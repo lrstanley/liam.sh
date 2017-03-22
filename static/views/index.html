@@ -16,6 +16,23 @@
                 <p class="blog-post-meta">{{simpletime ctx.post.Time}} ({{hrt ctx.post.Time}}) [<a href="/post/{{ctx.post.UID}}">direct link</a>]</p>
 
                 <div id="html-gen">{{{ctx.post.HTML}}}</div>
+
+
+                <h5 class="mt-4">Comments</h5>
+                <hr>
+                <div class="content p-2" id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function() {
+                    this.page.identifier = "{{ctx.post.UID}}";
+                    };
+                    (function() {
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://liamraystanley.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the comments.</noscript>
             </div>
         </div>
 
