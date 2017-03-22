@@ -1,0 +1,19 @@
+; can go in /etc/systemd/system/<app>.service
+; make sure to:
+;  $ systemctl enable <app>
+;  $ systemctl start <app>
+[Unit]
+Description=liam-site
+
+[Service]
+PIDFile=/tmp/liam-site.pid
+ExecStart=/root/sites/liam.sh/liam.sh --log "debug.log" run -b ":8080" --proxy --cache
+WorkingDirectory=/root/sites/liam.sh
+LimitNOFILE=4096
+; change this
+User=root
+Group=root
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
