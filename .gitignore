@@ -1,0 +1,13 @@
+liam.sh
+*.exe
+*.test
+*.prof
+vendor/*
+!vendor/*.json
+.glide
+*.lock
+bindata.go
+release
+*.upx
+*.txt
+*.log

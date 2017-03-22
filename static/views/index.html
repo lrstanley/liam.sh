@@ -1,0 +1,57 @@
+{{> header title="Home"}}
+<div class="blog-header">
+    <div class="container">
+        <h1 class="blog-title">Liam's Blog</h1>
+        <p class="lead blog-description">Where I ramble about things not many care about.</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-sm-8 blog-main">
+            <div class="blog-post">
+                <h2 class="blog-post-title">{{ctx.post.Title}}</h2>
+                <p class="blog-post-meta">{{simpletime ctx.post.Time}} ({{hrt ctx.post.Time}}) [<a href="/post/{{ctx.post.UID}}">direct link</a>]</p>
+
+                <div id="html-gen">{{{ctx.post.HTML}}}</div>
+            </div>
+        </div>
+
+        <div class="col-sm-3 offset-sm-1 blog-sidebar">
+            <div class="sidebar-about rounded-bottom">
+                <div class="pad rounded-top"></div>
+                <img src="https://avatars2.githubusercontent.com/u/1847365?v=3&s=460" class="mx-auto d-block rounded">
+
+                <div class="about-content text-center">
+                    <strong>Liam Stanley</strong>
+                    <p>
+                        <small>
+                            Avid enthusiastic computer programming nerd. Hardware hobbyist.
+                            Creative minded geek. Argumentative, opinionated, and intellectual coder.
+                        </small>
+                    </p>
+                </div>
+            </div>
+
+            <div class="sidebar-module content">
+                <a class="btn btn-block btn-sm btn-primary" href="https://github.com/lrstanley"><i class="fa fa-github"></i> Github</a>
+                <a class="btn btn-block btn-sm btn-success" href="https://www.linkedin.com/profile/view?id=298244002">Linked.<i class="fa fa-linkedin"></i></a>
+                <a class="btn btn-block btn-sm btn-info" href="https://twitter.com/Liamraystanley"><i class="fa fa-twitter"></i> Twitter</a>
+            </div>
+
+            <div class="sidebar-module content">
+                <strong>Recent posts</strong>
+                <ol class="list-unstyled">
+                    {{#each ctx.recent}}
+                    <li class="flex-trunk"><a href="/post/{{this.UID}}" data-toggle="tooltip" title="{{hrt this.Time}}">{{this.Title}}</a></li>
+                    {{/each}}
+                </ol>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{{> footer}}
