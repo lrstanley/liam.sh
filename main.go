@@ -63,7 +63,7 @@ func runServer() {
 	r.Get("/", getPost)
 	r.Get("/post/:uid", getPost)
 
-	r.Get("/go/:pkg", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/g/:pkg", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Load(w, r, "static/views/go.html", map[string]interface{}{"pkg": chi.URLParam(r, "pkg")})
 	})
 
