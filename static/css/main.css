@@ -83,6 +83,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 }
 
 .blog-header {
+  background-color: #333;
   background-image: url(/static/img/bg.png);
   padding-top: 3rem;
   padding-bottom: 1.25rem;
