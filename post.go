@@ -13,6 +13,8 @@ import (
 	"strings"
 	"time"
 
+	"regexp"
+
 	"github.com/pressly/chi"
 	"github.com/russross/blackfriday"
 )
@@ -41,9 +43,11 @@ func FormatTime(in time.Time) string {
 	return in.Format(time.RFC822)
 }
 
+var uidRe = regexp.MustCompile("^[a-z0-9-._]{3,50}$")
+
 // IsValidUID validates and ensures the UID is "web-safe".
 func IsValidUID(uid string) bool {
-	return true
+	return uidRe.MatchString(uid)
 }
 
 // ParseTime parses the time format we use in posts from a string.
