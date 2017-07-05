@@ -22,8 +22,6 @@ Time: %s
 ### Markdown here
 `
 
-var tmpl *Loader
-
 type Config struct {
 	// Listen changes what ip/port the server is listening on.
 	Listen string
@@ -48,7 +46,6 @@ var conf Config
 var debug = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
 
 func runServer() {
-	tmpl = NewLoader("static/partials/*", conf.Cache, defaultCtx)
 	r := chi.NewRouter()
 	if conf.Proxy {
 		r.Use(middleware.RealIP)
@@ -64,7 +61,7 @@ func runServer() {
 	r.Get("/post/{uid}", getPost)
 
 	r.Get("/g/{pkg}", func(w http.ResponseWriter, r *http.Request) {
-		tmpl.Load(w, r, "static/views/go.html", map[string]interface{}{"pkg": chi.URLParam(r, "pkg")})
+		tmpl(w, r, "static/views/go.html", map[string]interface{}{"pkg": chi.URLParam(r, "pkg")})
 	})
 
 	debug.Println("initializing webserver")

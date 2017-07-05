@@ -1,4 +1,6 @@
-{{> header title="Home"}}
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
 <div class="blog-header">
     <div class="container">
         <h1 class="blog-title">Liam's Blog</h1>
@@ -7,23 +9,24 @@
 </div>
 
 <div class="container">
-
     <div class="row">
-
         <div class="col-sm-12 col-lg-8 blog-main">
             <div class="blog-post">
-                <h2 class="blog-post-title">{{ctx.post.Title}}</h2>
-                <p class="blog-post-meta">{{simpletime ctx.post.Time}} ({{hrt ctx.post.Time}}) [<a href="/post/{{ctx.post.UID}}">direct link</a>]</p>
+                <h2 class="blog-post-title">{{ post.Title }}</h2>
+                <p class="blog-post-meta">
+                    {{ post.Time|date:'January _2, 2006' }}
+                    ({{ post.Time|naturaltime }})
+                    [<a href="/post/{{ post.UID }}">direct link</a>]
+                </p>
 
-                <div id="html-gen">{{{ctx.post.HTML}}}</div>
-
+                <div id="html-gen">{{ post.HTML|safe }}</div>
 
                 <h5 class="mt-4">Comments</h5>
                 <hr>
                 <div class="content p-2" id="disqus_thread"></div>
                 <script>
                     var disqus_config = function() {
-                    this.page.identifier = "{{ctx.post.UID}}";
+                    this.page.identifier = "{{ post.UID }}";
                     };
                     (function() {
                         var d = document, s = d.createElement('script');
@@ -62,15 +65,15 @@
                 <div class="sidebar-module content">
                     <strong>Recent posts</strong>
                     <ol class="list-unstyled">
-                        {{#each ctx.recent}}
-                        <li class="flex-trunk"><a href="/post/{{this.UID}}" data-toggle="tooltip" title="{{hrt this.Time}}">{{this.Title}}</a></li>
-                        {{/each}}
+                        {% for item in recent %}
+                            <li class="flex-trunk">
+                                <a href="/post/{{item.UID}}" data-toggle="tooltip" title="{{item.Time|naturaltime}}">{{item.Title}}</a>
+                            </li>
+                        {% endfor %}
                     </ol>
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
-{{> footer}}
+{% endblock content %}

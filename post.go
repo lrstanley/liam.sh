@@ -176,7 +176,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		tmpl.Load(w, r, "static/views/index.html", map[string]interface{}{
+		tmpl(w, r, "static/views/index.html", map[string]interface{}{
 			"post":   posts[0],
 			"recent": posts,
 		})
@@ -197,7 +197,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 
 	posts := RecentPosts("posts/**", 5)
 
-	tmpl.Load(w, r, "static/views/index.html", map[string]interface{}{
+	tmpl(w, r, "static/views/index.html", map[string]interface{}{
 		"post":   post,
 		"recent": posts,
 	})
