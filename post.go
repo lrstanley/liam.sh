@@ -191,7 +191,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 
 	post, err := LoadPost(path)
 	if err != nil {
-		httpPanic(w, err)
+		panic(err)
 		return
 	}
 

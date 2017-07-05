@@ -45,6 +45,8 @@ type Config struct {
 
 var conf Config
 
+var debug = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
+
 func runServer() {
 	tmpl = NewLoader("static/partials/*", conf.Cache, defaultCtx)
 	r := chi.NewRouter()
@@ -53,17 +55,15 @@ func runServer() {
 	}
 
 	r.Use(middleware.DefaultCompress)
-	r.Use(middleware.CloseNotify)
 	r.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: debug}))
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(middleware.Recoverer)
-
 	FileServer(r, "/static", http.Dir("static"))
 
 	r.Get("/", getPost)
-	r.Get("/post/:uid", getPost)
+	r.Get("/post/{uid}", getPost)
 
-	r.Get("/g/:pkg", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/g/{pkg}", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Load(w, r, "static/views/go.html", map[string]interface{}{"pkg": chi.URLParam(r, "pkg")})
 	})
 
@@ -76,8 +76,6 @@ func runServer() {
 }
 
 func main() {
-	initLogger()
-
 	app := cli.NewApp()
 	app.HideVersion = true
 	app.Name = "liam.sh"
