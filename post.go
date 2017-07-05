@@ -8,14 +8,13 @@ import (
 	"net/mail"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 	"time"
 
-	"regexp"
-
-	"github.com/pressly/chi"
+	"github.com/go-chi/chi"
 	"github.com/russross/blackfriday"
 )
 

@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 	gctx "github.com/gorilla/context"
-	"github.com/pressly/chi"
-	"github.com/pressly/chi/middleware"
 	"github.com/urfave/cli"
 )
 
@@ -58,7 +58,7 @@ func runServer() {
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(middleware.Recoverer)
 
-	r.FileServer("/static", http.Dir("static"))
+	FileServer(r, "/static", http.Dir("static"))
 
 	r.Get("/", getPost)
 	r.Get("/post/:uid", getPost)
@@ -95,8 +95,8 @@ func main() {
 				cli.BoolFlag{Name: "proxy", Destination: &conf.Proxy, Usage: "Use X-Forwarded-For (ONLY IF PROXYING!)"},
 				cli.BoolFlag{Name: "cache", Destination: &conf.Cache, Usage: "Cache templates"},
 				cli.StringFlag{Name: "b", Destination: &conf.Listen, Usage: "Bind `address`. E.g. 0.0.0.0:8080"},
-				cli.StringFlag{Name: "cert", Destination: &conf.CertFile, Usage: "certificate file `path`"},
-				cli.StringFlag{Name: "key", Destination: &conf.KeyFile, Usage: "certificate key `path`"},
+				cli.StringFlag{Name: "cert", Destination: &conf.CertFile, Usage: "Certificate file `path`"},
+				cli.StringFlag{Name: "key", Destination: &conf.KeyFile, Usage: "Certificate key `path`"},
 			},
 		},
 		{
