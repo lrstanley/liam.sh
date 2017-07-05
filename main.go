@@ -29,20 +29,16 @@ type Config struct {
 	TLS bool
 	// CertFile and KeyFile are the system paths to the SSL certificate and
 	// key file which can be used when TLS is enabled.
-	CertFile string
-	KeyFile  string
+	CertFile, KeyFile string
 	// Proxy when enabled, will allow the webserver to sit behind another
 	// webserver, that supports X-Forwarded-For and similar headers to provide
 	// the server behind the proxy with the real IP address.
 	Proxy bool
 	// If the templates/style should be cached upon first load.
 	Cache bool
-	// DebugLog is the log file path where debug logs will be written.
-	DebugLog string
 }
 
 var conf Config
-
 var debug = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
 
 func runServer() {
@@ -102,10 +98,6 @@ func main() {
 			},
 			Aliases: []string{"gen-post", "generate"},
 		},
-	}
-
-	app.Flags = []cli.Flag{
-		cli.StringFlag{Name: "log", Destination: &conf.DebugLog, Usage: "Logfile `path`"},
 	}
 
 	app.Action = func(ctx *cli.Context) error {
