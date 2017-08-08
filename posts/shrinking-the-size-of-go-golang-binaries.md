@@ -20,21 +20,21 @@ $ cd $GOPATH/src/github.com/username/package
 $ go build -ldflags "-s -w"
 ```
 
-Ok, so what kind of decrease/margin do we get from just this? (running this against my [Automated Site Testing Utility, Marill](https://github.com/Liamraystanley/marill)):
+Ok, so what kind of decrease/margin do we get from just this? (running this against my [Automated Site Testing Utility, Marill](https://github.com/lrstanley/marill)):
 
 Before:
 
 ```
-liam:~/go/src/github.com/Liamraystanley/marill$ go build
-liam:~/go/src/github.com/Liamraystanley/marill$ ls -lah marill
+$ go build
+$ ls -lah marill
 -rwxrwxr-x 1 liam liam 9.2M Dec  6 18:22 marill
 ```
 
 After:
 
 ```
-liam@hacktop:~/go/src/github.com/Liamraystanley/marill$ go build -ldflags "-s -w"
-liam@hacktop:~/go/src/github.com/Liamraystanley/marill$ ls -lah marill
+$ go build -ldflags "-s -w"
+$ ls -lah marill
 -rwxrwxr-x 1 liam liam 5.8M Dec  6 18:23 marill
 ```
 
@@ -55,7 +55,7 @@ Now ensure that you have built the binary with the above commands. We will then 
 Let's start off with fast. What size margins do we get from this? (remember the size before was **5.8M**):
 
 ```
-liam:~/go/src/github.com/Liamraystanley/marill$ upx -1 -q marill
+$ upx -1 -q marill
                        Ultimate Packer for eXecutables
                           Copyright (C) 1996 - 2013
 UPX 3.91        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 30th 2013
@@ -72,7 +72,7 @@ Packed 1 file.
 Let's try `--best` with `--brute`...:
 
 ```
-liam:~/go/src/github.com/Liamraystanley/marill$ upx --best --brute marill
+$ upx --best --brute marill
                        Ultimate Packer for eXecutables
                           Copyright (C) 1996 - 2013
 UPX 3.91        Markus Oberhumer, Laszlo Molnar & John Reiser   Sep 30th 2013
@@ -88,7 +88,7 @@ Packed 1 file.
 
 ## What to do from here?
 
-If you are following the above guide, you are likely making a user-facing application, and not a library. Meaning you probably have a Makefile or some form of script to build it for you, if your application requires external files, you are building things into a **.tar.gz** or **.zip** file, etc. How I currently tackle the above processes in my applications and utilities is by using a `Makefile`. See a very long example of one of these [here](https://github.com/Liamraystanley/marill/blob/master/Makefile).
+If you are following the above guide, you are likely making a user-facing application, and not a library. Meaning you probably have a Makefile or some form of script to build it for you, if your application requires external files, you are building things into a **.tar.gz** or **.zip** file, etc. How I currently tackle the above processes in my applications and utilities is by using a `Makefile`. See a very long example of one of these [here](https://github.com/lrstanley/marill/blob/master/Makefile) or maybe [here](https://github.com/lrstanley/links.ml/blob/master/Makefile).
 
 Below is a good starting point for a Go project's Makefile:
 
@@ -100,15 +100,11 @@ BINARY=your-package-name
 LD_FLAGS += -s -w
 
 compress:
-	@echo "\n\033[0;36m [ Attempting to compress ${BINARY} with UPX ]\033[0;m"
 	(which upx > /dev/null && upx -9 -q ${BINARY} > /dev/null) || echo "UPX not installed"
 
 build:
-	@echo "\n\033[0;36m [ Removing previously compiled binaries ]\033[0;m"
 	rm -vf ${BINARY}
-
-	@echo "\n\033[0;36m [ Building ${BINARY} ]\033[0;m"
-	go build -ldflags "${LD_FLAGS}" -x -v -o ${BINARY}
+	go build -ldflags "${LD_FLAGS}" -v -o ${BINARY}
 ```
 
 Simply run the above with:
@@ -131,7 +127,7 @@ Using the above methods, there are a few caveats and downsides that should be no
    * If you are using Go pre-1.5, you will also likely need to change the syntax of the ld-flags functionality, because this has changed in 1.5 to use the method I used above.
    * UPX does not work with all binary types. You can run `upx --help` to get a full list of what is supported, and what isn't. Most x86 and x64/amd binary types are supported, however you may have issues compressing things on arm, and freebsd (and other less popular architectures/binary types).
    * UPX using the `--brute` method and `--best` method does take a bit of time (1-2 minutes on my i7 laptop, with 12gb of ram). However, just dropping `--brute` will make it much faster with still a considerable size decrease.
-   * As mentioned above with using the `-s` and `-w` `LD_FLAG` options, this may make using things like GDB much more difficult, though this should not be an issue in most cases.
+   * As mentioned above with using the `-s` and `-w` `LD_FLAG` options, this may make using things like GDB much more difficult, though this should not be an issue in most cases (and, you should be using Delve!)
 
 
 Now _**Go**_ have some fun with your small binaries! (see what I did there!)
