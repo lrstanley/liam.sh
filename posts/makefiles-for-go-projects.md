@@ -1,5 +1,5 @@
 Title: Makefiles for Go projects
-Show: false
+Show: true
 Time: 19 Aug 17 22:16 UTC
 
 I've started releasing enough Go projects that making a user-distributed tool comes close in line with Makefiles to simplify my workflow when:
