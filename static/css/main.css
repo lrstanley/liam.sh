@@ -113,7 +113,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
 }
 
 .blog-sidebar {
-  top: 20px;
+  top: 35px;
 }
 
 .sidebar-about {
@@ -200,9 +200,10 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     color: #ec2f2f;
     border-radius: 5px;
     padding: 2px 4px;
+    font-size: 14px;
 }
 
-#html-gen pre>code {
+#html-gen pre > code {
     background-color: #23241f;
     color: white;
     border-radius: 5px;
@@ -210,6 +211,7 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     white-space: pre-wrap;
     display: block;
     overflow-x: auto;
+    font-size: 13px;
 }
 
 #html-gen img {
