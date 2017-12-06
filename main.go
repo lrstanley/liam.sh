@@ -1,3 +1,7 @@
+// Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
+// of this source code is governed by the MIT license that can be found in
+// the LICENSE file.
+
 package main
 
 import (
@@ -11,6 +15,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	gctx "github.com/gorilla/context"
+	"github.com/joho/godotenv"
 	"github.com/urfave/cli"
 )
 
@@ -60,6 +65,32 @@ func runServer() {
 		tmpl(w, r, "static/views/go.html", map[string]interface{}{"pkg": chi.URLParam(r, "pkg")})
 	})
 
+	r.Get("/ghr/{asset}", func(w http.ResponseWriter, r *http.Request) {
+		gc.RLock()
+		asset, ok := gc.assetMap[chi.URLParam(r, "asset")]
+		gc.RUnlock()
+
+		if !ok {
+			http.NotFound(w, r)
+			return
+		}
+
+		http.Redirect(w, r, asset, http.StatusFound)
+	})
+
+	if err := updateReleaseCache(); err != nil {
+		panic(err)
+	}
+
+	go func() {
+		for {
+			time.Sleep(5 * time.Minute)
+			if err := updateReleaseCache(); err != nil {
+				fmt.Printf("error updating cache: %s", err)
+			}
+		}
+	}()
+
 	debug.Println("initializing webserver")
 	if conf.TLS {
 		debug.Fatal(http.ListenAndServeTLS(conf.Listen, mustFile(conf.CertFile), mustFile(conf.KeyFile), gctx.ClearHandler(r)))
@@ -69,6 +100,11 @@ func runServer() {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		debug.Printf("warn: error loading .env file: %s", err)
+	}
+
 	app := cli.NewApp()
 	app.HideVersion = true
 	app.Name = "liam.sh"

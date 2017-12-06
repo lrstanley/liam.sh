@@ -11,3 +11,5 @@ release
 *.upx
 *.txt
 *.log
+.env
+.gitapicache
