@@ -13,7 +13,7 @@ LimitNOFILE=4096
 ; change this
 User=root
 Group=root
-Restart=on-failure
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
