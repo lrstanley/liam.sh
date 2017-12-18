@@ -19,8 +19,22 @@ import (
 	"time"
 
 	"github.com/go-chi/chi"
+	"github.com/lrstanley/pt"
 	"github.com/russross/blackfriday"
 )
+
+type GenPost struct{}
+
+func (GenPost) Execute(_ []string) error {
+	fmt.Println(fmt.Sprintf(`
+Title: Example Post
+Show: false
+Time: %s
+
+### Markdown here
+`, FormatTime(time.Now())))
+	return nil
+}
 
 type Post struct {
 	Title   string
@@ -120,7 +134,7 @@ func IsPost(uid string) (string, bool) {
 	return "", false
 }
 
-// Give us all of the public posts.
+// AllPosts gives us all of the public posts.
 func AllPosts(path string) []*Post {
 	files, err := filepath.Glob(path)
 	if err != nil {
@@ -151,7 +165,7 @@ func AllPosts(path string) []*Post {
 	return posts
 }
 
-// Give us all of the recent public posts.
+// RecentPosts gives us all of the recent public posts.
 func RecentPosts(path string, max int) []*Post {
 	posts := AllPosts(path)
 
@@ -180,10 +194,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		tmpl(w, r, "static/views/index.html", map[string]interface{}{
-			"post":   posts[0],
-			"recent": posts,
-		})
+		tmpl.Render(w, r, "/tmpl/index.html", pt.M{"post": posts[0], "recent": posts})
 		return
 	}
 
@@ -196,13 +207,9 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	post, err := LoadPost(path)
 	if err != nil {
 		panic(err)
-		return
 	}
 
 	posts := RecentPosts("posts/**", 5)
 
-	tmpl(w, r, "static/views/index.html", map[string]interface{}{
-		"post":   post,
-		"recent": posts,
-	})
+	tmpl.Render(w, r, "/tmpl/index.html", pt.M{"post": post, "recent": posts})
 }
