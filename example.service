@@ -7,7 +7,7 @@ Description=liam-site
 
 [Service]
 PIDFile=/tmp/liam-site.pid
-ExecStart=/root/sites/liam.sh/liam.sh run -b ":8080" --proxy
+ExecStart=/root/sites/liam.sh/liam.sh run -b ":8080" --behind-proxy
 WorkingDirectory=/root/sites/liam.sh
 LimitNOFILE=4096
 ; change this
