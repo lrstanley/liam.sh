@@ -1,12 +1,10 @@
 liam.sh
-*.exe
 *.test
 *.prof
 vendor/*
 !vendor/*.json
-.glide
 *.lock
-bindata.go
+rice-box.go
 release
 *.upx
 *.txt

@@ -6,12 +6,17 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"os"
+	"sort"
+	"strings"
 	"sync"
 
+	"github.com/go-chi/chi"
 	"github.com/google/go-github/github"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
+	"github.com/lrstanley/pt"
 	"golang.org/x/oauth2"
 )
 
@@ -117,4 +122,36 @@ func updateReleaseCache() error {
 	debug.Println("cache update complete")
 
 	return nil
+}
+
+func gitRequestAsset(w http.ResponseWriter, r *http.Request) {
+	gc.RLock()
+	asset, ok := gc.assetMap[chi.URLParam(r, "asset")]
+	gc.RUnlock()
+
+	if !ok {
+		http.NotFound(w, r)
+		return
+	}
+
+	http.Redirect(w, r, asset, http.StatusFound)
+}
+
+func gitRequestAllAssets(w http.ResponseWriter, r *http.Request) {
+	gc.RLock()
+	mapRef := make(map[string]string, len(gc.assetMap))
+	keys := make([]string, 0, len(mapRef))
+	for key := range gc.assetMap {
+		mapRef[key] = gc.assetMap[key]
+		keys = append(keys, key)
+	}
+	gc.RUnlock()
+
+	if strings.HasSuffix(strings.ToLower(r.URL.Path), ".json") {
+		pt.JSON(w, r, mapRef)
+		return
+	}
+
+	sort.Strings(keys)
+	tmpl.Render(w, r, "/tmpl/ghr.html", pt.M{"assets": mapRef, "assetsSorted": keys})
 }

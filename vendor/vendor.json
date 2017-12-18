@@ -141,12 +141,6 @@
 			"revisionTime": "2017-12-16T04:55:26Z"
 		},
 		{
-			"checksumSHA1": "Hc7LMQrHR71kkSsd/P/SBdiC258=",
-			"path": "github.com/petar/GoLLRB/llrb",
-			"revision": "53be0d36a84c2a886ca057d34b6aa4468df9ccb4",
-			"revisionTime": "2013-04-27T21:51:48Z"
-		},
-		{
 			"checksumSHA1": "K1Y3/a6mmpc31MzB2pvsC5fHrek=",
 			"path": "github.com/peterbourgon/diskv",
 			"revision": "2973218375c3d13162e1d3afe1708aaee318ef3f",
@@ -183,32 +177,8 @@
 			"revisionTime": "2017-12-15T21:06:10Z"
 		},
 		{
-			"checksumSHA1": "Jl15/27Bbsc70w2cOyVKVwy8BCQ=",
-			"path": "golang.org/x/text/internal/gen",
-			"revision": "d5a9226ed7dd70cade6ccae9d37517fe14dd9fee",
-			"revisionTime": "2017-12-13T13:47:34Z"
-		},
-		{
-			"checksumSHA1": "47nwiUyVBY2RKoEGXmCSvusY4Js=",
-			"path": "golang.org/x/text/internal/triegen",
-			"revision": "d5a9226ed7dd70cade6ccae9d37517fe14dd9fee",
-			"revisionTime": "2017-12-13T13:47:34Z"
-		},
-		{
-			"checksumSHA1": "brtRuRoLzfZwY4Bir6gjFZqzSME=",
-			"path": "golang.org/x/text/internal/ucd",
-			"revision": "d5a9226ed7dd70cade6ccae9d37517fe14dd9fee",
-			"revisionTime": "2017-12-13T13:47:34Z"
-		},
-		{
 			"checksumSHA1": "ziMb9+ANGRJSSIuxYdRbA+cDRBQ=",
 			"path": "golang.org/x/text/transform",
-			"revision": "d5a9226ed7dd70cade6ccae9d37517fe14dd9fee",
-			"revisionTime": "2017-12-13T13:47:34Z"
-		},
-		{
-			"checksumSHA1": "s5G0noFRbSKD8Jr4FZmFeT4UvW8=",
-			"path": "golang.org/x/text/unicode/cldr",
 			"revision": "d5a9226ed7dd70cade6ccae9d37517fe14dd9fee",
 			"revisionTime": "2017-12-13T13:47:34Z"
 		},

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	rice "github.com/GeertJohan/go.rice"
+	"github.com/flosch/pongo2"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	gctx "github.com/gorilla/context"
@@ -59,18 +60,9 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		tmpl.Render(w, r, "/tmpl/go.html", pt.M{"pkg": chi.URLParam(r, "pkg")})
 	})
 
-	r.Get("/ghr/{asset}", func(w http.ResponseWriter, r *http.Request) {
-		gc.RLock()
-		asset, ok := gc.assetMap[chi.URLParam(r, "asset")]
-		gc.RUnlock()
-
-		if !ok {
-			http.NotFound(w, r)
-			return
-		}
-
-		http.Redirect(w, r, asset, http.StatusFound)
-	})
+	r.Get("/ghr.json", gitRequestAllAssets)
+	r.Get("/ghr", gitRequestAllAssets)
+	r.Get("/ghr/{asset}", gitRequestAsset)
 
 	if err := updateReleaseCache(); err != nil {
 		panic(err)
@@ -101,4 +93,24 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	debug.Fatal(srv.ListenAndServe())
 
 	return nil
+}
+
+func init() {
+	pongo2.RegisterFilter("field", func(in *pongo2.Value, param *pongo2.Value) (out *pongo2.Value, err *pongo2.Error) {
+		if in == nil || in.IsNil() {
+			return pongo2.AsValue(nil), nil
+		}
+
+		obj, isMap := in.Interface().(map[string]string)
+		if !isMap {
+			return pongo2.AsValue(nil), nil
+		}
+
+		res, found := obj[param.String()]
+		if found {
+			return pongo2.AsValue(res), nil
+		}
+
+		return pongo2.AsValue(nil), nil
+	})
 }
