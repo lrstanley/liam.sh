@@ -8,12 +8,12 @@ BINARY=liam.sh
 LD_FLAGS += -s -w
 
 update-deps: fetch
-	$(GOPATH)/bin/govendor add +external
-	$(GOPATH)/bin/govendor remove +unused
-	$(GOPATH)/bin/govendor update +external
+	$(GOPATH)/bin/govendor add -v +external
+	$(GOPATH)/bin/govendor remove -v +unused
+	$(GOPATH)/bin/govendor update -v +external
 
 upgrade-deps: update-deps
-	$(GOPATH)/bin/govendor fetch +vendor
+	$(GOPATH)/bin/govendor fetch -v +vendor
 
 fetch:
 	test -f $(GOPATH)/bin/govendor || go get -u -v github.com/kardianos/govendor
