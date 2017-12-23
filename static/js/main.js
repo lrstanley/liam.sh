@@ -10,6 +10,13 @@ $(function () {
 
         $(this).html("<a class='anchor' href='#" + anchor + "'>#</a> " + $(this).html());
     });
+
+    setTimeout(function() {
+        if (window.location.hash != "") {
+            el = document.getElementById(window.location.hash.replace("#", ""));
+            if (el !== null) { el.scrollIntoView(); }
+        }
+    }, 500);
 });
 
 var anchorArray = [];
