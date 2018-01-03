@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/google/go-github/github"
@@ -19,6 +20,11 @@ import (
 	"github.com/lrstanley/pt"
 	"golang.org/x/oauth2"
 )
+
+type GitArgs struct {
+	ReleaseSkip  bool          `long:"release-skip" description:"disables checking for github release data"`
+	ReleaseCheck time.Duration `long:"release-duration" default:"5m" description:"duration between release checks"`
+}
 
 func newGit() (*github.Client, context.Context) {
 	ctx := context.Background()
@@ -34,13 +40,31 @@ func newGit() (*github.Client, context.Context) {
 type gitCache struct {
 	sync.RWMutex
 
+	user     *github.User
 	repos    []*github.Repository
 	assetMap map[string]string
 }
 
 var gc = &gitCache{}
 
-func updateReleaseCache() error {
+func gitUpdateUserCache() error {
+	debug.Println("updating github user cache")
+	git, ctx := newGit()
+	user, _, err := git.Users.Get(ctx, os.Getenv("GITHUB_USER"))
+	if err != nil {
+		return err
+	}
+
+	gc.Lock()
+	gc.user = user
+	gc.Unlock()
+
+	debug.Println("user cache update complete")
+
+	return nil
+}
+
+func gitUpdateReleaseCache() error {
 	debug.Println("updating github release cache")
 	git, ctx := newGit()
 	repositories := []*github.Repository{}
@@ -119,7 +143,7 @@ func updateReleaseCache() error {
 	gc.assetMap = assetMap
 	gc.Unlock()
 
-	debug.Println("cache update complete")
+	debug.Println("release cache update complete")
 
 	return nil
 }

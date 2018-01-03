@@ -29,6 +29,7 @@ type HTTPArgs struct {
 		Cert   string `short:"c" long:"cert" description:"path to ssl cert file"`
 		Key    string `short:"k" long:"key" description:"path to ssl key file"`
 	} `group:"TLS Options" namespace:"tls"`
+	GitArgs GitArgs `group:"Git Options" namespace:"git"`
 }
 
 func (h *HTTPArgs) Execute(_ []string) error {
@@ -64,15 +65,30 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	r.Get("/ghr", gitRequestAllAssets)
 	r.Get("/ghr/{asset}", gitRequestAsset)
 
-	if err := updateReleaseCache(); err != nil {
-		panic(err)
+	// Pre-fetch git data just to make sure when we're starting that credentials
+	// and similar are functioning.
+	if !h.GitArgs.ReleaseSkip {
+		if err := gitUpdateReleaseCache(); err != nil {
+			panic(err)
+		}
+		go func() {
+			for {
+				time.Sleep(h.GitArgs.ReleaseCheck)
+				if err := gitUpdateReleaseCache(); err != nil {
+					fmt.Printf("error updating release cache: %s", err)
+				}
+			}
+		}()
 	}
 
+	if err := gitUpdateUserCache(); err != nil {
+		panic(err)
+	}
 	go func() {
 		for {
-			time.Sleep(5 * time.Minute)
-			if err := updateReleaseCache(); err != nil {
-				fmt.Printf("error updating cache: %s", err)
+			time.Sleep(1 * time.Hour)
+			if err := gitUpdateUserCache(); err != nil {
+				fmt.Printf("error updating user cache: %s", err)
 			}
 		}
 	}()

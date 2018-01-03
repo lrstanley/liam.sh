@@ -27,7 +27,7 @@ generate:
 	$(GOPATH)/bin/rice -v embed-go
 
 debug: clean fetch
-	go run *.go run --debug
+	go run *.go run --debug --git.release-skip
 
 build: fetch clean generate
 	go build -ldflags "${LD_FLAGS}" -v -o ${BINARY}
