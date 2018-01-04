@@ -1,8 +1,5 @@
 $(function () {
     $('[data-toggle="tooltip"]').tooltip();
-    $('pre code').each(function(i, block) {
-        hljs.highlightBlock(block);
-    });
 
     $.each($('#html-gen h2, #html-gen h3, #html-gen h4'), function(index, value) {
         var anchor = makeAnchor($(this).text());

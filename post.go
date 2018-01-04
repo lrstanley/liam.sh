@@ -18,9 +18,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Depado/bfchroma"
 	"github.com/go-chi/chi"
 	"github.com/lrstanley/pt"
-	"github.com/russross/blackfriday"
+	zglob "github.com/mattn/go-zglob"
+	bf "github.com/russross/blackfriday"
 )
 
 type GenPost struct{}
@@ -46,7 +48,7 @@ type Post struct {
 
 // HTML generates an HTML version of the stored markdown.
 func (p *Post) HTML() string {
-	return string(blackfriday.MarkdownCommon(p.Content))
+	return string(bf.Run(p.Content, bf.WithRenderer(bfchroma.NewRenderer(bfchroma.Style("monokai")))))
 }
 
 // FormatTime is much like stand-alone FormatTime, however it uses the post
@@ -136,7 +138,7 @@ func IsPost(uid string) (string, bool) {
 
 // AllPosts gives us all of the public posts.
 func AllPosts(path string) []*Post {
-	files, err := filepath.Glob(path)
+	files, err := zglob.Glob(path)
 	if err != nil {
 		panic(err)
 	}

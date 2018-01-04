@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 
-	_ "github.com/flosch/pongo2-addons"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/joho/godotenv"
 )

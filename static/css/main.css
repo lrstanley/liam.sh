@@ -209,26 +209,7 @@ h4 > .anchor {
   margin-bottom: 0;
 }
 
-#html-gen code {
-    background-color: #dcdcdc;
-    color: #ec2f2f;
-    border-radius: 5px;
-    padding: 2px 4px;
-    font-size: 14px;
-}
-
-#html-gen pre > code {
-    background-color: #23241f;
-    color: white;
-    border-radius: 5px;
-    padding: 9px;
-    white-space: pre-wrap;
-    display: block;
-    overflow-x: auto;
-    font-size: 13px;
-}
-
-#html-gen img {
+.markdown-body img {
     max-width: 93%;
     padding: 15px 40px;
 }

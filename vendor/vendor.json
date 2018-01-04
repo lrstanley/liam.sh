@@ -15,6 +15,12 @@
 			"revision": ""
 		},
 		{
+			"checksumSHA1": "TlzTVqt9j7S/VU+jWyUhG/RsQ/A=",
+			"path": "github.com/Depado/bfchroma",
+			"revision": "8c6b09e72c9ece27528e58a181b4674c1cb90f1d",
+			"revisionTime": "2017-12-08T09:16:57Z"
+		},
+		{
 			"checksumSHA1": "c4dFBfQ1TiTG3CAp6MpMen/nWXU=",
 			"path": "github.com/GeertJohan/go.rice",
 			"revision": "c02ca9a983da5807ddf7d796784928f5be4afd09",
@@ -27,10 +33,52 @@
 			"revisionTime": "2017-04-20T13:57:05Z"
 		},
 		{
+			"checksumSHA1": "Dskq3kH3wMDCk2h0ceLmrgKY4H0=",
+			"path": "github.com/alecthomas/chroma",
+			"revision": "38cc9bdc19d2bc494360dfe6140f34c7ab36a800",
+			"revisionTime": "2018-01-04T02:53:33Z"
+		},
+		{
+			"checksumSHA1": "23ET0IgywqQQZC13DHEqFH1MHxE=",
+			"path": "github.com/alecthomas/chroma/formatters/html",
+			"revision": "38cc9bdc19d2bc494360dfe6140f34c7ab36a800",
+			"revisionTime": "2018-01-04T02:53:33Z"
+		},
+		{
+			"checksumSHA1": "VAqLbwPFs32XTBqecnHpaUna78Y=",
+			"path": "github.com/alecthomas/chroma/lexers",
+			"revision": "38cc9bdc19d2bc494360dfe6140f34c7ab36a800",
+			"revisionTime": "2018-01-04T02:53:33Z"
+		},
+		{
+			"checksumSHA1": "Wxv1e1MLoJGrZ33LgJqaoHcaBTs=",
+			"path": "github.com/alecthomas/chroma/styles",
+			"revision": "38cc9bdc19d2bc494360dfe6140f34c7ab36a800",
+			"revisionTime": "2018-01-04T02:53:33Z"
+		},
+		{
 			"checksumSHA1": "8i+beEgcVf0q/I7lTqo2ERZM/OU=",
 			"path": "github.com/daaku/go.zipexe",
 			"revision": "a5fe2436ffcb3236e175e5149162b41cd28bd27d",
 			"revisionTime": "2015-03-29T02:31:25Z"
+		},
+		{
+			"checksumSHA1": "d/czTNq3bacK85PFEKcHvW6aR80=",
+			"path": "github.com/danwakefield/fnmatch",
+			"revision": "cbb64ac3d964b81592e64f957ad53df015803288",
+			"revisionTime": "2016-04-03T17:12:40Z"
+		},
+		{
+			"checksumSHA1": "6y/Ht8J58EotTDBEIuE3+s4AnL8=",
+			"path": "github.com/dlclark/regexp2",
+			"revision": "7632a260cbaf5e7594fc1544a503456ecd0827f1",
+			"revisionTime": "2017-10-09T02:06:23Z"
+		},
+		{
+			"checksumSHA1": "k0JXX65FspyueQ8/1i50DGRiCUk=",
+			"path": "github.com/dlclark/regexp2/syntax",
+			"revision": "7632a260cbaf5e7594fc1544a503456ecd0827f1",
+			"revisionTime": "2017-10-09T02:06:23Z"
 		},
 		{
 			"checksumSHA1": "YmrgwI/WKVW0wJXyZKUjyk6seho=",
@@ -147,10 +195,18 @@
 			"revisionTime": "2017-11-20T01:46:56Z"
 		},
 		{
-			"checksumSHA1": "1KVewmQICPa+IH1gYJUKDgNbKpY=",
+			"checksumSHA1": "6O19ufsJoV6Z3E9jYZakcgEII1E=",
 			"path": "github.com/russross/blackfriday",
-			"revision": "6d1ef893fcb01b4f50cb6e57ed7df3e2e627b6b2",
-			"revisionTime": "2017-10-11T18:22:19Z"
+			"revision": "cadec560ec52d93835bf2f15bd794700d3a2473b",
+			"revisionTime": "2017-08-06T17:10:14Z",
+			"version": "v2",
+			"versionExact": "v2.0.0"
+		},
+		{
+			"checksumSHA1": "HkNUuhYSk5C2fTMa536jBiORq44=",
+			"path": "github.com/shurcooL/sanitized_anchor_name",
+			"revision": "86672fcb3f950f35f2e675df2240550f2a50762f",
+			"revisionTime": "2017-09-05T02:47:45Z"
 		},
 		{
 			"checksumSHA1": "GtamqiJoL7PGHsN454AoffBFMa8=",

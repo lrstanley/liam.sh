@@ -5,12 +5,14 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"time"
 
 	rice "github.com/GeertJohan/go.rice"
+	humanize "github.com/flosch/go-humanize"
 	"github.com/flosch/pongo2"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -128,5 +130,29 @@ func init() {
 		}
 
 		return pongo2.AsValue(nil), nil
+	})
+
+	pongo2.RegisterFilter("naturaltime", func(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+		basetime, isTime := in.Interface().(time.Time)
+		if !isTime {
+			return nil, &pongo2.Error{
+				Sender:    "filter:timeuntil/timesince",
+				OrigError: errors.New("time-value is not a time.Time-instance"),
+			}
+		}
+		var paramtime time.Time
+		if !param.IsNil() {
+			paramtime, isTime = param.Interface().(time.Time)
+			if !isTime {
+				return nil, &pongo2.Error{
+					Sender:    "filter:timeuntil/timesince",
+					OrigError: errors.New("time-parameter is not a time.Time-instance"),
+				}
+			}
+		} else {
+			paramtime = time.Now()
+		}
+
+		return pongo2.AsValue(humanize.TimeDuration(basetime.Sub(paramtime))), nil
 	})
 }
