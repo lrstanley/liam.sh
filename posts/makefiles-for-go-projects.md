@@ -14,7 +14,7 @@ I've started releasing enough Go projects that making a user-distributed tool co
 
 The below example is pulled from my recently released [nagios-notify-irc](https://github.com/lrstanley/nagios-notify-irc) project. It has entries for releasing, cleaning, and managing the dependencies of the project.
 
-```
+```Makefile
 .DEFAULT_GOAL := build
 
 GOPATH := $(shell go env | grep GOPATH | sed 's/GOPATH="\(.*\)"/\1/')
@@ -61,7 +61,7 @@ In addition, for Go projects, a useful combination is a `Makefile` with [GoRelea
 
 Below is an example of a Makefile task (`$ make compress`) that you could call as a GoReleaser `hook.post`, which will compress all supported binaries using the [UPX](https://upx.github.io/) binary compression utility. This allows for streamlined, small, compressed archives which can easily be distributed for many systems. Below is an excerpt which you could use:
 
-```
+```Makefile
 compress:
 	(which /usr/bin/upx > /dev/null && find dist/*/* | xargs -I{} -n1 -P 4 /usr/bin/upx --best "{}") || echo "not using upx for binary compression"
 ```

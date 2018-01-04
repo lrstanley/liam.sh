@@ -15,7 +15,7 @@ First off, I would recommend ensuring you are compiling with the latest Go relea
 
 How do we get rid of them? With many packages submitted to things like the Debian system repositories, they recommend stripping the DWARF/symbol tables from the executables when they are submitted, to ensure that they are much smaller. We can do this during the build process of the binary. Below is an example of how this may work:
 
-```bash
+```
 $ cd $GOPATH/src/github.com/username/package
 $ go build -ldflags "-s -w"
 ```
@@ -46,7 +46,7 @@ The next thing we can do, because the binary is now mainly just machine code, is
 
 For Ubuntu 16.04, the package within the Ubuntu repositories is named `upx-ucl`, however it may differ in your package manager/repos.
 
-```bash
+```
 $ apt install upx-ucl
 ```
 
@@ -109,13 +109,13 @@ build:
 
 Simply run the above with:
 
-```bash
+```
 $ make build compress
 ```
 
 Or without compression:
 
-```bash
+```
 $ make build # (or just 'make' will select build by default)
 ```
 

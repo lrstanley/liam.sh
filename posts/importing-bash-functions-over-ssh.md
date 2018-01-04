@@ -10,7 +10,7 @@ Ever wanted to import or carry over custom made functions and aliases over SSH, 
 
 Simply start off by taking the below script, and dropping it into `/usr/local/bin/sshrc` (or your equivalent **$PATH** location), and running `chmod +x /usr/local/bin/sshrc`.
 
-```
+```bash
 #!/usr/bin/env bash
 
 function sshrc {
@@ -48,7 +48,7 @@ else ssh;fi
 
 Since the functionality is useful for every server I login to, I alias **ssh** to the above command. As such, I simply open up my `~/.bashrc` file, and add the following (be sure to modify this if you stored the **sshrc** script in another location):
 
-```
+```bash
 function ssh() {
         /usr/local/bin/sshrc -oStrictHostKeyChecking=no $@
         clear
@@ -75,7 +75,7 @@ Well, there are many things you could add to be extremely helpful in real world 
 
 Function:
 
-```
+```bash
 function genpw { < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-15};echo; }
 ```
 
@@ -96,7 +96,7 @@ oqdh7HplyInBLVz
 
 Function:
 
-```
+```bash
 function geoip { while IFS= read x;do ip=$(echo $x | egrep -o "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}");if [ -n "$ip" ];then location=$(curl -s geoip.cf/api/$ip/country);echo "$x" | sed -r "s#$ip#$ip ($location)#g"; else echo "$x";fi;done; }
 ```
 
@@ -117,7 +117,7 @@ $ cat /home/domlogs/liamstanley.io | awk '{print $1}' | tail -5 | geoip
 
 Function:
 
-```
+```bash
 function ssh { echo -e "\n\n\e[0;36mSSH has been disabled, you are daisychaining!\e[m\n\n"; }
 ```
 
@@ -128,8 +128,6 @@ $ ssh root@server-2.liam.sh
 
 
 SSH has been disabled, you are daisychaining!
-
-
 ```
 
 ---------------------------------------
@@ -138,7 +136,7 @@ SSH has been disabled, you are daisychaining!
 
 Function:
 
-```
+```bash
 function mode { while read filename;do echo "($(if [ -f "$filename" ];then stat -c '%a' "$filename";else echo "---";fi)) $filename";done; }
 ```
 

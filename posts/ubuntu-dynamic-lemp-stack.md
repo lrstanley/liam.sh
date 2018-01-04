@@ -66,7 +66,7 @@ $ sudo nano /etc/php5/fpm/php.ini
 
 The parameter in the configuration file you are going to be looking for is `cgi.fix_pathinfo`. Changing it to the following, will ensure remote users can't execute PHP files out of the accessible directories provided to them (**Note:** ensure there is no `;` in front of the line, this is an inline comment character, and it won't be applied if it exists):
 
-```
+```ini
 cgi.fix_pathinfo=0
 ```
 
@@ -83,7 +83,7 @@ $ sudo service php5-fpm restart
 
 Due to the way that `php5-fpm` works, it requires passing requests to a sock file to the php5-fpm service. An Nginx configuration section needs to be added to any server block to tell Nginx that `.php` requests are special. Add the below to `/etc/nginx/fastcgi_php`, which we can later include in an Nginx configuration file for easy setup:
 
-```
+```nginx
 location ~ \.php$ {
     include /etc/nginx/fastcgi_params;
     fastcgi_index index.php;
@@ -97,7 +97,7 @@ location ~ \.php$ {
 
 Now is the core of this post. Basically, we can tell Nginx that it should look in a specific directory for the web content of each site pointed towards the server. As mentioned at the start of the post, website roots will be in `/var/www/<domain>`. Put the following into `/etc/nginx/sites-enabled/core`:
 
-```
+```nginx
 server {
     server_name ~^(www\.)?(?<domain>.+)$;
     if ($host ~* ^www\.(.*)) {
@@ -142,7 +142,7 @@ At this point, everything should be setup properly. To test, we can create a PHP
 
 Create a file named `index.php` in `/var/www/<domain>/index.php` with the following contents:
 
-```
+```php
 <?php phpinfo(); ?>
 ```
 
