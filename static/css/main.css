@@ -189,7 +189,7 @@ h4 > .anchor {
 
 .blog-post-title {
   margin-bottom: .25rem;
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 
 .blog-post-meta {
@@ -209,10 +209,39 @@ h4 > .anchor {
   margin-bottom: 0;
 }
 
+.markdown-body pre {
+    white-space: pre-wrap;
+    display: block;
+    overflow-x: auto;
+    font-size: 13px;
+}
+
 .markdown-body img {
     max-width: 93%;
     padding: 15px 40px;
 }
+
+.markdown-body h1 > .anchor,
+.markdown-body h2 > .anchor,
+.markdown-body h3 > .anchor,
+.markdown-body h4 > .anchor {
+  font-size: 20px;
+  position: relative;
+  margin-left: 0;
+  text-decoration: none;
+  color: #639fe2;
+}
+
+.markdown-body h1 > .anchor:hover,
+.markdown-body h2 > .anchor:hover,
+.markdown-body h3 > .anchor:hover,
+.markdown-body h4 > .anchor:hover {
+  color: #0366d6;
+}
+.markdown-body h1 > .anchor { top: 10px; }
+.markdown-body h2 > .anchor { top: 5px; }
+.markdown-body h3 > .anchor { top: 2.5px; }
+.markdown-body h4 > .anchor { font-size: 18px; }
 
 .flex-trunk {
   white-space: nowrap;
