@@ -15,10 +15,10 @@
 			"revision": ""
 		},
 		{
-			"checksumSHA1": "TlzTVqt9j7S/VU+jWyUhG/RsQ/A=",
+			"checksumSHA1": "4lt5sq1/iLUtgxSfxnSsSBdfDY4=",
 			"path": "github.com/Depado/bfchroma",
-			"revision": "8c6b09e72c9ece27528e58a181b4674c1cb90f1d",
-			"revisionTime": "2017-12-08T09:16:57Z"
+			"revision": "8c923959de0e3953729a3777c4d8ed021bacd519",
+			"revisionTime": "2018-01-05T09:02:35Z"
 		},
 		{
 			"checksumSHA1": "c4dFBfQ1TiTG3CAp6MpMen/nWXU=",
@@ -81,12 +81,6 @@
 			"revisionTime": "2017-10-09T02:06:23Z"
 		},
 		{
-			"checksumSHA1": "YmrgwI/WKVW0wJXyZKUjyk6seho=",
-			"path": "github.com/extemporalgenome/slug",
-			"revision": "0320c85e32e0015b090f08a5d1324d5ab6094f07",
-			"revisionTime": "2015-04-14T03:31:09Z"
-		},
-		{
 			"checksumSHA1": "DVut22b9l550udnbJWEs8se9sLg=",
 			"path": "github.com/flosch/go-humanize",
 			"revision": "3ba51eabe50663842d569003bab93fc256883173",
@@ -97,12 +91,6 @@
 			"path": "github.com/flosch/pongo2",
 			"revision": "1f4be1efe3b3529b7e58861f75d70120a9567dc4",
 			"revisionTime": "2017-09-06T22:20:41Z"
-		},
-		{
-			"checksumSHA1": "5M7h3sh45RoWA4FaflE9tm2ZFxg=",
-			"path": "github.com/flosch/pongo2-addons",
-			"revision": "86b9b7b8051253fbb41b3fff8a8f5cc9c300305e",
-			"revisionTime": "2017-09-02T00:11:13Z"
 		},
 		{
 			"checksumSHA1": "YODbzvhUr0Tzp2/MkXflXph2hdY=",
@@ -195,14 +183,6 @@
 			"revisionTime": "2017-11-20T01:46:56Z"
 		},
 		{
-			"checksumSHA1": "6O19ufsJoV6Z3E9jYZakcgEII1E=",
-			"path": "github.com/russross/blackfriday",
-			"revision": "cadec560ec52d93835bf2f15bd794700d3a2473b",
-			"revisionTime": "2017-08-06T17:10:14Z",
-			"version": "v2",
-			"versionExact": "v2.0.0"
-		},
-		{
 			"checksumSHA1": "HkNUuhYSk5C2fTMa536jBiORq44=",
 			"path": "github.com/shurcooL/sanitized_anchor_name",
 			"revision": "86672fcb3f950f35f2e675df2240550f2a50762f",
@@ -231,18 +211,6 @@
 			"path": "golang.org/x/oauth2/internal",
 			"revision": "0448841f0cbe9d174c6c1cedd177f583337b8e2c",
 			"revisionTime": "2017-12-14T23:38:05Z"
-		},
-		{
-			"checksumSHA1": "ziMb9+ANGRJSSIuxYdRbA+cDRBQ=",
-			"path": "golang.org/x/text/transform",
-			"revision": "eb22672bea55af56d225d4e35405f4d2e9f062a0",
-			"revisionTime": "2017-12-13T18:21:11Z"
-		},
-		{
-			"checksumSHA1": "BCNYmf4Ek93G4lk5x3ucNi/lTwA=",
-			"path": "golang.org/x/text/unicode/norm",
-			"revision": "eb22672bea55af56d225d4e35405f4d2e9f062a0",
-			"revisionTime": "2017-12-13T18:21:11Z"
 		},
 		{
 			"checksumSHA1": "NA+ebc/RfKLZ+wxPs3lRn94H3gA=",
@@ -285,6 +253,12 @@
 			"path": "google.golang.org/appengine/urlfetch",
 			"revision": "5bee14b453b4c71be47ec1781b0fa61c2ea182db",
 			"revisionTime": "2017-12-12T22:30:47Z"
+		},
+		{
+			"checksumSHA1": "WrnWl9sC9qr8Ny0wkfKfnuwIxDM=",
+			"path": "gopkg.in/russross/blackfriday.v2",
+			"revision": "cadec560ec52d93835bf2f15bd794700d3a2473b",
+			"revisionTime": "2017-08-06T17:10:14Z"
 		}
 	],
 	"rootPath": "github.com/lrstanley/liam.sh"

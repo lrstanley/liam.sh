@@ -22,7 +22,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/lrstanley/pt"
 	zglob "github.com/mattn/go-zglob"
-	bf "github.com/russross/blackfriday"
+	bf "gopkg.in/russross/blackfriday.v2"
 )
 
 type GenPost struct{}
