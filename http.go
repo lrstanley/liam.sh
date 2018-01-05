@@ -62,6 +62,10 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		r.Mount("/debug", middleware.Profiler())
 	}
 
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		tmpl.Render(w, r, "/tmpl/404.html", nil)
+	})
 	r.Get("/", getPost)
 	r.Get("/post/{uid}", getPost)
 

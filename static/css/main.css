@@ -11,8 +11,7 @@ html {
 }
 
 body {
-  height: 100%;
-  width: 100%;
+  margin-bottom: 145px; /* height of footer + 25px */
   font-family: "Century Gothic", sans-serif;
   color: #555;
   background-color: #FFFFFF;
@@ -94,17 +93,25 @@ h4 > .anchor {
 .blog-header h3,
 .blog-header h4,
 .blog-header h5,
-.blog-header h6 { color: white; }
+.blog-header h6,
+.blog-header p { color: white; }
 .blog-header-extra { padding: 2rem 0 2rem; }
+.blog-header-extra-small { padding: 1rem 0 1rem; }
 
-.blog-title {
+.blog-header-extra .blog-title {
   margin-bottom: 0;
   font-size: 2rem;
   font-weight: normal;
 }
 
+.blog-header-extra .blog-title-small {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
 @media (min-width: 40em) {
-  .blog-title {
+  .blog-header-extra .blog-title, .blog-header-extra .blog-title-small {
     font-size: 3.5rem;
   }
 }
@@ -182,7 +189,10 @@ h4 > .anchor {
 }
 
 .blog-footer {
-  margin-top: 1rem;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 120px;
   padding: 2.5rem 0;
   color: #999;
   text-align: center;
