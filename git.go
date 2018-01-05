@@ -11,6 +11,7 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/go-chi/chi"
@@ -38,9 +39,9 @@ func newGit() (*github.Client, context.Context) {
 }
 
 type gitCache struct {
-	sync.RWMutex
+	user atomic.Value
 
-	user     *github.User
+	sync.RWMutex
 	repos    []*github.Repository
 	assetMap map[string]string
 }
@@ -55,10 +56,7 @@ func gitUpdateUserCache() error {
 		return err
 	}
 
-	gc.Lock()
-	gc.user = user
-	gc.Unlock()
-
+	gc.user.Store(user)
 	debug.Println("user cache update complete")
 
 	return nil

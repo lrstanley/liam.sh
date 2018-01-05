@@ -16,6 +16,7 @@ import (
 	"github.com/flosch/pongo2"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
+	"github.com/google/go-github/github"
 	gctx "github.com/gorilla/context"
 	"github.com/lrstanley/pt"
 )
@@ -39,6 +40,11 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		CacheParsed: !h.Debug,
 		Loader:      rice.MustFindBox("static").Bytes,
 		ErrorLogger: os.Stderr,
+		DefaultCtx: func(w http.ResponseWriter, r *http.Request) (ctx map[string]interface{}) {
+			return pt.M{
+				"git": gc.user.Load().(*github.User),
+			}
+		},
 	})
 
 	r := chi.NewRouter()

@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
 {% block title %}Home{% endblock title %}
-{% block content %}
-<div class="blog-header">
-    <div class="container">
-        <h1 class="blog-title">Liam's Blog</h1>
-        <p class="lead blog-description">Where I ramble about things not many care about.</p>
-    </div>
+{% block header %}
+<div class="blog-header-extra">
+    <h1 class="blog-title">Liam's Blog</h1>
+    <p class="lead blog-description">Where I ramble about things not many care about.</p>
 </div>
-
+{% endblock header %}
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-lg-9 blog-main">
@@ -46,12 +45,9 @@
                     <img src="https://avatars2.githubusercontent.com/u/1847365?v=3&s=460" class="mx-auto d-block rounded">
 
                     <div class="about-content text-center">
-                        <strong>Liam Stanley</strong>
+                        <strong>{% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}</strong>
                         <p>
-                            <small>
-                                Avid enthusiastic computer programming nerd. Hardware hobbyist.
-                                Creative and intellectual coder.
-                            </small>
+                            <small>{{ git.GetBio() }}</small>
                         </p>
                     </div>
                 </div>
