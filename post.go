@@ -192,7 +192,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	if len(uid) == 0 {
 		posts := RecentPosts("posts/**", 5)
 		if len(posts) < 1 {
-			http.NotFound(w, r)
+			notFoundHandler(w, r)
 			return
 		}
 
@@ -202,7 +202,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 
 	path, ok := IsPost(uid)
 	if !ok {
-		http.NotFound(w, r)
+		notFoundHandler(w, r)
 		return
 	}
 

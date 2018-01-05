@@ -62,10 +62,7 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		r.Mount("/debug", middleware.Profiler())
 	}
 
-	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusNotFound)
-		tmpl.Render(w, r, "/tmpl/404.html", nil)
-	})
+	r.NotFound(notFoundHandler)
 	r.Get("/", getPost)
 	r.Get("/post/{uid}", getPost)
 
@@ -121,6 +118,11 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	debug.Fatal(srv.ListenAndServe())
 
 	return nil
+}
+
+func notFoundHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusNotFound)
+	tmpl.Render(w, r, "/tmpl/404.html", nil)
 }
 
 func init() {
