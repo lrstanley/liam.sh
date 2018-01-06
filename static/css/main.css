@@ -85,6 +85,8 @@ h4 > .anchor {
   margin-bottom: 2rem;
   color: #FFFFFF;
   background-color: #4183c4;
+  -webkit-box-shadow: inset 0 -0.2rem 0.25rem rgba(0, 0, 0, .1);
+  box-shadow: inset 0 -0.2rem 0.25rem rgba(0, 0, 0, .1);
 }
 
 .blog-header .lead { color: #E5E5E5; }
@@ -95,9 +97,9 @@ h4 > .anchor {
 .blog-header h5,
 .blog-header h6,
 .blog-header p { color: white; }
+
 .blog-header-extra { padding: 2rem 0 2rem; }
 .blog-header-extra-small { padding: 1rem 0 1rem; }
-
 .blog-header-extra .blog-title {
   margin-bottom: 0;
   font-size: 2rem;
