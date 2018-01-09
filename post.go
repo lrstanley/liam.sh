@@ -23,6 +23,7 @@ import (
 	"time"
 
 	"github.com/Depado/bfchroma"
+	"github.com/blevesearch/bleve"
 	"github.com/go-chi/chi"
 	"github.com/lrstanley/pt"
 	zglob "github.com/mattn/go-zglob"
@@ -47,6 +48,7 @@ var pc = &postCache{posts: make(map[string]*Post)}
 type postCache struct {
 	sync.RWMutex
 	posts map[string]*Post
+	index bleve.Index
 }
 
 func (p *postCache) update(path string) {
@@ -76,7 +78,25 @@ func (p *postCache) update(path string) {
 		posts[post.UID] = post
 	}
 
+	log.Println("beginning update of search indexing")
+	index, err := bleve.NewMemOnly(bleve.NewIndexMapping())
+	if err != nil {
+		panic(err)
+	}
+	for uid := range posts {
+		err = index.Index(uid, posts[uid])
+		if err != nil {
+			log.Printf("error indexing %s: %s", uid, err)
+		}
+	}
+	log.Println("search index update complete")
+
 	p.Lock()
+	// Close the last index if there was one set.
+	if p.index != nil {
+		p.index.Close()
+	}
+	p.index = index
 	p.posts = posts
 	p.Unlock()
 }
@@ -97,6 +117,29 @@ func (p *postCache) get(uid string) *Post {
 	post := p.posts[uid]
 	p.RUnlock()
 	return post
+}
+
+func (p *postCache) search(query string, max int) (posts []*Post, results *bleve.SearchResult, err error) {
+	posts = []*Post{}
+
+	p.RLock()
+	res, err := p.index.Search(bleve.NewSearchRequest(bleve.NewQueryStringQuery(query)))
+	p.RUnlock()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	for i, hit := range res.Hits {
+		if i == max {
+			break
+		}
+
+		p.RLock()
+		posts = append(posts, p.posts[hit.ID])
+		p.RUnlock()
+	}
+
+	return posts, res, nil
 }
 
 func (p *postCache) all() (posts []*Post) {
@@ -135,7 +178,7 @@ type Post struct {
 	Time    time.Time
 	Show    bool
 	UID     string
-	Content []byte
+	Content string
 
 	TOCCache  atomic.Value
 	HTMLCache atomic.Value
@@ -163,7 +206,7 @@ func (p *Post) HTML() (toc, body string) {
 	}
 
 	raw := bf.Run(
-		p.Content, bf.WithRenderer(bfchroma.NewRenderer(
+		[]byte(p.Content), bf.WithRenderer(bfchroma.NewRenderer(
 			bfchroma.Style("monokai"),
 			bfchroma.Extend(bf.NewHTMLRenderer(bf.HTMLRendererParameters{
 				Flags: bf.CommonHTMLFlags | bf.TOC,
@@ -255,9 +298,12 @@ func loadPost(path string) (*Post, error) {
 	}
 
 	// Read the rest of the post.
-	if p.Content, err = ioutil.ReadAll(m.Body); err != nil {
+	var out []byte
+	if out, err = ioutil.ReadAll(m.Body); err != nil {
 		return nil, err
 	}
+
+	p.Content = string(out)
 
 	return p, nil
 }
@@ -266,6 +312,20 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "uid")
 
 	if len(uid) == 0 {
+		query := r.FormValue("q")
+		if query != "" {
+			posts, results, err := pc.search(query, 10)
+			if err != nil {
+				log.Printf("error in search: %s", err)
+			}
+			tmpl.Render(w, r, "/tmpl/index.html", pt.M{
+				"searchPosts":   posts,
+				"searchResults": results,
+				"query":         query,
+			})
+			return
+		}
+
 		posts := pc.recent(10)
 		if len(posts) < 1 {
 			notFoundHandler(w, r)
