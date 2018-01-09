@@ -2,72 +2,39 @@
 {% block title %}Home{% endblock title %}
 {% block header %}
 <div class="blog-header-extra">
-    <h1 class="blog-title">Liam's Blog</h1>
+    <h1 class="blog-title">{% if git.Name != nil %}{{ git.GetName()|split:' '|first }}{% else %}{{ git.GetLogin }}{% endif %}'s Blog</h1>
     <p class="lead blog-description">Where I ramble about things not many care about.</p>
 </div>
 {% endblock header %}
 {% block content %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 col-lg-9 blog-main">
-            <div class="blog-post">
-                <h2 class="blog-post-title">{{ post.Title }}</h2>
+        <div class="col-sm-12 col-lg-9">
+            <h4>Recent Posts</h4>
+            <hr>
+            {% for post in recent %}
+                <a href="/post/{{post.UID}}">{{ post.Title }}</a>
+                <p class="blog-post-description">{{ post.Summary }}</p>
                 <p class="blog-post-meta">
-                    {{ post.Time|date:'January _2, 2006' }}
+                    <i class="fa fa-calendar"></i> {{ post.Time|date:'January _2, 2006' }}
                     ({{ post.Time|naturaltime }})
-                    [<a href="/post/{{ post.UID }}">direct link</a>]
                 </p>
 
-                <div id="html-gen" class="markdown-body">{{ post.HTML|safe }}</div>
-
-                <h5 class="mt-4">Comments</h5>
-                <hr>
-                <div class="content p-2" id="disqus_thread"></div>
-                <script>
-                    var disqus_config = function() {
-                    this.page.identifier = "{{ post.UID }}";
-                    };
-                    (function() {
-                        var d = document, s = d.createElement('script');
-                        s.src = 'https://liamraystanley.disqus.com/embed.js';
-                        s.setAttribute('data-timestamp', +new Date());
-                        (d.head || d.body).appendChild(s);
-                    })();
-                </script>
-                <noscript>Please enable JavaScript to view the comments.</noscript>
-            </div>
+                {% if not forloop.Last %}<hr>{% endif %}
+            {% endfor %}
         </div>
 
-        <div class="col-sm-12 col-lg-3 ml-auto">
+        <div class="col-sm-12 col-lg-3 ml-auto d-none d-md-block">
             <div class="sticky-top blog-sidebar">
-                <div class="sidebar-about rounded-bottom">
-                    <div class="pad rounded-top"></div>
-                    <img src="https://avatars2.githubusercontent.com/u/1847365?v=3&s=460" class="mx-auto d-block rounded">
-
-                    <div class="about-content text-center">
-                        <strong>{% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}</strong>
-                        <p>
-                            <small>{{ git.GetBio() }}</small>
-                        </p>
+                <div class="sidebar-module no-pad">
+                    <img src="{{ git.GetAvatarURL() }}" class="mx-auto d-block rounded img-fluid">
+                </div>
+                <div class="sidebar-module no-pad sidebar-github">
+                    <div class="pb-3">
+                        <span class="full-name">{% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}</span>
+                        <span class="user-name">{{ git.GetLogin }}</span>
                     </div>
-                </div>
-
-                <div class="sidebar-module content">
-                    <a class="btn btn-block btn-sm btn-primary" href="https://github.com/lrstanley"><i class="fa fa-github"></i> Github</a>
-                    <a class="btn btn-block btn-sm btn-dark" href="https://chat.byteirc.org/?join=%23%2Fdev%2Fnull"><i class="fa fa-comments"></i> Chat on IRC</a>
-                    <a class="btn btn-block btn-sm btn-success" href="https://www.linkedin.com/profile/view?id=298244002">Linked.<i class="fa fa-linkedin"></i></a>
-                    <a class="btn btn-block btn-sm btn-info" href="https://twitter.com/_lstanley"><i class="fa fa-twitter"></i> Twitter</a>
-                </div>
-
-                <div class="sidebar-module content">
-                    <strong>Recent posts</strong>
-                    <ol class="list-unstyled">
-                        {% for item in recent %}
-                            <li class="flex-trunk">
-                                <a href="/post/{{item.UID}}" data-toggle="tooltip" title="{{item.Time|naturaltime}}">{{item.Title}}</a>
-                            </li>
-                        {% endfor %}
-                    </ol>
+                    <div class="bio">{{ git.GetBio() }}</div>
                 </div>
             </div>
         </div>

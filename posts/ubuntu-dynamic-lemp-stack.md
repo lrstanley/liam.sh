@@ -1,5 +1,6 @@
 Title: Ubuntu Dynamic LEMP Stack
 Show: true
+Summary: Learn how to setup Nginx, and other awesome stuff!
 Time: 07 Aug 15 23:20 EST
 
 LEMP is a variation of the LAMP stack used for developing and deploying web applications. Traditionally, LAMP consists of **Linux**, **Apache**, **MySQL**, and **PHP**. Due to its modular nature, the components can easily be swapped out. With LEMP, Apache is replaced with the lightweight yet powerful [Nginx](http://nginx.org/). If you are wondering why it's called LEMP, not _LNMP_, this is due to the [pronunciation](http://wiki.nginx.org/Pronunciation) of Nginx (_en-juhn-ecks_).

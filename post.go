@@ -5,9 +5,11 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/mail"
 	"os"
@@ -16,6 +18,8 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/Depado/bfchroma"
@@ -34,21 +38,152 @@ Show: false
 Time: %s
 
 ### Markdown here
-`, FormatTime(time.Now())))
+`, formatPostTime(time.Now())))
 	return nil
+}
+
+var pc = &postCache{posts: make(map[string]*Post)}
+
+type postCache struct {
+	sync.RWMutex
+	posts map[string]*Post
+}
+
+func (p *postCache) update(path string) {
+	defer log.Print("update of post index cache complete")
+	posts := make(map[string]*Post)
+
+	files, err := zglob.Glob(path)
+	if err != nil {
+		log.Printf("error indexing posts: %s", err)
+		return
+	}
+
+	var post *Post
+
+	for i := 0; i < len(files); i++ {
+		log.Printf("updating index for: %s", files[i])
+		post, err = loadPost(files[i])
+		if err != nil {
+			log.Printf("error loading post %s: %s", files[i], err)
+		}
+
+		// Skip posts we don't want to show.
+		if !post.Show {
+			continue
+		}
+
+		posts[post.UID] = post
+	}
+
+	p.Lock()
+	p.posts = posts
+	p.Unlock()
+}
+
+func (p *postCache) exists(uid string) bool {
+	if !isValidPostUID(uid) {
+		return false
+	}
+
+	p.RLock()
+	_, ok := p.posts[uid]
+	p.RUnlock()
+	return ok
+}
+
+func (p *postCache) get(uid string) *Post {
+	p.RLock()
+	post := p.posts[uid]
+	p.RUnlock()
+	return post
+}
+
+func (p *postCache) all() (posts []*Post) {
+	p.RLock()
+	posts = make([]*Post, 0, len(p.posts))
+	for uid := range p.posts {
+		posts = append(posts, p.posts[uid])
+	}
+	p.RUnlock()
+
+	return posts
+}
+
+func (p *postCache) recent(max int) []*Post {
+	posts := []*Post{}
+	var count int
+
+	all := p.all()
+	sortPosts(all)
+
+	for i := 0; i < len(all); i++ {
+		count++
+		posts = append(posts, all[i])
+
+		if count == max {
+			break
+		}
+	}
+
+	return posts
 }
 
 type Post struct {
 	Title   string
+	Summary string
 	Time    time.Time
 	Show    bool
 	UID     string
 	Content []byte
+
+	TOCCache  atomic.Value
+	HTMLCache atomic.Value
 }
 
+var tocSplitAt = []byte("</nav>")
+var tocReplacer = strings.NewReplacer(
+	"<nav>", "",
+	"<ul>", `<ul class="nav flex-column">`,
+	"<li>", `<li class="nav-item">`,
+	"<a ", `<a class="nav-link" `,
+)
+
 // HTML generates an HTML version of the stored markdown.
-func (p *Post) HTML() string {
-	return string(bf.Run(p.Content, bf.WithRenderer(bfchroma.NewRenderer(bfchroma.Style("monokai")))))
+func (p *Post) HTML() (toc, body string) {
+	if tocCache := p.TOCCache.Load(); tocCache != nil {
+		toc = tocCache.(string)
+	}
+	if htmlCache := p.HTMLCache.Load(); htmlCache != nil {
+		body = htmlCache.(string)
+	}
+	if toc != "" || body != "" {
+		log.Printf("loaded post from generated cache")
+		return toc, body
+	}
+
+	raw := bf.Run(
+		p.Content, bf.WithRenderer(bfchroma.NewRenderer(
+			bfchroma.Style("monokai"),
+			bfchroma.Extend(bf.NewHTMLRenderer(bf.HTMLRendererParameters{
+				Flags: bf.CommonHTMLFlags | bf.TOC,
+			})),
+		)),
+	)
+
+	if i := bytes.Index(raw, tocSplitAt); i > -1 {
+		toc = tocReplacer.Replace(string(raw[:i]))
+		body = string(raw[i+len(tocSplitAt)+1:])
+
+		p.TOCCache.Store(toc)
+		p.HTMLCache.Store(body)
+
+		return toc, body
+	}
+
+	body = string(raw)
+	p.HTMLCache.Store(body)
+	return "", body
 }
 
 // FormatTime is much like stand-alone FormatTime, however it uses the post
@@ -57,25 +192,31 @@ func (p *Post) FormatTime() string {
 	return p.Time.Format(time.RFC822)
 }
 
-// FormatTime returns a string version of the time format we use for posts.
-func FormatTime(in time.Time) string {
+func sortPosts(posts []*Post) {
+	sort.Slice(posts, func(i, j int) bool {
+		return posts[j].Time.Before(posts[i].Time)
+	})
+}
+
+// formatPostTime returns a string version of the time format we use for posts.
+func formatPostTime(in time.Time) string {
 	return in.Format(time.RFC822)
 }
 
 var uidRe = regexp.MustCompile("^[a-z0-9-._]{3,50}$")
 
-// IsValidUID validates and ensures the UID is "web-safe".
-func IsValidUID(uid string) bool {
+// isValidPostUID validates and ensures the UID is "web-safe".
+func isValidPostUID(uid string) bool {
 	return uidRe.MatchString(uid)
 }
 
-// ParseTime parses the time format we use in posts from a string.
-func ParseTime(in string) (time.Time, error) {
+// parsePostTime parses the time format we use in posts from a string.
+func parsePostTime(in string) (time.Time, error) {
 	return time.Parse(time.RFC822, in)
 }
 
-// LoadPost loads a given post from a file path.
-func LoadPost(path string) (*Post, error) {
+// loadPost loads a given post from a file path.
+func loadPost(path string) (*Post, error) {
 	f, err := os.OpenFile(path, os.O_RDONLY, 0555)
 	if err != nil {
 		return nil, err
@@ -87,12 +228,14 @@ func LoadPost(path string) (*Post, error) {
 		return nil, err
 	}
 
-	p := &Post{}
-	p.Title = m.Header.Get("title")
+	p := &Post{
+		Title:   m.Header.Get("title"),
+		Summary: m.Header.Get("Summary"),
+	}
 	if len(p.Title) == 0 {
 		return nil, errors.New("no title defined")
 	}
-	if p.Time, err = ParseTime(m.Header.Get("time")); err != nil {
+	if p.Time, err = parsePostTime(m.Header.Get("time")); err != nil {
 		return nil, err
 	}
 	if p.Show, err = strconv.ParseBool(m.Header.Get("show")); err != nil {
@@ -107,7 +250,7 @@ func LoadPost(path string) (*Post, error) {
 	}
 	p.UID = base[0:j]
 
-	if !IsValidUID(p.UID) {
+	if !isValidPostUID(p.UID) {
 		return nil, fmt.Errorf("uid %q is invalid", p.UID)
 	}
 
@@ -119,99 +262,31 @@ func LoadPost(path string) (*Post, error) {
 	return p, nil
 }
 
-// IsPost ensures that a post with a given uid exists.
-func IsPost(uid string) (string, bool) {
-	if !IsValidUID(uid) {
-		return "", false
-	}
-
-	// This would be very unsafe if we were to not use IsValidUID (as someone
-	// could potentially use something like "../../../", etc).
-	path := "posts/" + uid + ".md"
-
-	if _, err := os.Stat(path); err == nil {
-		return path, true
-	}
-
-	return "", false
-}
-
-// AllPosts gives us all of the public posts.
-func AllPosts(path string) []*Post {
-	files, err := zglob.Glob(path)
-	if err != nil {
-		panic(err)
-	}
-
-	posts := []*Post{}
-	var post *Post
-
-	for i := 0; i < len(files); i++ {
-		post, err = LoadPost(files[i])
-		if err != nil {
-			panic(err)
-		}
-
-		// Skip posts we don't want to show.
-		if !post.Show {
-			continue
-		}
-
-		posts = append(posts, post)
-	}
-
-	sort.Slice(posts, func(i, j int) bool {
-		return posts[j].Time.Before(posts[i].Time)
-	})
-
-	return posts
-}
-
-// RecentPosts gives us all of the recent public posts.
-func RecentPosts(path string, max int) []*Post {
-	posts := AllPosts(path)
-
-	var out []*Post
-	var count int
-
-	for i := 0; i < len(posts); i++ {
-		count++
-		out = append(out, posts[i])
-
-		if count == max {
-			break
-		}
-	}
-
-	return out
-}
-
 func getPost(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "uid")
 
 	if len(uid) == 0 {
-		posts := RecentPosts("posts/**", 5)
+		posts := pc.recent(10)
 		if len(posts) < 1 {
 			notFoundHandler(w, r)
 			return
 		}
 
-		tmpl.Render(w, r, "/tmpl/index.html", pt.M{"post": posts[0], "recent": posts})
+		tmpl.Render(w, r, "/tmpl/index.html", pt.M{"recent": posts})
 		return
 	}
 
-	path, ok := IsPost(uid)
-	if !ok {
+	if !pc.exists(uid) {
 		notFoundHandler(w, r)
 		return
 	}
 
-	post, err := LoadPost(path)
-	if err != nil {
-		panic(err)
-	}
+	post := pc.get(uid)
+	recent := pc.recent(5)
 
-	posts := RecentPosts("posts/**", 5)
-
-	tmpl.Render(w, r, "/tmpl/index.html", pt.M{"post": post, "recent": posts})
+	toc, body := post.HTML()
+	tmpl.Render(w, r, "/tmpl/post.html", pt.M{
+		"toc": toc, "body": body,
+		"post": post, "recent": recent,
+	})
 }

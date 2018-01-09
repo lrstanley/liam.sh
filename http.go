@@ -7,6 +7,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -14,6 +15,7 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 	humanize "github.com/flosch/go-humanize"
 	"github.com/flosch/pongo2"
+	"github.com/fsnotify/fsnotify"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/google/go-github/github"
@@ -47,6 +49,37 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		},
 	})
 
+	fsw, err := fsnotify.NewWatcher()
+	if err != nil {
+		panic(err)
+	}
+	defer fsw.Close()
+
+	if err = fsw.Add("posts/"); err != nil {
+		panic(err)
+	}
+
+	go func() {
+		for err := range fsw.Errors {
+			if err != nil {
+				log.Printf("error in fsnotify: %s", err)
+				time.Sleep(5 * time.Second)
+			}
+		}
+	}()
+
+	go func() {
+		// Make sure that initially it gets updated too.
+		pc.update("posts/**")
+		time.Sleep(5 * time.Second)
+
+		for event := range fsw.Events {
+			log.Printf("new fsevent: %v", event)
+			pc.update("posts/**")
+			time.Sleep(5 * time.Second)
+		}
+	}()
+
 	r := chi.NewRouter()
 	if h.Proxy {
 		r.Use(middleware.RealIP)
@@ -69,6 +102,17 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	r.Get("/g/{pkg}", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Render(w, r, "/tmpl/go.html", pt.M{"pkg": chi.URLParam(r, "pkg")})
 	})
+
+	// r.Get("/api/user", func(w http.ResponseWriter, r *http.Request) {
+	// 	pt.JSON(w, r, gc.user.Load().(*github.User))
+	// })
+	// r.Get("/api/repos", func(w http.ResponseWriter, r *http.Request) {
+	// 	gc.RLock()
+	// 	repos := gc.repos
+	// 	gc.RUnlock()
+
+	// 	pt.JSON(w, r, repos)
+	// })
 
 	r.Get("/ghr.json", gitRequestAllAssets)
 	r.Get("/ghr", gitRequestAllAssets)

@@ -1,5 +1,6 @@
 Title: Importing bash functions over SSH
 Show: true
+Summary: Nerdy time-saving tips.
 Time: 20 Aug 15 23:23 EST
 
 Ever wanted to import or carry over custom made functions and aliases over SSH, when logging into other desktop computers, and servers? Well, here's how I do it.

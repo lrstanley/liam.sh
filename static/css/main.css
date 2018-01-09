@@ -96,7 +96,7 @@ h4 > .anchor {
 .blog-header h4,
 .blog-header h5,
 .blog-header h6,
-.blog-header p { color: white; }
+.blog-header p { color: #FFFFFF; }
 
 .blog-header-extra { padding: 2rem 0 2rem; }
 .blog-header-extra-small { padding: 1rem 0 1rem; }
@@ -129,65 +129,76 @@ h4 > .anchor {
 }
 
 .blog-post-meta {
-  margin-bottom: 1.25rem;
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 13px;
   color: #999;
+}
+
+.blog-post-description {
+  max-width: 550px;
+  margin-top: 8px;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .blog-sidebar {
   top: 35px;
 }
 
-.sidebar-about {
-  background-color: white;
-  min-height: 250px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.sidebar-about > .pad {
-  height: 100px;
-  background-image: url(/static/img/avatar-bg.png);
-
-  -webkit-box-shadow: inset 0px 0px 18px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: inset 0px 0px 18px 0px rgba(0,0,0,0.75);
-  box-shadow: inset 0px 0px 18px 0px rgba(0,0,0,0.75);
-}
-
-.sidebar-about > .about-content {
-  padding: 5px;
-  margin-top: -40px; /* should be the same as top (+10px) on .sidebar-about>img */
-}
-
-.sidebar-about > .about-content p {
-  line-height: 80%;
-  margin: 10px;
-}
-
-.sidebar-about > img {
-  background-image: url(https://avatars2.githubusercontent.com/u/1847365?v=3&s=460);
-  width: 100px;
-  height: 100px;
-  top: -50px; /* should be -50% of width/height */
-  position: relative;
-  border: 2px solid white;
-  border-radius: 5px;
-}
-
 .sidebar-module {
-  padding: 1rem;
+  margin-bottom: 20px;
 }
 
-.content {
-  border-radius: .25rem;
-  background-color: white;
-  margin-bottom: 20px;
-  border: 1px solid rgba(0, 0, 0, 0.125);
+.sidebar-module:not(.no-pad) {
+  padding: 1rem;
 }
 
 .sidebar-module p:last-child,
 .sidebar-module ul:last-child,
 .sidebar-module ol:last-child {
   margin-bottom: 0;
+}
+
+.sidebar-module hr {
+  margin-top: 0rem;
+  margin-bottom: 0.7rem;
+}
+
+.sidebar-module li a, .sidebar-module li a:hover {
+  text-decoration: none;
+  font-size: .9rem;
+  color: #007bff;
+}
+
+.sidebar-module h6 {
+  border-left: 5px solid #999;
+  padding-left: 15px;
+  margin-left: -20px;
+}
+
+.sidebar-github .full-name {
+  font-size: 26px;
+  line-height: 30px;
+  color: #000000;
+  display: block;
+}
+
+.sidebar-github .user-name {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  color: #666666;
+}
+
+.sidebar-github .bio {
+  margin-bottom: 12px;
+  overflow: hidden;
+  font-size: 14px;
+  color: #6a737d;
 }
 
 .blog-footer {
@@ -200,6 +211,12 @@ h4 > .anchor {
   text-align: center;
   background-color: #f9f9f9;
   border-top: .05rem solid #e5e5e5;
+}
+
+.content {
+  border-radius: .25rem;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .blog-footer p:last-child {
@@ -239,6 +256,40 @@ h4 > .anchor {
 .markdown-body h2 > .anchor { top: 5px; }
 .markdown-body h3 > .anchor { top: 2.5px; }
 .markdown-body h4 > .anchor { font-size: 18px; }
+
+.html-gen-toc > ul {
+  position: relative;
+}
+
+.html-gen-toc li {
+  padding: 0 0 0.3rem 0.1em;
+}
+
+.html-gen-toc li > a {
+  display: block;
+  text-decoration: none;
+  font-size: .8rem;
+  color: #99979c;
+  padding: 0;
+}
+
+.html-gen-toc li > a:before {
+  content: '- ';
+  margin-left: -0.3rem;
+}
+
+.html-gen-toc li > a.active {
+  color: #000000;
+  border-left: 5px solid rgb(0, 93, 214);
+  padding: 0 0 0 20px;
+  margin-left: -25px;
+}
+
+.html-gen-toc li > a:hover {
+  font-size: .8rem;
+  color: #007bff;
+  text-decoration: none;
+}
 
 .flex-trunk {
   white-space: nowrap;

@@ -4,22 +4,23 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="The homepage of developer and programmer, Liam Stanley">
+    <meta name="description" content="The homepage of developer and programmer, {% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}">
     <link rel="icon" href="/static/img/favicon.ico">
-    <title>{% block title %}Home{% endblock title %} &middot; Liam Stanley</title>
+    <title>{% block title %}Home{% endblock title %} &middot; {% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/github-markdown.min.css">
     <link rel="stylesheet" href="/static/css/main.css">
 </head>
 
-    <body>
+    <body data-spy="scroll" data-target="#scrollspy-parent" data-offset="35">
         <div class="blog-header">
             <div class="container">
                 <nav class="nav justify-content-end">
                     <a class="nav-link nav-author mr-auto d-none d-md-block" href="{{ git.GetHTMLURL() }}"><i class="fa fa-code-fork"></i> {{ git.GetLogin() }}</a>
                     <a class="nav-link active" href="/">Home</a>
-                    <a class="nav-link" href="https://status.liam.sh/">Service Status</a>
+                    <a class="nav-link" href="https://twitter.com/_lstanley">Twitter</a>
+                    <a class="nav-link" href="https://chat.byteirc.org/?join=%23%2Fdev%2Fnull">IRC</a>
                     <a class="nav-link" href="{{ git.GetHTMLURL() }}">Github</a>
                 </nav>
                 {% block header %}{% endblock header %}

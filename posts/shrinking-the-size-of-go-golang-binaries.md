@@ -1,5 +1,6 @@
 Title: Shrinking the size of Go (Golang) Binaries
 Show: true
+Summary: Truncating the size of Go binaries with ease.
 Time: 06 Dec 16 19:18 EST
 
 I recently started using Go a little over 4 months ago. It was an amazing change from things like Python, NodeJS, and other misc. languages in that it was very opinionated. The syntax was sound, it performed very well, it had static typing, and it compiled down into a single binary.

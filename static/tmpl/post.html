@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock title %}
+{% block header %}
+<div class="blog-header-extra">
+    <h1 class="blog-title">{{ post.Title }}</h1>
+    <p class="lead blog-description">
+        {{ post.Time|date:'January _2, 2006' }}
+        ({{ post.Time|naturaltime }})
+    </p>
+</div>
+{% endblock header %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-lg-9">
+            <div class="blog-post">
+                <h2 class="blog-post-title">{{ post.Title }}</h2>
+
+                <div id="html-gen" class="markdown-body">{{ body|safe }}</div>
+
+                <h5 class="mt-4">Comments</h5>
+                <hr>
+                <div class="content p-2" id="disqus_thread"></div>
+                <script>
+                    var disqus_config = function() {
+                    this.page.identifier = "{{ post.UID }}";
+                    };
+                    (function() {
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://liamraystanley.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the comments.</noscript>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-lg-3 ml-auto">
+            <div class="sticky-top blog-sidebar">
+                <div class="sidebar-module content html-gen-toc flex-column pb-0" id="scrollspy-parent">
+                    <h6>Table of Contents</h6>
+                    <hr>
+
+                    {{ toc|safe }}
+                </div>
+
+                <div class="sidebar-module content">
+                    <h6>Recent Posts</h6>
+                    <hr>
+                    <ol class="list-unstyled">
+                        {% for item in recent %}
+                            <li class="flex-trunk">
+                                <a href="/post/{{item.UID}}" data-toggle="tooltip" title="{{item.Time|naturaltime}}">{{item.Title}}</a>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
