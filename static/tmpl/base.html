@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="The homepage of developer and programmer, {% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}">
-    <link rel="icon" href="/static/img/favicon.ico">
+    <link rel="icon" href="/static/img/favicon.ico?ts={{ cachets }}">
     <title>{% block title %}Home{% endblock title %} &middot; {% if git.Name != nil %}{{ git.GetName() }}{% else %}{{ git.GetLogin }}{% endif %}</title>
-    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/static/css/github-markdown.min.css">
-    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css?ts={{ cachets }}">
+    <link rel="stylesheet" href="/static/css/font-awesome.min.css?ts={{ cachets }}">
+    <link rel="stylesheet" href="/static/css/github-markdown.min.css?ts={{ cachets }}">
+    <link rel="stylesheet" href="/static/css/main.css?ts={{ cachets }}">
 </head>
 
     <body data-spy="scroll" data-target="#scrollspy-parent" data-offset="35">
@@ -33,8 +33,8 @@
         <footer class="blog-footer">
             <p>Built with <i class="fa fa-heart text-danger"></i> by <a href="https://github.com/lrstanley/liam.sh">liam</a> &middot; <a href="#">Back to top</a></p>
         </footer>
-        <script src="/static/js/jquery.slim.min.js"></script>
-        <script src="/static/js/bootstrap.bundle.min.js"></script>
-        <script src="/static/js/main.js"></script>
+        <script src="/static/js/jquery.slim.min.js?ts={{ cachets }}"></script>
+        <script src="/static/js/bootstrap.bundle.min.js?ts={{ cachets }}"></script>
+        <script src="/static/js/main.js?ts={{ cachets }}"></script>
     </body>
 </html>
