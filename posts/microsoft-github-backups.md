@@ -51,7 +51,46 @@ amazing.
 ### On a cron you say?
 
 I've setup a simple wrapper script, which runs backups in a temporary directory, then archives
-them and places them in a desired location. Take a look at it [here](https://gist.github.com/lrstanley/34ee3b024223af142258ce5d1a7c16c9).
+them and places them in a desired location:
+
+```bash
+
+#!/bin/bash
+
+USER="${1:?usage: $0 <user> <archive>}"
+ARCHIVE_LOC="${2:?usage: $0 <user> <archive>}"
+
+which github-backup > /dev/null 2>&1 || pip install github-backup
+
+if [ -z "$GH_BACKUP_TOKEN" ];then
+	echo 'missing $GH_BACKUP_TOKEN...'
+	exit 1
+fi
+
+_tmp=$(mktemp -d -p "/run/user/$(id -u)" -t "github-backup-XXXXX")
+if [ "$?" != 0 ];then exit 1;fi
+
+trap "rm -rf $_tmp" EXIT
+echo "using '$_tmp'..."
+
+github-backup \
+	--token "$GH_BACKUP_TOKEN" \
+	--starred \
+	--followers \
+	--following \
+	--issues \
+	--issue-comments \
+	--repositories \
+	--wikis \
+	--gists \
+	--starred-gists \
+	--private \
+	--output-directory "$_tmp" "$USER"
+
+tar -czvf "$ARCHIVE_LOC" -C "$_tmp" .
+```
+
+Above script is also [available here](https://gist.github.com/lrstanley/34ee3b024223af142258ce5d1a7c16c9).
 
 I've dropped it in `~/bin/gbackup`, but you can place it anywhere. I also have two cronjobs, which
 run every Sunday, at ~3:00AM and ~3:15AM respectively:
