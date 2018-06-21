@@ -68,6 +68,7 @@ func (p *postCache) update(path string) {
 		post, err = loadPost(files[i])
 		if err != nil {
 			log.Printf("error loading post %s: %s", files[i], err)
+			continue
 		}
 
 		// Skip posts we don't want to show.
