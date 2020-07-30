@@ -1,33 +1,39 @@
 .DEFAULT_GOAL := build
 
-GOPATH := $(shell go env | grep GOPATH | sed 's/GOPATH="\(.*\)"/\1/')
-PATH := $(GOPATH)/bin:$(PATH)
-export $(PATH)
-
+DIRS=bin dist
 BINARY=liam.sh
-LD_FLAGS += -s -w
 
-update-deps: fetch
-	$(GOPATH)/bin/govendor add -v +external
-	$(GOPATH)/bin/govendor remove -v +unused
-	$(GOPATH)/bin/govendor update -v +external
+$(info $(shell mkdir -p $(DIRS)))
+BIN=$(CURDIR)/bin
+export GOBIN=$(CURDIR)/bin
 
-upgrade-deps: update-deps
-	$(GOPATH)/bin/govendor fetch -v +vendor
+help:
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
-fetch:
-	test -f $(GOPATH)/bin/govendor || go get -u -v github.com/kardianos/govendor
-	test -f $(GOPATH)/bin/rice || go get -u -v github.com/GeertJohan/go.rice/rice
-	$(GOPATH)/bin/govendor sync
+docker-build: fetch clean ## Compile within a docker container (no go or other dependencies required)
+	docker build --force-rm -f Dockerfile -t lrstanley/liam.sh:latest .	
 
-clean:
-	/bin/rm -rfv ${BINARY} rice-box.go
+docker-push:
+	docker push lrstanley/liam.sh:latest
 
-generate:
-	$(GOPATH)/bin/rice -v embed-go
+fetch: ## Fetches the necessary dependencies to build.
+	which $(BIN)/rice 2>&1 > /dev/null || go get github.com/GeertJohan/go.rice/rice
+	go mod download
+	go mod tidy
+	go mod vendor
 
-debug: clean fetch
+upgrade-deps: ## Upgrade all dependencies to the latest version.
+	go get -u ./...
+
+upgrade-deps-patch: ## Upgrade all dependencies to the latest patch release.
+	go get -u=patch ./...
+
+clean: ## Cleans up generated files/folders from the build.
+	/bin/rm -rfv "dist/" "${BINARY}" rice-box.go
+
+build: fetch clean ## Compile and generate a binary with static assets embedded.
+	$(BIN)/rice -v embed-go
+	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
+
+debug: fetch clean
 	go run *.go run --debug --git.release-skip
-
-build: fetch clean generate
-	go build -ldflags "${LD_FLAGS}" -v -o ${BINARY}

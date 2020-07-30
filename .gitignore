@@ -2,7 +2,7 @@ liam.sh
 *.test
 *.prof
 vendor/*
-!vendor/*.json
+bin/*
 *.lock
 rice-box.go
 release

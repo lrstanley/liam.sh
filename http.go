@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -35,6 +36,7 @@ type HTTPArgs struct {
 		Key    string `short:"k" long:"key" description:"path to ssl key file"`
 	} `group:"TLS Options" namespace:"tls"`
 	GitArgs GitArgs `group:"Git Options" namespace:"git"`
+	PostDir string  `long:"post-dir" description:"directory containing all posts" default:"posts/"`
 }
 
 func (h *HTTPArgs) Execute(_ []string) error {
@@ -55,7 +57,7 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	}
 	defer fsw.Close()
 
-	if err = fsw.Add("posts/"); err != nil {
+	if err = fsw.Add(h.PostDir); err != nil {
 		panic(err)
 	}
 
@@ -70,12 +72,12 @@ func (h *HTTPArgs) Execute(_ []string) error {
 
 	go func() {
 		// Make sure that initially it gets updated too.
-		pc.update("posts/**")
+		pc.update(filepath.Join(h.PostDir, "**"))
 		time.Sleep(5 * time.Second)
 
 		for event := range fsw.Events {
 			log.Printf("new fsevent: %v", event)
-			pc.update("posts/**")
+			pc.update(filepath.Join(h.PostDir, "**"))
 			time.Sleep(5 * time.Second)
 		}
 	}()
