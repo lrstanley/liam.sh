@@ -36,4 +36,4 @@ build: fetch clean ## Compile and generate a binary with static assets embedded.
 	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
 
 debug: fetch clean
-	go run *.go run --debug --git.release-skip
+	go run *.go run --debug --git.release-skip --chat-link https://some-url.com/chat

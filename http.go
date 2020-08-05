@@ -27,16 +27,17 @@ import (
 var tmpl *pt.Loader
 
 type HTTPArgs struct {
-	Debug bool   `long:"debug" description:"enable debugging (pprof endpoints) and disables template caching"`
+	Debug bool   `long:"debug" env:"DEBUG" description:"enable debugging (pprof endpoints) and disables template caching"`
 	Bind  string `short:"b" long:"bind" default:":8080" description:"ip:port pair to bind to"`
-	Proxy bool   `short:"p" long:"behind-proxy" description:"if X-Forwarded-For headers should be trusted"`
+	Proxy bool   `short:"p" env:"PROXY" long:"behind-proxy" description:"if X-Forwarded-For headers should be trusted"`
 	TLS   struct {
 		Enable bool   `long:"enable" description:"run tls server rather than standard http"`
 		Cert   string `short:"c" long:"cert" description:"path to ssl cert file"`
 		Key    string `short:"k" long:"key" description:"path to ssl key file"`
 	} `group:"TLS Options" namespace:"tls"`
-	GitArgs GitArgs `group:"Git Options" namespace:"git"`
-	PostDir string  `long:"post-dir" description:"directory containing all posts" default:"posts/"`
+	GitArgs  GitArgs `group:"Git Options" namespace:"git"`
+	PostDir  string  `long:"post-dir" description:"directory containing all posts" default:"posts/"`
+	ChatLink string  `long:"chat-link" env:"CHAT_LINK" description:"Link to redirect to, to chat"`
 }
 
 func (h *HTTPArgs) Execute(_ []string) error {
@@ -100,6 +101,9 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	r.NotFound(notFoundHandler)
 	r.Get("/", getPost)
 	r.Get("/post/{uid}", getPost)
+	r.Get("/chat", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, cli.HTTP.ChatLink, http.StatusTemporaryRedirect)
+	})
 
 	r.Get("/g/{pkg}", func(w http.ResponseWriter, r *http.Request) {
 		tmpl.Render(w, r, "/tmpl/go.html", pt.M{"pkg": chi.URLParam(r, "pkg")})
