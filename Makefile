@@ -14,7 +14,7 @@ docker-build: fetch clean ## Compile within a docker container (no go or other d
 	docker build --rm --force-rm -f Dockerfile -t lrstanley/liam.sh:latest .
 
 docker-push: ## Push docker images to <version> and latest
-	docker rmi $(docker images -f "dangling=true" -q) | true
+	docker rmi $(shell docker images -f "dangling=true" -q) || true
 	docker push lrstanley/liam.sh:latest
 
 fetch: ## Fetches the necessary dependencies to build.
