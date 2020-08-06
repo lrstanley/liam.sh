@@ -11,9 +11,10 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
 docker-build: fetch clean ## Compile within a docker container (no go or other dependencies required)
-	docker build --force-rm -f Dockerfile -t lrstanley/liam.sh:latest .	
+	docker build --rm --force-rm -f Dockerfile -t lrstanley/liam.sh:latest .
 
-docker-push:
+docker-push: ## Push docker images to <version> and latest
+	docker rmi $(docker images -f "dangling=true" -q) | true
 	docker push lrstanley/liam.sh:latest
 
 fetch: ## Fetches the necessary dependencies to build.
