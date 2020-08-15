@@ -1,0 +1,16 @@
+*.log
+~*
+*.tmp
+*.txt
+dist
+*.test
+*.prof
+*.conf
+*.toml
+*.db
+liam.sh
+vendor
+rice*.go
+.git
+bin
+**/*.md

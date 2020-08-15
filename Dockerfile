@@ -1,27 +1,20 @@
 
 # build image
-FROM golang:1.14 as build
-RUN mkdir /build
-COPY . /build/
+FROM golang:latest as build
 WORKDIR /build
+COPY go.sum go.mod Makefile /build/
+RUN make fetch
+COPY . /build/
 RUN make
 
+# runtime image
 FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates
-
+RUN apk add --no-cache ca-certificates bash
 # set up nsswitch.conf for Go's "netgo" implementation
 # - https://github.com/docker-library/golang/blob/1eb096131592bcbc90aa3b97471811c798a93573/1.14/alpine3.12/Dockerfile#L9
 RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
-
 COPY --from=build /build/liam.sh /usr/local/bin/liam.sh
-
-LABEL org.opencontainers.image.title=liam.sh
-LABEL org.opencontainers.image.description="liam.sh"
-LABEL org.opencontainers.image.url="https://liam.sh"
-LABEL org.opencontainers.image.documentation="https://github.com/lrstanley/liam.sh"
-LABEL org.opencontainers.image.licenses=MIT
-LABEL org.opencontainers.image.source="https://github.com/lrstanley/liam.sh"
 
 VOLUME /config
 EXPOSE 80
