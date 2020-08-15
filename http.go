@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -47,7 +48,8 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		ErrorLogger: os.Stderr,
 		DefaultCtx: func(w http.ResponseWriter, r *http.Request) (ctx map[string]interface{}) {
 			return pt.M{
-				"git": gc.user.Load().(*github.User),
+				"git":       gc.user.Load().(*github.User),
+				"goVersion": runtime.Version(),
 			}
 		},
 	})
@@ -88,7 +90,7 @@ func (h *HTTPArgs) Execute(_ []string) error {
 		r.Use(middleware.RealIP)
 	}
 
-	r.Use(middleware.DefaultCompress)
+	r.Use(middleware.Compress(5))
 	r.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: debug}))
 	r.Use(middleware.Timeout(30 * time.Second))
 	r.Use(middleware.Recoverer)
