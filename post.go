@@ -24,7 +24,7 @@ import (
 
 	"github.com/Depado/bfchroma"
 	"github.com/blevesearch/bleve"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/pt"
 	zglob "github.com/mattn/go-zglob"
 	bf "github.com/russross/blackfriday/v2"

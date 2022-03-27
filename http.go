@@ -18,8 +18,8 @@ import (
 	humanize "github.com/flosch/go-humanize"
 	"github.com/flosch/pongo2"
 	"github.com/fsnotify/fsnotify"
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/google/go-github/github"
 	gctx "github.com/gorilla/context"
 	"github.com/lrstanley/pt"
@@ -93,7 +93,7 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	r.Use(middleware.Compress(5))
 	r.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: debug}))
 	r.Use(middleware.Timeout(30 * time.Second))
-	r.Use(middleware.Recoverer)
+	// r.Use(middleware.Recoverer)
 	pt.FileServer(r, "/static", rice.MustFindBox("static").HTTPBox())
 
 	if h.Debug {
