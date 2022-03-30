@@ -10,6 +10,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: lrstanley/.github/workflows/lang-go-latest-version.yml
-      - uses: lrstanley/.github/workflows/lang-go-test.yml
+      - uses: lrstanley/.github/workflows/lang-go-latest-version.yml@master
+      - uses: lrstanley/.github/workflows/lang-go-test.yml@master
         with: { go-version: "${{ steps[0].outputs.go-version" }
