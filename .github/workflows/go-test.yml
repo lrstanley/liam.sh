@@ -10,6 +10,7 @@ on:
     paths-ignore: [".gitignore", "**/*.md"]
     tags: ["*"]
 
+# test
 jobs:
   go-version:
     uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
