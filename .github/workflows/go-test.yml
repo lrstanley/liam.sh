@@ -12,4 +12,4 @@ jobs:
     steps:
       - uses: lrstanley/.github/workflows/lang-go-latest-version.yml@master
       - uses: lrstanley/.github/workflows/lang-go-test.yml@master
-        with: { go-version: "${{ steps[0].outputs.go-version" }
+        with: { go-version: "${{ steps[0].outputs.go-version }}" }
