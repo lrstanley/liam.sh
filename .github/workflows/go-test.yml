@@ -9,9 +9,8 @@ on:
     paths-ignore: ["**/*.md"]
 
 jobs:
-  go-version:
-    uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
+  # go-version:
+  #   uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
   go-test:
-    needs: [go-version]
-    uses: lrstanley/.github/.github/workflows/lang-go-test.yml@master
-    with: { go-version: "${{ needs.go-version.outputs.go-version }}" }
+    uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
+    with: { num-versions: 3 }
