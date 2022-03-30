@@ -12,5 +12,6 @@ jobs:
   go-version:
     uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
   go-test:
+    needs: [go-version]
     uses: lrstanley/.github/.github/workflows/lang-go-test.yml@master
-    with: { go-version: "${{ jobs.go-version.outputs.go-version }}" }
+    with: { go-version: "${{ needs.go-version.outputs.go-version }}" }
