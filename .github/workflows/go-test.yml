@@ -10,7 +10,7 @@ on:
 
 jobs:
   go-version:
-    uses: lrstanley/.github/workflows/lang-go-latest-version.yml@master
+    uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
   go-test:
-    uses: lrstanley/.github/workflows/lang-go-test.yml@master
+    uses: lrstanley/.github/.github/workflows/lang-go-test.yml@master
     with: { go-version: "${{ jobs.go-version.outputs.go-version }}" }
