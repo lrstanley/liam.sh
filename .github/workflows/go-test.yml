@@ -10,13 +10,12 @@ on:
     paths-ignore: [".gitignore", "**/*.md"]
     tags: ["*"]
 
-# test
 jobs:
   go-version:
     uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
   go-test:
     uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
-    with: { num-versions: 2 }
+    with: { major: 2, minor: 2 }
   go-lint:
     needs: [go-version]
     uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
