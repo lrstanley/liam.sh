@@ -33,13 +33,13 @@ import (
 type GenPost struct{}
 
 func (GenPost) Execute(_ []string) error {
-	fmt.Println(fmt.Sprintf(`
+	fmt.Printf(`
 Title: Example Post
 Show: false
 Time: %s
 
 ### Markdown here
-`, formatPostTime(time.Now())))
+`, formatPostTime(time.Now()))
 	return nil
 }
 
