@@ -15,7 +15,7 @@ jobs:
     uses: lrstanley/.github/.github/workflows/lang-go-latest-version.yml@master
   go-test:
     uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
-    with: { major: 2, minor: 2 }
+    with: { minor: 2, patch: 2 }
   go-lint:
     needs: [go-version]
     uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
