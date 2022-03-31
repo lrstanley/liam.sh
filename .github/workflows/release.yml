@@ -1,0 +1,15 @@
+name: release
+
+on:
+  pull_request:
+    branches: [master, main]
+    paths-ignore: [".gitignore", "**/*.md"]
+    types: [opened, edited, reopened, synchronize, unlocked]
+  push:
+    branches: [master, main]
+    tags: ["v**"]
+    paths-ignore: [".gitignore", "**/*.md"]
+
+jobs:
+  docker-release:
+    uses: lrstanley/.github/.github/workflows/docker-release.yml@master
