@@ -3,12 +3,10 @@ name: go-test
 on:
   pull_request:
     branches: [master, main]
-    tags: ["*"]
     paths-ignore: [".gitignore", "**/*.md"]
   push:
     branches: [master, main]
     paths-ignore: [".gitignore", "**/*.md"]
-    tags: ["*"]
 
 jobs:
   go-test:
