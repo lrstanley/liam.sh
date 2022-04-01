@@ -10,6 +10,10 @@ RUN make
 # runtime image
 FROM alpine:latest
 
+LABEL org.opencontainers.image.source = "https://github.com/lrstanley/liam.sh"
+LABEL org.opencontainers.image.authors = "Liam Stanley <me@liamstanley.io>"
+LABEL org.opencontainers.image.license = "MIT"
+
 RUN apk add --no-cache ca-certificates bash
 # set up nsswitch.conf for Go's "netgo" implementation
 # - https://github.com/docker-library/golang/blob/1eb096131592bcbc90aa3b97471811c798a93573/1.14/alpine3.12/Dockerfile#L9
