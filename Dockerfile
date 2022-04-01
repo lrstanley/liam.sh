@@ -10,10 +10,10 @@ RUN make
 # runtime image
 FROM alpine:latest
 
-LABEL org.opencontainers.image.source = "https://github.com/lrstanley/liam.sh"
-LABEL org.opencontainers.image.authors = "Liam Stanley <me@liamstanley.io>"
-LABEL org.opencontainers.image.license = "MIT"
-LABEL org.opencontainers.image.description = "Container image for my personal website."
+LABEL org.opencontainers.image.source "https://github.com/lrstanley/liam.sh"
+LABEL org.opencontainers.image.authors "Liam Stanley <me@liamstanley.io>"
+LABEL org.opencontainers.image.license "MIT"
+LABEL org.opencontainers.image.description "Container image for my personal website."
 
 RUN apk add --no-cache ca-certificates bash
 # set up nsswitch.conf for Go's "netgo" implementation
