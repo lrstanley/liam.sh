@@ -21,7 +21,8 @@ jobs:
   tag-semver:
     uses: lrstanley/.github/.github/workflows/tag-semver.yml@master
     with:
-      token: ${{ secrets.USER_PAT }}
       method: ${{ github.event.inputs.method }}
       ref: ${{ github.event.inputs.ref }}
       custom: ${{ github.event.inputs.custom }}
+    secrets:
+      token: ${{ secrets.USER_PAT }}
