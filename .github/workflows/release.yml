@@ -17,6 +17,6 @@ jobs:
   lint:
     uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
   docker-release:
-    if: startsWith(github.ref, 'refs/tags/')
+    # if: startsWith(github.ref, 'refs/tags/')
     needs: [test, lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
