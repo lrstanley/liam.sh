@@ -11,5 +11,12 @@ on:
     paths-ignore: [".gitignore", "**/*.md"]
 
 jobs:
+  test:
+    uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
+    with: { num-minor: 2, num-patch: 2 }
+  lint:
+    uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
   docker-release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [test, lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
