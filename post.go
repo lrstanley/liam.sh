@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/mail"
@@ -261,7 +261,7 @@ func parsePostTime(in string) (time.Time, error) {
 
 // loadPost loads a given post from a file path.
 func loadPost(path string) (*Post, error) {
-	f, err := os.OpenFile(path, os.O_RDONLY, 0555)
+	f, err := os.OpenFile(path, os.O_RDONLY, 0o555)
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +276,7 @@ func loadPost(path string) (*Post, error) {
 		Title:   m.Header.Get("title"),
 		Summary: m.Header.Get("Summary"),
 	}
-	if len(p.Title) == 0 {
+	if p.Title == "" {
 		return nil, errors.New("no title defined")
 	}
 	if p.Time, err = parsePostTime(m.Header.Get("time")); err != nil {
@@ -300,7 +300,7 @@ func loadPost(path string) (*Post, error) {
 
 	// Read the rest of the post.
 	var out []byte
-	if out, err = ioutil.ReadAll(m.Body); err != nil {
+	if out, err = io.ReadAll(m.Body); err != nil {
 		return nil, err
 	}
 
@@ -312,7 +312,7 @@ func loadPost(path string) (*Post, error) {
 func getPost(w http.ResponseWriter, r *http.Request) {
 	uid := chi.URLParam(r, "uid")
 
-	if len(uid) == 0 {
+	if uid == "" {
 		query := r.FormValue("q")
 		if query != "" {
 			posts, results, err := pc.search(query, 10)

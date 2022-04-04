@@ -93,7 +93,6 @@ func (h *HTTPArgs) Execute(_ []string) error {
 	r.Use(middleware.Compress(5))
 	r.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: debug}))
 	r.Use(middleware.Timeout(30 * time.Second))
-	// r.Use(middleware.Recoverer)
 	pt.FileServer(r, "/static", rice.MustFindBox("static").HTTPBox())
 
 	if h.Debug {
