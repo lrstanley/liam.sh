@@ -11,7 +11,7 @@ on:
     paths-ignore: [".gitignore", "**/*.md"]
 
 jobs:
-  test:
+  go-test:
     uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
     with: { num-minor: 2, num-patch: 2 }
   go-lint:
@@ -20,12 +20,12 @@ jobs:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   docker-release:
     # if: startsWith(github.ref, 'refs/tags/')
-    needs: [test, go-lint]
+    needs: [go-test, go-lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
-  # go-release:
-  #   # if: startsWith(github.ref, 'refs/tags/')
-  #   # needs: [test, lint]
-  #   uses: lrstanley/.github/.github/workflows/lang-go-release.yml@master
-  #   with:
-  #     has-ghcr: true
-  #     upload-artifacts: true
+  go-release:
+    # if: startsWith(github.ref, 'refs/tags/')
+    needs: [go-test, go-lint]
+    uses: lrstanley/.github/.github/workflows/lang-go-release.yml@master
+    with:
+      has-ghcr: true
+      upload-artifacts: true
