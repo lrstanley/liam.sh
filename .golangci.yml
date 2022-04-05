@@ -8,7 +8,7 @@ issues:
   max-same-issues: 0
 
 severity:
-  default-severity: failure
+  default-severity: error
   rules:
     - linters:
         - errcheck
