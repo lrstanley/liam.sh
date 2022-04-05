@@ -8,12 +8,12 @@ issues:
   max-same-issues: 0
 
 severity:
-  default-severity: error
+  default-severity: failure
   rules:
     - linters:
         - errcheck
         - gocritic
-      severity: info
+      severity: warning
 
 linters:
   enable:
