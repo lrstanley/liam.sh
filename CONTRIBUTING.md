@@ -13,6 +13,27 @@ working on this project.
 > agree to the terms of the [Developer Certificate of Origin][dco]. This helps
 > ensure that contributions aren't in violation of 3rd party license terms.
 
+## :lady_beetle: Issue submission
+
+When [submitting an issue][issues] or bug report,
+please follow these guidelines:
+
+   * Provide as much information as possible (logs, metrics, screenshots,
+     runtime environment, etc).
+   * Ensure that you are running on the latest stable version (tagged), or
+     when using `master`, provide the specific commit being used.
+   * Provide the minimum needed viable source to replicate the problem.
+
+## :bulb: Feature requests
+
+When [submitting a feature request][issues], please
+follow these guidelines:
+
+   * Does this feature benefit others? or just your usecase? If the latter,
+     it will likely be declined, unless it has a more broad benefit to others.
+   * Please include the pros and cons of the feature.
+   * If possible, describe how the feature would work, and any diagrams/mock
+     examples of what the feature would look like.
 
 ## :rocket: Pull requests
 
@@ -88,7 +109,7 @@ Below are a few guidelines if you would like to contribute:
      should help catch any potential bugs/issues. This is available in VSCode
      [here](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck).
    * `shfmt` should be used if possible, to auto-format shell scripts. The
-     flags that should generally be used are: `shfmt -s -bn -ci`. This is
+     flags that should generally be used are: `shfmt -s -bn -ci -sr`. This is
      available in VSCode [here](https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format).
 
 
