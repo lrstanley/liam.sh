@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: "💬 Discord chat"
+    url: https://liam.sh/chat
+    about: On-topic and off-topic discussions.
+  - name: "🙋‍♂️ Additional support information"
+    url: https://github.com/lrstanley/.github/blob/master/SUPPORT.md
+    about: Looking for something else? Check here.
