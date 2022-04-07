@@ -1,0 +1,13 @@
+name: triage
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+  issues:
+    types: [opened, edited, closed, reopened]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  triage:
+    uses: lrstanley/.github/.github/workflows/triage.yml@master
