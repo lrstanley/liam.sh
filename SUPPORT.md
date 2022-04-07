@@ -44,7 +44,7 @@ See [`CONTRIBUTING.md`][contributing] on how to contribute.
 <!-- definitions -->
 [coc]: https://github.com/lrstanley/liam.sh/blob/master/CODE_OF_CONDUCT.md
 [contributing]: https://github.com/lrstanley/liam.sh/blob/master/CONTRIBUTING.md
-[discussions]: https://github.com/lrstanley/liam.sh/discussions
+[discussions]: https://github.com/lrstanley/liam.sh/discussions/categories/q-a
 [issues]: https://github.com/lrstanley/liam.sh/issues/new/choose
 [license]: https://github.com/lrstanley/liam.sh/blob/master/LICENSE
 [pull-requests]: https://github.com/lrstanley/liam.sh/issues/new/choose
