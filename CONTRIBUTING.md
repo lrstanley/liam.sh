@@ -71,7 +71,7 @@ Below are a few guidelines if you would like to contribute:
      the library is needed, simply rewrite it within the library to prevent
      useless imports.
 
-### Golang
+### :hamster: Golang
 
    * See [golang/go/wiki/CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
    * This project uses [golangci-lint](https://golangci-lint.run/) for
