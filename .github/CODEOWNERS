@@ -1,2 +1,7 @@
-*          @lrstanley
-.github/*  @lrstanley
+# THIS FILE IS GENERATED! DO NOT EDIT! Maintained by Terraform.
+.github/*          @lrstanley
+LICENSE            @lrstanley
+CONTRIBUTING.md    @lrstanley
+SECURITY.md        @lrstanley
+SUPPORT.md         @lrstanley
+CODE_OF_CONDUCT.md @lrstanley
