@@ -8,6 +8,7 @@ COPY . /build/
 RUN make
 
 # runtime image
+# test ignore
 FROM alpine:latest
 
 RUN apk add --no-cache ca-certificates bash
