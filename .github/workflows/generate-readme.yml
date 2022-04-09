@@ -1,0 +1,10 @@
+name: generate-readme
+
+on:
+  push:
+    branches: [master, main]
+    tags: [v*]
+
+jobs:
+  generate:
+    uses: lrstanley/.github/.github/workflows/generate-readme.yml@master
