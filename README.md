@@ -1,5 +1,34 @@
 <!-- template:begin:header -->
+<p align="center">liam.sh -- my personal website/blog</p>
+<p align="center">
+  <a href="https://github.com/lrstanley/liam.sh/blob/master/LICENSE">
+    <img alt="Software License" src="https://img.shields.io/github/license/lrstanley/liam.sh?style=flat-square">
+  </a>
+  <a href="https://github.com/lrstanley/liam.sh/actions?query=workflow%3Arelease+event%3Apush">
+    <img alt="GitHub Workflow Status (release @ master)" src="https://img.shields.io/github/workflow/status/lrstanley/liam.sh/release/master?label=release&style=flat-square&event=push">
+  </a>
 
+
+
+
+
+  <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/lrstanley/liam.sh/master?style=flat-square">
+
+  <img alt="Bug reports" src="https://img.shields.io/github/issues/lrstanley/liam.sh/bug?label=issues&style=flat-square">
+  <img alt="Feature requests" src="https://img.shields.io/github/issues/lrstanley/liam.sh/enhancement?label=feature%20requests&style=flat-square">
+  <a href="https://github.com/lrstanley/liam.sh/pulls">
+    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/lrstanley/liam.sh?style=flat-square">
+  </a>
+  <a href="https://github.com/lrstanley/liam.sh/tags">
+    <img alt="Latest Semver Tag" src="https://img.shields.io/github/v/tag/lrstanley/liam.sh?style=flat-square">
+  </a>
+  <img alt="Last commit" src="https://img.shields.io/github/last-commit/lrstanley/liam.sh?style=flat-square">
+  <a href="https://github.com/lrstanley/liam.sh/discussions/new?category=q-a">
+    <img alt="Ask a Question" src="https://img.shields.io/badge/Discussions-Ask_a_Question!-green?style=flat-square">
+  </a>
+
+  <a href="https://liam.sh/chat"><img src="https://img.shields.io/badge/discord-bytecord-blue.svg" alt="Discord Chat"></a>
+</p>
 <!-- template:end:header -->
 
 <!-- template:begin:toc -->
