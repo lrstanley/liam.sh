@@ -1,4 +1,5 @@
 <!-- template:begin:header -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 <p align="center">liam.sh -- my personal website/blog</p>
 <p align="center">
   <a href="https://github.com/lrstanley/liam.sh/actions?query=workflow%3Arelease+event%3Apush">
@@ -34,6 +35,7 @@
 <!-- template:end:header -->
 
 <!-- template:begin:toc -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 ## :link: Table of Contents
 
   - [What](#what)
@@ -51,6 +53,7 @@ This is a work-in-progress version of my personal website.
 ## Installation
 
 <!-- template:begin:ghcr -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 ### :whale: Container Images (ghcr)
 
 ```console
@@ -59,6 +62,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
 <!-- template:end:ghcr -->
 
 <!-- template:begin:support -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 ## :raising_hand_man: Support & Assistance
 
    * :heart: Please review the [Code of Conduct](CODE_OF_CONDUCT.md) for
@@ -70,6 +74,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
 <!-- template:end:support -->
 
 <!-- template:begin:contributing -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 ## :handshake: Contributing
 
    * :heart: Please review the [Code of Conduct](CODE_OF_CONDUCT.md) for guidelines
@@ -81,6 +86,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
 <!-- template:end:contributing -->
 
 <!-- template:begin:license -->
+<!-- do not edit anything in this "template" block, its auto-generated -->
 ## :balance_scale: License
 
 ```
