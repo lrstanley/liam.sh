@@ -16,6 +16,10 @@ on:
         description: "Git ref to apply tag to (will use default branch if unspecified)."
         required: false
         type: string
+      annotation:
+        description: "Optional annotation to add to the commit."
+        required: false
+        type: string
 
 jobs:
   tag-semver:
@@ -24,5 +28,6 @@ jobs:
       method: ${{ github.event.inputs.method }}
       ref: ${{ github.event.inputs.ref }}
       custom: ${{ github.event.inputs.custom }}
+      annotation: ${{ github.event.inputs.annotation }}
     secrets:
       token: ${{ secrets.USER_PAT }}
