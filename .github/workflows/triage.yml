@@ -11,5 +11,5 @@ on:
 jobs:
   triage:
     uses: lrstanley/.github/.github/workflows/triage.yml@master
-    with:
+    secrets:
       token: ${{ secrets.USER_PAT }}

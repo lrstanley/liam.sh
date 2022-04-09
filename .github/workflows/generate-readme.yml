@@ -8,5 +8,5 @@ on:
 jobs:
   generate:
     uses: lrstanley/.github/.github/workflows/generate-readme.yml@master
-    with:
+    secrets:
       token: ${{ secrets.USER_PAT }}
