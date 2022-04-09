@@ -35,7 +35,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
      the community.
    * :raising_hand_man: Take a look at the [support](SUPPORT.md) document on
      guidelines for tips on how to ask the right questions.
-   * :lady_beetle: For all features/bugs/issues/questions/etc, [head over here](/issues/new/choose).
+   * :lady_beetle: For all features/bugs/issues/questions/etc, [head over here](https://github.com/lrstanley/liam.sh/issues/new/choose).
 <!-- template:end:support -->
 
 <!-- template:begin:contributing -->
@@ -46,7 +46,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
 	   community.
    * :clipboard: Please review the [contributing](CONTRIBUTING.md) doc for submitting
      issues/a guide on submitting pull requests and helping out.
-   * :old_key: For anything security related, please review this repositories [security policy](/security/policy).
+   * :old_key: For anything security related, please review this repositories [security policy](https://github.com/lrstanley/liam.sh/security/policy).
 <!-- template:end:contributing -->
 
 <!-- template:begin:license -->
@@ -75,4 +75,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+_Also located [here](LICENSE)_
 <!-- template:end:license -->
