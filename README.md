@@ -1,38 +1,5 @@
 <!-- template:begin:header -->
-<p align="center">liam.sh -- my personal website/blog</p>
-<p align="center">
-  <a href="https://github.com/lrstanley/liam.sh/releases">
-    <img alt="Release Downloads" src="https://img.shields.io/github/downloads/lrstanley/liam.sh/total?style=flat-square">
-  </a>
-  <a href="https://github.com/lrstanley/liam.sh/blob/master/LICENSE">
-    <img alt="Software License" src="https://img.shields.io/github/license/lrstanley/liam.sh?style=flat-square">
-  </a>
-  <a href="https://github.com/lrstanley/liam.sh/actions?query=workflow%3Arelease+event%3Apush">
-    <img alt="GitHub Workflow Status (release @ master)" src="https://img.shields.io/github/workflow/status/lrstanley/liam.sh/release/master?style=flat-square&event=push">
-  </a>
 
-
-
-
-
-  <img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/lrstanley/liam.sh/master?style=flat-square">
-
-  <img alt="Bug reports" src="https://img.shields.io/github/issues/lrstanley/liam.sh/bug?label=issues&style=flat-square">
-  <img alt="Feature requests" src="https://img.shields.io/github/issues/lrstanley/liam.sh/enhancement?label=feature%20requests&style=flat-square">
-  <a href="https://github.com/lrstanley/liam.sh/pulls">
-    <img alt="Open Pull Requests" src="https://img.shields.io/github/issues-pr/lrstanley/liam.sh?style=flat-square">
-  </a>
-  <a href="https://github.com/lrstanley/liam.sh/releases">
-    <img alt="Latest Semver Release" src="https://img.shields.io/github/v/release/lrstanley/liam.sh?style=flat-square">
-    <img alt="Latest Release Date" src="https://img.shields.io/github/release-date/lrstanley/liam.sh?style=flat-square">
-  </a>
-  <img alt="Last commit" src="https://img.shields.io/github/last-commit/lrstanley/liam.sh?style=flat-square">
-  <a href="https://github.com/lrstanley/liam.sh/discussions/new?category=q-a">
-    <img alt="Ask a Question" src="https://img.shields.io/badge/Discussions-Ask_a_Question!-green?style=flat-square">
-  </a>
-
-  <a href="https://liam.sh/chat"><img src="https://img.shields.io/badge/discord-bytecord-blue.svg" alt="Discord Chat"></a>
-</p>
 <!-- template:end:header -->
 
 <!-- template:begin:toc -->
@@ -40,10 +7,10 @@
 
   - [What](#what)
   - [Installation](#installation)
-    - [Container Images (ghcr)](#container-images-ghcr)
-  - [Support & Assistance](#support-assistance)
-  - [Contributing](#contributing)
-  - [License](#license)
+    - [Container Images (ghcr)](#whale-container-images-ghcr)
+  - [Support & Assistance](#raising_hand_man-support-assistance)
+  - [Contributing](#handshake-contributing)
+  - [License](#balance_scale-license)
 <!-- template:end:toc -->
 
 ## What
@@ -77,7 +44,7 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
    * :heart: Please review the [Code of Conduct](CODE_OF_CONDUCT.md) for guidelines
      on ensuring everyone has the best experience interacting with the
 	   community.
-   * :heart: Please review the [contributing](CONTRIBUTING.md) doc for submitting
+   * :clipboard: Please review the [contributing](CONTRIBUTING.md) doc for submitting
      issues/a guide on submitting pull requests and helping out.
    * :old_key: For anything security related, please review this repositories [security policy](/security/policy).
 <!-- template:end:contributing -->
