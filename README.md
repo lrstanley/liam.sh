@@ -40,8 +40,8 @@
 
   - [What](#what)
   - [Installation](#installation)
-    - [Container Images (ghcr)](#whale-container-images-ghcr)
-  - [Support & Assistance](#raising_hand_man-support-assistance)
+   - [Container Images (ghcr)](#whale-container-images-ghcr)
+  - [Support &amp; Assistance](#raising_hand_man-support--assistance)
   - [Contributing](#handshake-contributing)
   - [License](#balance_scale-license)
 <!-- template:end:toc -->
@@ -77,10 +77,10 @@ $ docker run -it --rm ghcr.io/lrstanley/liam.sh:master
 <!-- do not edit anything in this "template" block, its auto-generated -->
 ## :handshake: Contributing
 
-   * :heart: Please review the [Code of Conduct](CODE_OF_CONDUCT.md) for guidelines
+   * :heart: Please review the [Code of Conduct](.github/CODE_OF_CONDUCT.md) for guidelines
      on ensuring everyone has the best experience interacting with the
 	   community.
-   * :clipboard: Please review the [contributing](CONTRIBUTING.md) doc for submitting
+   * :clipboard: Please review the [contributing](.github/CONTRIBUTING.md) doc for submitting
      issues/a guide on submitting pull requests and helping out.
    * :old_key: For anything security related, please review this repositories [security policy](https://github.com/lrstanley/liam.sh/security/policy).
 <!-- template:end:contributing -->
