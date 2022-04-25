@@ -8,7 +8,7 @@ require (
 	github.com/blevesearch/bleve v1.0.14
 	github.com/flosch/go-humanize v0.0.0-20140728123800-3ba51eabe506
 	github.com/flosch/pongo2 v0.0.0-20200913210552-0d938eb266f3
-	github.com/fsnotify/fsnotify v1.5.1
+	github.com/fsnotify/fsnotify v1.5.3
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/gorilla/context v1.1.1
