@@ -11,3 +11,6 @@ release
 *.log
 .env
 .gitapicache
+.task
+node_modules
+public/dist

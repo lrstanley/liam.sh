@@ -1,0 +1,48 @@
+version: "3"
+
+dotenv: [".env"]
+output: prefixed
+
+env:
+  BINARY: liam.sh
+
+tasks:
+  default: "task --list-all"
+  prepare:
+    run: when_changed
+    deps: [fetch]
+    cmds:
+      - go generate -v ./...
+  fetch:
+    run: always
+    cmds:
+      - echo "$PATH"
+      - go mod download
+      - go mod tidy
+  upgrade-deps: go get -u ./...
+  upgrade-deps-patch: go get -u=patch ./...
+  frontend-watch:
+    run: always
+    cmds:
+      - echo test
+      - while true;do echo "frontend"; sleep 10;done
+  build:
+    deps: [prepare]
+    cmds:
+      - |
+        CGO_ENABLED=0 go build -ldflags '-d -s -w -extldflags=-static' \
+          -tags=netgo,osusergo,static_build,go_json,nomsgpack \
+          -installsuffix netgo -buildvcs=false -trimpath -o "${BINARY}"
+  debug:
+    run: always
+    method: none
+    ignore_error: true
+    deps: [fetch]
+    cmds:
+      # - pkill http && sleep 6 || /bin/true
+      - while kill $(pgrep http 2>/dev/null) 2>/dev/null;do sleep 1;done
+      - go run *.go --debug
+    sources:
+      - "**/*.go"
+    generates:
+      - "**/*.go"

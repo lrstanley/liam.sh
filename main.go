@@ -1,47 +1,62 @@
 // Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
 // of this source code is governed by the MIT license that can be found in
 // the LICENSE file.
-
 package main
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
-	flags "github.com/jessevdk/go-flags"
-	"github.com/joho/godotenv"
+	"github.com/apex/log"
+	_ "github.com/joho/godotenv/autoload"
+	"github.com/lrstanley/liam.sh/internal/database"
+	"github.com/lrstanley/liam.sh/internal/ent"
+	_ "github.com/lrstanley/liam.sh/internal/ent/runtime"
+	"github.com/lrstanley/liam.sh/internal/models"
+	"golang.org/x/sync/errgroup"
 )
 
-type Config struct {
-	HTTP    HTTPArgs `command:"run" description:"run http server"`
-	GenPost GenPost  `command:"gen-post" description:"generate a post"`
-}
-
 var (
-	cli   Config
-	debug = log.New(os.Stdout, "", log.Lshortfile|log.LstdFlags)
+	version = "master"
+	commit  = "latest"
+	date    = "-"
+	cli     = &models.Flags{}
+
+	db     *ent.Client
+	logger log.Interface
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		debug.Printf("warn: error loading .env file: %s", err)
-	}
+	_ = cli.Parse()
+	logger = cli.Log.Parse(cli.Debug).WithFields(log.Fields{
+		"build_version": fmt.Sprintf("%s/%s (%s)", version, commit, date),
+	})
 
-	parser := flags.NewParser(&cli, flags.HelpFlag)
-	parser.CommandHandler = func(cmd flags.Commander, args []string) error {
-		if _, ok := cmd.(*GenPost); ok {
-			return cmd.Execute(args)
+	db = database.Open(logger, cli.Database)
+	defer db.Close()
+	database.Migrate(context.TODO(), logger, db)
+
+	grp, ctx := errgroup.WithContext(context.Background())
+
+	grp.Go(func() error {
+		return httpServer(ctx)
+	})
+	grp.Go(func() error {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, os.Interrupt, syscall.SIGTERM, syscall.SIGQUIT)
+
+		select {
+		case sig := <-quit:
+			return fmt.Errorf("received signal %v", sig)
+		case <-ctx.Done():
+			return nil
 		}
+	})
 
-		return cmd.Execute(args)
+	if err := grp.Wait(); err != nil {
+		logger.WithError(err).Fatal("shutting down")
 	}
-	_, err = parser.Parse()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-
-	os.Exit(1)
 }
