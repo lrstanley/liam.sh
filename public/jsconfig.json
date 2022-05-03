@@ -1,24 +1,30 @@
 {
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".git"
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
+    "include": [
+        "./src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".git",
+        "./src/lib/http/api/**"
+    ],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+        "types": [
+            "naive-ui/volar"
+        ],
+        // "lib": [
+        //     "dom"
+        // ],
+        // "checkJs": false,
+        // "allowSyntheticDefaultImports": true,
     },
-    "types": [
-      "naive-ui/volar"
-    ]
-  },
-  "vueCompilerOptions": {
-    "experimentalDisableTemplateSupport": true
-  }
+    "vueCompilerOptions": {
+        "experimentalDisableTemplateSupport": true
+    }
 }

@@ -5,17 +5,30 @@ package policies
 
 import (
 	"context"
+	"strings"
 
+	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
-	"github.com/lrstanley/liam.sh/internal/models"
 )
 
-// AllowIfAdmin is a rule that returns Allow decision if the viewer is admin.
-func AllowIfAdmin() privacy.QueryMutationRule {
+// AllowRoles is a rule that returns Allow decision if the authenticated client
+// has ONE of the specified roles.
+func AllowRoles(allowed []string, deny bool) privacy.QueryMutationRule {
 	return privacy.ContextQueryMutationRule(func(ctx context.Context) error {
-		if x := ctx.Value(models.UserContextKey); x != nil {
-			return privacy.Allow
+		roles := chix.RolesFromContext(ctx)
+		if roles != nil {
+			for _, role := range roles {
+				for _, allowedRole := range allowed {
+					if strings.EqualFold(role, allowedRole) {
+						return privacy.Allow
+					}
+				}
+			}
 		}
-		return privacy.Deny
+
+		if deny {
+			return privacy.Deny
+		}
+		return privacy.Skip
 	})
 }

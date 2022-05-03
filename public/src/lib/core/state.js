@@ -4,6 +4,7 @@ export const useState = defineStore("state", {
     state: () => {
         return {
             loading: false,
+            auth: null,
         }
     },
 })

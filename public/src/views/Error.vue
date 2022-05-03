@@ -9,11 +9,11 @@
                 <template #footer>
                     <n-button-group>
                         <n-button @click="$router.back()">
-                            <n-icon class="mr-1"><ArrowHookDownLeft24Filled /></n-icon>
+                            <n-icon class="mr-1"><ArrowUndoOutline /></n-icon>
                             Go back
                         </n-button>
                         <n-button @click="$router.push('/')">
-                            <n-icon class="mr-1"><Home24Regular /></n-icon>
+                            <n-icon class="mr-1"><Home /></n-icon>
                             Home
                         </n-button>
                     </n-button-group>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { ArrowHookDownLeft24Filled, Home24Regular } from "@vicons/fluent"
+import { ArrowUndoOutline, Home } from "@vicons/ionicons5"
 
 const $route = useRoute()
 const errorCode = ref("0")

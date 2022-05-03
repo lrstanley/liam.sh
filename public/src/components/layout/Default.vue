@@ -17,7 +17,7 @@
                 <span class="flex flex-auto justify-end px-2">
                     Made with
                     <n-icon class="text-green-600 mx-1">
-                        <Heart16Filled />
+                        <Heart />
                     </n-icon>
                     by Liam
                 </span>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { Heart16Filled } from "@vicons/fluent"
+import { Heart } from "@vicons/ionicons5"
 import { menuOptions } from "@/lib/navigation.js"
 
 const activeKey = ref(null)

@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	"github.com/lrstanley/liam.sh/internal/ent/privacy"
 )
 
 var (
@@ -33,7 +34,19 @@ func (User) Fields() []ent.Field {
 func (User) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		mixin.Time{},
-		PrivacyMixin{},
+	}
+}
+
+// policies.AllowRoles([]string{"admin"}, true),
+
+func (User) Policy() ent.Policy {
+	return privacy.Policy{
+		Mutation: privacy.MutationPolicy{
+			privacy.AlwaysAllowRule(), // Users have to be able to login, which may be done by anyone.
+		},
+		Query: privacy.QueryPolicy{
+			privacy.AlwaysAllowRule(),
+		},
 	}
 }
 

@@ -45,7 +45,13 @@ func Open(logger log.Interface, config models.ConfigDatabase) *ent.Client {
 
 	// Create an ent.Driver from db.
 	driver := entsql.OpenDB(dialect.Postgres, db)
-	return ent.NewClient(ent.Driver(entcache.NewDriver(driver, entcache.TTL(10*time.Minute))))
+	return ent.NewClient(ent.Driver(
+		entcache.NewDriver(
+			driver,
+			entcache.TTL(1*time.Minute),
+			entcache.Levels(entcache.NewLRU(256)),
+		),
+	))
 }
 
 func Migrate(ctx context.Context, logger log.Interface, client *ent.Client) {

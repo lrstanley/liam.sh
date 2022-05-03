@@ -5,129 +5,117 @@ package main
 
 import (
 	"context"
-	"errors"
+	_ "embed"
 	"net/http"
+	"strings"
 	"time"
 
-	"github.com/didip/tollbooth/v6"
-	"github.com/didip/tollbooth/v6/limiter"
-	"github.com/gin-contrib/gzip"
-	"github.com/gin-contrib/pprof"
-	"github.com/gin-contrib/requestid"
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/sessions"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/httprate"
+	"github.com/lrstanley/chix"
+	"github.com/lrstanley/liam.sh/internal/database"
+	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/ogent"
 	"github.com/lrstanley/liam.sh/internal/handlers/adminhandler"
-	"github.com/lrstanley/liam.sh/internal/handlers/authhandler"
-	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
-	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/github"
 )
 
-func httpServer(ctx context.Context) error {
-	if !cli.Debug {
-		gin.SetMode(gin.ReleaseMode)
+//go:embed internal/ent/openapi.json
+var openapi []byte
+
+func httpServer() *http.Server {
+	r := chi.NewRouter()
+
+	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
+		r.Use(chix.UseRealIP(cli.Flags.HTTP.TrustedProxies, chix.OptUseXForwardedFor))
 	}
 
-	r := gin.New()
-	r.RedirectTrailingSlash = true
-	r.HandleMethodNotAllowed = true
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Recoverer)
+	r.Use(chix.UseStructuredLogger(logger))
+	r.Use(chix.UseNextURL)
+	r.Use(middleware.StripSlashes)
+	r.Use(middleware.Compress(5))
+	r.Use(httprate.LimitByIP(400, 5*time.Minute))
+	r.Use(chix.UseRobotsTxt(""))
+	r.Use(chix.UseSecurityTxt(&chix.SecurityConfig{
+		ExpiresIn: 182 * 24 * time.Hour,
+		Contacts: []string{
+			"mailto:me@liamstanley.io",
+			"https://liam.sh/chat",
+			"https://github.com/lrstanley",
+		},
+		KeyLinks:  []string{"https://github.com/lrstanley.gpg"},
+		Languages: []string{"en"},
+	}))
 
-	if err := r.SetTrustedProxies(cli.HTTP.TrustedProxies); err != nil {
-		logger.WithError(err).Fatal("failed to set trusted proxies")
-	}
-
-	r.Use(gin.Recovery())
-	r.Use(requestid.New())
-	r.Use(httpware.ErrorCatcher)
-	r.Use(httpware.StructuredLogger(logger, false))
-
-	limit := tollbooth.NewLimiter(10, &limiter.ExpirableOptions{DefaultExpirationTTL: time.Hour})
-	r.Use(httpware.LimitHandler(limit))
-
-	// r.Use(timeout.New(timeout.WithTimeout(20 * time.Second)))
-
-	// Setup session store and oauth2 configuration.
-	authStore := sessions.NewCookieStore([]byte(cli.HTTP.SessionKey))
-	authStore.MaxAge(30 * 86400)
-	authStore.Options.Path = "/"
-	authStore.Options.HttpOnly = true
-	authStore.Options.Secure = !cli.Debug
-	gothic.Store = authStore
 	goth.UseProviders(
 		github.New(
-			cli.Github.ClientID,
-			cli.Github.ClientSecret,
-			cli.HTTP.BaseURL+"/api/auth/providers/github/callback",
+			cli.Flags.Github.ClientID,
+			cli.Flags.Github.ClientSecret,
+			cli.Flags.HTTP.BaseURL+"/api/auth/providers/github/callback",
 		),
 	)
 
-	if cli.Debug {
-		pprof.Register(r)
-	}
+	auth := chix.NewAuthHandler[ent.User, int](
+		database.NewAuthService(db, cli.Flags.Github.User),
+		cli.Flags.HTTP.ValidationKey,
+		cli.Flags.HTTP.EncryptionKey,
+	)
+	r.Use(auth.AddToContext)
 
-	r.Use(gzip.Gzip(gzip.DefaultCompression))
-
-	// Misc standard routes.
-	r.GET("/robots.txt", func(c *gin.Context) {
-		c.String(http.StatusOK, "User-agent: *\nDisallow: /api\nAllow /\n")
-	})
-	r.GET("/security.txt", httpware.SecurityText)
-	r.GET("/.well-known/security.txt", httpware.SecurityText)
-
-	r.Use(httpware.InjectUser(db))
-	adminhandler.New(db, r.Group("/api/admin"))
-	authhandler.New(db, r.Group("/api/auth"), &cli.Github)
-
-	dbHandler, err := ogent.NewServer(ogent.NewOgentHandler(db))
+	dbHandler, err := ogent.NewServer(
+		ogent.NewOgentHandler(db),
+		ogent.WithErrorHandler(func(ctx context.Context, w http.ResponseWriter, r *http.Request, err error) {
+			chix.Error(w, r, http.StatusInternalServerError, err)
+		}),
+		ogent.WithNotFound(func(w http.ResponseWriter, r *http.Request) {
+			r.URL.Path = "/api/query" + r.URL.Path
+			chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
+		}),
+	)
 	if err != nil {
 		logger.WithError(err).Fatal("failed to create ogent handler")
 	}
 
-	r.Any("/api/query/*any", gin.WrapH(http.StripPrefix("/api/query", dbHandler)))
+	r.Mount("/api/auth", auth)
+	r.With(auth.AuthRequired).Route("/api/admin", adminhandler.New(db, auth).Route)
+	r.Mount("/api/query", http.StripPrefix("/api/query", dbHandler))
+	r.Get("/api/openapi.json", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(openapi)
+	})
 
-	srv := &http.Server{
-		Addr:    cli.HTTP.BindAddr,
+	if !cli.Debug {
+		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
+	}
+
+	r.NotFound(catchAll)
+
+	return &http.Server{
+		Addr:    cli.Flags.HTTP.BindAddr,
 		Handler: r,
 
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-
-	ch := make(chan error)
-	go func() {
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			logger.WithError(err).Fatal("http server error")
-			ch <- err
-		}
-		close(ch)
-	}()
-
-	select {
-	case <-ctx.Done():
-	case err := <-ch:
-		return err
-	}
-
-	ctxTimeout, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	return srv.Shutdown(ctxTimeout)
 }
 
-// func catchAll(w http.ResponseWriter, r *http.Request) {
-// 	if strings.HasPrefix(r.URL.Path, "/api/") {
-// 		httpware.Error(w, r, http.StatusNotFound, nil)
-// 		return
-// 	}
-// 	if r.Method != http.MethodGet {
-// 		httpware.Error(w, r, http.StatusMethodNotAllowed, errors.New(http.StatusText(http.StatusMethodNotAllowed)))
-// 		return
-// 	}
-// 	if strings.HasSuffix(r.URL.Path, ".ico") {
-// 		w.WriteHeader(http.StatusNotFound)
-// 		return
-// 	}
-// 	w.Write(rice.MustFindBox("public").MustBytes("index.html"))
-// }
+func catchAll(w http.ResponseWriter, r *http.Request) {
+	if strings.HasPrefix(r.URL.Path, "/api/") {
+		chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
+		return
+	}
+	if r.Method != http.MethodGet {
+		chix.Error(w, r, http.StatusMethodNotAllowed, chix.ErrMatchStatus)
+		return
+	}
+	// if strings.HasSuffix(r.URL.Path, ".ico") {
+	// 	w.WriteHeader(http.StatusNotFound)
+	// 	return
+	// }
+	// w.Write(rice.MustFindBox("public").MustBytes("index.html"))
+}

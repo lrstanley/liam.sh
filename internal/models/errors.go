@@ -3,9 +3,43 @@
 // the LICENSE file.
 package models
 
-import "github.com/jackc/pgerrcode"
+import (
+	"errors"
+	"net/http"
 
-// TODO: stub for now.
+	"github.com/jackc/pgconn"
+	"github.com/lrstanley/chix"
+	"github.com/lrstanley/liam.sh/internal/ent"
+)
+
+func init() {
+	chix.AddErrorResolver(func(err error) (status int) {
+		if ent.IsConstraintError(err) || ent.IsValidationError(err) {
+			return http.StatusBadRequest
+		}
+
+		if ent.IsNotFound(err) {
+			return http.StatusNotFound
+		}
+
+		if IsDatabaseError(err) {
+			return http.StatusInternalServerError
+		}
+
+		return 0
+	})
+}
+
+// TODO: is pgerrcode needed for anything?
+
+func unwrapDBError(err error) string {
+	var pge *pgconn.PgError
+	if errors.As(err, &pge) {
+		return pge.Code
+	}
+	return ""
+}
+
 func IsDatabaseError(err error) bool {
-	return pgerrcode.IsWarning(err.Error())
+	return unwrapDBError(err) != ""
 }

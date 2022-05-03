@@ -13,6 +13,8 @@ tasks:
     deps: [fetch]
     cmds:
       - go generate -v ./...
+      - mkdir -vp public/dist
+      - touch public/dist/.gitkeep
   fetch:
     run: always
     cmds:
@@ -33,13 +35,18 @@ tasks:
         CGO_ENABLED=0 go build -ldflags '-d -s -w -extldflags=-static' \
           -tags=netgo,osusergo,static_build,go_json,nomsgpack \
           -installsuffix netgo -buildvcs=false -trimpath -o "${BINARY}"
+  dlv:
+    run: always
+    interactive: true
+    deps: [fetch]
+    cmds:
+      - dlv debug --headless --listen=:2345 --api-version=2 --log --allow-non-terminal-interactive -- --debug
   debug:
     run: always
     method: none
     ignore_error: true
     deps: [fetch]
     cmds:
-      # - pkill http && sleep 6 || /bin/true
       - while kill $(pgrep http 2>/dev/null) 2>/dev/null;do sleep 1;done
       - go run *.go --debug
     sources:

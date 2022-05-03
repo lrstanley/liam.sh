@@ -1,6 +1,6 @@
 import { RouterLink } from "vue-router"
 import { NIcon } from "naive-ui"
-import { Book20Filled } from "@vicons/fluent"
+import { FingerPrint } from "@vicons/ionicons5"
 
 function renderIcon(icon) {
     return () => h(NIcon, null, { default: () => h(icon) })
@@ -19,7 +19,7 @@ export const menuOptions = [
                 }
             ),
         key: "home",
-        icon: renderIcon(Book20Filled),
+        icon: renderIcon(FingerPrint),
     },
     {
         label: () =>
@@ -33,6 +33,6 @@ export const menuOptions = [
                 }
             ),
         key: "about",
-        icon: renderIcon(Book20Filled),
+        icon: renderIcon(FingerPrint),
     },
 ]

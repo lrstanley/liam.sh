@@ -25,7 +25,16 @@ func checkError(err error) {
 }
 
 func main() {
-	spec := new(ogen.Spec)
+	spec := ogen.NewSpec().AddServers(
+		&ogen.Server{
+			Description: "development server",
+			URL:         "http://localhost:8080/api/query",
+		},
+		&ogen.Server{
+			Description: "production server",
+			URL:         "https://liam.sh/api/query",
+		},
+	)
 	oas, err := entoas.NewExtension(entoas.Spec(spec))
 	checkError(err)
 

@@ -22,7 +22,7 @@ import (
 // to their package variables.
 func init() {
 	userMixin := schema.User{}.Mixin()
-	user.Policy = privacy.NewPolicies(userMixin[1], schema.User{})
+	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
 			if err := user.Policy.EvalMutation(ctx, m); err != nil {

@@ -1,37 +1,57 @@
 <template>
     <LayoutBase>
-        <div class="flex flex-auto justify-center items-center">
-            <div class="flex-auto flex-col max-w-3xl max-h-xl py-7">
-                <div class="flex-auto flex-row mb-4">
-                    <span class="inline-flex text-size-45px mr-10px text-green-600">
+        <div class="flex flex-row flex-auto justify-center items-stretch md:items-center">
+            <div class="flex flex-col flex-auto max-w-3xl md:max-h-xl pt-7 md:py-7 items-stretch md:items-center">
+                <div class="mb-4 text-size-38px md:text-size-45px">
+                    <span class="inline-flex mr-10px text-green-600">
                         liam
                         <span class="text-gray-500">:</span>
                         ~
                         <span class="text-gray-500 mr-4">$</span>
                         #
                     </span>
-                    <span class="text-gradient text-size-45px from-teal-500 to-violet-600">Hello!</span>
-                    <span class="text-size-40px text-gray-600 animate-pulse">▌</span>
+                    <span class="text-gradient from-teal-500 to-violet-600">Hello!</span>
+                    <span class="text-size-0.9em text-gray-600 animate-pulse">▌</span>
                 </div>
-                <n-card content-style="padding: 0" class="p-0">
-                    <n-space v-motion-slide-left vertical :size="12" class="p-5">
-                        <!-- <div class="flex-auto flex-row">
-                            <span class="inline-flex text-size-45px mr-10px text-green-600">
-                                liam
-                                <span class="text-gray-500">:</span>
-                                ~
-                                <span class="text-gray-500 mr-4">$</span> #
-                            </span>
-                            <span class="text-gradient text-size-45px from-teal-500 to-violet-600">Hello!</span>
-                            <span class="text-size-40px text-violet-700 animate-pulse">▌</span>
-                        </div> -->
+                <n-card content-style="padding: 0;display: flex;flex-direction: column" class="p-0 flex-auto">
+                    <n-space v-motion-slide-left vertical :size="12" class="p-5 flex-auto">
                         <n-alert title="Default Text" type="info"> Gee it's good to be back home </n-alert>
                         <n-alert title="Info Text" type="info"> Gee it's good to be back home </n-alert>
                         <n-alert title="Success Text" type="success"> Leave it till tomorrow to unpack my case </n-alert>
                     </n-space>
 
-                    <n-layout-footer bordered>
-                        <span v-motion-fade class="flex flex-auto justify-end px-2"> &copy; Liam Stanley </span>
+                    <n-layout-footer bordered class="bottom-bar">
+                        <span v-motion-fade class="flex flex-auto">
+                            <span class="bar-item">
+                                <n-icon class="align-middle">
+                                    <GitBranchOutline />
+                                </n-icon>
+                                feature/home
+                            </span>
+
+                            <span class="ml-auto" />
+                            <n-tooltip trigger="hover">
+                                <template #trigger>
+                                    <span class="bar-item misc">spaces:4</span>
+                                </template>
+                                ... or just gofmt
+                            </n-tooltip>
+                            <n-tooltip trigger="hover">
+                                <template #trigger>
+                                    <span class="hidden bar-item misc">go/vue</span>
+                                </template>
+                                built with Go and Vue.js
+                            </n-tooltip>
+                            <a
+                                class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
+                                href="https://github.com/lrstanley"
+                            >
+                                <n-icon class="align-middle">
+                                    <LogoGithub />
+                                </n-icon>
+                                @lrstanley
+                            </a>
+                        </span>
                     </n-layout-footer>
                 </n-card>
             </div>
@@ -39,4 +59,20 @@
     </LayoutBase>
 </template>
 
-<script setup></script>
+<script setup>
+import { GitBranchOutline, LogoGithub } from "@vicons/ionicons5"
+</script>
+
+<style scoped>
+.bottom-bar {
+    line-height: 1.5;
+}
+
+.bar-item {
+    @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-gray-400 align-middle cursor-pointer transition hover: bg-gray-800;
+}
+
+.bar-item.misc {
+    @apply <sm: hidden sm:inline-flex;
+}
+</style>

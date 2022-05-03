@@ -12,21 +12,17 @@ import { darkTheme } from "naive-ui"
 
 <style>
 html,
-body,
-#app {
-    height: 100%;
-    width: 100%;
-}
-
-html,
 body {
-    @apply bg-dark-300 text-center text-light-600 flex flex-auto;
+    min-height: 100%;
+    min-width: 100%;
+    @apply flex flex-auto;
+    @apply bg-dark-300 text-center text-light-600;
 }
 
 #app {
     font-family: Consolas, monaco, monospace;
     @apply antialiased;
-    @apply flex flex-auto flex-grow flex-col;
+    @apply flex flex-auto;
 }
 
 .text-gradient {
