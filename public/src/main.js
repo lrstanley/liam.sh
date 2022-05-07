@@ -1,5 +1,5 @@
 import { createApp } from "vue"
-import App from "@/App.vue"
+import App from "@/app.vue"
 import router from "@/lib/core/router.js"
 import { createPinia } from "pinia"
 import { MotionPlugin } from "@vueuse/motion"

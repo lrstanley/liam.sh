@@ -23,7 +23,7 @@
     "@vueuse/core": "^8.2.6",
     "@vueuse/motion": "^2.0.0-beta.12",
     "axios": "^0.27.2",
-    "eslint": "^7.32.0",
+    "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-vue": "^8.0.3",
     "form-data": "^4.0.0",
@@ -31,10 +31,10 @@
     "openapi-typescript-codegen": "^0.21.0",
     "pinia": "^2.0.13",
     "postcss": "^8.4.12",
-    "prettier": "^2.4.1",
+    "prettier": "^2.6.2",
     "unplugin-auto-import": "^0.7.1",
     "unplugin-vue-components": "^0.19.3",
-    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-pages": "^0.23.0",
     "vite-plugin-windicss": "^1.8.4",
     "windicss": "^3.5.1"
   },
@@ -46,6 +46,7 @@
     "extends": [
       "plugin:vue/vue3-recommended",
       "eslint:recommended",
+      "prettier",
       "./.eslintrc-auto-import.json"
     ],
     "rules": {
@@ -59,11 +60,15 @@
       "dist",
       "node_modules",
       ".git"
-    ]
+    ],
+    "globals": {
+      "defineProps": "readonly",
+      "defineEmits": "readonly",
+      "defineExpose": "readonly",
+      "withDefaults": "readonly"
+    }
   },
   "prettier": {
-    "printWidth": 140,
-    "tabWidth": 4,
     "trailingComma": "es5",
     "arrowParens": "always",
     "quoteProps": "as-needed",

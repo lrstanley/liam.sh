@@ -8,7 +8,7 @@ import WindiCSS from "vite-plugin-windicss"
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers"
 import { IconComponentResolver } from "./src/lib/resolvers/icon-component-resolver.ts"
 import IconResolver from "./src/lib/resolvers/icon-resolver.ts"
-import viteCompression from "vite-plugin-compression"
+import Pages from "vite-plugin-pages"
 
 export default defineConfig({
     resolve: {
@@ -18,11 +18,22 @@ export default defineConfig({
     },
     publicDir: `${path.resolve(__dirname, "src")}/assets`,
     plugins: [
-        // TODO: may require an http.FS interface for checking for .br or .gz files
-        // before regular files.
-        viteCompression({
-            algorithm: "brotliCompress",
-            ext: ".br",
+        Pages({
+            dirs: "src/views",
+            routeBlockLang: "yaml",
+            extendRoute(route) {
+                // route, parent
+                if (route.path.startsWith("/admin")) {
+                    route = {
+                        ...route,
+                        meta: {
+                            auth: true,
+                        },
+                    }
+                }
+
+                return route
+            },
         }),
         Vue({
             reactivityTransform: true,

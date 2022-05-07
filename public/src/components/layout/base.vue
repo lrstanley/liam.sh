@@ -1,5 +1,5 @@
 <template>
-    <slot></slot>
+  <slot></slot>
 </template>
 
 <script setup>
@@ -10,6 +10,6 @@ const { loading } = storeToRefs(useState())
 
 loading ? loadingBar.start() : loadingBar.finish()
 watch(loading, (isLoading) => {
-    isLoading ? loadingBar.start() : loadingBar.finish()
+  isLoading ? loadingBar.start() : loadingBar.finish()
 })
 </script>
