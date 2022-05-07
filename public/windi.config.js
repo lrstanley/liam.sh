@@ -5,7 +5,4 @@ export default defineConfig({
         extend: {},
     },
     plugins: [require("windicss/plugin/typography")],
-    // shortcuts: {
-    //     "text-gradient": "",
-    // },
 })

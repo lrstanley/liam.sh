@@ -4,7 +4,7 @@
             <div class="flex flex-col flex-auto max-w-3xl md:max-h-xl pt-7 md:py-7 items-stretch md:items-center">
                 <div class="mb-4 text-size-38px md:text-size-45px">
                     <span class="inline-flex mr-10px text-green-600">
-                        liam
+                        {{ state.me.name.split(" ")[0].toLowerCase() }}
                         <span class="text-gray-500">:</span>
                         ~
                         <span class="text-gray-500 mr-4">$</span>
@@ -22,13 +22,17 @@
 
                     <n-layout-footer bordered class="bottom-bar">
                         <span v-motion-fade class="flex flex-auto">
-                            <span class="bar-item">
-                                <n-icon class="align-middle">
-                                    <GitBranchOutline />
-                                </n-icon>
-                                feature/home
-                            </span>
-
+                            <n-tooltip trigger="hover">
+                                <template #trigger>
+                                    <span class="bar-item">
+                                        <n-icon class="align-middle">
+                                            <GitBranchOutline />
+                                        </n-icon>
+                                        {{ version ? version.build_commit?.substring(0, 8) : "master" }}
+                                    </span>
+                                </template>
+                                {{ version ? `${version.go_version} &middot; built: ${version.build_date}` : "master" }}
+                            </n-tooltip>
                             <span class="ml-auto" />
                             <n-tooltip trigger="hover">
                                 <template #trigger>
@@ -42,15 +46,23 @@
                                 </template>
                                 built with Go and Vue.js
                             </n-tooltip>
-                            <a
-                                class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
-                                href="https://github.com/lrstanley"
-                            >
-                                <n-icon class="align-middle">
-                                    <LogoGithub />
-                                </n-icon>
-                                @lrstanley
-                            </a>
+                            <n-tooltip trigger="hover">
+                                <template #trigger>
+                                    <a
+                                        class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
+                                        :href="state.me.html_url"
+                                    >
+                                        <n-icon class="align-middle">
+                                            <LogoGithub />
+                                        </n-icon>
+                                        @{{ state.me.login }}
+                                    </a>
+                                </template>
+                                <p>
+                                    <n-icon class="align-middle"><LogoGithub /></n-icon>
+                                    {{ state.me.name }} &middot; {{ state.me.bio }}
+                                </p>
+                            </n-tooltip>
                         </span>
                     </n-layout-footer>
                 </n-card>
@@ -60,7 +72,14 @@
 </template>
 
 <script setup>
-import { GitBranchOutline, LogoGithub } from "@vicons/ionicons5"
+import { api } from "@/lib/http"
+
+const state = useState()
+const version = ref(null)
+
+api.get("/version").then(({ data }) => {
+    version.value = data.build_commit ? data : null
+})
 </script>
 
 <style scoped>

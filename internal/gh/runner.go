@@ -1,0 +1,44 @@
+// Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
+// of this source code is governed by the MIT license that can be found in
+// the LICENSE file.
+
+package gh
+
+import (
+	"context"
+	"time"
+
+	"github.com/apex/log"
+	"github.com/google/go-github/v44/github"
+	"github.com/lrstanley/liam.sh/internal/models"
+)
+
+var (
+	User models.Atomic[*github.User]
+)
+
+func Runner(ctx context.Context) error {
+	logger := log.FromContext(ctx).WithField("runner", "github")
+
+	getUser(ctx, logger)
+
+	for {
+		select {
+		case <-ctx.Done():
+			return nil
+		case <-time.After(10 * time.Minute):
+			getUser(ctx, logger)
+		}
+	}
+}
+
+func getUser(ctx context.Context, logger log.Interface) {
+	user, _, err := Client.Users.Get(ctx, "lrstanley")
+	if err != nil {
+		logger.WithError(err).Error("failed to get user")
+		return
+	}
+
+	logger.WithField("user", user.GetLogin()).Info("got user")
+	User.Store(user)
+}

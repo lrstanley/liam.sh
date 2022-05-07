@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import Index from "@/views/Index.vue"
 
-import { api } from "@/lib/http/index.js"
+import { api } from "@/lib/http"
 
 const routes = [
     {
@@ -42,28 +42,49 @@ router.beforeEach(async (to, from, next) => {
         return next()
     }
 
-    await api
-        .get("/auth/self")
-        .then((resp) => {
-            console.log(resp)
-            state.auth = resp.data.auth
+    const self = new Promise((resolve, reject) => {
+        api.get("/auth/self")
+            .then(({ data }) => {
+                state.auth = data.auth
+                return resolve()
+            })
+            .catch(({ response }) => {
+                if (response.status === 401) {
+                    state.auth = null
+
+                    if (to.meta.auth == true) {
+                        window.location.href = `/api/auth/providers/github?next=${window.location.origin + to.path}`
+                        return
+                    }
+                    return resolve()
+                } else {
+                    if (to.name == "catchall") return resolve()
+
+                    return reject(response)
+                }
+            })
+    })
+
+    const me = new Promise((resolve, reject) => {
+        api.get("/gh/me")
+            .then(({ data }) => {
+                state.me = data.user
+                return resolve()
+            })
+            .catch(({ response }) => {
+                console.log(response)
+                if (to.name == "catchall") return resolve()
+
+                return reject(response)
+            })
+    })
+
+    await Promise.all([self, me])
+        .then(() => {
             return next()
         })
         .catch((error) => {
-            console.log(error.response)
-            if (error.response.status === 401) {
-                state.auth = null
-
-                if (to.meta.auth == true) {
-                    window.location.href = `/api/auth/providers/github?next=${window.location.origin + to.path}`
-                    return
-                }
-                return next()
-            } else {
-                if (to.name == "catchall") return next()
-
-                return next({ name: "catchall" })
-            }
+            return next({ name: "catchall", params: { pathMatch: error.status } })
         })
 })
 

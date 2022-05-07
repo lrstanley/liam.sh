@@ -1,5 +1,5 @@
-import { ApiClient } from "@/lib/http/api"
 import axios from "axios"
+import { ApiClient } from "@/lib/http/api"
 
 const query = new ApiClient({
     BASE: "/api/query",
@@ -19,6 +19,7 @@ const api = axios.create({
         Accept: "application/json",
         "Content-Type": "application/json",
     },
+    timeout: 5000,
 })
 
 export { query, api }

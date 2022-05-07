@@ -2,35 +2,42 @@
 // of this source code is governed by the MIT license that can be found in
 // the LICENSE file.
 
-package adminhandler
+package githubhandler
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/gh"
 )
 
-func New(db *ent.Client, auth *chix.AuthHandler[ent.User, int]) *handler {
+func New(db *ent.Client) *handler {
 	return &handler{
-		db:   db,
-		auth: auth,
+		db: db,
 	}
 }
 
 type handler struct {
-	db   *ent.Client
-	auth *chix.AuthHandler[ent.User, int]
+	db *ent.Client
 }
 
 func (h *handler) Route(r chi.Router) {
-	r.Get("/ping", h.ping)
+	r.Get("/me", h.me)
 }
 
-func (h *handler) ping(w http.ResponseWriter, r *http.Request) {
+func (h *handler) me(w http.ResponseWriter, r *http.Request) {
+	user := gh.User.Load()
+	if user == nil {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		chix.Error(w, r, http.StatusServiceUnavailable, errors.New("information not available yet"))
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
 	chix.JSON(w, r, chix.M{
-		"message": "pong",
+		"user": user,
 	})
 }

@@ -1,9 +1,9 @@
 <template>
     <LayoutBase>
-        <div class="flex flex-col h-full justify-center content-center">
+        <div class="flex flex-auto flex-col justify-center">
             <n-result
                 :status="errorCode"
-                :title="'Error code: ' + (errorCode == 'error' ? 'unknown' : errorCode)"
+                :title="'Error code: ' + $route.params.pathMatch"
                 description="You know life is always ridiculous."
             >
                 <template #footer>
@@ -24,16 +24,18 @@
 </template>
 
 <script setup>
-import { ArrowUndoOutline, Home } from "@vicons/ionicons5"
-
 const $route = useRoute()
 const errorCode = ref("0")
 
+const supported = ["info", "success", "warning", "error", "404", "403", "500", "418"]
+
 onMounted(() => {
-    if ($route.params.pathMatch.match(/^[0-9]+$/)) {
+    if (supported.includes($route.params.pathMatch)) {
         errorCode.value = $route.params.pathMatch
+    } else if ($route.params.pathMatch.match(/^[45][0-9]+$/)) {
+        errorCode.value = "error"
     } else {
-        errorCode.value = "404"
+        errorCode.value = $route.params.pathMatch
     }
 })
 </script>

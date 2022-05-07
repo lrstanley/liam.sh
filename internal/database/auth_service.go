@@ -1,13 +1,13 @@
 // Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
 // of this source code is governed by the MIT license that can be found in
 // the LICENSE file.
+
 package database
 
 import (
 	"context"
 	"strconv"
 
-	"ariga.io/entcache"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -53,7 +53,7 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 		SetBio(guser.Description).
 		OnConflictColumns(user.FieldUserID).Ignore().
 		UpdateNewValues().
-		ID(entcache.Evict(ctx))
+		ID(ctx)
 }
 
 func (s *authService) Roles(ctx context.Context, id int) ([]string, error) {

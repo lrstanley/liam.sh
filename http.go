@@ -1,6 +1,7 @@
 // Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
 // of this source code is governed by the MIT license that can be found in
 // the LICENSE file.
+
 package main
 
 import (
@@ -18,6 +19,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/ogent"
 	"github.com/lrstanley/liam.sh/internal/handlers/adminhandler"
+	"github.com/lrstanley/liam.sh/internal/handlers/githubhandler"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
@@ -81,12 +83,18 @@ func httpServer() *http.Server {
 	}
 
 	r.Mount("/api/auth", auth)
+	r.Route("/api/gh", githubhandler.New(db).Route)
 	r.With(auth.AuthRequired).Route("/api/admin", adminhandler.New(db, auth).Route)
 	r.Mount("/api/query", http.StripPrefix("/api/query", dbHandler))
+
 	r.Get("/api/openapi.json", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(openapi)
+	})
+	r.Get("/api/version", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		chix.JSON(w, r, cli.GetVersionInfo().NonSensitive())
 	})
 
 	if !cli.Debug {

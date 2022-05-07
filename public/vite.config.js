@@ -6,6 +6,8 @@ import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import WindiCSS from "vite-plugin-windicss"
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers"
+import { IconComponentResolver } from "./src/lib/resolvers/icon-component-resolver.ts"
+import IconResolver from "./src/lib/resolvers/icon-resolver.ts"
 
 export default defineConfig({
     resolve: {
@@ -20,7 +22,7 @@ export default defineConfig({
         }),
         Components({
             directoryAsNamespace: true,
-            resolvers: [NaiveUiResolver()],
+            resolvers: [NaiveUiResolver(), IconComponentResolver({ pkg: "@vicons/ionicons5" })],
         }),
         AutoImport({
             imports: [
@@ -34,6 +36,7 @@ export default defineConfig({
                 {
                     "@/lib/core/state.js": ["useState"],
                 },
+                IconResolver("@vicons/ionicons5"),
             ],
             eslintrc: {
                 enabled: true,

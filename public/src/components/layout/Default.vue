@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-import { Heart } from "@vicons/ionicons5"
 import { menuOptions } from "@/lib/navigation.js"
 
 const activeKey = ref(null)

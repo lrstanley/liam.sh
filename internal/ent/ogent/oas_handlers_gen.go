@@ -34,8 +34,8 @@ func (s *Server) handleCreateUserRequest(args [0]string, w http.ResponseWriter, 
 	request, err := decodeCreateUserRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			"CreateUser",
-			err,
+			Operation: "CreateUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
@@ -79,8 +79,8 @@ func (s *Server) handleDeleteUserRequest(args [1]string, w http.ResponseWriter, 
 	params, err := decodeDeleteUserParams(args, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
-			"DeleteUser",
-			err,
+			Operation: "DeleteUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
@@ -124,8 +124,8 @@ func (s *Server) handleListUserRequest(args [0]string, w http.ResponseWriter, r 
 	params, err := decodeListUserParams(args, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
-			"ListUser",
-			err,
+			Operation: "ListUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
@@ -169,8 +169,8 @@ func (s *Server) handleReadUserRequest(args [1]string, w http.ResponseWriter, r 
 	params, err := decodeReadUserParams(args, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
-			"ReadUser",
-			err,
+			Operation: "ReadUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
@@ -214,8 +214,8 @@ func (s *Server) handleUpdateUserRequest(args [1]string, w http.ResponseWriter, 
 	params, err := decodeUpdateUserParams(args, r)
 	if err != nil {
 		err = &ogenerrors.DecodeParamsError{
-			"UpdateUser",
-			err,
+			Operation: "UpdateUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
@@ -223,8 +223,8 @@ func (s *Server) handleUpdateUserRequest(args [1]string, w http.ResponseWriter, 
 	request, err := decodeUpdateUserRequest(r, span)
 	if err != nil {
 		err = &ogenerrors.DecodeRequestError{
-			"UpdateUser",
-			err,
+			Operation: "UpdateUser",
+			Err:       err,
 		}
 		s.badRequest(ctx, w, r, span, otelAttrs, err)
 		return
