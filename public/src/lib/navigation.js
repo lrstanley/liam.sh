@@ -1,38 +1,107 @@
 import { RouterLink } from "vue-router"
 import { NIcon } from "naive-ui"
-import { FingerPrint } from "@vicons/ionicons5"
 
 function renderIcon(icon) {
     return () => h(NIcon, null, { default: () => h(icon) })
 }
 
-export const menuOptions = [
-    {
+function renderLink(target, title, icon) {
+    return {
         label: () =>
             h(
                 RouterLink,
+                { to: target },
                 {
-                    to: "/",
-                },
-                {
-                    default: () => "Home",
+                    default: () => title,
                 }
             ),
-        key: "home",
-        icon: renderIcon(FingerPrint),
+        key: target.name,
+        icon: renderIcon(icon),
+    }
+}
+
+export const menuOptions = [renderLink({ name: "index" }, "Home", FingerPrint), renderLink({ name: "about" }, "About", FingerPrint)]
+
+export const adminSidebarOptions = [
+    renderLink({ name: "admin" }, "Admin home", FingerPrint),
+    renderLink({ name: "admin-edit" }, "Edit test", FingerPrint),
+    {
+        key: "divider-1",
+        type: "divider",
+        props: {
+            style: {
+                marginLeft: "32px",
+            },
+        },
     },
     {
-        label: () =>
-            h(
-                RouterLink,
-                {
-                    to: "/about",
-                },
-                {
-                    default: () => "About",
-                }
-            ),
-        key: "about",
-        icon: renderIcon(FingerPrint),
+        label: "Hear the Wind Sing",
+        key: "hear-the-wind-sing",
+        icon: renderIcon(BookOutline),
+    },
+    {
+        label: "Pinball 1973",
+        key: "pinball-1973",
+        icon: renderIcon(BookOutline),
+        children: [
+            {
+                label: "Rat",
+                key: "rat",
+            },
+        ],
+    },
+    {
+        label: "A Wild Sheep Chase",
+        key: "a-wild-sheep-chase",
+        icon: renderIcon(BookOutline),
+    },
+    {
+        label: "Dance Dance Dance",
+        key: "Dance Dance Dance",
+        icon: renderIcon(BookOutline),
+        children: [
+            {
+                type: "group",
+                label: "People",
+                key: "people",
+                children: [
+                    {
+                        label: "Narrator",
+                        key: "narrator",
+                        icon: renderIcon(PersonOutline),
+                    },
+                    {
+                        label: "Sheep Man",
+                        key: "sheep-man",
+                        icon: renderIcon(PersonOutline),
+                    },
+                ],
+            },
+            {
+                label: "Beverage",
+                key: "beverage",
+                icon: renderIcon(WineOutline),
+                children: [
+                    {
+                        label: "Whisky",
+                        key: "whisky",
+                    },
+                ],
+            },
+            {
+                label: "Food",
+                key: "food",
+                children: [
+                    {
+                        label: "Sandwich",
+                        key: "sandwich",
+                    },
+                ],
+            },
+            {
+                label: "The past increases. The future recedes.",
+                key: "the-past-increases-the-future-recedes",
+            },
+        ],
     },
 ]

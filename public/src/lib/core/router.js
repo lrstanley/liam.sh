@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router"
-import Index from "@/views/Index.vue"
 
 import { api } from "@/lib/http"
 
@@ -7,7 +6,7 @@ const routes = [
     {
         path: "/",
         name: "index",
-        component: Index,
+        component: () => import("@/views/Index.vue"),
         meta: {
             title: "Home",
         },
@@ -18,6 +17,24 @@ const routes = [
         component: () => import("@/views/About.vue"),
         meta: {
             title: "About",
+            auth: true,
+        },
+    },
+    {
+        path: "/admin",
+        name: "admin",
+        component: () => import("@/views/admin/Index.vue"),
+        meta: {
+            title: "Admin",
+            auth: true,
+        },
+    },
+    {
+        path: "/admin/edit",
+        name: "admin-edit",
+        component: () => import("@/views/admin/EditPost.vue"),
+        meta: {
+            title: "Edit Post",
             auth: true,
         },
     },
