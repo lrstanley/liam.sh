@@ -50,6 +50,9 @@
                 </template>
                 built with Go and Vue.js
               </n-tooltip>
+              <router-link :to="'admin'">
+                <span class="hidden bar-item misc">sudo</span>
+              </router-link>
               <n-tooltip trigger="hover">
                 <template #trigger>
                   <a

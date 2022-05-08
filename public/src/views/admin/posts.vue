@@ -5,7 +5,7 @@
         <template #title="{ row }">{{ row.title }}</template>
         <template #slug="{ row }">{{ row.slug }}</template>
         <template #published="{ row }">
-          <n-time :time="Date.parse(row.published_at)" type="relative" />
+          {{ useTimeAgo(Date.parse(row.published_at)).value }}
         </template>
         <template #actions="{ row }">
           <router-link :to="{ name: 'admin-edit-post-id', params: { id: row.id } }">
@@ -30,6 +30,7 @@
 
 <script setup>
 import { useDialog, useMessage } from "naive-ui"
+import { useTimeAgo } from "@vueuse/core"
 import { query } from "@/lib/http"
 
 const dialog = useDialog()
