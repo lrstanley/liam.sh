@@ -10,5 +10,11 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// Label is the predicate function for label builders.
+type Label func(*sql.Selector)
+
+// Post is the predicate function for post builders.
+type Post func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

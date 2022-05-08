@@ -12,30 +12,114 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
+	// CreateLabel implements createLabel operation.
+	//
+	// Creates a new Label and persists it to storage.
+	//
+	// POST /labels
+	CreateLabel(ctx context.Context, req CreateLabelReq) (CreateLabelRes, error)
+	// CreatePost implements createPost operation.
+	//
+	// Creates a new Post and persists it to storage.
+	//
+	// POST /posts
+	CreatePost(ctx context.Context, req CreatePostReq) (CreatePostRes, error)
 	// CreateUser implements createUser operation.
 	//
 	// Creates a new User and persists it to storage.
 	//
 	// POST /users
 	CreateUser(ctx context.Context, req CreateUserReq) (CreateUserRes, error)
+	// DeleteLabel implements deleteLabel operation.
+	//
+	// Deletes the Label with the requested ID.
+	//
+	// DELETE /labels/{id}
+	DeleteLabel(ctx context.Context, params DeleteLabelParams) (DeleteLabelRes, error)
+	// DeletePost implements deletePost operation.
+	//
+	// Deletes the Post with the requested ID.
+	//
+	// DELETE /posts/{id}
+	DeletePost(ctx context.Context, params DeletePostParams) (DeletePostRes, error)
 	// DeleteUser implements deleteUser operation.
 	//
 	// Deletes the User with the requested ID.
 	//
 	// DELETE /users/{id}
 	DeleteUser(ctx context.Context, params DeleteUserParams) (DeleteUserRes, error)
+	// ListLabel implements listLabel operation.
+	//
+	// List Labels.
+	//
+	// GET /labels
+	ListLabel(ctx context.Context, params ListLabelParams) (ListLabelRes, error)
+	// ListLabelPosts implements listLabelPosts operation.
+	//
+	// List attached Posts.
+	//
+	// GET /labels/{id}/posts
+	ListLabelPosts(ctx context.Context, params ListLabelPostsParams) (ListLabelPostsRes, error)
+	// ListPost implements listPost operation.
+	//
+	// List Posts.
+	//
+	// GET /posts
+	ListPost(ctx context.Context, params ListPostParams) (ListPostRes, error)
+	// ListPostLabels implements listPostLabels operation.
+	//
+	// List attached Labels.
+	//
+	// GET /posts/{id}/labels
+	ListPostLabels(ctx context.Context, params ListPostLabelsParams) (ListPostLabelsRes, error)
 	// ListUser implements listUser operation.
 	//
 	// List Users.
 	//
 	// GET /users
 	ListUser(ctx context.Context, params ListUserParams) (ListUserRes, error)
+	// ListUserPosts implements listUserPosts operation.
+	//
+	// List attached Posts.
+	//
+	// GET /users/{id}/posts
+	ListUserPosts(ctx context.Context, params ListUserPostsParams) (ListUserPostsRes, error)
+	// ReadLabel implements readLabel operation.
+	//
+	// Finds the Label with the requested ID and returns it.
+	//
+	// GET /labels/{id}
+	ReadLabel(ctx context.Context, params ReadLabelParams) (ReadLabelRes, error)
+	// ReadPost implements readPost operation.
+	//
+	// Finds the Post with the requested ID and returns it.
+	//
+	// GET /posts/{id}
+	ReadPost(ctx context.Context, params ReadPostParams) (ReadPostRes, error)
+	// ReadPostAuthor implements readPostAuthor operation.
+	//
+	// Find the attached User of the Post with the given ID.
+	//
+	// GET /posts/{id}/author
+	ReadPostAuthor(ctx context.Context, params ReadPostAuthorParams) (ReadPostAuthorRes, error)
 	// ReadUser implements readUser operation.
 	//
 	// Finds the User with the requested ID and returns it.
 	//
 	// GET /users/{id}
 	ReadUser(ctx context.Context, params ReadUserParams) (ReadUserRes, error)
+	// UpdateLabel implements updateLabel operation.
+	//
+	// Updates a Label and persists changes to storage.
+	//
+	// PATCH /labels/{id}
+	UpdateLabel(ctx context.Context, req UpdateLabelReq, params UpdateLabelParams) (UpdateLabelRes, error)
+	// UpdatePost implements updatePost operation.
+	//
+	// Updates a Post and persists changes to storage.
+	//
+	// PATCH /posts/{id}
+	UpdatePost(ctx context.Context, req UpdatePostReq, params UpdatePostParams) (UpdatePostRes, error)
 	// UpdateUser implements updateUser operation.
 	//
 	// Updates a User and persists changes to storage.

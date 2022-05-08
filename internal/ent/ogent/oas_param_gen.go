@@ -2,9 +2,51 @@
 
 package ogent
 
+type DeleteLabelParams struct {
+	// ID of the Label.
+	ID int
+}
+
+type DeletePostParams struct {
+	// ID of the Post.
+	ID int
+}
+
 type DeleteUserParams struct {
 	// ID of the User.
 	ID int
+}
+
+type ListLabelParams struct {
+	// What page to render.
+	Page OptInt
+	// Item count to render per page.
+	ItemsPerPage OptInt
+}
+
+type ListLabelPostsParams struct {
+	// ID of the Label.
+	ID int
+	// What page to render.
+	Page OptInt
+	// Item count to render per page.
+	ItemsPerPage OptInt
+}
+
+type ListPostParams struct {
+	// What page to render.
+	Page OptInt
+	// Item count to render per page.
+	ItemsPerPage OptInt
+}
+
+type ListPostLabelsParams struct {
+	// ID of the Post.
+	ID int
+	// What page to render.
+	Page OptInt
+	// Item count to render per page.
+	ItemsPerPage OptInt
 }
 
 type ListUserParams struct {
@@ -14,8 +56,42 @@ type ListUserParams struct {
 	ItemsPerPage OptInt
 }
 
+type ListUserPostsParams struct {
+	// ID of the User.
+	ID int
+	// What page to render.
+	Page OptInt
+	// Item count to render per page.
+	ItemsPerPage OptInt
+}
+
+type ReadLabelParams struct {
+	// ID of the Label.
+	ID int
+}
+
+type ReadPostParams struct {
+	// ID of the Post.
+	ID int
+}
+
+type ReadPostAuthorParams struct {
+	// ID of the Post.
+	ID int
+}
+
 type ReadUserParams struct {
 	// ID of the User.
+	ID int
+}
+
+type UpdateLabelParams struct {
+	// ID of the Label.
+	ID int
+}
+
+type UpdatePostParams struct {
+	// ID of the Post.
 	ID int
 }
 

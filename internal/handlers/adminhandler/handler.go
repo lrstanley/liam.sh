@@ -29,8 +29,7 @@ func (h *handler) Route(r chi.Router) {
 }
 
 func (h *handler) ping(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
-	chix.JSON(w, r, chix.M{
+	chix.JSON(w, r, http.StatusOK, chix.M{
 		"message": "pong",
 	})
 }

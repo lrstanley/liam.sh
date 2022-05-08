@@ -12,6 +12,44 @@ import (
 )
 
 var (
+	// LabelsColumns holds the columns for the "labels" table.
+	LabelsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "name", Type: field.TypeString, Unique: true},
+	}
+	// LabelsTable holds the schema information for the "labels" table.
+	LabelsTable = &schema.Table{
+		Name:       "labels",
+		Columns:    LabelsColumns,
+		PrimaryKey: []*schema.Column{LabelsColumns[0]},
+	}
+	// PostsColumns holds the columns for the "posts" table.
+	PostsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "create_time", Type: field.TypeTime},
+		{Name: "update_time", Type: field.TypeTime},
+		{Name: "slug", Type: field.TypeString, Unique: true},
+		{Name: "title", Type: field.TypeString, Size: 100},
+		{Name: "content", Type: field.TypeString},
+		{Name: "published_at", Type: field.TypeTime},
+		{Name: "user_posts", Type: field.TypeInt},
+	}
+	// PostsTable holds the schema information for the "posts" table.
+	PostsTable = &schema.Table{
+		Name:       "posts",
+		Columns:    PostsColumns,
+		PrimaryKey: []*schema.Column{PostsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "posts_users_posts",
+				Columns:    []*schema.Column{PostsColumns[7]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -31,11 +69,42 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// LabelPostsColumns holds the columns for the "label_posts" table.
+	LabelPostsColumns = []*schema.Column{
+		{Name: "label_id", Type: field.TypeInt},
+		{Name: "post_id", Type: field.TypeInt},
+	}
+	// LabelPostsTable holds the schema information for the "label_posts" table.
+	LabelPostsTable = &schema.Table{
+		Name:       "label_posts",
+		Columns:    LabelPostsColumns,
+		PrimaryKey: []*schema.Column{LabelPostsColumns[0], LabelPostsColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "label_posts_label_id",
+				Columns:    []*schema.Column{LabelPostsColumns[0]},
+				RefColumns: []*schema.Column{LabelsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "label_posts_post_id",
+				Columns:    []*schema.Column{LabelPostsColumns[1]},
+				RefColumns: []*schema.Column{PostsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		LabelsTable,
+		PostsTable,
 		UsersTable,
+		LabelPostsTable,
 	}
 )
 
 func init() {
+	PostsTable.ForeignKeys[0].RefTable = UsersTable
+	LabelPostsTable.ForeignKeys[0].RefTable = LabelsTable
+	LabelPostsTable.ForeignKeys[1].RefTable = PostsTable
 }

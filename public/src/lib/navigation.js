@@ -21,13 +21,13 @@ function renderLink(target, title, icon) {
 }
 
 export const menuOptions = [
-  renderLink({ name: "index" }, "Home", FingerPrint),
-  renderLink({ name: "about" }, "About", FingerPrint),
+  renderLink({ name: "index" }, "Home", Home),
+  renderLink({ name: "about" }, "About", HelpCircleOutline),
 ]
 
 export const adminSidebarOptions = [
-  renderLink({ name: "admin" }, "Admin home", FingerPrint),
-  renderLink({ name: "admin-edit-post" }, "Edit test", FingerPrint),
+  renderLink({ name: "admin" }, "Admin Home", Home),
+  renderLink({ name: "admin-posts" }, "Blog Posts", Book),
   {
     key: "divider-1",
     type: "divider",

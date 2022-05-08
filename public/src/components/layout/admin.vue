@@ -5,7 +5,14 @@
         <n-menu :options="menuOptions" mode="horizontal" class="mt-1" />
       </n-layout-header>
       <n-layout has-sider>
-        <n-layout-sider bordered show-trigger collapse-mode="width" :collapsed-width="54" :width="270">
+        <n-layout-sider
+          v-model:collapsed="state.sidebarCollapsed"
+          :collapsed-width="54"
+          :width="270"
+          bordered
+          show-trigger
+          collapse-mode="width"
+        >
           <n-menu
             :value="$route.name"
             :root-indent="16"
@@ -15,7 +22,10 @@
             :options="adminSidebarOptions"
           />
         </n-layout-sider>
-        <n-layout embedded content-style="padding-top: 30px;padding-bottom: 45px">
+        <!-- content-style="padding-top: 30px;padding-bottom: 45px" -->
+        <n-layout embedded content-style="height: 100%">
+          <CoreBreadcrumbs class="pt-2 pl-3" />
+
           <slot><router-view /></slot>
         </n-layout>
       </n-layout>
@@ -25,4 +35,6 @@
 
 <script setup>
 import { menuOptions, adminSidebarOptions } from "@/lib/navigation.js"
+
+const state = useState()
 </script>

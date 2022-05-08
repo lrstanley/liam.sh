@@ -12,13 +12,12 @@ tasks:
     run: when_changed
     deps: [fetch]
     cmds:
-      - go generate -v ./...
+      - go generate -x ./...
       - mkdir -vp public/dist
       - touch public/dist/.gitkeep
   fetch:
     run: always
     cmds:
-      - echo "$PATH"
       - go mod download
       - go mod tidy
   upgrade-deps: go get -u ./...
@@ -45,7 +44,7 @@ tasks:
     run: always
     method: none
     ignore_error: true
-    deps: [fetch]
+    deps: [prepare]
     cmds:
       - while kill $(pgrep http 2>/dev/null) 2>/dev/null;do sleep 1;done
       - go run *.go --debug

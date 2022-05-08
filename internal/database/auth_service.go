@@ -57,5 +57,8 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 }
 
 func (s *authService) Roles(ctx context.Context, id int) ([]string, error) {
+	if ok, _ := s.db.User.Query().Where(user.IDEQ(id)).Exist(ctx); ok {
+		return []string{"admin"}, nil
+	}
 	return nil, nil
 }

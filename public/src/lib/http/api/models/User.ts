@@ -2,6 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
+import type { Post } from './Post';
+
 export type User = {
     id: number;
     create_time: string;
@@ -13,4 +15,5 @@ export type User = {
     email?: string;
     location?: string;
     bio?: string;
+    posts?: Array<Post>;
 };

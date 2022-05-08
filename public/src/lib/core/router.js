@@ -73,22 +73,39 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to) => {
+  const state = useState()
+
   let title = to.path
     .split("/")
-    .at(-1)
-    .replace(/-/g, " ")
-    .replace(/:([^a-zA-Z0-9]+)/g, (p1) => {
-      return ` ${to.params[p1]} `
-    })
+    .reverse()
+    .filter((item) => item != "")
+
+  if (title.length > 2) {
+    title = title.slice(0, 2)
+  }
+
+  title = titleCase(title.reverse().join(" · ").replace(/-/g, " "))
 
   if (title.length < 2) {
     title = "Home"
   }
 
-  document.title = `${titleCase(title)} · Liam Stanley`
+  document.title = `${title} · Liam Stanley`
+
+  if (state.history.length > 4) {
+    state.history.shift()
+  }
+
+  // remove any previous duplicates with the exact same path.
+  for (let i = state.history.length - 1; i >= 0; i--) {
+    if (state.history[i].path === to.path) {
+      state.history.splice(i, 1)
+    }
+  }
+
+  state.history.push({ title, path: to.path, timestamp: new Date().toISOString() })
 
   setTimeout(() => {
-    const state = useState()
     state.loading = false
   }, 100)
   return

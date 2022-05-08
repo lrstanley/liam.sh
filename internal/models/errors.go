@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgconn"
+	"github.com/jackc/pgerrcode"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent"
 )
@@ -24,6 +25,11 @@ func init() {
 		}
 
 		if IsDatabaseError(err) {
+			if code := unwrapDBError(err); code != "" {
+				if pgerrcode.IsDataException(code) {
+					return http.StatusBadRequest
+				}
+			}
 			return http.StatusInternalServerError
 		}
 

@@ -8,6 +8,24 @@ import (
 	"github.com/go-faster/jx"
 )
 
+type CreateLabelReq struct {
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+	Posts      []int     "json:\"posts\""
+}
+
+type CreatePostReq struct {
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
+	Author      int       "json:\"author\""
+	Labels      []int     "json:\"labels\""
+}
+
 type CreateUserReq struct {
 	CreateTime time.Time "json:\"create_time\""
 	UpdateTime time.Time "json:\"update_time\""
@@ -18,16 +36,96 @@ type CreateUserReq struct {
 	Email      OptString "json:\"email\""
 	Location   OptString "json:\"location\""
 	Bio        OptString "json:\"bio\""
+	Posts      []int     "json:\"posts\""
 }
+
+// DeleteLabelNoContent is response for DeleteLabel operation.
+type DeleteLabelNoContent struct{}
+
+func (*DeleteLabelNoContent) deleteLabelRes() {}
+
+// DeletePostNoContent is response for DeletePost operation.
+type DeletePostNoContent struct{}
+
+func (*DeletePostNoContent) deletePostRes() {}
 
 // DeleteUserNoContent is response for DeleteUser operation.
 type DeleteUserNoContent struct{}
 
 func (*DeleteUserNoContent) deleteUserRes() {}
 
+// Ref: #/components/schemas/LabelCreate
+type LabelCreate struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+func (*LabelCreate) createLabelRes() {}
+
+// Ref: #/components/schemas/LabelList
+type LabelList struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+// Ref: #/components/schemas/Label_PostsList
+type LabelPostsList struct {
+	ID          int       "json:\"id\""
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
+}
+
+// Ref: #/components/schemas/LabelRead
+type LabelRead struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+func (*LabelRead) readLabelRes() {}
+
+// Ref: #/components/schemas/LabelUpdate
+type LabelUpdate struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+func (*LabelUpdate) updateLabelRes() {}
+
+type ListLabelOKApplicationJSON []LabelList
+
+func (ListLabelOKApplicationJSON) listLabelRes() {}
+
+type ListLabelPostsOKApplicationJSON []LabelPostsList
+
+func (ListLabelPostsOKApplicationJSON) listLabelPostsRes() {}
+
+type ListPostLabelsOKApplicationJSON []PostLabelsList
+
+func (ListPostLabelsOKApplicationJSON) listPostLabelsRes() {}
+
+type ListPostOKApplicationJSON []PostList
+
+func (ListPostOKApplicationJSON) listPostRes() {}
+
 type ListUserOKApplicationJSON []UserList
 
 func (ListUserOKApplicationJSON) listUserRes() {}
+
+type ListUserPostsOKApplicationJSON []UserPostsList
+
+func (ListUserPostsOKApplicationJSON) listUserPostsRes() {}
 
 // NewOptDateTime returns new OptDateTime with value set to v.
 func NewOptDateTime(v time.Time) OptDateTime {
@@ -167,17 +265,129 @@ func (o OptString) Or(d string) string {
 	return d
 }
 
+// Ref: #/components/schemas/Post_AuthorRead
+type PostAuthorRead struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	UserID     int       "json:\"user_id\""
+	Login      string    "json:\"login\""
+	Name       OptString "json:\"name\""
+	AvatarURL  OptString "json:\"avatar_url\""
+	Email      OptString "json:\"email\""
+	Location   OptString "json:\"location\""
+	Bio        OptString "json:\"bio\""
+}
+
+func (*PostAuthorRead) readPostAuthorRes() {}
+
+// Ref: #/components/schemas/PostCreate
+type PostCreate struct {
+	ID          int       "json:\"id\""
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
+}
+
+func (*PostCreate) createPostRes() {}
+
+// Ref: #/components/schemas/Post_LabelsList
+type PostLabelsList struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+// Ref: #/components/schemas/PostList
+type PostList struct {
+	ID          int       "json:\"id\""
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
+}
+
+// Ref: #/components/schemas/PostRead
+type PostRead struct {
+	ID          int              "json:\"id\""
+	CreateTime  time.Time        "json:\"create_time\""
+	UpdateTime  time.Time        "json:\"update_time\""
+	Slug        string           "json:\"slug\""
+	Title       string           "json:\"title\""
+	Content     string           "json:\"content\""
+	PublishedAt time.Time        "json:\"published_at\""
+	Author      PostReadAuthor   "json:\"author\""
+	Labels      []PostReadLabels "json:\"labels\""
+}
+
+func (*PostRead) readPostRes() {}
+
+// Ref: #/components/schemas/PostRead_Author
+type PostReadAuthor struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	UserID     int       "json:\"user_id\""
+	Login      string    "json:\"login\""
+	Name       OptString "json:\"name\""
+	AvatarURL  OptString "json:\"avatar_url\""
+	Email      OptString "json:\"email\""
+	Location   OptString "json:\"location\""
+	Bio        OptString "json:\"bio\""
+}
+
+// Ref: #/components/schemas/PostRead_Labels
+type PostReadLabels struct {
+	ID         int       "json:\"id\""
+	CreateTime time.Time "json:\"create_time\""
+	UpdateTime time.Time "json:\"update_time\""
+	Name       string    "json:\"name\""
+}
+
+// Ref: #/components/schemas/PostUpdate
+type PostUpdate struct {
+	ID          int       "json:\"id\""
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
+}
+
+func (*PostUpdate) updatePostRes() {}
+
 type R400 struct {
 	Code   int    "json:\"code\""
 	Status string "json:\"status\""
 	Errors jx.Raw "json:\"errors\""
 }
 
-func (*R400) createUserRes() {}
-func (*R400) deleteUserRes() {}
-func (*R400) listUserRes()   {}
-func (*R400) readUserRes()   {}
-func (*R400) updateUserRes() {}
+func (*R400) createLabelRes()    {}
+func (*R400) createPostRes()     {}
+func (*R400) createUserRes()     {}
+func (*R400) deleteLabelRes()    {}
+func (*R400) deletePostRes()     {}
+func (*R400) deleteUserRes()     {}
+func (*R400) listLabelPostsRes() {}
+func (*R400) listLabelRes()      {}
+func (*R400) listPostLabelsRes() {}
+func (*R400) listPostRes()       {}
+func (*R400) listUserPostsRes()  {}
+func (*R400) listUserRes()       {}
+func (*R400) readLabelRes()      {}
+func (*R400) readPostAuthorRes() {}
+func (*R400) readPostRes()       {}
+func (*R400) readUserRes()       {}
+func (*R400) updateLabelRes()    {}
+func (*R400) updatePostRes()     {}
+func (*R400) updateUserRes()     {}
 
 type R404 struct {
 	Code   int    "json:\"code\""
@@ -185,10 +395,22 @@ type R404 struct {
 	Errors jx.Raw "json:\"errors\""
 }
 
-func (*R404) deleteUserRes() {}
-func (*R404) listUserRes()   {}
-func (*R404) readUserRes()   {}
-func (*R404) updateUserRes() {}
+func (*R404) deleteLabelRes()    {}
+func (*R404) deletePostRes()     {}
+func (*R404) deleteUserRes()     {}
+func (*R404) listLabelPostsRes() {}
+func (*R404) listLabelRes()      {}
+func (*R404) listPostLabelsRes() {}
+func (*R404) listPostRes()       {}
+func (*R404) listUserPostsRes()  {}
+func (*R404) listUserRes()       {}
+func (*R404) readLabelRes()      {}
+func (*R404) readPostAuthorRes() {}
+func (*R404) readPostRes()       {}
+func (*R404) readUserRes()       {}
+func (*R404) updateLabelRes()    {}
+func (*R404) updatePostRes()     {}
+func (*R404) updateUserRes()     {}
 
 type R409 struct {
 	Code   int    "json:\"code\""
@@ -196,11 +418,25 @@ type R409 struct {
 	Errors jx.Raw "json:\"errors\""
 }
 
-func (*R409) createUserRes() {}
-func (*R409) deleteUserRes() {}
-func (*R409) listUserRes()   {}
-func (*R409) readUserRes()   {}
-func (*R409) updateUserRes() {}
+func (*R409) createLabelRes()    {}
+func (*R409) createPostRes()     {}
+func (*R409) createUserRes()     {}
+func (*R409) deleteLabelRes()    {}
+func (*R409) deletePostRes()     {}
+func (*R409) deleteUserRes()     {}
+func (*R409) listLabelPostsRes() {}
+func (*R409) listLabelRes()      {}
+func (*R409) listPostLabelsRes() {}
+func (*R409) listPostRes()       {}
+func (*R409) listUserPostsRes()  {}
+func (*R409) listUserRes()       {}
+func (*R409) readLabelRes()      {}
+func (*R409) readPostAuthorRes() {}
+func (*R409) readPostRes()       {}
+func (*R409) readUserRes()       {}
+func (*R409) updateLabelRes()    {}
+func (*R409) updatePostRes()     {}
+func (*R409) updateUserRes()     {}
 
 type R500 struct {
 	Code   int    "json:\"code\""
@@ -208,11 +444,41 @@ type R500 struct {
 	Errors jx.Raw "json:\"errors\""
 }
 
-func (*R500) createUserRes() {}
-func (*R500) deleteUserRes() {}
-func (*R500) listUserRes()   {}
-func (*R500) readUserRes()   {}
-func (*R500) updateUserRes() {}
+func (*R500) createLabelRes()    {}
+func (*R500) createPostRes()     {}
+func (*R500) createUserRes()     {}
+func (*R500) deleteLabelRes()    {}
+func (*R500) deletePostRes()     {}
+func (*R500) deleteUserRes()     {}
+func (*R500) listLabelPostsRes() {}
+func (*R500) listLabelRes()      {}
+func (*R500) listPostLabelsRes() {}
+func (*R500) listPostRes()       {}
+func (*R500) listUserPostsRes()  {}
+func (*R500) listUserRes()       {}
+func (*R500) readLabelRes()      {}
+func (*R500) readPostAuthorRes() {}
+func (*R500) readPostRes()       {}
+func (*R500) readUserRes()       {}
+func (*R500) updateLabelRes()    {}
+func (*R500) updatePostRes()     {}
+func (*R500) updateUserRes()     {}
+
+type UpdateLabelReq struct {
+	UpdateTime OptDateTime "json:\"update_time\""
+	Name       OptString   "json:\"name\""
+	Posts      []int       "json:\"posts\""
+}
+
+type UpdatePostReq struct {
+	UpdateTime  OptDateTime "json:\"update_time\""
+	Slug        OptString   "json:\"slug\""
+	Title       OptString   "json:\"title\""
+	Content     OptString   "json:\"content\""
+	PublishedAt OptDateTime "json:\"published_at\""
+	Author      OptInt      "json:\"author\""
+	Labels      []int       "json:\"labels\""
+}
 
 type UpdateUserReq struct {
 	UpdateTime OptDateTime "json:\"update_time\""
@@ -222,6 +488,7 @@ type UpdateUserReq struct {
 	Email      OptString   "json:\"email\""
 	Location   OptString   "json:\"location\""
 	Bio        OptString   "json:\"bio\""
+	Posts      []int       "json:\"posts\""
 }
 
 // Ref: #/components/schemas/UserCreate
@@ -252,6 +519,17 @@ type UserList struct {
 	Email      OptString "json:\"email\""
 	Location   OptString "json:\"location\""
 	Bio        OptString "json:\"bio\""
+}
+
+// Ref: #/components/schemas/User_PostsList
+type UserPostsList struct {
+	ID          int       "json:\"id\""
+	CreateTime  time.Time "json:\"create_time\""
+	UpdateTime  time.Time "json:\"update_time\""
+	Slug        string    "json:\"slug\""
+	Title       string    "json:\"title\""
+	Content     string    "json:\"content\""
+	PublishedAt time.Time "json:\"published_at\""
 }
 
 // Ref: #/components/schemas/UserRead

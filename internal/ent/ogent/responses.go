@@ -8,6 +8,425 @@ package ogent
 
 import "github.com/lrstanley/liam.sh/internal/ent"
 
+func NewLabelCreate(e *ent.Label) *LabelCreate {
+	if e == nil {
+		return nil
+	}
+	var ret LabelCreate
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewLabelCreates(es []*ent.Label) []LabelCreate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]LabelCreate, len(es))
+	for i, e := range es {
+		r[i] = NewLabelCreate(e).Elem()
+	}
+	return r
+}
+
+func (l *LabelCreate) Elem() LabelCreate {
+	if l == nil {
+		return LabelCreate{}
+	}
+	return *l
+}
+
+func NewLabelList(e *ent.Label) *LabelList {
+	if e == nil {
+		return nil
+	}
+	var ret LabelList
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewLabelLists(es []*ent.Label) []LabelList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]LabelList, len(es))
+	for i, e := range es {
+		r[i] = NewLabelList(e).Elem()
+	}
+	return r
+}
+
+func (l *LabelList) Elem() LabelList {
+	if l == nil {
+		return LabelList{}
+	}
+	return *l
+}
+
+func NewLabelRead(e *ent.Label) *LabelRead {
+	if e == nil {
+		return nil
+	}
+	var ret LabelRead
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewLabelReads(es []*ent.Label) []LabelRead {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]LabelRead, len(es))
+	for i, e := range es {
+		r[i] = NewLabelRead(e).Elem()
+	}
+	return r
+}
+
+func (l *LabelRead) Elem() LabelRead {
+	if l == nil {
+		return LabelRead{}
+	}
+	return *l
+}
+
+func NewLabelUpdate(e *ent.Label) *LabelUpdate {
+	if e == nil {
+		return nil
+	}
+	var ret LabelUpdate
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewLabelUpdates(es []*ent.Label) []LabelUpdate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]LabelUpdate, len(es))
+	for i, e := range es {
+		r[i] = NewLabelUpdate(e).Elem()
+	}
+	return r
+}
+
+func (l *LabelUpdate) Elem() LabelUpdate {
+	if l == nil {
+		return LabelUpdate{}
+	}
+	return *l
+}
+
+func NewLabelPostsList(e *ent.Post) *LabelPostsList {
+	if e == nil {
+		return nil
+	}
+	var ret LabelPostsList
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	return &ret
+}
+
+func NewLabelPostsLists(es []*ent.Post) []LabelPostsList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]LabelPostsList, len(es))
+	for i, e := range es {
+		r[i] = NewLabelPostsList(e).Elem()
+	}
+	return r
+}
+
+func (po *LabelPostsList) Elem() LabelPostsList {
+	if po == nil {
+		return LabelPostsList{}
+	}
+	return *po
+}
+
+func NewPostCreate(e *ent.Post) *PostCreate {
+	if e == nil {
+		return nil
+	}
+	var ret PostCreate
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	return &ret
+}
+
+func NewPostCreates(es []*ent.Post) []PostCreate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostCreate, len(es))
+	for i, e := range es {
+		r[i] = NewPostCreate(e).Elem()
+	}
+	return r
+}
+
+func (po *PostCreate) Elem() PostCreate {
+	if po == nil {
+		return PostCreate{}
+	}
+	return *po
+}
+
+func NewPostList(e *ent.Post) *PostList {
+	if e == nil {
+		return nil
+	}
+	var ret PostList
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	return &ret
+}
+
+func NewPostLists(es []*ent.Post) []PostList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostList, len(es))
+	for i, e := range es {
+		r[i] = NewPostList(e).Elem()
+	}
+	return r
+}
+
+func (po *PostList) Elem() PostList {
+	if po == nil {
+		return PostList{}
+	}
+	return *po
+}
+
+func NewPostRead(e *ent.Post) *PostRead {
+	if e == nil {
+		return nil
+	}
+	var ret PostRead
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	ret.Author = NewPostReadAuthor(e.Edges.Author).Elem()
+	ret.Labels = NewPostReadLabelsSlice(e.Edges.Labels)
+	return &ret
+}
+
+func NewPostReads(es []*ent.Post) []PostRead {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostRead, len(es))
+	for i, e := range es {
+		r[i] = NewPostRead(e).Elem()
+	}
+	return r
+}
+
+func (po *PostRead) Elem() PostRead {
+	if po == nil {
+		return PostRead{}
+	}
+	return *po
+}
+
+func NewPostReadAuthor(e *ent.User) *PostReadAuthor {
+	if e == nil {
+		return nil
+	}
+	var ret PostReadAuthor
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.UserID = e.UserID
+	ret.Login = e.Login
+	ret.Name = NewOptString(e.Name)
+	ret.AvatarURL = NewOptString(e.AvatarURL)
+	ret.Email = NewOptString(e.Email)
+	ret.Location = NewOptString(e.Location)
+	ret.Bio = NewOptString(e.Bio)
+	return &ret
+}
+
+func NewPostReadAuthors(es []*ent.User) []PostReadAuthor {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostReadAuthor, len(es))
+	for i, e := range es {
+		r[i] = NewPostReadAuthor(e).Elem()
+	}
+	return r
+}
+
+func (u *PostReadAuthor) Elem() PostReadAuthor {
+	if u == nil {
+		return PostReadAuthor{}
+	}
+	return *u
+}
+
+func NewPostReadLabels(e *ent.Label) *PostReadLabels {
+	if e == nil {
+		return nil
+	}
+	var ret PostReadLabels
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewPostReadLabelsSlice(es []*ent.Label) []PostReadLabels {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostReadLabels, len(es))
+	for i, e := range es {
+		r[i] = NewPostReadLabels(e).Elem()
+	}
+	return r
+}
+
+func (l *PostReadLabels) Elem() PostReadLabels {
+	if l == nil {
+		return PostReadLabels{}
+	}
+	return *l
+}
+
+func NewPostUpdate(e *ent.Post) *PostUpdate {
+	if e == nil {
+		return nil
+	}
+	var ret PostUpdate
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	return &ret
+}
+
+func NewPostUpdates(es []*ent.Post) []PostUpdate {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostUpdate, len(es))
+	for i, e := range es {
+		r[i] = NewPostUpdate(e).Elem()
+	}
+	return r
+}
+
+func (po *PostUpdate) Elem() PostUpdate {
+	if po == nil {
+		return PostUpdate{}
+	}
+	return *po
+}
+
+func NewPostAuthorRead(e *ent.User) *PostAuthorRead {
+	if e == nil {
+		return nil
+	}
+	var ret PostAuthorRead
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.UserID = e.UserID
+	ret.Login = e.Login
+	ret.Name = NewOptString(e.Name)
+	ret.AvatarURL = NewOptString(e.AvatarURL)
+	ret.Email = NewOptString(e.Email)
+	ret.Location = NewOptString(e.Location)
+	ret.Bio = NewOptString(e.Bio)
+	return &ret
+}
+
+func NewPostAuthorReads(es []*ent.User) []PostAuthorRead {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostAuthorRead, len(es))
+	for i, e := range es {
+		r[i] = NewPostAuthorRead(e).Elem()
+	}
+	return r
+}
+
+func (u *PostAuthorRead) Elem() PostAuthorRead {
+	if u == nil {
+		return PostAuthorRead{}
+	}
+	return *u
+}
+
+func NewPostLabelsList(e *ent.Label) *PostLabelsList {
+	if e == nil {
+		return nil
+	}
+	var ret PostLabelsList
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Name = e.Name
+	return &ret
+}
+
+func NewPostLabelsLists(es []*ent.Label) []PostLabelsList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]PostLabelsList, len(es))
+	for i, e := range es {
+		r[i] = NewPostLabelsList(e).Elem()
+	}
+	return r
+}
+
+func (l *PostLabelsList) Elem() PostLabelsList {
+	if l == nil {
+		return PostLabelsList{}
+	}
+	return *l
+}
+
 func NewUserCreate(e *ent.User) *UserCreate {
 	if e == nil {
 		return nil
@@ -150,4 +569,37 @@ func (u *UserUpdate) Elem() UserUpdate {
 		return UserUpdate{}
 	}
 	return *u
+}
+
+func NewUserPostsList(e *ent.Post) *UserPostsList {
+	if e == nil {
+		return nil
+	}
+	var ret UserPostsList
+	ret.ID = e.ID
+	ret.CreateTime = e.CreateTime
+	ret.UpdateTime = e.UpdateTime
+	ret.Slug = e.Slug
+	ret.Title = e.Title
+	ret.Content = e.Content
+	ret.PublishedAt = e.PublishedAt
+	return &ret
+}
+
+func NewUserPostsLists(es []*ent.Post) []UserPostsList {
+	if len(es) == 0 {
+		return nil
+	}
+	r := make([]UserPostsList, len(es))
+	for i, e := range es {
+		r[i] = NewUserPostsList(e).Elem()
+	}
+	return r
+}
+
+func (po *UserPostsList) Elem() UserPostsList {
+	if po == nil {
+		return UserPostsList{}
+	}
+	return *po
 }

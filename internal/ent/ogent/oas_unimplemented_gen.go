@@ -13,12 +13,48 @@ var _ Handler = UnimplementedHandler{}
 // UnimplementedHandler is no-op Handler which returns http.ErrNotImplemented.
 type UnimplementedHandler struct{}
 
+// CreateLabel implements createLabel operation.
+//
+// Creates a new Label and persists it to storage.
+//
+// POST /labels
+func (UnimplementedHandler) CreateLabel(ctx context.Context, req CreateLabelReq) (r CreateLabelRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// CreatePost implements createPost operation.
+//
+// Creates a new Post and persists it to storage.
+//
+// POST /posts
+func (UnimplementedHandler) CreatePost(ctx context.Context, req CreatePostReq) (r CreatePostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // CreateUser implements createUser operation.
 //
 // Creates a new User and persists it to storage.
 //
 // POST /users
 func (UnimplementedHandler) CreateUser(ctx context.Context, req CreateUserReq) (r CreateUserRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// DeleteLabel implements deleteLabel operation.
+//
+// Deletes the Label with the requested ID.
+//
+// DELETE /labels/{id}
+func (UnimplementedHandler) DeleteLabel(ctx context.Context, params DeleteLabelParams) (r DeleteLabelRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// DeletePost implements deletePost operation.
+//
+// Deletes the Post with the requested ID.
+//
+// DELETE /posts/{id}
+func (UnimplementedHandler) DeletePost(ctx context.Context, params DeletePostParams) (r DeletePostRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 
@@ -31,6 +67,42 @@ func (UnimplementedHandler) DeleteUser(ctx context.Context, params DeleteUserPar
 	return r, ht.ErrNotImplemented
 }
 
+// ListLabel implements listLabel operation.
+//
+// List Labels.
+//
+// GET /labels
+func (UnimplementedHandler) ListLabel(ctx context.Context, params ListLabelParams) (r ListLabelRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ListLabelPosts implements listLabelPosts operation.
+//
+// List attached Posts.
+//
+// GET /labels/{id}/posts
+func (UnimplementedHandler) ListLabelPosts(ctx context.Context, params ListLabelPostsParams) (r ListLabelPostsRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ListPost implements listPost operation.
+//
+// List Posts.
+//
+// GET /posts
+func (UnimplementedHandler) ListPost(ctx context.Context, params ListPostParams) (r ListPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ListPostLabels implements listPostLabels operation.
+//
+// List attached Labels.
+//
+// GET /posts/{id}/labels
+func (UnimplementedHandler) ListPostLabels(ctx context.Context, params ListPostLabelsParams) (r ListPostLabelsRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ListUser implements listUser operation.
 //
 // List Users.
@@ -40,12 +112,66 @@ func (UnimplementedHandler) ListUser(ctx context.Context, params ListUserParams)
 	return r, ht.ErrNotImplemented
 }
 
+// ListUserPosts implements listUserPosts operation.
+//
+// List attached Posts.
+//
+// GET /users/{id}/posts
+func (UnimplementedHandler) ListUserPosts(ctx context.Context, params ListUserPostsParams) (r ListUserPostsRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ReadLabel implements readLabel operation.
+//
+// Finds the Label with the requested ID and returns it.
+//
+// GET /labels/{id}
+func (UnimplementedHandler) ReadLabel(ctx context.Context, params ReadLabelParams) (r ReadLabelRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ReadPost implements readPost operation.
+//
+// Finds the Post with the requested ID and returns it.
+//
+// GET /posts/{id}
+func (UnimplementedHandler) ReadPost(ctx context.Context, params ReadPostParams) (r ReadPostRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// ReadPostAuthor implements readPostAuthor operation.
+//
+// Find the attached User of the Post with the given ID.
+//
+// GET /posts/{id}/author
+func (UnimplementedHandler) ReadPostAuthor(ctx context.Context, params ReadPostAuthorParams) (r ReadPostAuthorRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ReadUser implements readUser operation.
 //
 // Finds the User with the requested ID and returns it.
 //
 // GET /users/{id}
 func (UnimplementedHandler) ReadUser(ctx context.Context, params ReadUserParams) (r ReadUserRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// UpdateLabel implements updateLabel operation.
+//
+// Updates a Label and persists changes to storage.
+//
+// PATCH /labels/{id}
+func (UnimplementedHandler) UpdateLabel(ctx context.Context, req UpdateLabelReq, params UpdateLabelParams) (r UpdateLabelRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// UpdatePost implements updatePost operation.
+//
+// Updates a Post and persists changes to storage.
+//
+// PATCH /posts/{id}
+func (UnimplementedHandler) UpdatePost(ctx context.Context, req UpdatePostReq, params UpdatePostParams) (r UpdatePostRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
+import type { User_PostsList } from '../models/User_PostsList';
 import type { UserCreate } from '../models/UserCreate';
 import type { UserList } from '../models/UserList';
 import type { UserRead } from '../models/UserRead';
@@ -59,6 +60,7 @@ export class UserService {
             email?: string;
             location?: string;
             bio?: string;
+            posts?: Array<number>;
         },
     ): CancelablePromise<UserCreate> {
         return this.httpRequest.request({
@@ -142,6 +144,7 @@ export class UserService {
             email?: string;
             location?: string;
             bio?: string;
+            posts?: Array<number>;
         },
     ): CancelablePromise<UserUpdate> {
         return this.httpRequest.request({
@@ -152,6 +155,39 @@ export class UserService {
             },
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                400: `invalid input, data invalid`,
+                404: `resource not found`,
+                409: `conflicting resources`,
+                500: `unexpected error`,
+            },
+        });
+    }
+
+    /**
+     * List attached Posts
+     * List attached Posts.
+     * @param id ID of the User
+     * @param page what page to render
+     * @param itemsPerPage item count to render per page
+     * @returns User_PostsList result Users list
+     * @throws ApiError
+     */
+    public listUserPosts(
+        id: number,
+        page?: number,
+        itemsPerPage?: number,
+    ): CancelablePromise<Array<User_PostsList>> {
+        return this.httpRequest.request({
+            method: 'GET',
+            url: '/users/{id}/posts',
+            path: {
+                'id': id,
+            },
+            query: {
+                'page': page,
+                'itemsPerPage': itemsPerPage,
+            },
             errors: {
                 400: `invalid input, data invalid`,
                 404: `resource not found`,

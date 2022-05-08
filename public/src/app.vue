@@ -1,7 +1,11 @@
 <template>
   <n-config-provider :theme="darkTheme" :abstract="true">
     <n-loading-bar-provider>
-      <router-view />
+      <n-message-provider>
+        <n-dialog-provider>
+          <router-view />
+        </n-dialog-provider>
+      </n-message-provider>
     </n-loading-bar-provider>
   </n-config-provider>
 </template>
@@ -16,7 +20,7 @@ body {
   min-height: 100%;
   min-width: 100%;
   @apply flex flex-auto;
-  @apply bg-dark-300 text-center text-light-600;
+  @apply bg-dark-300 text-light-600;
 }
 
 #app {

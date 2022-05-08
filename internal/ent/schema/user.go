@@ -4,6 +4,7 @@ import (
 	"regexp"
 
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
@@ -22,7 +23,7 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("user_id").Unique().Positive().Immutable(),
-		field.String("login").Unique().Match(reUserLogin).Annotations(),
+		field.String("login").Unique().Match(reUserLogin),
 		field.String("name").Optional().MaxLen(400),
 		field.String("avatar_url").Optional().MaxLen(2048),
 		field.String("email").Optional().MaxLen(320),
@@ -37,8 +38,6 @@ func (User) Mixin() []ent.Mixin {
 	}
 }
 
-// policies.AllowRoles([]string{"admin"}, true),
-
 func (User) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
@@ -52,5 +51,7 @@ func (User) Policy() ent.Policy {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("posts", Post.Type),
+	}
 }

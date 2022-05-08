@@ -13,6 +13,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database"
@@ -20,6 +21,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/ogent"
 	"github.com/lrstanley/liam.sh/internal/handlers/adminhandler"
 	"github.com/lrstanley/liam.sh/internal/handlers/githubhandler"
+	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
@@ -53,6 +55,8 @@ func httpServer() *http.Server {
 		Languages: []string{"en"},
 	}))
 
+	r.Use(cors.AllowAll().Handler)
+
 	goth.UseProviders(
 		github.New(
 			cli.Flags.Github.ClientID,
@@ -67,10 +71,13 @@ func httpServer() *http.Server {
 		cli.Flags.HTTP.EncryptionKey,
 	)
 	r.Use(auth.AddToContext)
+	r.Use(httpware.EvictCacheAdmin)
 
 	dbHandler, err := ogent.NewServer(
 		ogent.NewOgentHandler(db),
 		ogent.WithErrorHandler(func(ctx context.Context, w http.ResponseWriter, r *http.Request, err error) {
+			logger.WithError(err).Error("ogent handler error")
+			r.URL.Path = "/api/query" + r.URL.Path
 			chix.Error(w, r, http.StatusInternalServerError, err)
 		}),
 		ogent.WithNotFound(func(w http.ResponseWriter, r *http.Request) {
@@ -88,13 +95,12 @@ func httpServer() *http.Server {
 	r.Mount("/api/query", http.StripPrefix("/api/query", dbHandler))
 
 	r.Get("/api/openapi.json", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
 		w.Write(openapi)
 	})
 	r.Get("/api/version", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		chix.JSON(w, r, cli.GetVersionInfo().NonSensitive())
+		chix.JSON(w, r, http.StatusOK, cli.GetVersionInfo().NonSensitive())
 	})
 
 	if !cli.Debug {

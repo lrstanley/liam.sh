@@ -7,7 +7,39 @@ import (
 	"go.opentelemetry.io/otel/trace"
 )
 
+func encodeCreateLabelRequestJSON(req CreateLabelReq, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+
+	return e, nil
+}
+
+func encodeCreatePostRequestJSON(req CreatePostReq, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+
+	return e, nil
+}
+
 func encodeCreateUserRequestJSON(req CreateUserReq, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+
+	return e, nil
+}
+
+func encodeUpdateLabelRequestJSON(req UpdateLabelReq, span trace.Span) (data *jx.Encoder, err error) {
+	e := jx.GetEncoder()
+
+	req.Encode(e)
+
+	return e, nil
+}
+
+func encodeUpdatePostRequestJSON(req UpdatePostReq, span trace.Span) (data *jx.Encoder, err error) {
 	e := jx.GetEncoder()
 
 	req.Encode(e)

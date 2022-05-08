@@ -13,6 +13,32 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent"
 )
 
+// The LabelFunc type is an adapter to allow the use of ordinary
+// function as Label mutator.
+type LabelFunc func(context.Context, *ent.LabelMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f LabelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.LabelMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LabelMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The PostFunc type is an adapter to allow the use of ordinary
+// function as Post mutator.
+type PostFunc func(context.Context, *ent.PostMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f PostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.PostMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PostMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The UserFunc type is an adapter to allow the use of ordinary
 // function as User mutator.
 type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)

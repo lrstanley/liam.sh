@@ -10,6 +10,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/ent/label"
+	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/schema"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 
@@ -21,6 +23,74 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	labelMixin := schema.Label{}.Mixin()
+	label.Policy = privacy.NewPolicies(schema.Label{})
+	label.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := label.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	labelMixinFields0 := labelMixin[0].Fields()
+	_ = labelMixinFields0
+	labelFields := schema.Label{}.Fields()
+	_ = labelFields
+	// labelDescCreateTime is the schema descriptor for create_time field.
+	labelDescCreateTime := labelMixinFields0[0].Descriptor()
+	// label.DefaultCreateTime holds the default value on creation for the create_time field.
+	label.DefaultCreateTime = labelDescCreateTime.Default.(func() time.Time)
+	// labelDescUpdateTime is the schema descriptor for update_time field.
+	labelDescUpdateTime := labelMixinFields0[1].Descriptor()
+	// label.DefaultUpdateTime holds the default value on creation for the update_time field.
+	label.DefaultUpdateTime = labelDescUpdateTime.Default.(func() time.Time)
+	// label.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	label.UpdateDefaultUpdateTime = labelDescUpdateTime.UpdateDefault.(func() time.Time)
+	// labelDescName is the schema descriptor for name field.
+	labelDescName := labelFields[0].Descriptor()
+	// label.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	label.NameValidator = labelDescName.Validators[0].(func(string) error)
+	postMixin := schema.Post{}.Mixin()
+	post.Policy = privacy.NewPolicies(schema.Post{})
+	post.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := post.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	postMixinFields0 := postMixin[0].Fields()
+	_ = postMixinFields0
+	postFields := schema.Post{}.Fields()
+	_ = postFields
+	// postDescCreateTime is the schema descriptor for create_time field.
+	postDescCreateTime := postMixinFields0[0].Descriptor()
+	// post.DefaultCreateTime holds the default value on creation for the create_time field.
+	post.DefaultCreateTime = postDescCreateTime.Default.(func() time.Time)
+	// postDescUpdateTime is the schema descriptor for update_time field.
+	postDescUpdateTime := postMixinFields0[1].Descriptor()
+	// post.DefaultUpdateTime holds the default value on creation for the update_time field.
+	post.DefaultUpdateTime = postDescUpdateTime.Default.(func() time.Time)
+	// post.UpdateDefaultUpdateTime holds the default value on update for the update_time field.
+	post.UpdateDefaultUpdateTime = postDescUpdateTime.UpdateDefault.(func() time.Time)
+	// postDescSlug is the schema descriptor for slug field.
+	postDescSlug := postFields[0].Descriptor()
+	// post.SlugValidator is a validator for the "slug" field. It is called by the builders before save.
+	post.SlugValidator = postDescSlug.Validators[0].(func(string) error)
+	// postDescTitle is the schema descriptor for title field.
+	postDescTitle := postFields[1].Descriptor()
+	// post.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	post.TitleValidator = postDescTitle.Validators[0].(func(string) error)
+	// postDescContent is the schema descriptor for content field.
+	postDescContent := postFields[2].Descriptor()
+	// post.ContentValidator is a validator for the "content" field. It is called by the builders before save.
+	post.ContentValidator = postDescContent.Validators[0].(func(string) error)
+	// postDescPublishedAt is the schema descriptor for published_at field.
+	postDescPublishedAt := postFields[3].Descriptor()
+	// post.DefaultPublishedAt holds the default value on creation for the published_at field.
+	post.DefaultPublishedAt = postDescPublishedAt.Default.(func() time.Time)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {

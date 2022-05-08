@@ -5,12 +5,16 @@ import type { BaseHttpRequest } from './core/BaseHttpRequest';
 import type { OpenAPIConfig } from './core/OpenAPI';
 import { AxiosHttpRequest } from './core/AxiosHttpRequest';
 
+import { LabelService } from './services/LabelService';
+import { PostService } from './services/PostService';
 import { UserService } from './services/UserService';
 
 type HttpRequestConstructor = new (config: OpenAPIConfig) => BaseHttpRequest;
 
 export class ApiClient {
 
+    public readonly label: LabelService;
+    public readonly post: PostService;
     public readonly user: UserService;
 
     public readonly request: BaseHttpRequest;
@@ -28,6 +32,8 @@ export class ApiClient {
             ENCODE_PATH: config?.ENCODE_PATH,
         });
 
+        this.label = new LabelService(this.request);
+        this.post = new PostService(this.request);
         this.user = new UserService(this.request);
     }
 }

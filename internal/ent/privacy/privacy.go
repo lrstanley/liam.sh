@@ -169,6 +169,54 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The LabelQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type LabelQueryRuleFunc func(context.Context, *ent.LabelQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f LabelQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.LabelQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.LabelQuery", q)
+}
+
+// The LabelMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type LabelMutationRuleFunc func(context.Context, *ent.LabelMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f LabelMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.LabelMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.LabelMutation", m)
+}
+
+// The PostQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type PostQueryRuleFunc func(context.Context, *ent.PostQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f PostQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.PostQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.PostQuery", q)
+}
+
+// The PostMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type PostMutationRuleFunc func(context.Context, *ent.PostMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f PostMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.PostMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.PostMutation", m)
+}
+
 // The UserQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type UserQueryRuleFunc func(context.Context, *ent.UserQuery) error
@@ -228,6 +276,10 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
+	case *ent.LabelQuery:
+		return q.Filter(), nil
+	case *ent.PostQuery:
+		return q.Filter(), nil
 	case *ent.UserQuery:
 		return q.Filter(), nil
 	default:
@@ -237,6 +289,10 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
+	case *ent.LabelMutation:
+		return m.Filter(), nil
+	case *ent.PostMutation:
+		return m.Filter(), nil
 	case *ent.UserMutation:
 		return m.Filter(), nil
 	default:

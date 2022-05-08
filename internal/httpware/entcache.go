@@ -8,11 +8,17 @@ import (
 	"net/http"
 
 	"ariga.io/entcache"
+	"github.com/lrstanley/chix"
 )
 
-func EvictCache(next http.Handler) http.Handler {
+func EvictCacheAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		next.ServeHTTP(w, r.WithContext(entcache.Evict(r.Context())))
+		if chix.RolesFromContext(r.Context()).Has("admin") {
+			next.ServeHTTP(w, r.WithContext(entcache.Evict(r.Context())))
+			return
+		}
+
+		next.ServeHTTP(w, r)
 	})
 }
 

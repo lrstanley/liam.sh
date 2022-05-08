@@ -31,13 +31,12 @@ func (h *handler) Route(r chi.Router) {
 func (h *handler) me(w http.ResponseWriter, r *http.Request) {
 	user := gh.User.Load()
 	if user == nil {
-		w.WriteHeader(http.StatusServiceUnavailable)
 		chix.Error(w, r, http.StatusServiceUnavailable, errors.New("information not available yet"))
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	chix.JSON(w, r, chix.M{
+	chix.JSON(w, r, http.StatusOK, chix.M{
 		"user": user,
 	})
 }
