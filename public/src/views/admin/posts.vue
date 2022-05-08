@@ -1,7 +1,21 @@
 <template>
   <LayoutAdmin>
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
-      <n-data-table :columns="columns" :data="posts" :loading="loading" />
+      <CoreDataTable :data="posts" :loading="loading" :headers="{ published_at: 'Published' }">
+        <template #title="{ row }">{{ row.title }}</template>
+        <template #slug="{ row }">{{ row.slug }}</template>
+        <template #published="{ row }">
+          <n-time :time="Date.parse(row.published_at)" type="relative" />
+        </template>
+        <template #actions="{ row }">
+          <router-link :to="{ name: 'admin-edit-post-id', params: { id: row.id } }">
+            <n-button size="small" type="primary" tertiary> <CreateOutline /> Edit </n-button>
+          </router-link>
+          <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(row)">
+            <Trash /> Delete
+          </n-button>
+        </template>
+      </CoreDataTable>
     </div>
 
     <router-link :to="{ name: 'admin-new-post' }" class="no-underline absolute bottom-5 right-5">
@@ -15,62 +29,14 @@
 </template>
 
 <script setup>
-import { NButton, NTime, useDialog, useMessage } from "naive-ui"
+import { useDialog, useMessage } from "naive-ui"
 import { query } from "@/lib/http"
-import { h } from "vue"
 
-const router = useRouter()
 const dialog = useDialog()
 const message = useMessage()
 
 const posts = ref([])
 const loading = ref(true)
-
-const columns = [
-  {
-    title: "Title",
-    key: "title",
-  },
-  {
-    title: "Slug",
-    key: "slug",
-  },
-  {
-    title: "Published",
-    key: "published_at",
-    render(row) {
-      return h(NTime, {
-        time: Date.parse(row.published_at),
-        type: "relative",
-      })
-    },
-  },
-  {
-    title: "Action",
-    key: "actions",
-    render(row) {
-      return [
-        h(
-          NButton,
-          {
-            size: "small",
-            onClick: () => router.push({ name: "admin-edit-post-id", params: { id: row.id } }),
-          },
-          { default: () => "Edit" }
-        ),
-        h(
-          NButton,
-          {
-            size: "small",
-            style: "margin-left: 5px",
-            onClick: () => deletePost(row),
-          },
-          { default: () => "Delete" }
-        ),
-      ]
-    },
-  },
-]
 
 function fetchPosts() {
   loading.value = true

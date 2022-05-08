@@ -14,12 +14,12 @@
           collapse-mode="width"
         >
           <n-menu
+            :options="adminSidebarOptions"
             :value="$route.name"
             :root-indent="16"
             :indent="12"
             :collapsed-width="54"
             :collapsed-icon-size="22"
-            :options="adminSidebarOptions"
           />
         </n-layout-sider>
         <!-- content-style="padding-top: 30px;padding-bottom: 45px" -->

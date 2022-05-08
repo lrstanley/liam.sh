@@ -1,16 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import routes from "~pages"
 import { api } from "@/lib/http"
-
-function titleCase(str) {
-  return str
-    .toLowerCase()
-    .split(" ")
-    .map(function (word) {
-      return word.charAt(0).toUpperCase() + word.slice(1)
-    })
-    .join(" ")
-}
+import { titleCase } from "@/lib/core/util"
 
 const router = createRouter({
   history: createWebHistory("/"),
