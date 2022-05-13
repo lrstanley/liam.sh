@@ -9,20 +9,19 @@
         </template>
         <template #actions="{ row }">
           <router-link :to="{ name: 'admin-edit-post-id', params: { id: row.id } }">
-            <n-button size="small" type="primary" tertiary> <CreateOutline /> Edit </n-button>
+            <n-button size="small" type="primary" tertiary>
+              <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
+            </n-button>
           </router-link>
           <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(row)">
-            <Trash /> Delete
+            <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
           </n-button>
         </template>
       </CoreDataTable>
     </div>
-
     <router-link :to="{ name: 'admin-new-post' }" class="no-underline absolute bottom-5 right-5">
       <n-button tertiary circle size="large" type="primary" class="h-13 w-13">
-        <template #icon>
-          <n-icon><Create /></n-icon>
-        </template>
+        <n-icon class="text-2em"><i-mdi-pencil-outline /></n-icon>
       </n-button>
     </router-link>
   </LayoutAdmin>

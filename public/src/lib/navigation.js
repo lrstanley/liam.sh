@@ -2,7 +2,7 @@ import { RouterLink } from "vue-router"
 import { NIcon } from "naive-ui"
 
 function renderIcon(icon) {
-  return () => h(NIcon, null, { default: () => h(icon) })
+  return () => h(NIcon, { style: "margin-top: -3px" }, { default: () => h(icon) })
 }
 
 function renderLink(target, title, icon) {
@@ -21,13 +21,13 @@ function renderLink(target, title, icon) {
 }
 
 export const menuOptions = [
-  renderLink({ name: "index" }, "Home", Home),
-  renderLink({ name: "about" }, "About", HelpCircleOutline),
+  renderLink({ name: "index" }, "Home", IconMdiHome),
+  renderLink({ name: "about" }, "About", IconMdiHelpCircleOutline),
 ]
 
 export const adminSidebarOptions = [
-  renderLink({ name: "admin" }, "Admin Home", Home),
-  renderLink({ name: "admin-posts" }, "Blog Posts", Book),
+  renderLink({ name: "admin" }, "Admin Home", IconMdiHome),
+  renderLink({ name: "admin-posts" }, "Blog Posts", IconMdiBookOpenPageVariantOutline),
   {
     key: "divider-1",
     type: "divider",
@@ -40,12 +40,12 @@ export const adminSidebarOptions = [
   {
     label: "Hear the Wind Sing",
     key: "hear-the-wind-sing",
-    icon: renderIcon(BookOutline),
+    icon: renderIcon(IconMdiBookOpenPageVariantOutline),
   },
   {
     label: "Pinball 1973",
     key: "pinball-1973",
-    icon: renderIcon(BookOutline),
+    icon: renderIcon(IconMdiBookOpenPageVariantOutline),
     children: [
       {
         label: "Rat",
@@ -56,12 +56,12 @@ export const adminSidebarOptions = [
   {
     label: "A Wild Sheep Chase",
     key: "a-wild-sheep-chase",
-    icon: renderIcon(BookOutline),
+    icon: renderIcon(IconMdiBookOpenPageVariantOutline),
   },
   {
     label: "Dance Dance Dance",
     key: "Dance Dance Dance",
-    icon: renderIcon(BookOutline),
+    icon: renderIcon(IconMdiBookOpenPageVariantOutline),
     children: [
       {
         type: "group",
@@ -71,19 +71,19 @@ export const adminSidebarOptions = [
           {
             label: "Narrator",
             key: "narrator",
-            icon: renderIcon(PersonOutline),
+            icon: renderIcon(IconMdiAccount),
           },
           {
             label: "Sheep Man",
             key: "sheep-man",
-            icon: renderIcon(PersonOutline),
+            icon: renderIcon(IconMdiAccount),
           },
         ],
       },
       {
         label: "Beverage",
         key: "beverage",
-        icon: renderIcon(WineOutline),
+        icon: renderIcon(IconMdiAccount),
         children: [
           {
             label: "Whisky",

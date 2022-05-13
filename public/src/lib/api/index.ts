@@ -467,14 +467,14 @@ export type UpdatePostInput = {
 
 export type User = Node & {
   __typename?: 'User';
-  avatarURL: Scalars['String'];
-  bio: Scalars['String'];
+  avatarURL?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
   createTime: Scalars['Time'];
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  location: Scalars['String'];
+  location?: Maybe<Scalars['String']>;
   login: Scalars['String'];
-  name: Scalars['String'];
+  name?: Maybe<Scalars['String']>;
   posts: PostConnection;
   updateTime: Scalars['Time'];
   userID: Scalars['Int'];
@@ -706,7 +706,7 @@ export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __type
 export type BaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type BaseQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, name: string, login: string, avatarURL: string } | null, githubUser: { __typename?: 'GithubUser', login: string, name: string, avatarURL: string, bio: string, email: string, location: string, htmlurl: string }, version: { __typename?: 'VersionInfo', commit: string, goVersion: string, date: string } };
+export type BaseQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, name?: string | null, login: string, avatarURL?: string | null } | null, githubUser: { __typename?: 'GithubUser', login: string, name: string, avatarURL: string, bio: string, email: string, location: string, htmlurl: string }, version: { __typename?: 'VersionInfo', commit: string, goVersion: string, date: string } };
 
 export type GetPostQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -721,7 +721,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, author: { __typename?: 'User', login: string, avatarURL: string } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, author: { __typename?: 'User', login: string, avatarURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
 
 
 export const DeletePostDocument = gql`

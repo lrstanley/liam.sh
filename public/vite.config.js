@@ -6,9 +6,9 @@ import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
 import WindiCSS from "vite-plugin-windicss"
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers"
-import { IconComponentResolver } from "./src/lib/resolvers/icon-component-resolver.ts"
-import IconResolver from "./src/lib/resolvers/icon-resolver.ts"
 import Pages from "vite-plugin-pages"
+import Icons from "unplugin-icons/vite"
+import IconsResolver from "unplugin-icons/resolver"
 
 export default defineConfig({
   resolve: {
@@ -41,7 +41,10 @@ export default defineConfig({
     Components({
       dts: false,
       directoryAsNamespace: true,
-      resolvers: [NaiveUiResolver(), IconComponentResolver({ pkg: "@vicons/ionicons5" })],
+      resolvers: [
+        NaiveUiResolver(),
+        IconsResolver({ componentPrefix: "i", enabledCollections: ["mdi"] }),
+      ],
     }),
     AutoImport({
       dts: false,
@@ -56,14 +59,17 @@ export default defineConfig({
         {
           "@/lib/core/state.js": ["useState"],
         },
-        IconResolver("@vicons/ionicons5"),
       ],
+      resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi"] })],
       eslintrc: {
         enabled: true,
       },
       exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
     }),
     WindiCSS(),
+    Icons({
+      autoInstall: true,
+    }),
   ],
   server: {
     port: 8081,

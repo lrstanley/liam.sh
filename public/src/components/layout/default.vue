@@ -17,7 +17,7 @@
         <span class="flex flex-auto justify-end px-2">
           Made with
           <n-icon class="text-green-600 mx-1">
-            <Heart />
+            <i-mdi-heart />
           </n-icon>
           by Liam
         </span>

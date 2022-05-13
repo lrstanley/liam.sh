@@ -30,7 +30,7 @@
                 <template #trigger>
                   <span class="bar-item">
                     <n-icon class="align-middle">
-                      <GitBranchOutline />
+                      <i-mdi-source-branch />
                     </n-icon>
                     {{ state.base.version?.commit?.substring(0, 8) || "master" }}
                   </span>
@@ -64,13 +64,13 @@
                     :href="state.base.githubUser.htmlurl"
                   >
                     <n-icon class="align-middle">
-                      <LogoGithub />
+                      <i-mdi-github />
                     </n-icon>
                     @{{ state.base.githubUser.login }}
                   </a>
                 </template>
                 <p>
-                  <n-icon class="align-middle"><LogoGithub /></n-icon>
+                  <n-icon class="align-middle"><i-mdi-github /></n-icon>
                   {{ state.base.githubUser.name }} &middot; {{ state.base.githubUser.bio }}
                 </p>
               </n-tooltip>

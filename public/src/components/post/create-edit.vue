@@ -50,7 +50,7 @@
         </n-form-item>
 
         <n-button block strong secondary type="primary" @click="emit('update:post', post)">
-          <n-icon class="mr-1"><Save /></n-icon>
+          <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
           Save post
         </n-button>
       </n-card>

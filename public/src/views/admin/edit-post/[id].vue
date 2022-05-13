@@ -2,7 +2,7 @@
   <LayoutAdmin>
     <n-page-header :subtitle="data?.node.title" class="px-5 mt-4 mb-8">
       <template #avatar>
-        <n-icon :size="40"><Create /></n-icon>
+        <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
       </template>
       <template #title>
         <a href="#" class="no-underline capitalize" style="color: inherit">

@@ -9,11 +9,11 @@
         <template #footer>
           <n-button-group>
             <n-button @click="$router.back()">
-              <n-icon class="mr-1"><ArrowUndoOutline /></n-icon>
+              <n-icon class="mr-1"><i-mdi-undo-variant /></n-icon>
               Go back
             </n-button>
             <n-button @click="$router.push('/')">
-              <n-icon class="mr-1"><Home /></n-icon>
+              <n-icon class="mr-1"><i-mdi-home /></n-icon>
               Home
             </n-button>
           </n-button-group>
