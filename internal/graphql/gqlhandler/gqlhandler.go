@@ -976,19 +976,19 @@ type Label implements Node {
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
@@ -1114,19 +1114,19 @@ type Post implements Node {
   labels(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Labels returned from the connection."""
     orderBy: LabelOrder
-  ,
+
     """Filtering options for Labels returned from the connection."""
     where: LabelWhereInput
   ): LabelConnection!
@@ -1267,57 +1267,57 @@ type Query {
   labels(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Labels returned from the connection."""
     orderBy: LabelOrder
-  ,
+
     """Filtering options for Labels returned from the connection."""
     where: LabelWhereInput
   ): LabelConnection!
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
   users(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Users returned from the connection."""
     orderBy: UserOrder
-  ,
+
     """Filtering options for Users returned from the connection."""
     where: UserWhereInput
   ): UserConnection!
@@ -1328,27 +1328,27 @@ type User implements Node {
   updateTime: Time!
   userID: Int!
   login: String!
-  name: String!
-  avatarURL: String!
-  email: String!
-  location: String!
-  bio: String!
+  name: String
+  avatarURL: String
+  email: String
+  location: String
+  bio: String
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
@@ -5524,14 +5524,11 @@ func (ec *executionContext) _User_name(ctx context.Context, field graphql.Collec
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5568,14 +5565,11 @@ func (ec *executionContext) _User_avatarURL(ctx context.Context, field graphql.C
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_avatarURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5612,14 +5606,11 @@ func (ec *executionContext) _User_email(ctx context.Context, field graphql.Colle
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_email(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5656,14 +5647,11 @@ func (ec *executionContext) _User_location(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_location(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5700,14 +5688,11 @@ func (ec *executionContext) _User_bio(ctx context.Context, field graphql.Collect
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_bio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11416,37 +11401,22 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._User_name(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "avatarURL":
 
 			out.Values[i] = ec._User_avatarURL(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "email":
 
 			out.Values[i] = ec._User_email(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "location":
 
 			out.Values[i] = ec._User_location(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "bio":
 
 			out.Values[i] = ec._User_bio(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "posts":
 			field := field
 
@@ -13022,6 +12992,16 @@ func (ec *executionContext) unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanley
 	}
 	res, err := ec.unmarshalInputPostWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
+	res := graphql.MarshalString(v)
+	return res
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {

@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	ariga.io/entcache v0.0.0-20220506183931-8c90cb7644e5
-	entgo.io/contrib v0.2.1-0.20220508193423-08d1e9820106
-	entgo.io/ent v0.10.2-0.20220507055527-429a5e5d917c
+	entgo.io/contrib v0.2.1-0.20220512222251-0dc018cb6708
+	entgo.io/ent v0.10.2-0.20220512043615-f2e0bef7a803
 	github.com/99designs/gqlgen v0.17.6-0.20220506133315-ec3e597e7b45
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.0.7
@@ -20,14 +20,14 @@ require (
 	github.com/lrstanley/chix v0.0.0-20220511021550-4f323b2b239b
 	github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb
 	github.com/markbates/goth v1.72.0
-	github.com/vektah/gqlparser/v2 v2.4.2
+	github.com/vektah/gqlparser/v2 v2.4.3-0.20220508162109-d3d9eb001575
 	github.com/vmihailenco/msgpack/v5 v5.0.0-beta.9
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
 )
 
 require (
-	ariga.io/atlas v0.3.8-0.20220504080252-21a1b71b3247 // indirect
+	ariga.io/atlas v0.3.8-0.20220505085539-5ec35b058386 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect

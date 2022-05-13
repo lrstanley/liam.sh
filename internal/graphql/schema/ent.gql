@@ -13,19 +13,19 @@ type Label implements Node {
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
@@ -151,19 +151,19 @@ type Post implements Node {
   labels(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Labels returned from the connection."""
     orderBy: LabelOrder
-  ,
+
     """Filtering options for Labels returned from the connection."""
     where: LabelWhereInput
   ): LabelConnection!
@@ -304,57 +304,57 @@ type Query {
   labels(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Labels returned from the connection."""
     orderBy: LabelOrder
-  ,
+
     """Filtering options for Labels returned from the connection."""
     where: LabelWhereInput
   ): LabelConnection!
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
   users(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Users returned from the connection."""
     orderBy: UserOrder
-  ,
+
     """Filtering options for Users returned from the connection."""
     where: UserWhereInput
   ): UserConnection!
@@ -365,27 +365,27 @@ type User implements Node {
   updateTime: Time!
   userID: Int!
   login: String!
-  name: String!
-  avatarURL: String!
-  email: String!
-  location: String!
-  bio: String!
+  name: String
+  avatarURL: String
+  email: String
+  location: String
+  bio: String
   posts(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
-  ,
+
     """Returns the first _n_ elements from the list."""
     first: Int
-  ,
+
     """Returns the elements in the list that come before the specified cursor."""
     before: Cursor
-  ,
+
     """Returns the last _n_ elements from the list."""
     last: Int
-  ,
+
     """Ordering options for Posts returned from the connection."""
     orderBy: PostOrder
-  ,
+
     """Filtering options for Posts returned from the connection."""
     where: PostWhereInput
   ): PostConnection!
