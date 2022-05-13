@@ -370,9 +370,15 @@ func (luo *LabelUpdateOne) Save(ctx context.Context) (*Label, error) {
 			}
 			mut = luo.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, luo.mutation); err != nil {
+		v, err := mut.Mutate(ctx, luo.mutation)
+		if err != nil {
 			return nil, err
 		}
+		nv, ok := v.(*Label)
+		if !ok {
+			return nil, fmt.Errorf("unexpected node type %T returned from LabelMutation", v)
+		}
+		node = nv
 	}
 	return node, err
 }

@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
 import routes from "~pages"
-import { api } from "@/lib/http"
 import { titleCase } from "@/lib/core/util"
+import { client } from "@/lib/api/client"
+import { BaseDocument } from "@/lib/api"
 
 const router = createRouter({
   history: createWebHistory("/"),
@@ -12,55 +13,32 @@ router.beforeEach(async (to, from, next) => {
   const state = useState()
   state.loading = true
 
-  if (state.auth !== null) {
-    return next()
-  }
+  let error
 
-  const self = new Promise((resolve, reject) => {
-    api
-      .get("/auth/self")
-      .then(({ data }) => {
-        state.auth = data.auth
-        return resolve()
-      })
-      .catch(({ response }) => {
-        if (response.status === 401) {
-          state.auth = null
+  if (state.base == null || (from.path == "/" && from.name == undefined)) {
+    await client
+      .query(BaseDocument)
+      .toPromise()
+      .then((resp) => {
+        state.base = resp.data
 
-          if (to.meta.auth == true) {
-            window.location.href = `/api/auth/providers/github?next=${window.location.origin + to.path}`
-            return
-          }
-          return resolve()
-        } else {
-          if (to.name == "catchall") return resolve()
-
-          return reject(response)
+        if (resp.error !== null) {
+          error = resp.error
         }
       })
-  })
+  }
 
-  const me = new Promise((resolve, reject) => {
-    api
-      .get("/gh/me")
-      .then(({ data }) => {
-        state.me = data.user
-        return resolve()
-      })
-      .catch(({ response }) => {
-        if (to.name == "catchall") return resolve()
+  if (to.meta.auth == true && state.base.self == null) {
+    window.location.href = `/api/auth/providers/github?next=${window.location.origin + to.path}`
+    return
+  }
 
-        return reject(response)
-      })
-  })
+  if (error !== undefined && to.name !== "catchall") {
+    next({ name: "catchall", params: { pathMatch: error.name } })
+    return
+  }
 
-  await Promise.all([self, me])
-    .then(() => {
-      return next()
-    })
-    .catch((error) => {
-      return next({ name: "catchall", params: { pathMatch: error.status } })
-    })
+  next()
 })
 
 router.afterEach((to) => {

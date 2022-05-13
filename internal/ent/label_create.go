@@ -118,9 +118,15 @@ func (lc *LabelCreate) Save(ctx context.Context) (*Label, error) {
 			}
 			mut = lc.hooks[i](mut)
 		}
-		if _, err := mut.Mutate(ctx, lc.mutation); err != nil {
+		v, err := mut.Mutate(ctx, lc.mutation)
+		if err != nil {
 			return nil, err
 		}
+		nv, ok := v.(*Label)
+		if !ok {
+			return nil, fmt.Errorf("unexpected node type %T returned from LabelMutation", v)
+		}
+		node = nv
 	}
 	return node, err
 }

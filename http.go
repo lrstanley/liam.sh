@@ -5,12 +5,12 @@
 package main
 
 import (
-	"context"
 	_ "embed"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -18,15 +18,13 @@ import (
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/ogent"
-	"github.com/lrstanley/liam.sh/internal/handlers/adminhandler"
-	"github.com/lrstanley/liam.sh/internal/handlers/githubhandler"
+	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
 
-//go:embed internal/ent/openapi.json
+// go:embed internal/ent/openapi.json
 var openapi []byte
 
 func httpServer() *http.Server {
@@ -73,35 +71,9 @@ func httpServer() *http.Server {
 	r.Use(auth.AddToContext)
 	r.Use(httpware.EvictCacheAdmin)
 
-	dbHandler, err := ogent.NewServer(
-		ogent.NewOgentHandler(db),
-		ogent.WithErrorHandler(func(ctx context.Context, w http.ResponseWriter, r *http.Request, err error) {
-			logger.WithError(err).Error("ogent handler error")
-			r.URL.Path = "/api/query" + r.URL.Path
-			chix.Error(w, r, http.StatusInternalServerError, err)
-		}),
-		ogent.WithNotFound(func(w http.ResponseWriter, r *http.Request) {
-			r.URL.Path = "/api/query" + r.URL.Path
-			chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
-		}),
-	)
-	if err != nil {
-		logger.WithError(err).Fatal("failed to create ogent handler")
-	}
-
+	r.Mount("/api/graphql", graphql.New(db, cli))
+	r.Mount("/api/playground", playground.Handler("GraphQL playground", "/api/graphql"))
 	r.Mount("/api/auth", auth)
-	r.Route("/api/gh", githubhandler.New(db).Route)
-	r.With(auth.AuthRequired).Route("/api/admin", adminhandler.New(db, auth).Route)
-	r.Mount("/api/query", http.StripPrefix("/api/query", dbHandler))
-
-	r.Get("/api/openapi.json", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(openapi)
-	})
-	r.Get("/api/version", func(w http.ResponseWriter, r *http.Request) {
-		chix.JSON(w, r, http.StatusOK, cli.GetVersionInfo().NonSensitive())
-	})
 
 	if !cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
@@ -123,6 +95,7 @@ func catchAll(w http.ResponseWriter, r *http.Request) {
 		chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
 		return
 	}
+
 	if r.Method != http.MethodGet {
 		chix.Error(w, r, http.StatusMethodNotAllowed, chix.ErrMatchStatus)
 		return

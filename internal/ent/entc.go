@@ -5,11 +5,9 @@ package main
 import (
 	"log"
 
-	"ariga.io/ogent"
-	"entgo.io/contrib/entoas"
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
-	"github.com/ogen-go/ogen"
 )
 
 const header = `// Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
@@ -25,31 +23,16 @@ func checkError(err error) {
 }
 
 func main() {
-	spec := ogen.NewSpec().AddServers(
-		&ogen.Server{
-			Description: "development server",
-			URL:         "http://localhost:8080/api/query",
-		},
-		&ogen.Server{
-			Description: "production server",
-			URL:         "https://liam.sh/api/query",
-		},
+	egq, err := entgql.NewExtension(
+		entgql.WithConfigPath("./graphql/gqlgen.yml"),
+		entgql.WithSchemaGenerator(),
+		entgql.WithSchemaPath("./graphql/schema/ent.gql"),
+		entgql.WithWhereInputs(true),
 	)
-	oas, err := entoas.NewExtension(entoas.Spec(spec))
 	checkError(err)
-
-	ogent, err := ogent.NewExtension(spec)
-	checkError(err)
-
-	// egq, err := entgql.NewExtension(
-	// 	entgql.WithWhereFilters(true),
-	// 	entgql.WithSchemaPath("../handlers/graphql/ent.graphql"),
-	// 	entgql.WithConfigPath("../handlers/graphql/gqlgen.yml"),
-	// )
-	// checkError(err)
 
 	err = entc.Generate(
-		"./schema",
+		"./ent/schema",
 		&gen.Config{
 			Header: header,
 			Features: []gen.Feature{
@@ -59,7 +42,8 @@ func main() {
 				gen.FeatureUpsert,
 			},
 		},
-		entc.Extensions(ogent, oas),
+		entc.Extensions(egq),
+		entc.TemplateDir("./ent/template"),
 	)
 	checkError(err)
 }

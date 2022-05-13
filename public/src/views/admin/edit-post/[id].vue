@@ -1,23 +1,23 @@
 <template>
   <LayoutAdmin>
-    <n-page-header :subtitle="post.title" class="px-5 mt-4 mb-8">
+    <n-page-header :subtitle="data?.node.title" class="px-5 mt-4 mb-8">
       <template #avatar>
         <n-icon :size="40"><Create /></n-icon>
       </template>
       <template #title>
         <a href="#" class="no-underline capitalize" style="color: inherit">
-          Editing post #{{ post.id }}
+          Editing post #{{ data?.node.id }}
         </a>
       </template>
     </n-page-header>
 
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap">
-      <n-spin :show="loading">
+      <n-spin :show="fetching">
         <n-alert v-if="error" title="Error fetching post" type="error">
           {{ error }}
         </n-alert>
 
-        <PostCreateEdit v-if="post.title" :post="post" @update:post="updatePost" />
+        <PostCreateEdit v-if="data?.node" :post="data.node" @update:post="updatePost" />
       </n-spin>
     </div>
   </LayoutAdmin>
@@ -25,7 +25,7 @@
 
 <script setup>
 import { useMessage } from "naive-ui"
-import { query } from "@/lib/http"
+import { useGetPostQuery, useUpdatePostMutation } from "@/lib/api"
 
 const props = defineProps({
   id: {
@@ -35,41 +35,29 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const state = useState()
 const message = useMessage()
-const loading = ref(true)
-const error = ref(null)
-const post = ref({})
+const { data, error, fetching } = useGetPostQuery({ variables: { id: props.id } })
+const update = useUpdatePostMutation()
 
 function updatePost(val) {
-  loading.value = true
-  val.author = state.auth.id
-
-  query.post
-    .updatePost(val.id, val)
-    .then(() => {
-      message.success("Post updated")
-      router.push({ name: "admin-posts" })
+  update
+    .executeMutation({
+      id: props.id,
+      input: {
+        title: val.title,
+        content: val.content,
+        slug: val.slug,
+        addLabelIDs: val.labelIDs,
+        publishedAt: val.publishedAt,
+      },
     })
-    .catch((err) => {
-      message.error(err)
-    })
-    .finally(() => {
-      setTimeout(() => (loading.value = false), 200)
+    .then((result) => {
+      if (!result.error) {
+        message.success("Post updated")
+        router.push({ name: "admin-posts" })
+      } else {
+        message.error("Error updating post: " + result.error.toString())
+      }
     })
 }
-
-onMounted(() => {
-  query.post
-    .readPost(props.id)
-    .then((data) => {
-      post.value = data
-    })
-    .catch((err) => {
-      error.value = err
-    })
-    .finally(() => {
-      loading.value = false
-    })
-})
 </script>

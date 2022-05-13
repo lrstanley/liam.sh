@@ -6,7 +6,7 @@
       >
         <div class="mb-4 text-size-38px md:text-size-45px">
           <span class="inline-flex mr-10px text-green-600">
-            {{ state.me.name.split(" ")[0].toLowerCase() }}
+            {{ state.base.githubUser.name.split(" ")[0].toLowerCase() }}
             <span class="text-gray-500">:</span>
             ~
             <span class="text-gray-500 mr-4">$</span>
@@ -32,10 +32,14 @@
                     <n-icon class="align-middle">
                       <GitBranchOutline />
                     </n-icon>
-                    {{ version ? version.build_commit?.substring(0, 8) : "master" }}
+                    {{ state.base.version?.commit?.substring(0, 8) || "master" }}
                   </span>
                 </template>
-                {{ version ? `${version.go_version} &middot; built: ${version.build_date}` : "master" }}
+                {{
+                  state.base.version
+                    ? `${state.base.version.goVersion} &middot; built: ${state.base.version.date}`
+                    : "master"
+                }}
               </n-tooltip>
               <span class="ml-auto" />
               <n-tooltip trigger="hover">
@@ -57,17 +61,17 @@
                 <template #trigger>
                   <a
                     class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
-                    :href="state.me.html_url"
+                    :href="state.base.githubUser.htmlurl"
                   >
                     <n-icon class="align-middle">
                       <LogoGithub />
                     </n-icon>
-                    @{{ state.me.login }}
+                    @{{ state.base.githubUser.login }}
                   </a>
                 </template>
                 <p>
                   <n-icon class="align-middle"><LogoGithub /></n-icon>
-                  {{ state.me.name }} &middot; {{ state.me.bio }}
+                  {{ state.base.githubUser.name }} &middot; {{ state.base.githubUser.bio }}
                 </p>
               </n-tooltip>
             </span>
@@ -79,14 +83,7 @@
 </template>
 
 <script setup>
-import { api } from "@/lib/http"
-
 const state = useState()
-const version = ref(null)
-
-api.get("/version").then(({ data }) => {
-  version.value = data.build_commit ? data : null
-})
 </script>
 
 <style scoped>

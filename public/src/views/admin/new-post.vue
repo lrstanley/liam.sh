@@ -10,31 +10,27 @@
     </n-page-header>
 
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap">
-      <PostCreateEdit :post="post" @update:post="createPost" />
+      <PostCreateEdit :post="post?.data.value" @update:post="createPost" />
     </div>
   </LayoutAdmin>
 </template>
 
 <script setup>
 import { useMessage } from "naive-ui"
-import { query } from "@/lib/http"
+import { useCreatePostMutation } from "@/lib/api"
 
 const router = useRouter()
-const state = useState()
 const message = useMessage()
-const post = ref({})
+const post = useCreatePostMutation()
 
 function createPost(val) {
-  val.author = state.auth.id
-
-  query.post
-    .createPost(val)
-    .then(() => {
-      message.success("Post created")
+  post.executeMutation({ input: val }).then((result) => {
+    if (!result.error) {
+      message.success("Post created successfully")
       router.push({ name: "admin-posts" })
-    })
-    .catch((err) => {
-      message.error(err)
-    })
+    } else {
+      message.error(result.error.toString())
+    }
+  })
 }
 </script>

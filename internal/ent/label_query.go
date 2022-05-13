@@ -32,6 +32,8 @@ type LabelQuery struct {
 	predicates []predicate.Label
 	// eager-loading edges.
 	withPosts *PostQuery
+	modifiers []func(*sql.Selector)
+	loadTotal []func(context.Context, []*Label) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -379,6 +381,9 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
+	if len(lq.modifiers) > 0 {
+		_spec.Modifiers = lq.modifiers
+	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -442,11 +447,19 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 		}
 	}
 
+	for i := range lq.loadTotal {
+		if err := lq.loadTotal[i](ctx, nodes); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
 }
 
 func (lq *LabelQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := lq.querySpec()
+	if len(lq.modifiers) > 0 {
+		_spec.Modifiers = lq.modifiers
+	}
 	_spec.Node.Columns = lq.fields
 	if len(lq.fields) > 0 {
 		_spec.Unique = lq.unique != nil && *lq.unique

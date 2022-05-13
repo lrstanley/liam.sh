@@ -39,10 +39,12 @@ export default defineConfig({
       reactivityTransform: true,
     }),
     Components({
+      dts: false,
       directoryAsNamespace: true,
       resolvers: [NaiveUiResolver(), IconComponentResolver({ pkg: "@vicons/ionicons5" })],
     }),
     AutoImport({
+      dts: false,
       imports: [
         "vue",
         "vue/macros",

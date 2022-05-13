@@ -1,0 +1,59 @@
+query base {
+    self {
+        id
+        name
+        login
+        avatarURL
+    }
+
+    githubUser {
+        login
+        name
+        avatarURL
+        bio
+        email
+        location
+        htmlurl
+    }
+
+    version {
+        commit
+        goVersion
+        date
+    }
+}
+
+query getPost($id: ID!) {
+    node(id: $id) {
+        ... on Post {
+            id
+            title
+            slug
+            content
+            publishedAt
+        }
+    }
+}
+
+query getPosts($count: Int!, $cursor: Cursor) {
+    posts(first: $count, after: $cursor) {
+        edges {
+            node {
+                id
+                title
+                slug
+                publishedAt
+                author {
+                    login
+                    avatarURL
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}

@@ -1,0 +1,55 @@
+# schema tells gqlgen where the GraphQL schema is located.
+schema:
+  - ./graphql/schema/*.gql
+
+# Where should the generated server code go?
+exec:
+  filename: ./graphql/gqlhandler/gqlhandler.go
+  package: gqlhandler
+
+# Where should any generated models go?
+model:
+  filename: ./models/graphql.go
+  package: models
+
+# Where should the resolver implementations go?
+resolver:
+  layout: follow-schema
+  dir: ./graphql/resolver
+  package: resolver
+  filename_template: "{name}.resolvers.go"
+
+# gqlgen will search for any type names in the schema in these go packages
+# if they match it will use them, otherwise it will generate them.
+
+# autobind tells gqlgen to search for any type names in the GraphQL schema in the
+# provided Go package. If they match it will use them, otherwise it will generate new ones.
+autobind:
+  - github.com/lrstanley/liam.sh/internal/ent
+  - github.com/lrstanley/liam.sh/internal/ent/user
+  - github.com/lrstanley/liam.sh/internal/ent/post
+  - github.com/lrstanley/liam.sh/internal/ent/label
+
+# This section declares type mapping between the GraphQL and Go type systems.
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.IntID
+  Node:
+    model:
+      - github.com/lrstanley/liam.sh/internal/ent.Noder
+  Duration:
+    model:
+      - entgo.io/contrib/entgql/internal/todo/ent/schema/durationgql.Duration
+  GithubUser:
+    model:
+      - github.com/google/go-github/v44/github.User
+  Timestamp:
+    model:
+      - github.com/google/go-github/v44/github.Timestamp
+  VersionInfo:
+    model:
+      - github.com/lrstanley/clix.NonSensitiveVersion
+  Link:
+    model:
+      - github.com/lrstanley/clix.Link

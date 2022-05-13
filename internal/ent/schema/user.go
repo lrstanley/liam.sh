@@ -3,7 +3,9 @@ package schema
 import (
 	"regexp"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
@@ -23,10 +25,16 @@ type User struct {
 func (User) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("user_id").Unique().Positive().Immutable(),
-		field.String("login").Unique().Match(reUserLogin),
-		field.String("name").Optional().MaxLen(400),
+		field.String("login").Unique().Match(reUserLogin).Annotations(
+			entgql.OrderField("LOGIN"),
+		),
+		field.String("name").Optional().MaxLen(400).Annotations(
+			entgql.OrderField("NAME"),
+		),
 		field.String("avatar_url").Optional().MaxLen(2048),
-		field.String("email").Optional().MaxLen(320),
+		field.String("email").Optional().MaxLen(320).Annotations(
+			entgql.OrderField("EMAIL"),
+		),
 		field.String("location").Optional().MaxLen(400),
 		field.String("bio").Optional().MaxLen(400),
 	}
@@ -52,6 +60,15 @@ func (User) Policy() ent.Policy {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("posts", Post.Type),
+		edge.To("posts", Post.Type).Annotations(
+			entgql.RelayConnection(),
+		),
+	}
+}
+
+func (User) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entgql.RelayConnection(),
+		entgql.QueryField(),
 	}
 }

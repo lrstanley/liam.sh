@@ -67,22 +67,15 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:post"])
 
-// const post = computed({
-//   get: () => props.post,
-//   set: (val) => emit("update:post", val),
-// })
-
 const post = reactive({
-  create_time: new Date().toISOString(),
-  published_at: new Date().toISOString(),
+  publishedAt: new Date().toISOString(),
   ...props.post,
-  update_time: new Date().toISOString(),
 })
 
 const datetime = computed({
-  get: () => Date.parse(post.published_at),
+  get: () => Date.parse(post.publishedAt),
   set: (val) => {
-    post.published_at = new Date(val).toISOString()
+    post.publishedAt = new Date(val).toISOString()
   },
 })
 </script>

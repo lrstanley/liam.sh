@@ -3,12 +3,13 @@ package schema
 import (
 	"regexp"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
-	"github.com/lrstanley/liam.sh/internal/policies"
 )
 
 var (
@@ -21,7 +22,9 @@ type Label struct {
 
 func (Label) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Unique().Match(reLabel),
+		field.String("name").Unique().Match(reLabel).Annotations(
+			entgql.OrderField("NAME"),
+		),
 	}
 }
 
@@ -34,7 +37,7 @@ func (Label) Mixin() []ent.Mixin {
 func (Label) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			policies.AllowRoles([]string{"admin"}, true),
+			AllowRoles([]string{"admin"}, true),
 		},
 		Query: privacy.QueryPolicy{
 			privacy.AlwaysAllowRule(),
@@ -44,6 +47,15 @@ func (Label) Policy() ent.Policy {
 
 func (Label) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("posts", Post.Type),
+		edge.To("posts", Post.Type).Annotations(
+			entgql.RelayConnection(),
+		),
+	}
+}
+
+func (Label) Annotations() []schema.Annotation {
+	return []schema.Annotation{
+		entgql.RelayConnection(),
+		entgql.QueryField(),
 	}
 }

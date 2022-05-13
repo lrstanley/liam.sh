@@ -4,14 +4,13 @@ import (
 	"regexp"
 	"time"
 
-	"entgo.io/contrib/entoas"
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
-	"github.com/lrstanley/liam.sh/internal/policies"
 )
 
 var (
@@ -24,10 +23,16 @@ type Post struct {
 
 func (Post) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("slug").Match(rePostSlug).Unique(),
-		field.String("title").MaxLen(100),
+		field.String("slug").Match(rePostSlug).Unique().Annotations(
+			entgql.OrderField("SLUG"),
+		),
+		field.String("title").MaxLen(100).Annotations(
+			entgql.OrderField("TITLE"),
+		),
 		field.String("content").NotEmpty(),
-		field.Time("published_at").Default(time.Now),
+		field.Time("published_at").Default(time.Now).Annotations(
+			entgql.OrderField("DATE"),
+		),
 	}
 }
 
@@ -40,7 +45,7 @@ func (Post) Mixin() []ent.Mixin {
 func (Post) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			policies.AllowRoles([]string{"admin"}, true),
+			AllowRoles([]string{"admin"}, true),
 		},
 		Query: privacy.QueryPolicy{
 			privacy.AlwaysAllowRule(),
@@ -50,19 +55,16 @@ func (Post) Policy() ent.Policy {
 
 func (Post) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("author", User.Type).Ref("posts").Unique().Required().Annotations(
-			entoas.Groups("post:read"),
-		),
+		edge.From("author", User.Type).Ref("posts").Unique().Required(),
 		edge.From("labels", Label.Type).Ref("posts").Annotations(
-			entoas.Groups("post:read"),
+			entgql.RelayConnection(),
 		),
 	}
 }
 
 func (Post) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entoas.ReadOperation(
-			entoas.OperationGroups("post:read"),
-		),
+		entgql.RelayConnection(),
+		entgql.QueryField(),
 	}
 }

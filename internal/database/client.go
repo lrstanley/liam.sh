@@ -16,6 +16,7 @@ import (
 	"github.com/apex/log"
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/ent/migrate"
 	_ "github.com/lrstanley/liam.sh/internal/ent/runtime"
 	"github.com/lrstanley/liam.sh/internal/models"
 )
@@ -60,7 +61,7 @@ func Migrate(ctx context.Context, logger log.Interface, client *ent.Client) {
 		entcache.Skip(ctx),
 		schema.WithAtlas(true),
 		schema.WithDropColumn(true),
-		// migrate.WithGlobalUniqueID(true),
+		migrate.WithGlobalUniqueID(true),
 	); err != nil {
 		logger.WithError(err).Fatal("failed to create schema")
 	}

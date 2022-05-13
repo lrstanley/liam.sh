@@ -1,0 +1,20 @@
+type VersionInfo {
+    name: String!
+    version: String!
+    commit: String!
+    date: String!
+    command: String!
+    goVersion: String!
+    os: String!
+    arch: String!
+    links: [Link!]
+}
+
+type Link {
+    name: String!
+    url: String!
+}
+
+extend type Query {
+    version: VersionInfo!
+}

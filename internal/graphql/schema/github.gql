@@ -1,0 +1,24 @@
+type GithubUser {
+    id: Int!
+    login: String!
+    name: String!
+    avatarURL: String!
+    email: String!
+    location: String!
+    bio: String!
+    htmlurl: String!
+    publicRepos: Int!
+    followers: Int!
+    following: Int!
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+}
+
+extend type Query {
+    githubUser: GithubUser!
+}
+
+# the Github API client aliases the time.Time type.
+type Timestamp {
+    Time: Time!
+}

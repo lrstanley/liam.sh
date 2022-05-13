@@ -1,11 +1,11 @@
 <template>
   <LayoutAdmin>
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
-      <CoreDataTable :data="posts" :loading="loading" :headers="{ published_at: 'Published' }">
+      <CoreDataTable :data="posts" :loading="fetching.value" :headers="{ published_at: 'Published' }">
         <template #title="{ row }">{{ row.title }}</template>
         <template #slug="{ row }">{{ row.slug }}</template>
         <template #published="{ row }">
-          {{ useTimeAgo(Date.parse(row.published_at)).value }}
+          {{ useTimeAgo(Date.parse(row.publishedAt)).value }}
         </template>
         <template #actions="{ row }">
           <router-link :to="{ name: 'admin-edit-post-id', params: { id: row.id } }">
@@ -31,26 +31,29 @@
 <script setup>
 import { useDialog, useMessage } from "naive-ui"
 import { useTimeAgo } from "@vueuse/core"
-import { query } from "@/lib/http"
+import { useGetPostsQuery, useDeletePostMutation } from "@/lib/api"
+
+const props = defineProps({
+  cursor: {
+    type: String,
+    default: null,
+  },
+})
 
 const dialog = useDialog()
 const message = useMessage()
+const {
+  data,
+  fetching,
+  executeQuery: refetch,
+} = useGetPostsQuery({
+  variables: { count: 100, cursor: props.cursor },
+})
+const del = useDeletePostMutation()
 
-const posts = ref([])
-const loading = ref(true)
-
-function fetchPosts() {
-  loading.value = true
-
-  query.post
-    .listPost(1, 1000)
-    .then((res) => {
-      posts.value = res
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
+const posts = computed({
+  get: () => data?.value?.posts.edges.map((v) => v.node),
+})
 
 function deletePost(row) {
   dialog.warning({
@@ -59,22 +62,16 @@ function deletePost(row) {
     positiveText: "Delete",
     negativeText: "Cancel",
     onPositiveClick: () => {
-      query.post
-        .deletePost(row.id)
-        .then(() => {
+      del.executeMutation({ id: row.id }).then((result) => {
+        if (!result.error) {
           message.success("Post deleted")
-        })
-        .catch((err) => {
-          message.error(err)
-        })
-        .finally(() => {
-          fetchPosts()
-        })
+        } else {
+          message.error(result.error.toString())
+        }
+
+        refetch()
+      })
     },
   })
 }
-
-onMounted(() => {
-  fetchPosts()
-})
 </script>
