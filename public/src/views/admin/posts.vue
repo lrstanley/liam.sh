@@ -1,7 +1,12 @@
 <template>
-  <LayoutAdmin>
+  <LayoutAdmin :loading="fetching" :error="error">
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
-      <CoreDataTable :data="posts" :loading="fetching.value" :headers="{ published_at: 'Published' }">
+      <CoreDataTable
+        v-if="!fetching"
+        v-motion-slide-top
+        :data="posts"
+        :headers="{ published_at: 'Published' }"
+      >
         <template #title="{ row }">{{ row.title }}</template>
         <template #slug="{ row }">{{ row.slug }}</template>
         <template #published="{ row }">
@@ -44,6 +49,7 @@ const message = useMessage()
 const {
   data,
   fetching,
+  error,
   executeQuery: refetch,
 } = useGetPostsQuery({
   variables: { count: 100, cursor: props.cursor },

@@ -22,11 +22,29 @@
             :collapsed-icon-size="22"
           />
         </n-layout-sider>
-        <!-- content-style="padding-top: 30px;padding-bottom: 45px" -->
-        <n-layout embedded content-style="height: 100%">
+        <n-layout
+          embedded
+          content-style="max-height: 100%;display: flex;flex: 1 1 auto;flex-direction: column"
+        >
           <CoreBreadcrumbs class="pt-2 pl-3" />
 
-          <slot><router-view /></slot>
+          <n-alert
+            v-if="props.error"
+            v-motion-fade-visible
+            title="An error occurred"
+            type="error"
+            class="m-2 md:m-6"
+          >
+            {{ props.error }}
+          </n-alert>
+          <template v-else-if="props.loading">
+            <n-spin class="flex-auto">
+              <template #description> Loading... </template>
+            </n-spin>
+          </template>
+          <template v-else>
+            <slot><router-view /></slot>
+          </template>
         </n-layout>
       </n-layout>
     </n-layout>
@@ -37,4 +55,14 @@
 import { menuOptions, adminSidebarOptions } from "@/lib/navigation.js"
 
 const state = useState()
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
+    type: Error,
+    default: null,
+  },
+})
 </script>

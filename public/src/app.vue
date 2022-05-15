@@ -17,8 +17,8 @@ import { darkTheme } from "naive-ui"
 <style>
 html,
 body {
-  min-height: 100%;
-  min-width: 100%;
+  height: 100%;
+  width: 100%;
   @apply flex flex-auto;
   @apply bg-dark-300 text-light-600;
 }
