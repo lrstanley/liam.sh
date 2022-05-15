@@ -12,11 +12,16 @@ const props = defineProps({
     default: () => ({}),
     required: true,
   },
+  columnDefaults: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const slots = useSlots()
 const columns = Object.keys(slots).map((name) => {
   return {
+    ...props.columnDefaults,
     title: name in props.headers ? props.headers[name] : titleCase(name),
     key: name,
     render: (row) => {

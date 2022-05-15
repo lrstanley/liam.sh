@@ -716,8 +716,10 @@ export type GetPostQueryVariables = Exact<{
 export type GetPostQuery = { __typename?: 'Query', node?: { __typename?: 'Label' } | { __typename?: 'Post', id: string, title: string, slug: string, content: string, publishedAt: any } | { __typename?: 'User' } | null };
 
 export type GetPostsQueryVariables = Exact<{
-  count: Scalars['Int'];
+  count?: InputMaybe<Scalars['Int']>;
   cursor?: InputMaybe<Scalars['Cursor']>;
+  order?: InputMaybe<OrderDirection>;
+  orderBy?: InputMaybe<PostOrderField>;
 }>;
 
 
@@ -801,8 +803,12 @@ export function useGetPostQuery(options: Omit<Urql.UseQueryArgs<never, GetPostQu
   return Urql.useQuery<GetPostQuery>({ query: GetPostDocument, ...options });
 };
 export const GetPostsDocument = gql`
-    query getPosts($count: Int!, $cursor: Cursor) {
-  posts(first: $count, after: $cursor) {
+    query getPosts($count: Int = 25, $cursor: Cursor, $order: OrderDirection = DESC, $orderBy: PostOrderField = DATE) {
+  posts(
+    first: $count
+    after: $cursor
+    orderBy: {direction: $order, field: $orderBy}
+  ) {
     edges {
       node {
         id

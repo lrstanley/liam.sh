@@ -35,8 +35,13 @@ query getPost($id: ID!) {
     }
 }
 
-query getPosts($count: Int!, $cursor: Cursor) {
-    posts(first: $count, after: $cursor) {
+query getPosts(
+    $count: Int = 25
+    $cursor: Cursor
+    $order: OrderDirection = DESC
+    $orderBy: PostOrderField = DATE
+) {
+    posts(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
         edges {
             node {
                 id
