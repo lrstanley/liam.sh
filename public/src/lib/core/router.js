@@ -17,7 +17,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (state.base == null || (from.path == "/" && from.name == undefined)) {
     await client
-      .query(BaseDocument)
+      .query(BaseDocument, {}, { requestPolicy: "network-only" })
       .toPromise()
       .then((resp) => {
         state.base = resp.data
@@ -33,8 +33,13 @@ router.beforeEach(async (to, from, next) => {
     return
   }
 
-  if (error !== undefined && to.name !== "catchall") {
-    next({ name: "catchall", params: { pathMatch: error.name } })
+  if (
+    error !== undefined &&
+    !error.graphQLErrors?.some((e) => e.path?.includes("self")) &&
+    to.name !== "catchall"
+  ) {
+    console.log(error)
+    next({ name: "catchall", params: { catchall: error.name } })
     return
   }
 

@@ -3,8 +3,8 @@
     <div class="flex flex-auto flex-col justify-center">
       <n-result
         :status="errorCode"
-        :title="'Error code: ' + errorCode"
-        description="You know life is always ridiculous."
+        :title="'Error code: ' + errorTitle"
+        :description="props.error ? props.error.toString() : 'You know life is always ridiculous.'"
       >
         <template #footer>
           <n-button-group>
@@ -26,24 +26,38 @@
 <script setup>
 const props = defineProps({
   catchall: {
-    type: Array,
+    type: [String, Array],
+    default: "",
+  },
+  error: {
+    type: Error,
     default: null,
   },
 })
 
+const source = computed(() => (typeof props.catchall === "string" ? [props.catchall] : props.catchall))
 const errorCode = ref("0")
+const errorTitle = ref("")
 const supported = ["info", "success", "warning", "error", "404", "403", "500", "418"]
 
 onMounted(() => {
-  for (const item of props.catchall) {
+  for (const item of source.value) {
     if (supported.includes(item)) {
       errorCode.value = item
     } else if (item.match(/^[45][0-9]+$/)) {
       errorCode.value = "error"
+    } else if (item == "CombinedError") {
+      errorCode.value = "error"
+      errorTitle.value = "query error"
     } else {
       errorCode.value = "404"
+      errorTitle.value = "not found"
       break
     }
+  }
+
+  if (errorTitle.value == "") {
+    errorTitle.value = errorCode.value
   }
 })
 </script>

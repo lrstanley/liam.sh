@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-auto flex-col md:flex-row">
+  <div v-motion-fade class="h-full flex flex-auto flex-col md:flex-row">
     <div class="h-full flex-auto mb-5 ml-7 md:ml-0 mr-7">
       <n-card>
         <n-space vertical>
