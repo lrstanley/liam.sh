@@ -13,3 +13,10 @@ mutation updatePost($id: ID!, $input: UpdatePostInput!) {
         id
     }
 }
+
+mutation createLabel($input: CreateLabelInput!) {
+    createLabel(input: $input) {
+        id
+        name
+    }
+}

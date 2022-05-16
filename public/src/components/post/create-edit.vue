@@ -49,6 +49,8 @@
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>
 
+        <PostLabelEdit class="pb-5" />
+
         <n-button block strong secondary type="primary" @click="emit('update:post', post)">
           <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
           Save post

@@ -703,6 +703,13 @@ export type UpdatePostMutationVariables = Exact<{
 
 export type UpdatePostMutation = { __typename?: 'Mutation', updatePost: { __typename?: 'Post', id: string } };
 
+export type CreateLabelMutationVariables = Exact<{
+  input: CreateLabelInput;
+}>;
+
+
+export type CreateLabelMutation = { __typename?: 'Mutation', createLabel: { __typename?: 'Label', id: string, name: string } };
+
 export type BaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -724,6 +731,11 @@ export type GetPostsQueryVariables = Exact<{
 
 
 export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, author: { __typename?: 'User', login: string, avatarURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
+
+export type GetLabelsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLabelsQuery = { __typename?: 'Query', labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } };
 
 
 export const DeletePostDocument = gql`
@@ -756,6 +768,18 @@ export const UpdatePostDocument = gql`
 
 export function useUpdatePostMutation() {
   return Urql.useMutation<UpdatePostMutation, UpdatePostMutationVariables>(UpdatePostDocument);
+};
+export const CreateLabelDocument = gql`
+    mutation createLabel($input: CreateLabelInput!) {
+  createLabel(input: $input) {
+    id
+    name
+  }
+}
+    `;
+
+export function useCreateLabelMutation() {
+  return Urql.useMutation<CreateLabelMutation, CreateLabelMutationVariables>(CreateLabelDocument);
 };
 export const BaseDocument = gql`
     query base {
@@ -833,4 +857,20 @@ export const GetPostsDocument = gql`
 
 export function useGetPostsQuery(options: Omit<Urql.UseQueryArgs<never, GetPostsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetPostsQuery>({ query: GetPostsDocument, ...options });
+};
+export const GetLabelsDocument = gql`
+    query getLabels {
+  labels(first: 100, orderBy: {direction: ASC, field: NAME}) {
+    edges {
+      node {
+        id
+        name
+      }
+    }
+  }
+}
+    `;
+
+export function useGetLabelsQuery(options: Omit<Urql.UseQueryArgs<never, GetLabelsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetLabelsQuery>({ query: GetLabelsDocument, ...options });
 };

@@ -62,3 +62,14 @@ query getPosts(
         }
     }
 }
+
+query getLabels {
+    labels(first: 100, orderBy: { direction: ASC, field: NAME }) {
+        edges {
+            node {
+                id
+                name
+            }
+        }
+    }
+}
