@@ -62,7 +62,7 @@ function createNewLabel(val) {
   createLabel.executeMutation({ input: { name: val } }).then((result) => {
     if (!result.error) {
       getLabels.executeQuery().then(() => {
-        selectedLabels.value = [...props.modelValue.value, result.data.createLabel.id]
+        selectedLabels.value = [...(selectedLabels.value ?? []), result.data.createLabel.id]
       })
       newLabelInput.value = ""
       message.success("Created label")
