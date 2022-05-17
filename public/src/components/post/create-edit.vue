@@ -49,7 +49,7 @@
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>
 
-        <PostLabelEdit class="pb-5" />
+        <PostLabelEdit v-model="post.labelIDs" class="pb-5" />
 
         <n-button block strong secondary type="primary" @click="emit('update:post', post)">
           <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
@@ -66,12 +66,17 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  create: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emit = defineEmits(["update:post"])
 
 const post = reactive({
   publishedAt: new Date().toISOString(),
   ...props.post,
+  labelIDs: props.post.labels?.edges?.map(({ node }) => node.id) ?? [],
 })
 
 const datetime = computed({

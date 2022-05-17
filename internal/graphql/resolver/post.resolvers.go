@@ -5,7 +5,6 @@ package resolver
 
 import (
 	"context"
-	"time"
 
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent"
@@ -13,10 +12,6 @@ import (
 
 func (r *mutationResolver) CreatePost(ctx context.Context, input ent.CreatePostInput) (*ent.Post, error) {
 	input.AuthorID = chix.IDFromContext[int](ctx)
-	now := time.Now()
-	input.CreateTime = &now
-	input.UpdateTime = &now
-
 	return r.client.Post.Create().SetInput(input).Save(ctx)
 }
 

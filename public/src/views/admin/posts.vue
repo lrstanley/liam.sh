@@ -1,28 +1,39 @@
 <template>
   <LayoutAdmin :loading="fetching" :error="error">
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
-      <CoreDataTable
-        v-if="!fetching"
-        v-motion-slide-top
-        :data="posts"
-        :headers="{ published_at: 'Published' }"
-      >
-        <template #title="{ row }">{{ row.title }}</template>
-        <template #slug="{ row }">{{ row.slug }}</template>
-        <template #published="{ row }">
-          {{ useTimeAgo(Date.parse(row.publishedAt)).value }}
-        </template>
-        <template #actions="{ row }">
-          <router-link :to="{ name: 'admin-edit-post-id', params: { id: row.id } }">
-            <n-button size="small" type="primary" tertiary>
-              <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
-            </n-button>
-          </router-link>
-          <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(row)">
-            <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
-          </n-button>
-        </template>
-      </CoreDataTable>
+      <n-table v-if="!fetching" v-motion-slide-top bordered single-line>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Slug</th>
+            <th>Labels</th>
+            <th>Published</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="post in posts" :key="post.id">
+            <td>{{ post.title }}</td>
+            <td>{{ post.slug }}</td>
+            <td>
+              <span v-for="label in post.labels.edges.map((v) => v.node)" :key="label.id" class="mr-2">
+                <n-tag class="hover:bg-green-700">{{ label.name }}</n-tag>
+              </span>
+            </td>
+            <td>{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
+            <td>
+              <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
+                <n-button size="small" type="primary" tertiary>
+                  <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
+                </n-button>
+              </router-link>
+              <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(post)">
+                <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
+              </n-button>
+            </td>
+          </tr>
+        </tbody>
+      </n-table>
     </div>
     <router-link :to="{ name: 'admin-new-post' }" class="no-underline absolute bottom-5 right-5">
       <n-button tertiary circle size="large" type="primary" class="h-13 w-13">

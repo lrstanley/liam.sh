@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="text-center">Update tags</p>
     <n-select
       v-bind="$props"
       v-model:value="selectedLabels"
@@ -30,9 +31,19 @@
 import { useMessage } from "naive-ui"
 import { useGetLabelsQuery, useCreateLabelMutation } from "@/lib/api"
 
-const message = useMessage()
+const props = defineProps({
+  modelValue: {
+    type: Array,
+    required: true,
+    default: () => [],
+  },
+})
+const emit = defineEmits(["update:modelValue"])
 
-const selectedLabels = ref([])
+const selectedLabels = computed({
+  get: () => props.modelValue,
+  set: (val) => emit("update:modelValue", val),
+})
 
 const getLabels = useGetLabelsQuery()
 const labels = computed(() =>
@@ -44,13 +55,14 @@ const labels = computed(() =>
   })
 )
 
+const message = useMessage()
 const newLabelInput = ref("")
 const createLabel = useCreateLabelMutation()
 function createNewLabel(val) {
   createLabel.executeMutation({ input: { name: val } }).then((result) => {
     if (!result.error) {
       getLabels.executeQuery().then(() => {
-        selectedLabels.value.push(result.data.createLabel.id)
+        selectedLabels.value = [...props.modelValue.value, result.data.createLabel.id]
       })
       newLabelInput.value = ""
       message.success("Created label")

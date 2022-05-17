@@ -5,16 +5,11 @@ package resolver
 
 import (
 	"context"
-	"time"
 
 	"github.com/lrstanley/liam.sh/internal/ent"
 )
 
 func (r *mutationResolver) CreateLabel(ctx context.Context, input ent.CreateLabelInput) (*ent.Label, error) {
-	now := time.Now()
-	input.CreateTime = &now
-	input.UpdateTime = &now
-
 	return r.client.Label.Create().SetInput(input).Save(ctx)
 }
 

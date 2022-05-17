@@ -40,6 +40,13 @@ const { data, error, fetching } = useGetPostQuery({ variables: { id: props.id } 
 const update = useUpdatePostMutation()
 
 function updatePost(val) {
+  let addedLabels = val.labelIDs.filter(
+    (id) => !data.value?.node.labels?.edges?.map(({ node }) => node.id).includes(id)
+  )
+  let removedLabels = data.value?.node.labels?.edges
+    ?.map(({ node }) => node.id)
+    .filter((id) => !val.labelIDs.includes(id))
+
   update
     .executeMutation({
       id: props.id,
@@ -47,7 +54,8 @@ function updatePost(val) {
         title: val.title,
         content: val.content,
         slug: val.slug,
-        addLabelIDs: val.labelIDs,
+        addLabelIDs: addedLabels,
+        removeLabelIDs: removedLabels,
         publishedAt: val.publishedAt,
       },
     })

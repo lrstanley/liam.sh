@@ -30,6 +30,14 @@ query getPost($id: ID!) {
             title
             slug
             content
+            labels {
+                edges {
+                    node {
+                        id
+                        name
+                    }
+                }
+            }
             publishedAt
         }
     }
@@ -48,6 +56,14 @@ query getPosts(
                 title
                 slug
                 publishedAt
+                labels {
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
                 author {
                     login
                     avatarURL

@@ -10,7 +10,7 @@
     </n-page-header>
 
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap">
-      <PostCreateEdit :post="post?.data.value" @update:post="createPost" />
+      <PostCreateEdit create :post="post?.data.value" @update:post="createPost" />
     </div>
   </LayoutAdmin>
 </template>

@@ -720,7 +720,7 @@ export type GetPostQueryVariables = Exact<{
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', node?: { __typename?: 'Label' } | { __typename?: 'Post', id: string, title: string, slug: string, content: string, publishedAt: any } | { __typename?: 'User' } | null };
+export type GetPostQuery = { __typename?: 'Query', node?: { __typename?: 'Label' } | { __typename?: 'Post', id: string, title: string, slug: string, content: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | { __typename?: 'User' } | null };
 
 export type GetPostsQueryVariables = Exact<{
   count?: InputMaybe<Scalars['Int']>;
@@ -730,7 +730,7 @@ export type GetPostsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, author: { __typename?: 'User', login: string, avatarURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null }, author: { __typename?: 'User', login: string, avatarURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
 
 export type GetLabelsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -817,6 +817,14 @@ export const GetPostDocument = gql`
       title
       slug
       content
+      labels {
+        edges {
+          node {
+            id
+            name
+          }
+        }
+      }
       publishedAt
     }
   }
@@ -839,6 +847,14 @@ export const GetPostsDocument = gql`
         title
         slug
         publishedAt
+        labels {
+          edges {
+            node {
+              id
+              name
+            }
+          }
+        }
         author {
           login
           avatarURL
