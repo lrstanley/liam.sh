@@ -30,6 +30,7 @@ func (Post) Fields() []ent.Field {
 			entgql.OrderField("TITLE"),
 		),
 		field.String("content").NotEmpty(),
+		field.String("content_html").NotEmpty(),
 		field.Time("published_at").Default(time.Now).Annotations(
 			entgql.OrderField("DATE"),
 		),

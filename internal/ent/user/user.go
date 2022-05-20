@@ -29,6 +29,8 @@ const (
 	FieldName = "name"
 	// FieldAvatarURL holds the string denoting the avatar_url field in the database.
 	FieldAvatarURL = "avatar_url"
+	// FieldHTMLURL holds the string denoting the html_url field in the database.
+	FieldHTMLURL = "html_url"
 	// FieldEmail holds the string denoting the email field in the database.
 	FieldEmail = "email"
 	// FieldLocation holds the string denoting the location field in the database.
@@ -57,6 +59,7 @@ var Columns = []string{
 	FieldLogin,
 	FieldName,
 	FieldAvatarURL,
+	FieldHTMLURL,
 	FieldEmail,
 	FieldLocation,
 	FieldBio,
@@ -95,6 +98,8 @@ var (
 	NameValidator func(string) error
 	// AvatarURLValidator is a validator for the "avatar_url" field. It is called by the builders before save.
 	AvatarURLValidator func(string) error
+	// HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
+	HTMLURLValidator func(string) error
 	// EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	EmailValidator func(string) error
 	// LocationValidator is a validator for the "location" field. It is called by the builders before save.

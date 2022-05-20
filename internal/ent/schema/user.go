@@ -32,6 +32,7 @@ func (User) Fields() []ent.Field {
 			entgql.OrderField("NAME"),
 		),
 		field.String("avatar_url").Optional().MaxLen(2048),
+		field.String("html_url").Optional().MaxLen(2048),
 		field.String("email").Optional().MaxLen(320).Annotations(
 			entgql.OrderField("EMAIL"),
 		),

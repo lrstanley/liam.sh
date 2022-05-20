@@ -558,6 +558,7 @@ type PostMutation struct {
 	slug          *string
 	title         *string
 	content       *string
+	content_html  *string
 	published_at  *time.Time
 	clearedFields map[string]struct{}
 	author        *int
@@ -848,6 +849,42 @@ func (m *PostMutation) ResetContent() {
 	m.content = nil
 }
 
+// SetContentHTML sets the "content_html" field.
+func (m *PostMutation) SetContentHTML(s string) {
+	m.content_html = &s
+}
+
+// ContentHTML returns the value of the "content_html" field in the mutation.
+func (m *PostMutation) ContentHTML() (r string, exists bool) {
+	v := m.content_html
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContentHTML returns the old "content_html" field's value of the Post entity.
+// If the Post object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PostMutation) OldContentHTML(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContentHTML is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContentHTML requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContentHTML: %w", err)
+	}
+	return oldValue.ContentHTML, nil
+}
+
+// ResetContentHTML resets all changes to the "content_html" field.
+func (m *PostMutation) ResetContentHTML() {
+	m.content_html = nil
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (m *PostMutation) SetPublishedAt(t time.Time) {
 	m.published_at = &t
@@ -996,7 +1033,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.create_time != nil {
 		fields = append(fields, post.FieldCreateTime)
 	}
@@ -1011,6 +1048,9 @@ func (m *PostMutation) Fields() []string {
 	}
 	if m.content != nil {
 		fields = append(fields, post.FieldContent)
+	}
+	if m.content_html != nil {
+		fields = append(fields, post.FieldContentHTML)
 	}
 	if m.published_at != nil {
 		fields = append(fields, post.FieldPublishedAt)
@@ -1033,6 +1073,8 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.Title()
 	case post.FieldContent:
 		return m.Content()
+	case post.FieldContentHTML:
+		return m.ContentHTML()
 	case post.FieldPublishedAt:
 		return m.PublishedAt()
 	}
@@ -1054,6 +1096,8 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldTitle(ctx)
 	case post.FieldContent:
 		return m.OldContent(ctx)
+	case post.FieldContentHTML:
+		return m.OldContentHTML(ctx)
 	case post.FieldPublishedAt:
 		return m.OldPublishedAt(ctx)
 	}
@@ -1099,6 +1143,13 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetContent(v)
+		return nil
+	case post.FieldContentHTML:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContentHTML(v)
 		return nil
 	case post.FieldPublishedAt:
 		v, ok := value.(time.Time)
@@ -1170,6 +1221,9 @@ func (m *PostMutation) ResetField(name string) error {
 		return nil
 	case post.FieldContent:
 		m.ResetContent()
+		return nil
+	case post.FieldContentHTML:
+		m.ResetContentHTML()
 		return nil
 	case post.FieldPublishedAt:
 		m.ResetPublishedAt()
@@ -1293,6 +1347,7 @@ type UserMutation struct {
 	login         *string
 	name          *string
 	avatar_url    *string
+	html_url      *string
 	email         *string
 	location      *string
 	bio           *string
@@ -1665,6 +1720,55 @@ func (m *UserMutation) ResetAvatarURL() {
 	delete(m.clearedFields, user.FieldAvatarURL)
 }
 
+// SetHTMLURL sets the "html_url" field.
+func (m *UserMutation) SetHTMLURL(s string) {
+	m.html_url = &s
+}
+
+// HTMLURL returns the value of the "html_url" field in the mutation.
+func (m *UserMutation) HTMLURL() (r string, exists bool) {
+	v := m.html_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHTMLURL returns the old "html_url" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldHTMLURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHTMLURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHTMLURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHTMLURL: %w", err)
+	}
+	return oldValue.HTMLURL, nil
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (m *UserMutation) ClearHTMLURL() {
+	m.html_url = nil
+	m.clearedFields[user.FieldHTMLURL] = struct{}{}
+}
+
+// HTMLURLCleared returns if the "html_url" field was cleared in this mutation.
+func (m *UserMutation) HTMLURLCleared() bool {
+	_, ok := m.clearedFields[user.FieldHTMLURL]
+	return ok
+}
+
+// ResetHTMLURL resets all changes to the "html_url" field.
+func (m *UserMutation) ResetHTMLURL() {
+	m.html_url = nil
+	delete(m.clearedFields, user.FieldHTMLURL)
+}
+
 // SetEmail sets the "email" field.
 func (m *UserMutation) SetEmail(s string) {
 	m.email = &s
@@ -1885,7 +1989,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.create_time != nil {
 		fields = append(fields, user.FieldCreateTime)
 	}
@@ -1903,6 +2007,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.avatar_url != nil {
 		fields = append(fields, user.FieldAvatarURL)
+	}
+	if m.html_url != nil {
+		fields = append(fields, user.FieldHTMLURL)
 	}
 	if m.email != nil {
 		fields = append(fields, user.FieldEmail)
@@ -1933,6 +2040,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case user.FieldAvatarURL:
 		return m.AvatarURL()
+	case user.FieldHTMLURL:
+		return m.HTMLURL()
 	case user.FieldEmail:
 		return m.Email()
 	case user.FieldLocation:
@@ -1960,6 +2069,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldName(ctx)
 	case user.FieldAvatarURL:
 		return m.OldAvatarURL(ctx)
+	case user.FieldHTMLURL:
+		return m.OldHTMLURL(ctx)
 	case user.FieldEmail:
 		return m.OldEmail(ctx)
 	case user.FieldLocation:
@@ -2016,6 +2127,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetAvatarURL(v)
+		return nil
+	case user.FieldHTMLURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHTMLURL(v)
 		return nil
 	case user.FieldEmail:
 		v, ok := value.(string)
@@ -2089,6 +2207,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldAvatarURL) {
 		fields = append(fields, user.FieldAvatarURL)
 	}
+	if m.FieldCleared(user.FieldHTMLURL) {
+		fields = append(fields, user.FieldHTMLURL)
+	}
 	if m.FieldCleared(user.FieldEmail) {
 		fields = append(fields, user.FieldEmail)
 	}
@@ -2117,6 +2238,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldAvatarURL:
 		m.ClearAvatarURL()
+		return nil
+	case user.FieldHTMLURL:
+		m.ClearHTMLURL()
 		return nil
 	case user.FieldEmail:
 		m.ClearEmail()
@@ -2152,6 +2276,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldAvatarURL:
 		m.ResetAvatarURL()
+		return nil
+	case user.FieldHTMLURL:
+		m.ResetHTMLURL()
 		return nil
 	case user.FieldEmail:
 		m.ResetEmail()

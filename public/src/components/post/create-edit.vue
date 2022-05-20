@@ -27,15 +27,17 @@
             </n-form-item>
           </div>
 
-          <n-form-item label="Post content" :required="true">
-            <n-input
-              v-model:value="post.content"
-              :status="post.content?.length > 5 ? 'success' : 'error'"
-              type="textarea"
-              placeholder="Post content"
-              :autosize="{ minRows: 5, maxRows: 16 }"
-            />
-          </n-form-item>
+          <component
+            :is="code"
+            v-if="code && codeExtensions.length == 2"
+            v-model="post.content"
+            placeholder="Post content"
+            :style="{ height: '60vh' }"
+            :autofocus="true"
+            :indent-with-tab="true"
+            :tab-size="4"
+            :extensions="codeExtensions"
+          />
         </n-space>
       </n-card>
     </div>
@@ -61,6 +63,19 @@
 </template>
 
 <script setup>
+const code = shallowRef(null)
+import("vue-codemirror").then(({ Codemirror }) => {
+  code.value = Codemirror
+})
+
+const codeExtensions = ref([])
+import("@codemirror/theme-one-dark").then(({ oneDark }) => {
+  codeExtensions.value.push(oneDark)
+})
+import("@codemirror/lang-markdown").then(({ markdown }) => {
+  codeExtensions.value.push(markdown())
+})
+
 const props = defineProps({
   post: {
     type: Object,

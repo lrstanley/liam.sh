@@ -13,8 +13,16 @@
         </thead>
         <tbody>
           <tr v-for="post in posts" :key="post.id">
-            <td>{{ post.title }}</td>
-            <td>{{ post.slug }}</td>
+            <td>
+              <router-link :to="{ name: 'posts-slug', params: { slug: post.slug } }">
+                {{ post.title }}
+              </router-link>
+            </td>
+            <td>
+              <router-link :to="{ name: 'posts-slug', params: { slug: post.slug } }">
+                {{ post.slug }}
+              </router-link>
+            </td>
             <td>
               <span v-for="label in post.labels.edges.map((v) => v.node)" :key="label.id" class="mr-2">
                 <n-tag class="hover:bg-green-700">{{ label.name }}</n-tag>

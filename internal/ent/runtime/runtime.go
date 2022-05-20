@@ -87,8 +87,12 @@ func init() {
 	postDescContent := postFields[2].Descriptor()
 	// post.ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	post.ContentValidator = postDescContent.Validators[0].(func(string) error)
+	// postDescContentHTML is the schema descriptor for content_html field.
+	postDescContentHTML := postFields[3].Descriptor()
+	// post.ContentHTMLValidator is a validator for the "content_html" field. It is called by the builders before save.
+	post.ContentHTMLValidator = postDescContentHTML.Validators[0].(func(string) error)
 	// postDescPublishedAt is the schema descriptor for published_at field.
-	postDescPublishedAt := postFields[3].Descriptor()
+	postDescPublishedAt := postFields[4].Descriptor()
 	// post.DefaultPublishedAt holds the default value on creation for the published_at field.
 	post.DefaultPublishedAt = postDescPublishedAt.Default.(func() time.Time)
 	userMixin := schema.User{}.Mixin()
@@ -131,16 +135,20 @@ func init() {
 	userDescAvatarURL := userFields[3].Descriptor()
 	// user.AvatarURLValidator is a validator for the "avatar_url" field. It is called by the builders before save.
 	user.AvatarURLValidator = userDescAvatarURL.Validators[0].(func(string) error)
+	// userDescHTMLURL is the schema descriptor for html_url field.
+	userDescHTMLURL := userFields[4].Descriptor()
+	// user.HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
+	user.HTMLURLValidator = userDescHTMLURL.Validators[0].(func(string) error)
 	// userDescEmail is the schema descriptor for email field.
-	userDescEmail := userFields[4].Descriptor()
+	userDescEmail := userFields[5].Descriptor()
 	// user.EmailValidator is a validator for the "email" field. It is called by the builders before save.
 	user.EmailValidator = userDescEmail.Validators[0].(func(string) error)
 	// userDescLocation is the schema descriptor for location field.
-	userDescLocation := userFields[5].Descriptor()
+	userDescLocation := userFields[6].Descriptor()
 	// user.LocationValidator is a validator for the "location" field. It is called by the builders before save.
 	user.LocationValidator = userDescLocation.Validators[0].(func(string) error)
 	// userDescBio is the schema descriptor for bio field.
-	userDescBio := userFields[6].Descriptor()
+	userDescBio := userFields[7].Descriptor()
 	// user.BioValidator is a validator for the "bio" field. It is called by the builders before save.
 	user.BioValidator = userDescBio.Validators[0].(func(string) error)
 }

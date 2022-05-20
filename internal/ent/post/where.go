@@ -132,6 +132,13 @@ func Content(v string) predicate.Post {
 	})
 }
 
+// ContentHTML applies equality check predicate on the "content_html" field. It's identical to ContentHTMLEQ.
+func ContentHTML(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContentHTML), v))
+	})
+}
+
 // PublishedAt applies equality check predicate on the "published_at" field. It's identical to PublishedAtEQ.
 func PublishedAt(v time.Time) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
@@ -621,6 +628,117 @@ func ContentEqualFold(v string) predicate.Post {
 func ContentContainsFold(v string) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldContent), v))
+	})
+}
+
+// ContentHTMLEQ applies the EQ predicate on the "content_html" field.
+func ContentHTMLEQ(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLNEQ applies the NEQ predicate on the "content_html" field.
+func ContentHTMLNEQ(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLIn applies the In predicate on the "content_html" field.
+func ContentHTMLIn(vs ...string) predicate.Post {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Post(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldContentHTML), v...))
+	})
+}
+
+// ContentHTMLNotIn applies the NotIn predicate on the "content_html" field.
+func ContentHTMLNotIn(vs ...string) predicate.Post {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Post(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldContentHTML), v...))
+	})
+}
+
+// ContentHTMLGT applies the GT predicate on the "content_html" field.
+func ContentHTMLGT(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLGTE applies the GTE predicate on the "content_html" field.
+func ContentHTMLGTE(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLLT applies the LT predicate on the "content_html" field.
+func ContentHTMLLT(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLLTE applies the LTE predicate on the "content_html" field.
+func ContentHTMLLTE(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLContains applies the Contains predicate on the "content_html" field.
+func ContentHTMLContains(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLHasPrefix applies the HasPrefix predicate on the "content_html" field.
+func ContentHTMLHasPrefix(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLHasSuffix applies the HasSuffix predicate on the "content_html" field.
+func ContentHTMLHasSuffix(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLEqualFold applies the EqualFold predicate on the "content_html" field.
+func ContentHTMLEqualFold(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldContentHTML), v))
+	})
+}
+
+// ContentHTMLContainsFold applies the ContainsFold predicate on the "content_html" field.
+func ContentHTMLContainsFold(v string) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldContentHTML), v))
 	})
 }
 

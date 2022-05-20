@@ -5,13 +5,25 @@
         <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
       </n-layout-header>
 
-      <n-layout embedded content-style="margin-top: 70px;margin-bottom: 45px">
-        <div class="sm:container sm:mx-auto flex flex-auto">
-          <n-card>
-            <slot><router-view /></slot>
-          </n-card>
+      <n-alert
+        v-if="props.error"
+        v-motion-fade-visible
+        title="An error occurred"
+        type="error"
+        class="m-2 md:m-6"
+      >
+        {{ props.error }}
+      </n-alert>
+      <template v-else-if="props.loading">
+        <n-spin class="flex-auto">
+          <template #description> Loading... </template>
+        </n-spin>
+      </template>
+      <template v-else>
+        <div class="sm:container sm:mx-auto flex flex-auto flex-col mt-70px mb-45px">
+          <slot><router-view /></slot>
         </div>
-      </n-layout>
+      </template>
 
       <n-layout-footer bordered>
         <span class="flex flex-auto justify-end px-2">
@@ -28,6 +40,17 @@
 
 <script setup>
 import { menuOptions } from "@/lib/navigation.js"
+
+const props = defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
+  },
+  error: {
+    type: Error,
+    default: null,
+  },
+})
 
 const activeKey = ref(null)
 </script>

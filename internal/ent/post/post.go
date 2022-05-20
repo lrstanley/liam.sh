@@ -27,6 +27,8 @@ const (
 	FieldTitle = "title"
 	// FieldContent holds the string denoting the content field in the database.
 	FieldContent = "content"
+	// FieldContentHTML holds the string denoting the content_html field in the database.
+	FieldContentHTML = "content_html"
 	// FieldPublishedAt holds the string denoting the published_at field in the database.
 	FieldPublishedAt = "published_at"
 	// EdgeAuthor holds the string denoting the author edge name in mutations.
@@ -57,6 +59,7 @@ var Columns = []string{
 	FieldSlug,
 	FieldTitle,
 	FieldContent,
+	FieldContentHTML,
 	FieldPublishedAt,
 }
 
@@ -108,6 +111,8 @@ var (
 	TitleValidator func(string) error
 	// ContentValidator is a validator for the "content" field. It is called by the builders before save.
 	ContentValidator func(string) error
+	// ContentHTMLValidator is a validator for the "content_html" field. It is called by the builders before save.
+	ContentHTMLValidator func(string) error
 	// DefaultPublishedAt holds the default value on creation for the "published_at" field.
 	DefaultPublishedAt func() time.Time
 )

@@ -53,6 +53,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldSlug:        {Type: field.TypeString, Column: post.FieldSlug},
 			post.FieldTitle:       {Type: field.TypeString, Column: post.FieldTitle},
 			post.FieldContent:     {Type: field.TypeString, Column: post.FieldContent},
+			post.FieldContentHTML: {Type: field.TypeString, Column: post.FieldContentHTML},
 			post.FieldPublishedAt: {Type: field.TypeTime, Column: post.FieldPublishedAt},
 		},
 	}
@@ -73,6 +74,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			user.FieldLogin:      {Type: field.TypeString, Column: user.FieldLogin},
 			user.FieldName:       {Type: field.TypeString, Column: user.FieldName},
 			user.FieldAvatarURL:  {Type: field.TypeString, Column: user.FieldAvatarURL},
+			user.FieldHTMLURL:    {Type: field.TypeString, Column: user.FieldHTMLURL},
 			user.FieldEmail:      {Type: field.TypeString, Column: user.FieldEmail},
 			user.FieldLocation:   {Type: field.TypeString, Column: user.FieldLocation},
 			user.FieldBio:        {Type: field.TypeString, Column: user.FieldBio},
@@ -269,6 +271,11 @@ func (f *PostFilter) WhereContent(p entql.StringP) {
 	f.Where(p.Field(post.FieldContent))
 }
 
+// WhereContentHTML applies the entql string predicate on the content_html field.
+func (f *PostFilter) WhereContentHTML(p entql.StringP) {
+	f.Where(p.Field(post.FieldContentHTML))
+}
+
 // WherePublishedAt applies the entql time.Time predicate on the published_at field.
 func (f *PostFilter) WherePublishedAt(p entql.TimeP) {
 	f.Where(p.Field(post.FieldPublishedAt))
@@ -370,6 +377,11 @@ func (f *UserFilter) WhereName(p entql.StringP) {
 // WhereAvatarURL applies the entql string predicate on the avatar_url field.
 func (f *UserFilter) WhereAvatarURL(p entql.StringP) {
 	f.Where(p.Field(user.FieldAvatarURL))
+}
+
+// WhereHTMLURL applies the entql string predicate on the html_url field.
+func (f *UserFilter) WhereHTMLURL(p entql.StringP) {
+	f.Where(p.Field(user.FieldHTMLURL))
 }
 
 // WhereEmail applies the entql string predicate on the email field.

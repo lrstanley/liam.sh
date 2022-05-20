@@ -360,6 +360,21 @@ type PostWhereInput struct {
 	ContentEqualFold    *string  `json:"contentEqualFold,omitempty"`
 	ContentContainsFold *string  `json:"contentContainsFold,omitempty"`
 
+	// "content_html" field predicates.
+	ContentHTML             *string  `json:"contentHTML,omitempty"`
+	ContentHTMLNEQ          *string  `json:"contentHTMLNEQ,omitempty"`
+	ContentHTMLIn           []string `json:"contentHTMLIn,omitempty"`
+	ContentHTMLNotIn        []string `json:"contentHTMLNotIn,omitempty"`
+	ContentHTMLGT           *string  `json:"contentHTMLGT,omitempty"`
+	ContentHTMLGTE          *string  `json:"contentHTMLGTE,omitempty"`
+	ContentHTMLLT           *string  `json:"contentHTMLLT,omitempty"`
+	ContentHTMLLTE          *string  `json:"contentHTMLLTE,omitempty"`
+	ContentHTMLContains     *string  `json:"contentHTMLContains,omitempty"`
+	ContentHTMLHasPrefix    *string  `json:"contentHTMLHasPrefix,omitempty"`
+	ContentHTMLHasSuffix    *string  `json:"contentHTMLHasSuffix,omitempty"`
+	ContentHTMLEqualFold    *string  `json:"contentHTMLEqualFold,omitempty"`
+	ContentHTMLContainsFold *string  `json:"contentHTMLContainsFold,omitempty"`
+
 	// "published_at" field predicates.
 	PublishedAt      *time.Time  `json:"publishedAt,omitempty"`
 	PublishedAtNEQ   *time.Time  `json:"publishedAtNEQ,omitempty"`
@@ -633,6 +648,45 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	if i.ContentContainsFold != nil {
 		predicates = append(predicates, post.ContentContainsFold(*i.ContentContainsFold))
 	}
+	if i.ContentHTML != nil {
+		predicates = append(predicates, post.ContentHTMLEQ(*i.ContentHTML))
+	}
+	if i.ContentHTMLNEQ != nil {
+		predicates = append(predicates, post.ContentHTMLNEQ(*i.ContentHTMLNEQ))
+	}
+	if len(i.ContentHTMLIn) > 0 {
+		predicates = append(predicates, post.ContentHTMLIn(i.ContentHTMLIn...))
+	}
+	if len(i.ContentHTMLNotIn) > 0 {
+		predicates = append(predicates, post.ContentHTMLNotIn(i.ContentHTMLNotIn...))
+	}
+	if i.ContentHTMLGT != nil {
+		predicates = append(predicates, post.ContentHTMLGT(*i.ContentHTMLGT))
+	}
+	if i.ContentHTMLGTE != nil {
+		predicates = append(predicates, post.ContentHTMLGTE(*i.ContentHTMLGTE))
+	}
+	if i.ContentHTMLLT != nil {
+		predicates = append(predicates, post.ContentHTMLLT(*i.ContentHTMLLT))
+	}
+	if i.ContentHTMLLTE != nil {
+		predicates = append(predicates, post.ContentHTMLLTE(*i.ContentHTMLLTE))
+	}
+	if i.ContentHTMLContains != nil {
+		predicates = append(predicates, post.ContentHTMLContains(*i.ContentHTMLContains))
+	}
+	if i.ContentHTMLHasPrefix != nil {
+		predicates = append(predicates, post.ContentHTMLHasPrefix(*i.ContentHTMLHasPrefix))
+	}
+	if i.ContentHTMLHasSuffix != nil {
+		predicates = append(predicates, post.ContentHTMLHasSuffix(*i.ContentHTMLHasSuffix))
+	}
+	if i.ContentHTMLEqualFold != nil {
+		predicates = append(predicates, post.ContentHTMLEqualFold(*i.ContentHTMLEqualFold))
+	}
+	if i.ContentHTMLContainsFold != nil {
+		predicates = append(predicates, post.ContentHTMLContainsFold(*i.ContentHTMLContainsFold))
+	}
 	if i.PublishedAt != nil {
 		predicates = append(predicates, post.PublishedAtEQ(*i.PublishedAt))
 	}
@@ -799,6 +853,23 @@ type UserWhereInput struct {
 	AvatarURLNotNil       bool     `json:"avatarURLNotNil,omitempty"`
 	AvatarURLEqualFold    *string  `json:"avatarURLEqualFold,omitempty"`
 	AvatarURLContainsFold *string  `json:"avatarURLContainsFold,omitempty"`
+
+	// "html_url" field predicates.
+	HTMLURL             *string  `json:"htmlURL,omitempty"`
+	HTMLURLNEQ          *string  `json:"htmlURLNEQ,omitempty"`
+	HTMLURLIn           []string `json:"htmlURLIn,omitempty"`
+	HTMLURLNotIn        []string `json:"htmlURLNotIn,omitempty"`
+	HTMLURLGT           *string  `json:"htmlURLGT,omitempty"`
+	HTMLURLGTE          *string  `json:"htmlURLGTE,omitempty"`
+	HTMLURLLT           *string  `json:"htmlURLLT,omitempty"`
+	HTMLURLLTE          *string  `json:"htmlURLLTE,omitempty"`
+	HTMLURLContains     *string  `json:"htmlURLContains,omitempty"`
+	HTMLURLHasPrefix    *string  `json:"htmlURLHasPrefix,omitempty"`
+	HTMLURLHasSuffix    *string  `json:"htmlURLHasSuffix,omitempty"`
+	HTMLURLIsNil        bool     `json:"htmlURLIsNil,omitempty"`
+	HTMLURLNotNil       bool     `json:"htmlURLNotNil,omitempty"`
+	HTMLURLEqualFold    *string  `json:"htmlURLEqualFold,omitempty"`
+	HTMLURLContainsFold *string  `json:"htmlURLContainsFold,omitempty"`
 
 	// "email" field predicates.
 	Email             *string  `json:"email,omitempty"`
@@ -1145,6 +1216,51 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	}
 	if i.AvatarURLContainsFold != nil {
 		predicates = append(predicates, user.AvatarURLContainsFold(*i.AvatarURLContainsFold))
+	}
+	if i.HTMLURL != nil {
+		predicates = append(predicates, user.HTMLURLEQ(*i.HTMLURL))
+	}
+	if i.HTMLURLNEQ != nil {
+		predicates = append(predicates, user.HTMLURLNEQ(*i.HTMLURLNEQ))
+	}
+	if len(i.HTMLURLIn) > 0 {
+		predicates = append(predicates, user.HTMLURLIn(i.HTMLURLIn...))
+	}
+	if len(i.HTMLURLNotIn) > 0 {
+		predicates = append(predicates, user.HTMLURLNotIn(i.HTMLURLNotIn...))
+	}
+	if i.HTMLURLGT != nil {
+		predicates = append(predicates, user.HTMLURLGT(*i.HTMLURLGT))
+	}
+	if i.HTMLURLGTE != nil {
+		predicates = append(predicates, user.HTMLURLGTE(*i.HTMLURLGTE))
+	}
+	if i.HTMLURLLT != nil {
+		predicates = append(predicates, user.HTMLURLLT(*i.HTMLURLLT))
+	}
+	if i.HTMLURLLTE != nil {
+		predicates = append(predicates, user.HTMLURLLTE(*i.HTMLURLLTE))
+	}
+	if i.HTMLURLContains != nil {
+		predicates = append(predicates, user.HTMLURLContains(*i.HTMLURLContains))
+	}
+	if i.HTMLURLHasPrefix != nil {
+		predicates = append(predicates, user.HTMLURLHasPrefix(*i.HTMLURLHasPrefix))
+	}
+	if i.HTMLURLHasSuffix != nil {
+		predicates = append(predicates, user.HTMLURLHasSuffix(*i.HTMLURLHasSuffix))
+	}
+	if i.HTMLURLIsNil {
+		predicates = append(predicates, user.HTMLURLIsNil())
+	}
+	if i.HTMLURLNotNil {
+		predicates = append(predicates, user.HTMLURLNotNil())
+	}
+	if i.HTMLURLEqualFold != nil {
+		predicates = append(predicates, user.HTMLURLEqualFold(*i.HTMLURLEqualFold))
+	}
+	if i.HTMLURLContainsFold != nil {
+		predicates = append(predicates, user.HTMLURLContainsFold(*i.HTMLURLContainsFold))
 	}
 	if i.Email != nil {
 		predicates = append(predicates, user.EmailEQ(*i.Email))

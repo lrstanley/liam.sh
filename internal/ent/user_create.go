@@ -95,6 +95,20 @@ func (uc *UserCreate) SetNillableAvatarURL(s *string) *UserCreate {
 	return uc
 }
 
+// SetHTMLURL sets the "html_url" field.
+func (uc *UserCreate) SetHTMLURL(s string) *UserCreate {
+	uc.mutation.SetHTMLURL(s)
+	return uc
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (uc *UserCreate) SetNillableHTMLURL(s *string) *UserCreate {
+	if s != nil {
+		uc.SetHTMLURL(*s)
+	}
+	return uc
+}
+
 // SetEmail sets the "email" field.
 func (uc *UserCreate) SetEmail(s string) *UserCreate {
 	uc.mutation.SetEmail(s)
@@ -282,6 +296,11 @@ func (uc *UserCreate) check() error {
 			return &ValidationError{Name: "avatar_url", err: fmt.Errorf(`ent: validator failed for field "User.avatar_url": %w`, err)}
 		}
 	}
+	if v, ok := uc.mutation.HTMLURL(); ok {
+		if err := user.HTMLURLValidator(v); err != nil {
+			return &ValidationError{Name: "html_url", err: fmt.Errorf(`ent: validator failed for field "User.html_url": %w`, err)}
+		}
+	}
 	if v, ok := uc.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
@@ -372,6 +391,14 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldAvatarURL,
 		})
 		_node.AvatarURL = value
+	}
+	if value, ok := uc.mutation.HTMLURL(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldHTMLURL,
+		})
+		_node.HTMLURL = value
 	}
 	if value, ok := uc.mutation.Email(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -557,6 +584,24 @@ func (u *UserUpsert) UpdateAvatarURL() *UserUpsert {
 // ClearAvatarURL clears the value of the "avatar_url" field.
 func (u *UserUpsert) ClearAvatarURL() *UserUpsert {
 	u.SetNull(user.FieldAvatarURL)
+	return u
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (u *UserUpsert) SetHTMLURL(v string) *UserUpsert {
+	u.Set(user.FieldHTMLURL, v)
+	return u
+}
+
+// UpdateHTMLURL sets the "html_url" field to the value that was provided on create.
+func (u *UserUpsert) UpdateHTMLURL() *UserUpsert {
+	u.SetExcluded(user.FieldHTMLURL)
+	return u
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (u *UserUpsert) ClearHTMLURL() *UserUpsert {
+	u.SetNull(user.FieldHTMLURL)
 	return u
 }
 
@@ -766,6 +811,27 @@ func (u *UserUpsertOne) UpdateAvatarURL() *UserUpsertOne {
 func (u *UserUpsertOne) ClearAvatarURL() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.ClearAvatarURL()
+	})
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (u *UserUpsertOne) SetHTMLURL(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetHTMLURL(v)
+	})
+}
+
+// UpdateHTMLURL sets the "html_url" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateHTMLURL() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateHTMLURL()
+	})
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (u *UserUpsertOne) ClearHTMLURL() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearHTMLURL()
 	})
 }
 
@@ -1148,6 +1214,27 @@ func (u *UserUpsertBulk) UpdateAvatarURL() *UserUpsertBulk {
 func (u *UserUpsertBulk) ClearAvatarURL() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.ClearAvatarURL()
+	})
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (u *UserUpsertBulk) SetHTMLURL(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetHTMLURL(v)
+	})
+}
+
+// UpdateHTMLURL sets the "html_url" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateHTMLURL() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateHTMLURL()
+	})
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (u *UserUpsertBulk) ClearHTMLURL() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.ClearHTMLURL()
 	})
 }
 

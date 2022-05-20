@@ -33,6 +33,7 @@ var (
 		{Name: "slug", Type: field.TypeString, Unique: true},
 		{Name: "title", Type: field.TypeString, Size: 100},
 		{Name: "content", Type: field.TypeString},
+		{Name: "content_html", Type: field.TypeString},
 		{Name: "published_at", Type: field.TypeTime},
 		{Name: "user_posts", Type: field.TypeInt},
 	}
@@ -44,7 +45,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "posts_users_posts",
-				Columns:    []*schema.Column{PostsColumns[7]},
+				Columns:    []*schema.Column{PostsColumns[8]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -59,6 +60,7 @@ var (
 		{Name: "login", Type: field.TypeString, Unique: true},
 		{Name: "name", Type: field.TypeString, Nullable: true, Size: 400},
 		{Name: "avatar_url", Type: field.TypeString, Nullable: true, Size: 2048},
+		{Name: "html_url", Type: field.TypeString, Nullable: true, Size: 2048},
 		{Name: "email", Type: field.TypeString, Nullable: true, Size: 320},
 		{Name: "location", Type: field.TypeString, Nullable: true, Size: 400},
 		{Name: "bio", Type: field.TypeString, Nullable: true, Size: 400},

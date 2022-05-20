@@ -74,6 +74,12 @@ func (pc *PostCreate) SetContent(s string) *PostCreate {
 	return pc
 }
 
+// SetContentHTML sets the "content_html" field.
+func (pc *PostCreate) SetContentHTML(s string) *PostCreate {
+	pc.mutation.SetContentHTML(s)
+	return pc
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (pc *PostCreate) SetPublishedAt(t time.Time) *PostCreate {
 	pc.mutation.SetPublishedAt(t)
@@ -249,6 +255,14 @@ func (pc *PostCreate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Post.content": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.ContentHTML(); !ok {
+		return &ValidationError{Name: "content_html", err: errors.New(`ent: missing required field "Post.content_html"`)}
+	}
+	if v, ok := pc.mutation.ContentHTML(); ok {
+		if err := post.ContentHTMLValidator(v); err != nil {
+			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
+		}
+	}
 	if _, ok := pc.mutation.PublishedAt(); !ok {
 		return &ValidationError{Name: "published_at", err: errors.New(`ent: missing required field "Post.published_at"`)}
 	}
@@ -322,6 +336,14 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 			Column: post.FieldContent,
 		})
 		_node.Content = value
+	}
+	if value, ok := pc.mutation.ContentHTML(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldContentHTML,
+		})
+		_node.ContentHTML = value
 	}
 	if value, ok := pc.mutation.PublishedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -484,6 +506,18 @@ func (u *PostUpsert) UpdateContent() *PostUpsert {
 	return u
 }
 
+// SetContentHTML sets the "content_html" field.
+func (u *PostUpsert) SetContentHTML(v string) *PostUpsert {
+	u.Set(post.FieldContentHTML, v)
+	return u
+}
+
+// UpdateContentHTML sets the "content_html" field to the value that was provided on create.
+func (u *PostUpsert) UpdateContentHTML() *PostUpsert {
+	u.SetExcluded(post.FieldContentHTML)
+	return u
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (u *PostUpsert) SetPublishedAt(v time.Time) *PostUpsert {
 	u.Set(post.FieldPublishedAt, v)
@@ -610,6 +644,20 @@ func (u *PostUpsertOne) SetContent(v string) *PostUpsertOne {
 func (u *PostUpsertOne) UpdateContent() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateContent()
+	})
+}
+
+// SetContentHTML sets the "content_html" field.
+func (u *PostUpsertOne) SetContentHTML(v string) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetContentHTML(v)
+	})
+}
+
+// UpdateContentHTML sets the "content_html" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateContentHTML() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateContentHTML()
 	})
 }
 
@@ -905,6 +953,20 @@ func (u *PostUpsertBulk) SetContent(v string) *PostUpsertBulk {
 func (u *PostUpsertBulk) UpdateContent() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateContent()
+	})
+}
+
+// SetContentHTML sets the "content_html" field.
+func (u *PostUpsertBulk) SetContentHTML(v string) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetContentHTML(v)
+	})
+}
+
+// UpdateContentHTML sets the "content_html" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateContentHTML() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateContentHTML()
 	})
 }
 

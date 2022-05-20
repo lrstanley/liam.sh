@@ -85,6 +85,26 @@ func (uu *UserUpdate) ClearAvatarURL() *UserUpdate {
 	return uu
 }
 
+// SetHTMLURL sets the "html_url" field.
+func (uu *UserUpdate) SetHTMLURL(s string) *UserUpdate {
+	uu.mutation.SetHTMLURL(s)
+	return uu
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableHTMLURL(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetHTMLURL(*s)
+	}
+	return uu
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (uu *UserUpdate) ClearHTMLURL() *UserUpdate {
+	uu.mutation.ClearHTMLURL()
+	return uu
+}
+
 // SetEmail sets the "email" field.
 func (uu *UserUpdate) SetEmail(s string) *UserUpdate {
 	uu.mutation.SetEmail(s)
@@ -278,6 +298,11 @@ func (uu *UserUpdate) check() error {
 			return &ValidationError{Name: "avatar_url", err: fmt.Errorf(`ent: validator failed for field "User.avatar_url": %w`, err)}
 		}
 	}
+	if v, ok := uu.mutation.HTMLURL(); ok {
+		if err := user.HTMLURLValidator(v); err != nil {
+			return &ValidationError{Name: "html_url", err: fmt.Errorf(`ent: validator failed for field "User.html_url": %w`, err)}
+		}
+	}
 	if v, ok := uu.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
@@ -352,6 +377,19 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: user.FieldAvatarURL,
+		})
+	}
+	if value, ok := uu.mutation.HTMLURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldHTMLURL,
+		})
+	}
+	if uu.mutation.HTMLURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldHTMLURL,
 		})
 	}
 	if value, ok := uu.mutation.Email(); ok {
@@ -515,6 +553,26 @@ func (uuo *UserUpdateOne) SetNillableAvatarURL(s *string) *UserUpdateOne {
 // ClearAvatarURL clears the value of the "avatar_url" field.
 func (uuo *UserUpdateOne) ClearAvatarURL() *UserUpdateOne {
 	uuo.mutation.ClearAvatarURL()
+	return uuo
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (uuo *UserUpdateOne) SetHTMLURL(s string) *UserUpdateOne {
+	uuo.mutation.SetHTMLURL(s)
+	return uuo
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableHTMLURL(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetHTMLURL(*s)
+	}
+	return uuo
+}
+
+// ClearHTMLURL clears the value of the "html_url" field.
+func (uuo *UserUpdateOne) ClearHTMLURL() *UserUpdateOne {
+	uuo.mutation.ClearHTMLURL()
 	return uuo
 }
 
@@ -724,6 +782,11 @@ func (uuo *UserUpdateOne) check() error {
 			return &ValidationError{Name: "avatar_url", err: fmt.Errorf(`ent: validator failed for field "User.avatar_url": %w`, err)}
 		}
 	}
+	if v, ok := uuo.mutation.HTMLURL(); ok {
+		if err := user.HTMLURLValidator(v); err != nil {
+			return &ValidationError{Name: "html_url", err: fmt.Errorf(`ent: validator failed for field "User.html_url": %w`, err)}
+		}
+	}
 	if v, ok := uuo.mutation.Email(); ok {
 		if err := user.EmailValidator(v); err != nil {
 			return &ValidationError{Name: "email", err: fmt.Errorf(`ent: validator failed for field "User.email": %w`, err)}
@@ -815,6 +878,19 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Column: user.FieldAvatarURL,
+		})
+	}
+	if value, ok := uuo.mutation.HTMLURL(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: user.FieldHTMLURL,
+		})
+	}
+	if uuo.mutation.HTMLURLCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: user.FieldHTMLURL,
 		})
 	}
 	if value, ok := uuo.mutation.Email(); ok {

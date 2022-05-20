@@ -146,6 +146,7 @@ type Post implements Node {
   slug: String!
   title: String!
   content: String!
+  contentHTML: String!
   publishedAt: Time!
   author: User!
   labels(
@@ -274,6 +275,20 @@ input PostWhereInput {
   contentHasSuffix: String
   contentEqualFold: String
   contentContainsFold: String
+  """content_html field predicates"""
+  contentHTML: String
+  contentHTMLNEQ: String
+  contentHTMLIn: [String!]
+  contentHTMLNotIn: [String!]
+  contentHTMLGT: String
+  contentHTMLGTE: String
+  contentHTMLLT: String
+  contentHTMLLTE: String
+  contentHTMLContains: String
+  contentHTMLHasPrefix: String
+  contentHTMLHasSuffix: String
+  contentHTMLEqualFold: String
+  contentHTMLContainsFold: String
   """published_at field predicates"""
   publishedAt: Time
   publishedAtNEQ: Time
@@ -367,6 +382,7 @@ type User implements Node {
   login: String!
   name: String
   avatarURL: String
+  htmlURL: String
   email: String
   location: String
   bio: String
@@ -509,6 +525,22 @@ input UserWhereInput {
   avatarURLNotNil: Boolean
   avatarURLEqualFold: String
   avatarURLContainsFold: String
+  """html_url field predicates"""
+  htmlURL: String
+  htmlURLNEQ: String
+  htmlURLIn: [String!]
+  htmlURLNotIn: [String!]
+  htmlURLGT: String
+  htmlURLGTE: String
+  htmlURLLT: String
+  htmlURLLTE: String
+  htmlURLContains: String
+  htmlURLHasPrefix: String
+  htmlURLHasSuffix: String
+  htmlURLIsNil: Boolean
+  htmlURLNotNil: Boolean
+  htmlURLEqualFold: String
+  htmlURLContainsFold: String
   """email field predicates"""
   email: String
   emailNEQ: String

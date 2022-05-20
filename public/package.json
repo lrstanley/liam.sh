@@ -11,6 +11,8 @@
     "lint": "npx eslint . --ext .js,.vue"
   },
   "dependencies": {
+    "@codemirror/lang-markdown": "^0.20.0",
+    "@codemirror/theme-one-dark": "^0.20.0",
     "@graphql-codegen/near-operation-file-preset": "^2.2.12",
     "@urql/exchange-retry": "^0.3.3",
     "@urql/vue": "^0.6.2",
@@ -22,6 +24,7 @@
     "naive-ui": "^2.28.2",
     "pinia": "^2.0.13",
     "vue": "^3.2.13",
+    "vue-codemirror": "^5.0.1",
     "vue-router": "^4.0.3",
     "windicss": "^3.5.1"
   },

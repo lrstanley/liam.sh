@@ -245,6 +245,7 @@ export type Post = Node & {
   __typename?: 'Post';
   author: User;
   content: Scalars['String'];
+  contentHTML: Scalars['String'];
   createTime: Scalars['Time'];
   id: Scalars['ID'];
   labels: LabelConnection;
@@ -312,6 +313,20 @@ export type PostWhereInput = {
   contentEqualFold?: InputMaybe<Scalars['String']>;
   contentGT?: InputMaybe<Scalars['String']>;
   contentGTE?: InputMaybe<Scalars['String']>;
+  /** content_html field predicates */
+  contentHTML?: InputMaybe<Scalars['String']>;
+  contentHTMLContains?: InputMaybe<Scalars['String']>;
+  contentHTMLContainsFold?: InputMaybe<Scalars['String']>;
+  contentHTMLEqualFold?: InputMaybe<Scalars['String']>;
+  contentHTMLGT?: InputMaybe<Scalars['String']>;
+  contentHTMLGTE?: InputMaybe<Scalars['String']>;
+  contentHTMLHasPrefix?: InputMaybe<Scalars['String']>;
+  contentHTMLHasSuffix?: InputMaybe<Scalars['String']>;
+  contentHTMLIn?: InputMaybe<Array<Scalars['String']>>;
+  contentHTMLLT?: InputMaybe<Scalars['String']>;
+  contentHTMLLTE?: InputMaybe<Scalars['String']>;
+  contentHTMLNEQ?: InputMaybe<Scalars['String']>;
+  contentHTMLNotIn?: InputMaybe<Array<Scalars['String']>>;
   contentHasPrefix?: InputMaybe<Scalars['String']>;
   contentHasSuffix?: InputMaybe<Scalars['String']>;
   contentIn?: InputMaybe<Array<Scalars['String']>>;
@@ -471,6 +486,7 @@ export type User = Node & {
   bio?: Maybe<Scalars['String']>;
   createTime: Scalars['Time'];
   email?: Maybe<Scalars['String']>;
+  htmlURL?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   location?: Maybe<Scalars['String']>;
   login: Scalars['String'];
@@ -591,6 +607,22 @@ export type UserWhereInput = {
   /** posts edge predicates */
   hasPosts?: InputMaybe<Scalars['Boolean']>;
   hasPostsWith?: InputMaybe<Array<PostWhereInput>>;
+  /** html_url field predicates */
+  htmlURL?: InputMaybe<Scalars['String']>;
+  htmlURLContains?: InputMaybe<Scalars['String']>;
+  htmlURLContainsFold?: InputMaybe<Scalars['String']>;
+  htmlURLEqualFold?: InputMaybe<Scalars['String']>;
+  htmlURLGT?: InputMaybe<Scalars['String']>;
+  htmlURLGTE?: InputMaybe<Scalars['String']>;
+  htmlURLHasPrefix?: InputMaybe<Scalars['String']>;
+  htmlURLHasSuffix?: InputMaybe<Scalars['String']>;
+  htmlURLIn?: InputMaybe<Array<Scalars['String']>>;
+  htmlURLIsNil?: InputMaybe<Scalars['Boolean']>;
+  htmlURLLT?: InputMaybe<Scalars['String']>;
+  htmlURLLTE?: InputMaybe<Scalars['String']>;
+  htmlURLNEQ?: InputMaybe<Scalars['String']>;
+  htmlURLNotIn?: InputMaybe<Array<Scalars['String']>>;
+  htmlURLNotNil?: InputMaybe<Scalars['Boolean']>;
   /** id field predicates */
   id?: InputMaybe<Scalars['ID']>;
   idGT?: InputMaybe<Scalars['ID']>;
@@ -715,12 +747,12 @@ export type BaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type BaseQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, name?: string | null, login: string, avatarURL?: string | null } | null, githubUser: { __typename?: 'GithubUser', login: string, name: string, avatarURL: string, bio: string, email: string, location: string, htmlurl: string }, version: { __typename?: 'VersionInfo', commit: string, goVersion: string, date: string } };
 
-export type GetPostQueryVariables = Exact<{
-  id: Scalars['ID'];
+export type GetPostContentQueryVariables = Exact<{
+  slug: Scalars['String'];
 }>;
 
 
-export type GetPostQuery = { __typename?: 'Query', node?: { __typename?: 'Label' } | { __typename?: 'Post', id: string, title: string, slug: string, content: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | { __typename?: 'User' } | null };
+export type GetPostContentQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, contentHTML: string, publishedAt: any, author: { __typename?: 'User', name?: string | null, login: string, avatarURL?: string | null, htmlURL?: string | null }, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | null } | null> | null } };
 
 export type GetPostsQueryVariables = Exact<{
   count?: InputMaybe<Scalars['Int']>;
@@ -809,30 +841,38 @@ export const BaseDocument = gql`
 export function useBaseQuery(options: Omit<Urql.UseQueryArgs<never, BaseQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<BaseQuery>({ query: BaseDocument, ...options });
 };
-export const GetPostDocument = gql`
-    query getPost($id: ID!) {
-  node(id: $id) {
-    ... on Post {
-      id
-      title
-      slug
-      content
-      labels {
-        edges {
-          node {
-            id
-            name
+export const GetPostContentDocument = gql`
+    query getPostContent($slug: String!) {
+  posts(where: {slugEqualFold: $slug}) {
+    edges {
+      node {
+        id
+        title
+        slug
+        contentHTML
+        author {
+          name
+          login
+          avatarURL
+          htmlURL
+        }
+        labels {
+          edges {
+            node {
+              id
+              name
+            }
           }
         }
+        publishedAt
       }
-      publishedAt
     }
   }
 }
     `;
 
-export function useGetPostQuery(options: Omit<Urql.UseQueryArgs<never, GetPostQueryVariables>, 'query'> = {}) {
-  return Urql.useQuery<GetPostQuery>({ query: GetPostDocument, ...options });
+export function useGetPostContentQuery(options: Omit<Urql.UseQueryArgs<never, GetPostContentQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetPostContentQuery>({ query: GetPostContentDocument, ...options });
 };
 export const GetPostsDocument = gql`
     query getPosts($count: Int = 25, $cursor: Cursor, $order: OrderDirection = DESC, $orderBy: PostOrderField = DATE) {

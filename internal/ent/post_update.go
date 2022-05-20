@@ -58,6 +58,12 @@ func (pu *PostUpdate) SetContent(s string) *PostUpdate {
 	return pu
 }
 
+// SetContentHTML sets the "content_html" field.
+func (pu *PostUpdate) SetContentHTML(s string) *PostUpdate {
+	pu.mutation.SetContentHTML(s)
+	return pu
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (pu *PostUpdate) SetPublishedAt(t time.Time) *PostUpdate {
 	pu.mutation.SetPublishedAt(t)
@@ -222,6 +228,11 @@ func (pu *PostUpdate) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Post.content": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.ContentHTML(); ok {
+		if err := post.ContentHTMLValidator(v); err != nil {
+			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
+		}
+	}
 	if _, ok := pu.mutation.AuthorID(); pu.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -272,6 +283,13 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: post.FieldContent,
+		})
+	}
+	if value, ok := pu.mutation.ContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldContentHTML,
 		})
 	}
 	if value, ok := pu.mutation.PublishedAt(); ok {
@@ -410,6 +428,12 @@ func (puo *PostUpdateOne) SetTitle(s string) *PostUpdateOne {
 // SetContent sets the "content" field.
 func (puo *PostUpdateOne) SetContent(s string) *PostUpdateOne {
 	puo.mutation.SetContent(s)
+	return puo
+}
+
+// SetContentHTML sets the "content_html" field.
+func (puo *PostUpdateOne) SetContentHTML(s string) *PostUpdateOne {
+	puo.mutation.SetContentHTML(s)
 	return puo
 }
 
@@ -590,6 +614,11 @@ func (puo *PostUpdateOne) check() error {
 			return &ValidationError{Name: "content", err: fmt.Errorf(`ent: validator failed for field "Post.content": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.ContentHTML(); ok {
+		if err := post.ContentHTMLValidator(v); err != nil {
+			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
+		}
+	}
 	if _, ok := puo.mutation.AuthorID(); puo.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -657,6 +686,13 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: post.FieldContent,
+		})
+	}
+	if value, ok := puo.mutation.ContentHTML(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldContentHTML,
 		})
 	}
 	if value, ok := puo.mutation.PublishedAt(); ok {

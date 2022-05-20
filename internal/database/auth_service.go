@@ -43,17 +43,22 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 		return 0, chix.ErrAccessDenied
 	}
 
-	return s.db.User.Create().
+	q := s.db.User.Create().
 		SetUserID(uid).
 		SetName(guser.Name).
 		SetLogin(guser.NickName).
 		SetEmail(guser.Email).
 		SetAvatarURL(guser.AvatarURL).
 		SetLocation(guser.Location).
-		SetBio(guser.Description).
-		OnConflictColumns(user.FieldUserID).Ignore().
-		UpdateNewValues().
-		ID(ctx)
+		SetBio(guser.Description)
+
+	if data, ok := guser.RawData["html_url"]; ok {
+		if url, ok := data.(string); ok {
+			q = q.SetHTMLURL(url)
+		}
+	}
+
+	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(ctx)
 }
 
 func (s *authService) Roles(ctx context.Context, id int) ([]string, error) {

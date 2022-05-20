@@ -107,6 +107,7 @@ type ComplexityRoot struct {
 	Post struct {
 		Author      func(childComplexity int) int
 		Content     func(childComplexity int) int
+		ContentHTML func(childComplexity int) int
 		CreateTime  func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Labels      func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) int
@@ -147,6 +148,7 @@ type ComplexityRoot struct {
 		Bio        func(childComplexity int) int
 		CreateTime func(childComplexity int) int
 		Email      func(childComplexity int) int
+		HTMLURL    func(childComplexity int) int
 		ID         func(childComplexity int) int
 		Location   func(childComplexity int) int
 		Login      func(childComplexity int) int
@@ -516,6 +518,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.Content(childComplexity), true
 
+	case "Post.contentHTML":
+		if e.complexity.Post.ContentHTML == nil {
+			break
+		}
+
+		return e.complexity.Post.ContentHTML(childComplexity), true
+
 	case "Post.createTime":
 		if e.complexity.Post.CreateTime == nil {
 			break
@@ -720,6 +729,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.User.Email(childComplexity), true
+
+	case "User.htmlURL":
+		if e.complexity.User.HTMLURL == nil {
+			break
+		}
+
+		return e.complexity.User.HTMLURL(childComplexity), true
 
 	case "User.id":
 		if e.complexity.User.ID == nil {
@@ -1109,6 +1125,7 @@ type Post implements Node {
   slug: String!
   title: String!
   content: String!
+  contentHTML: String!
   publishedAt: Time!
   author: User!
   labels(
@@ -1237,6 +1254,20 @@ input PostWhereInput {
   contentHasSuffix: String
   contentEqualFold: String
   contentContainsFold: String
+  """content_html field predicates"""
+  contentHTML: String
+  contentHTMLNEQ: String
+  contentHTMLIn: [String!]
+  contentHTMLNotIn: [String!]
+  contentHTMLGT: String
+  contentHTMLGTE: String
+  contentHTMLLT: String
+  contentHTMLLTE: String
+  contentHTMLContains: String
+  contentHTMLHasPrefix: String
+  contentHTMLHasSuffix: String
+  contentHTMLEqualFold: String
+  contentHTMLContainsFold: String
   """published_at field predicates"""
   publishedAt: Time
   publishedAtNEQ: Time
@@ -1330,6 +1361,7 @@ type User implements Node {
   login: String!
   name: String
   avatarURL: String
+  htmlURL: String
   email: String
   location: String
   bio: String
@@ -1472,6 +1504,22 @@ input UserWhereInput {
   avatarURLNotNil: Boolean
   avatarURLEqualFold: String
   avatarURLContainsFold: String
+  """html_url field predicates"""
+  htmlURL: String
+  htmlURLNEQ: String
+  htmlURLIn: [String!]
+  htmlURLNotIn: [String!]
+  htmlURLGT: String
+  htmlURLGTE: String
+  htmlURLLT: String
+  htmlURLLTE: String
+  htmlURLContains: String
+  htmlURLHasPrefix: String
+  htmlURLHasSuffix: String
+  htmlURLIsNil: Boolean
+  htmlURLNotNil: Boolean
+  htmlURLEqualFold: String
+  htmlURLContainsFold: String
   """email field predicates"""
   email: String
   emailNEQ: String
@@ -3600,6 +3648,8 @@ func (ec *executionContext) fieldContext_Mutation_createPost(ctx context.Context
 				return ec.fieldContext_Post_title(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "contentHTML":
+				return ec.fieldContext_Post_contentHTML(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -3675,6 +3725,8 @@ func (ec *executionContext) fieldContext_Mutation_updatePost(ctx context.Context
 				return ec.fieldContext_Post_title(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "contentHTML":
+				return ec.fieldContext_Post_contentHTML(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -4188,6 +4240,50 @@ func (ec *executionContext) fieldContext_Post_content(ctx context.Context, field
 	return fc, nil
 }
 
+func (ec *executionContext) _Post_contentHTML(ctx context.Context, field graphql.CollectedField, obj *ent.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_contentHTML(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContentHTML, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_contentHTML(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Post_publishedAt(ctx context.Context, field graphql.CollectedField, obj *ent.Post) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Post_publishedAt(ctx, field)
 	if err != nil {
@@ -4285,6 +4381,8 @@ func (ec *executionContext) fieldContext_Post_author(ctx context.Context, field 
 				return ec.fieldContext_User_name(ctx, field)
 			case "avatarURL":
 				return ec.fieldContext_User_avatarURL(ctx, field)
+			case "htmlURL":
+				return ec.fieldContext_User_htmlURL(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "location":
@@ -4556,6 +4654,8 @@ func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Post_title(ctx, field)
 			case "content":
 				return ec.fieldContext_Post_content(ctx, field)
+			case "contentHTML":
+				return ec.fieldContext_Post_contentHTML(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -5031,6 +5131,8 @@ func (ec *executionContext) fieldContext_Query_self(ctx context.Context, field g
 				return ec.fieldContext_User_name(ctx, field)
 			case "avatarURL":
 				return ec.fieldContext_User_avatarURL(ctx, field)
+			case "htmlURL":
+				return ec.fieldContext_User_htmlURL(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "location":
@@ -5585,6 +5687,47 @@ func (ec *executionContext) fieldContext_User_avatarURL(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _User_htmlURL(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_User_htmlURL(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HTMLURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalOString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_User_htmlURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "User",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _User_email(ctx context.Context, field graphql.CollectedField, obj *ent.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_User_email(ctx, field)
 	if err != nil {
@@ -5966,6 +6109,8 @@ func (ec *executionContext) fieldContext_UserEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_User_name(ctx, field)
 			case "avatarURL":
 				return ec.fieldContext_User_avatarURL(ctx, field)
+			case "htmlURL":
+				return ec.fieldContext_User_htmlURL(ctx, field)
 			case "email":
 				return ec.fieldContext_User_email(ctx, field)
 			case "location":
@@ -9233,6 +9378,110 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
+		case "contentHTML":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTML"))
+			it.ContentHTML, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLNEQ":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLNEQ"))
+			it.ContentHTMLNEQ, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLIn"))
+			it.ContentHTMLIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLNotIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLNotIn"))
+			it.ContentHTMLNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLGT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLGT"))
+			it.ContentHTMLGT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLGTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLGTE"))
+			it.ContentHTMLGTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLLT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLLT"))
+			it.ContentHTMLLT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLLTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLLTE"))
+			it.ContentHTMLLTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLContains"))
+			it.ContentHTMLContains, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLHasPrefix"))
+			it.ContentHTMLHasPrefix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLHasSuffix"))
+			it.ContentHTMLHasSuffix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLEqualFold"))
+			it.ContentHTMLEqualFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "contentHTMLContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("contentHTMLContainsFold"))
+			it.ContentHTMLContainsFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "publishedAt":
 			var err error
 
@@ -10086,6 +10335,126 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("avatarURLContainsFold"))
 			it.AvatarURLContainsFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURL":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURL"))
+			it.HTMLURL, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLNEQ":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLNEQ"))
+			it.HTMLURLNEQ, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLIn"))
+			it.HTMLURLIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLNotIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLNotIn"))
+			it.HTMLURLNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLGT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLGT"))
+			it.HTMLURLGT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLGTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLGTE"))
+			it.HTMLURLGTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLLT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLLT"))
+			it.HTMLURLLT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLLTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLLTE"))
+			it.HTMLURLLTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLContains"))
+			it.HTMLURLContains, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLHasPrefix"))
+			it.HTMLURLHasPrefix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLHasSuffix"))
+			it.HTMLURLHasSuffix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLIsNil":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLIsNil"))
+			it.HTMLURLIsNil, err = ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLNotNil":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLNotNil"))
+			it.HTMLURLNotNil, err = ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLEqualFold"))
+			it.HTMLURLEqualFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "htmlURLContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("htmlURLContainsFold"))
+			it.HTMLURLContainsFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -10975,6 +11344,13 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "contentHTML":
+
+			out.Values[i] = ec._Post_contentHTML(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "publishedAt":
 
 			out.Values[i] = ec._Post_publishedAt(ctx, field, obj)
@@ -11404,6 +11780,10 @@ func (ec *executionContext) _User(ctx context.Context, sel ast.SelectionSet, obj
 		case "avatarURL":
 
 			out.Values[i] = ec._User_avatarURL(ctx, field, obj)
+
+		case "htmlURL":
+
+			out.Values[i] = ec._User_htmlURL(ctx, field, obj)
 
 		case "email":
 

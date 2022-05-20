@@ -139,6 +139,13 @@ func AvatarURL(v string) predicate.User {
 	})
 }
 
+// HTMLURL applies equality check predicate on the "html_url" field. It's identical to HTMLURLEQ.
+func HTMLURL(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHTMLURL), v))
+	})
+}
+
 // Email applies equality check predicate on the "email" field. It's identical to EmailEQ.
 func Email(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -746,6 +753,131 @@ func AvatarURLEqualFold(v string) predicate.User {
 func AvatarURLContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldAvatarURL), v))
+	})
+}
+
+// HTMLURLEQ applies the EQ predicate on the "html_url" field.
+func HTMLURLEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLNEQ applies the NEQ predicate on the "html_url" field.
+func HTMLURLNEQ(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLIn applies the In predicate on the "html_url" field.
+func HTMLURLIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldHTMLURL), v...))
+	})
+}
+
+// HTMLURLNotIn applies the NotIn predicate on the "html_url" field.
+func HTMLURLNotIn(vs ...string) predicate.User {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.User(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldHTMLURL), v...))
+	})
+}
+
+// HTMLURLGT applies the GT predicate on the "html_url" field.
+func HTMLURLGT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLGTE applies the GTE predicate on the "html_url" field.
+func HTMLURLGTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLLT applies the LT predicate on the "html_url" field.
+func HTMLURLLT(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLLTE applies the LTE predicate on the "html_url" field.
+func HTMLURLLTE(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLContains applies the Contains predicate on the "html_url" field.
+func HTMLURLContains(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.Contains(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLHasPrefix applies the HasPrefix predicate on the "html_url" field.
+func HTMLURLHasPrefix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasPrefix(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLHasSuffix applies the HasSuffix predicate on the "html_url" field.
+func HTMLURLHasSuffix(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.HasSuffix(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLIsNil applies the IsNil predicate on the "html_url" field.
+func HTMLURLIsNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldHTMLURL)))
+	})
+}
+
+// HTMLURLNotNil applies the NotNil predicate on the "html_url" field.
+func HTMLURLNotNil() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldHTMLURL)))
+	})
+}
+
+// HTMLURLEqualFold applies the EqualFold predicate on the "html_url" field.
+func HTMLURLEqualFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.EqualFold(s.C(FieldHTMLURL), v))
+	})
+}
+
+// HTMLURLContainsFold applies the ContainsFold predicate on the "html_url" field.
+func HTMLURLContainsFold(v string) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		s.Where(sql.ContainsFold(s.C(FieldHTMLURL), v))
 	})
 }
 

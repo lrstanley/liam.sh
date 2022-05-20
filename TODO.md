@@ -1,6 +1,9 @@
 ## TODO
 
 - meta html head tags
+- add preview to editor?
+- resumeeeee
+- add multi-error alert component
 - application/ld+json (like <https://martinheinz.dev/> to denote related sites?)
 - run through security checks
 - git release redirects

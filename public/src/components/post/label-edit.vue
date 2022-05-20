@@ -2,7 +2,7 @@
   <div>
     <p class="text-center">Update tags</p>
     <n-select
-      v-bind="$props"
+      v-bind="$attrs"
       v-model:value="selectedLabels"
       clearable
       filterable

@@ -101,7 +101,7 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     po.ID,
 		Type:   "Post",
-		Fields: make([]*Field, 6),
+		Fields: make([]*Field, 7),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
@@ -145,10 +145,18 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "content",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(po.PublishedAt); err != nil {
+	if buf, err = json.Marshal(po.ContentHTML); err != nil {
 		return nil, err
 	}
 	node.Fields[5] = &Field{
+		Type:  "string",
+		Name:  "content_html",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(po.PublishedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
 		Type:  "time.Time",
 		Name:  "published_at",
 		Value: string(buf),
@@ -180,7 +188,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     u.ID,
 		Type:   "User",
-		Fields: make([]*Field, 9),
+		Fields: make([]*Field, 10),
 		Edges:  make([]*Edge, 1),
 	}
 	var buf []byte
@@ -232,10 +240,18 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "avatar_url",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(u.Email); err != nil {
+	if buf, err = json.Marshal(u.HTMLURL); err != nil {
 		return nil, err
 	}
 	node.Fields[6] = &Field{
+		Type:  "string",
+		Name:  "html_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(u.Email); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
 		Type:  "string",
 		Name:  "email",
 		Value: string(buf),
@@ -243,7 +259,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	if buf, err = json.Marshal(u.Location); err != nil {
 		return nil, err
 	}
-	node.Fields[7] = &Field{
+	node.Fields[8] = &Field{
 		Type:  "string",
 		Name:  "location",
 		Value: string(buf),
@@ -251,7 +267,7 @@ func (u *User) Node(ctx context.Context) (node *Node, err error) {
 	if buf, err = json.Marshal(u.Bio); err != nil {
 		return nil, err
 	}
-	node.Fields[8] = &Field{
+	node.Fields[9] = &Field{
 		Type:  "string",
 		Name:  "bio",
 		Value: string(buf),
