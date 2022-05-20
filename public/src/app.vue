@@ -43,11 +43,15 @@ body {
 }
 
 a {
-  color: #42b983;
+  color: #2dc581 !important;
 }
 
 a:hover {
-  color: #2f855a;
+  color: #31a068 !important;
+}
+
+.n-menu a {
+  color: inherit !important;
 }
 
 * {

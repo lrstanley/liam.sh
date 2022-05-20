@@ -40,7 +40,7 @@ export default defineConfig({
     }),
     Components({
       dts: false,
-      directoryAsNamespace: true,
+      directoryAsNamespace: false,
       resolvers: [
         NaiveUiResolver(),
         IconsResolver({ componentPrefix: "i", enabledCollections: ["mdi"] }),

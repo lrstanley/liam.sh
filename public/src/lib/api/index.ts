@@ -747,12 +747,19 @@ export type BaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type BaseQuery = { __typename?: 'Query', self?: { __typename?: 'User', id: string, name?: string | null, login: string, avatarURL?: string | null } | null, githubUser: { __typename?: 'GithubUser', login: string, name: string, avatarURL: string, bio: string, email: string, location: string, htmlurl: string }, version: { __typename?: 'VersionInfo', commit: string, goVersion: string, date: string } };
 
+export type GetPostQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetPostQuery = { __typename?: 'Query', node?: { __typename?: 'Label' } | { __typename?: 'Post', id: string, title: string, slug: string, content: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | { __typename?: 'User' } | null };
+
 export type GetPostContentQueryVariables = Exact<{
   slug: Scalars['String'];
 }>;
 
 
-export type GetPostContentQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, contentHTML: string, publishedAt: any, author: { __typename?: 'User', name?: string | null, login: string, avatarURL?: string | null, htmlURL?: string | null }, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | null } | null> | null } };
+export type GetPostContentQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, content: string, contentHTML: string, publishedAt: any, author: { __typename?: 'User', name?: string | null, login: string, avatarURL?: string | null, htmlURL?: string | null }, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } } | null } | null> | null } };
 
 export type GetPostsQueryVariables = Exact<{
   count?: InputMaybe<Scalars['Int']>;
@@ -841,6 +848,31 @@ export const BaseDocument = gql`
 export function useBaseQuery(options: Omit<Urql.UseQueryArgs<never, BaseQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<BaseQuery>({ query: BaseDocument, ...options });
 };
+export const GetPostDocument = gql`
+    query getPost($id: ID!) {
+  node(id: $id) {
+    ... on Post {
+      id
+      title
+      slug
+      content
+      labels {
+        edges {
+          node {
+            id
+            name
+          }
+        }
+      }
+      publishedAt
+    }
+  }
+}
+    `;
+
+export function useGetPostQuery(options: Omit<Urql.UseQueryArgs<never, GetPostQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetPostQuery>({ query: GetPostDocument, ...options });
+};
 export const GetPostContentDocument = gql`
     query getPostContent($slug: String!) {
   posts(where: {slugEqualFold: $slug}) {
@@ -849,6 +881,7 @@ export const GetPostContentDocument = gql`
         id
         title
         slug
+        content
         contentHTML
         author {
           name

@@ -8,7 +8,9 @@ import (
 	"bytes"
 	"context"
 
+	chromahtml "github.com/alecthomas/chroma/formatters/html"
 	"github.com/yuin/goldmark"
+	highlighting "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/parser"
 	"github.com/yuin/goldmark/renderer/html"
@@ -19,6 +21,14 @@ var engine = goldmark.New(
 	goldmark.WithExtensions(
 		extension.GFM,
 		extension.Footnote,
+		highlighting.NewHighlighting(
+			highlighting.WithStyle("dracula"),
+			highlighting.WithFormatOptions(
+				chromahtml.WithLineNumbers(true),
+				// chromahtml.LinkableLineNumbers(true, "ln"),
+				chromahtml.TabWidth(4),
+			),
+		),
 		extension.NewLinkify(
 			extension.WithLinkifyAllowedProtocols([][]byte{
 				[]byte("http:"),

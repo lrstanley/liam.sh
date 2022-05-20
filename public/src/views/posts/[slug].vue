@@ -1,15 +1,10 @@
 <template>
   <LayoutDefault :loading="fetching" :error="error">
-    <n-page-header class="mt-4 mb-8">
-      <!-- <template #avatar>
-        <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
-      </template> -->
+    <CoreTableOfContents :element="postRef" />
+    <n-page-header class="container mx-auto hidden md:inline-flex xl:px-200px mt-4 mb-8">
       <template #title>
-        <!-- <a href="#" class="no-underline capitalize" style="color: inherit">
-          Editing post #{{ post.id }}
-        </a> -->
         <CoreTerminal
-          class="mb-4 text-size-38px md:text-size-45px"
+          class="mb-4 text-size-38px md:text-size-34px"
           path="posts"
           prefix=""
           :value="'cat &quot;' + post.slug + '.md&quot;'"
@@ -17,47 +12,36 @@
       </template>
     </n-page-header>
 
-    <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap">
+    <div class="container mx-auto px-15px xl:px-200px">
       <n-alert v-if="error" title="Error fetching post" type="error">
         {{ error }}
       </n-alert>
 
-      <div v-motion-fade class="h-full flex flex-auto flex-col md:flex-row">
-        <div class="h-full flex-auto mb-5 ml-7 md:ml-0 mr-7">
-          <!-- <n-card> -->
-          <n-space vertical>
-            <div
-              class="text-size-50px text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+      <div v-motion-fade class="h-full flex-auto flex-col">
+        <div
+          class="text-size-50px text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+        >
+          {{ post.title }}
+        </div>
+
+        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-8">
+          <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
+          <p>
+            <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
+            <br />
+            <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
+          </p>
+          <span class="ml-auto">
+            <router-link
+              v-if="state.base?.self"
+              :to="{ name: 'admin-edit-post-id', params: { id: post.id } }"
             >
-              {{ post.title }}
-            </div>
-
-            <div class="flex flex-auto flex-row flex-wrap items-center mt-3">
-              <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
-              <p>
-                <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
-                <br />
-                <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
-              </p>
-              <!-- <p class="ml-auto">
-                <i>Published</i>
-                <br />
-                {{ useTimeAgo(post.publishedAt).value }}
-              </p> -->
-            </div>
-
-            <div v-html="post.contentHTML" />
-          </n-space>
-          <!-- </n-card> -->
+              <n-button class="mr-3" type="secondary"> Edit post </n-button>
+            </router-link>
+          </span>
         </div>
-        <div class="h-full mb-5 mx-7 md:mx-0 md:w-70">
-          <!-- <n-card> -->
-          <n-button block strong secondary type="primary">
-            <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
-            Save post
-          </n-button>
-          <!-- </n-card> -->
-        </div>
+
+        <div id="post-content" ref="postRef" v-html="post.contentHTML" />
       </div>
     </div>
   </LayoutDefault>
@@ -74,6 +58,56 @@ const props = defineProps({
   },
 })
 
+const state = useState()
 const { data, error, fetching } = useGetPostContentQuery({ variables: { slug: props.slug } })
 const post = computed(() => data?.value?.posts?.edges[0].node)
+const postRef = ref(null)
 </script>
+
+<style scoped>
+#post-content {
+  @apply text-size-1.2em leading-relaxed;
+}
+
+#post-content :deep(img) {
+  max-width: 100%;
+  height: auto;
+}
+
+#post-content :deep(p) {
+  margin-top: 25px;
+}
+
+#post-content :deep(blockquote) {
+  line-height: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  opacity: 0.8;
+  margin-left: 0;
+  color: inherit;
+  border-left-width: 0.25rem;
+  /* border-color: #e5e7eb; */
+  margin-top: 1.6em;
+  margin-bottom: 1.6em;
+  @apply border-green-600;
+}
+
+#post-content :deep(blockquote) > p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#post-content :deep(h2),
+#post-content :deep(h3),
+#post-content :deep(h4) {
+  margin-top: 30px;
+  @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
+  @apply bg-gradient-to-r from-sky-400 to-blue-500;
+}
+
+#post-content :deep(pre) {
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+  white-space: pre-wrap;
+  @apply !bg-dark-400;
+}
+</style>

@@ -7,6 +7,7 @@ require (
 	entgo.io/contrib v0.2.1-0.20220515130829-06b73685c304
 	entgo.io/ent v0.10.2-0.20220512043615-f2e0bef7a803
 	github.com/99designs/gqlgen v0.17.6-0.20220506133315-ec3e597e7b45
+	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-chi/cors v1.2.1
@@ -23,6 +24,7 @@ require (
 	github.com/vektah/gqlparser/v2 v2.4.3-0.20220508162109-d3d9eb001575
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.4.12
+	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29
 	mvdan.cc/xurls/v2 v2.4.0
@@ -35,6 +37,7 @@ require (
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
+	github.com/dlclark/regexp2 v1.4.0 // indirect
 	github.com/go-logfmt/logfmt v0.5.1 // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-playground/form/v4 v4.2.0 // indirect

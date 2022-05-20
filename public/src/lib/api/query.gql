@@ -23,6 +23,26 @@ query base {
     }
 }
 
+query getPost($id: ID!) {
+    node(id: $id) {
+        ... on Post {
+            id
+            title
+            slug
+            content
+            labels {
+                edges {
+                    node {
+                        id
+                        name
+                    }
+                }
+            }
+            publishedAt
+        }
+    }
+}
+
 query getPostContent($slug: String!) {
     posts(where: { slugEqualFold: $slug }) {
         edges {
@@ -30,6 +50,7 @@ query getPostContent($slug: String!) {
                 id
                 title
                 slug
+                content
                 contentHTML
                 author {
                     name
