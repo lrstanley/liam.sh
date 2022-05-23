@@ -1,13 +1,13 @@
 <template>
   <LayoutAdmin :loading="fetching" :error="error">
-    <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
+    <div class="sm:container sm:mx-auto p-4">
       <n-table v-if="!fetching" v-motion-slide-top bordered single-line striped size="small">
         <thead>
           <tr>
             <th>Title</th>
-            <th>Slug</th>
-            <th>Labels</th>
-            <th>Published</th>
+            <th class="hidden md:table-cell">Slug</th>
+            <th class="hidden md:table-cell">Labels</th>
+            <th class="hidden md:table-cell">Published</th>
             <th>
               Actions
               <n-button class="ml-10" type="error" @click="regenerate">
@@ -23,15 +23,15 @@
                 {{ post.title }}
               </router-link>
             </td>
-            <td>
+            <td class="hidden md:table-cell">
               <router-link :to="{ name: 'posts-slug', params: { slug: post.slug } }">
                 {{ post.slug }}
               </router-link>
             </td>
-            <td>
+            <td class="hidden md:table-cell">
               <ObjectRender :value="post.labels" linkable class="mr-1" />
             </td>
-            <td>{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
+            <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
             <td>
               <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
                 <n-button size="small" type="primary" tertiary>

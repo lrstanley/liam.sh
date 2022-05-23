@@ -1,5 +1,6 @@
 <template>
   <LayoutBase>
+    <!-- TODO: use less flex -->
     <div class="flex flex-row flex-auto justify-center items-stretch md:items-center">
       <div
         class="flex flex-col flex-auto max-w-3xl md:max-h-xl pt-7 md:py-7 items-stretch md:items-center"

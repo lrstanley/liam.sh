@@ -1,6 +1,6 @@
 <template>
   <LayoutAdmin>
-    <n-page-header class="px-5 mt-4 mb-8">
+    <n-page-header class="px-5 mt-4 mb-8 hidden md:block">
       <template #avatar>
         <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
       </template>
@@ -9,7 +9,7 @@
       </template>
     </n-page-header>
 
-    <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap">
+    <div class="sm:container sm:mx-auto p-4 lg:p-0">
       <PostCreateEdit create :post="post?.data.value" @update:post="createPost" />
     </div>
   </LayoutAdmin>

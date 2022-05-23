@@ -1,47 +1,44 @@
 <template>
-  <div v-motion-fade class="h-full flex flex-auto flex-col md:flex-row">
-    <div class="h-full flex-auto mb-5 ml-7 md:ml-0 mr-7" style="max-width: 80%">
-      <!-- here -->
-      <n-card>
-        <div class="flex flex-auto flex-col md:flex-row">
-          <n-form-item label="Post title" :required="true" class="flex-auto mr-2">
-            <n-input
-              v-model:value="post.title"
-              :maxlength="100"
-              :status="post.title?.length > 5 ? 'success' : 'error'"
-              show-count
-              type="text"
-              placeholder="Post title"
-            />
-          </n-form-item>
+  <div v-motion-fade class="grid grid-sidebar gap-4 mb-20">
+    <n-card size="small">
+      <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
+        <n-form-item label="Post title" :required="true">
+          <n-input
+            v-model:value="post.title"
+            :maxlength="100"
+            :status="post.title?.length > 5 ? 'success' : 'error'"
+            show-count
+            type="text"
+            placeholder="Post title"
+          />
+        </n-form-item>
 
-          <n-form-item label="Post slug" :required="true" class="flex-auto">
-            <n-input
-              v-model:value="post.slug"
-              :maxlength="50"
-              :status="post.slug?.length > 5 ? 'success' : 'error'"
-              show-count
-              type="text"
-              placeholder="Post slug"
-            />
-          </n-form-item>
-        </div>
+        <n-form-item label="Post slug" :required="true">
+          <n-input
+            v-model:value="post.slug"
+            :maxlength="50"
+            :status="post.slug?.length > 5 ? 'success' : 'error'"
+            show-count
+            type="text"
+            placeholder="Post slug"
+          />
+        </n-form-item>
+      </div>
 
-        <component
-          :is="code"
-          v-if="code && codeExtensions.length == 3"
-          v-model="post.content"
-          placeholder="Post content"
-          :style="{ height: '60vh' }"
-          :autofocus="true"
-          :indent-with-tab="true"
-          :tab-size="4"
-          :extensions="codeExtensions"
-        />
-      </n-card>
-    </div>
-    <div class="h-full mb-5 mx-7 md:mx-0 md:w-280px">
-      <n-card>
+      <component
+        :is="code"
+        v-if="code && codeExtensions.length == 3"
+        v-model="post.content"
+        placeholder="Post content"
+        :autofocus="true"
+        :style="{ 'min-height': '400px' }"
+        :indent-with-tab="true"
+        :tab-size="4"
+        :extensions="codeExtensions"
+      />
+    </n-card>
+    <div>
+      <n-card size="small">
         <n-form-item
           label="Post published date"
           :required="true"
@@ -103,3 +100,9 @@ const datetime = computed({
   },
 })
 </script>
+
+<style scoped>
+.grid-sidebar {
+  @apply grid-cols-1 lg:grid-cols-[1fr,280px];
+}
+</style>

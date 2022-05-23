@@ -1,5 +1,6 @@
 ## TODO
 
+- brotli wrapper inside of chix
 - meta html head tags
 - add preview to editor?
 - resumeeeee
