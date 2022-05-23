@@ -32,7 +32,7 @@
             <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
           </p>
           <span class="ml-auto inline-flex items-center">
-            <ObjectRender :value="post.labels" class="mr-1" />
+            <ObjectRender :value="post.labels" linkable class="mr-1" />
             <router-link
               v-if="state.base?.self"
               class="ml-1"

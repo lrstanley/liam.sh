@@ -59,6 +59,18 @@ const message = useMessage()
 const newLabelInput = ref("")
 const createLabel = useCreateLabelMutation()
 function createNewLabel(val) {
+  // check if it already exists.
+  for (const label of labels.value) {
+    if (label.label === val) {
+      // check if it's already selected.
+      if (selectedLabels.value.filter((l) => l.label == val).length == 0) {
+        selectedLabels.value.push(label.value)
+      }
+      newLabelInput.value = ""
+      return
+    }
+  }
+
   createLabel.executeMutation({ input: { name: val } }).then((result) => {
     if (!result.error) {
       getLabels.executeQuery().then(() => {

@@ -1,6 +1,6 @@
 <template>
   <LayoutDefault :error="error">
-    <div class="grid gap-4 mt-8">
+    <div class="grid gap-25 mt-8">
       <div class="order-last md:order-first">
         <n-input
           v-model:value="search"
@@ -20,8 +20,19 @@
         </div>
       </div>
       <div class="col-auto">
-        <n-button type="primary" class="mb-8" @click="labels = [...labels, 'test']"> New post </n-button>
-        <n-card> test2 </n-card>
+        <template v-if="allLabels">
+          <n-space size="small" inline>
+            <n-tag
+              v-for="label in allLabels"
+              :key="label.id"
+              :type="labels.includes(label.name) ? 'success' : ''"
+              class="cursor-pointer"
+              @click="toggleLabel(label.name)"
+            >
+              {{ label.name }}
+            </n-tag>
+          </n-space>
+        </template>
       </div>
     </div>
   </LayoutDefault>
@@ -29,17 +40,44 @@
 
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
-import { useGetPostsQuery } from "@/lib/api"
+import { useGetPostsQuery, useGetLabelsQuery } from "@/lib/api"
 
 const search = useRouteQuery("q", "")
-const labels = useRouteQuery("label", [])
 const filterSearch = refDebounced(search, 300)
+
+const labels = useRouteQuery("label", [])
+const filterLabels = computed(() => (labels.value.length ? { nameIn: labels.value } : null))
+
+const labelQuery = useGetLabelsQuery({
+  variables: {
+    where: {
+      hasPosts: true,
+    },
+  },
+})
+const allLabels = computed(() => labelQuery.data.value?.labels.edges.map(({ node }) => node))
+
+function toggleLabel(name) {
+  let active = labels.value
+  if (!Array.isArray(labels.value)) {
+    active = [labels.value]
+  }
+
+  if (active.includes(name)) {
+    active = active.filter((l) => l !== name)
+  } else {
+    active = [...active, name]
+  }
+
+  labels.value = active
+}
 
 const { data, error, fetching } = useGetPostsQuery({
   variables: {
     first: 10,
     where: {
       or: [{ titleContainsFold: filterSearch }, { summaryContainsFold: filterSearch }],
+      hasLabelsWith: filterLabels,
     },
   },
 })

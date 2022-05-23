@@ -76,9 +76,6 @@ export default defineConfig({
       transformCSS: "pre",
     }),
   ],
-  build: {
-    manifest: true,
-  },
   server: {
     port: 8081,
     strictPort: true,

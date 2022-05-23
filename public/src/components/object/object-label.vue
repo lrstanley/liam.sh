@@ -1,6 +1,9 @@
 <template>
-  <component :is="props.linkable ? 'router-link' : 'span'">
-    <n-tag v-bind="$attrs">
+  <component
+    :is="props.linkable ? 'router-link' : 'span'"
+    :to="{ name: 'posts', query: { label: props.value.name } }"
+  >
+    <n-tag v-bind="$attrs" class="hover:bg-emerald-700 cursor-pointer">
       {{ props.value.name }}
     </n-tag>
   </component>

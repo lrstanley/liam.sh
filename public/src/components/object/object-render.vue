@@ -39,23 +39,23 @@ const objects = computed(() => {
 })
 
 function typeMapper(o) {
-  if (!o.__typename) {
-    return []
-  }
-
   if (Array.isArray(o)) {
     return o.map(typeMapper)
   }
 
+  if (!o.__typename) {
+    return []
+  }
+
+  if (o.__typename.endsWith("Connection")) {
+    return o.edges.map(typeMapper)
+  }
+
+  if (o.__typename.endsWith("Edge")) {
+    return typeMapper(o.node)
+  }
+
   switch (o.__typename) {
-    case "PostConnection":
-    case "LabelConnection":
-      return o.edges.map(typeMapper)
-
-    case "PostEdge":
-    case "LabelEdge":
-      return typeMapper(o.node)
-
     case "Post":
       return { component: h(ObjectPost, { value: o }), object: o }
 

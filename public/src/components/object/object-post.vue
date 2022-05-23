@@ -28,7 +28,7 @@
       <span v-html="props.value.summary" />
 
       <template #action>
-        <ObjectRender :value="props.value.labels" class="mr-1" />
+        <ObjectRender :value="props.value.labels" linkable class="mr-1" />
       </template>
     </n-thing>
   </component>

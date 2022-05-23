@@ -29,9 +29,7 @@
               </router-link>
             </td>
             <td>
-              <span v-for="label in post.labels.edges.map((v) => v.node)" :key="label.id" class="mr-2">
-                <n-tag class="hover:bg-green-700">{{ label.name }}</n-tag>
-              </span>
+              <ObjectRender :value="post.labels" linkable class="mr-1" />
             </td>
             <td>{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
             <td>
