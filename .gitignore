@@ -13,4 +13,7 @@ release
 .gitapicache
 .task
 node_modules
+internal/graphql/gqlhandler
 public/dist
+public/src/lib/api/index.ts
+public/.eslintrc-auto-import.json
