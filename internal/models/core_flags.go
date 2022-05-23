@@ -8,6 +8,7 @@ type Flags struct {
 	HTTP     ConfigHTTP     `group:"HTTP Server options" namespace:"http" env-namespace:"HTTP"`
 	Database ConfigDatabase `group:"Database options" namespace:"database" env-namespace:"DATABASE"`
 	Github   ConfigGithub   `group:"Github options" namespace:"github" env-namespace:"GITHUB"`
+	ChatLink string         `env:"CHAT_LINK" long:"chat-link" required:"true" description:"Link to a chat platform"`
 }
 
 // ConfigDatabase holds the database configuration.

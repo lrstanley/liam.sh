@@ -88,13 +88,14 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateLabel func(childComplexity int, input ent.CreateLabelInput) int
-		CreatePost  func(childComplexity int, input ent.CreatePostInput) int
-		DeleteLabel func(childComplexity int, id int) int
-		DeletePost  func(childComplexity int, id int) int
-		Ping        func(childComplexity int) int
-		UpdateLabel func(childComplexity int, id int, input ent.UpdateLabelInput) int
-		UpdatePost  func(childComplexity int, id int, input ent.UpdatePostInput) int
+		CreateLabel     func(childComplexity int, input ent.CreateLabelInput) int
+		CreatePost      func(childComplexity int, input ent.CreatePostInput) int
+		DeleteLabel     func(childComplexity int, id int) int
+		DeletePost      func(childComplexity int, id int) int
+		Ping            func(childComplexity int) int
+		RegeneratePosts func(childComplexity int) int
+		UpdateLabel     func(childComplexity int, id int, input ent.UpdateLabelInput) int
+		UpdatePost      func(childComplexity int, id int, input ent.UpdatePostInput) int
 	}
 
 	PageInfo struct {
@@ -113,6 +114,7 @@ type ComplexityRoot struct {
 		Labels      func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) int
 		PublishedAt func(childComplexity int) int
 		Slug        func(childComplexity int) int
+		Summary     func(childComplexity int) int
 		Title       func(childComplexity int) int
 		UpdateTime  func(childComplexity int) int
 	}
@@ -190,6 +192,7 @@ type MutationResolver interface {
 	CreatePost(ctx context.Context, input ent.CreatePostInput) (*ent.Post, error)
 	UpdatePost(ctx context.Context, id int, input ent.UpdatePostInput) (*ent.Post, error)
 	DeletePost(ctx context.Context, id int) (int, error)
+	RegeneratePosts(ctx context.Context) (bool, error)
 }
 type QueryResolver interface {
 	Node(ctx context.Context, id int) (ent.Noder, error)
@@ -452,6 +455,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.Ping(childComplexity), true
 
+	case "Mutation.regeneratePosts":
+		if e.complexity.Mutation.RegeneratePosts == nil {
+			break
+		}
+
+		return e.complexity.Mutation.RegeneratePosts(childComplexity), true
+
 	case "Mutation.updateLabel":
 		if e.complexity.Mutation.UpdateLabel == nil {
 			break
@@ -564,6 +574,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Post.Slug(childComplexity), true
+
+	case "Post.summary":
+		if e.complexity.Post.Summary == nil {
+			break
+		}
+
+		return e.complexity.Post.Summary(childComplexity), true
 
 	case "Post.title":
 		if e.complexity.Post.Title == nil {
@@ -1126,6 +1143,7 @@ type Post implements Node {
   title: String!
   content: String!
   contentHTML: String!
+  summary: String!
   publishedAt: Time!
   author: User!
   labels(
@@ -1268,6 +1286,20 @@ input PostWhereInput {
   contentHTMLHasSuffix: String
   contentHTMLEqualFold: String
   contentHTMLContainsFold: String
+  """summary field predicates"""
+  summary: String
+  summaryNEQ: String
+  summaryIn: [String!]
+  summaryNotIn: [String!]
+  summaryGT: String
+  summaryGTE: String
+  summaryLT: String
+  summaryLTE: String
+  summaryContains: String
+  summaryHasPrefix: String
+  summaryHasSuffix: String
+  summaryEqualFold: String
+  summaryContainsFold: String
   """published_at field predicates"""
   publishedAt: Time
   publishedAtNEQ: Time
@@ -1633,6 +1665,7 @@ extend type Mutation {
     createPost(input: CreatePostInput!): Post!
     updatePost(id: ID!, input: UpdatePostInput!): Post!
     deletePost(id: ID!): ID!
+    regeneratePosts: Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../schema/user.gql", Input: `extend type Query {
@@ -3650,6 +3683,8 @@ func (ec *executionContext) fieldContext_Mutation_createPost(ctx context.Context
 				return ec.fieldContext_Post_content(ctx, field)
 			case "contentHTML":
 				return ec.fieldContext_Post_contentHTML(ctx, field)
+			case "summary":
+				return ec.fieldContext_Post_summary(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -3727,6 +3762,8 @@ func (ec *executionContext) fieldContext_Mutation_updatePost(ctx context.Context
 				return ec.fieldContext_Post_content(ctx, field)
 			case "contentHTML":
 				return ec.fieldContext_Post_contentHTML(ctx, field)
+			case "summary":
+				return ec.fieldContext_Post_summary(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -3802,6 +3839,50 @@ func (ec *executionContext) fieldContext_Mutation_deletePost(ctx context.Context
 	if fc.Args, err = ec.field_Mutation_deletePost_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_regeneratePosts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_regeneratePosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RegeneratePosts(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_regeneratePosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -4284,6 +4365,50 @@ func (ec *executionContext) fieldContext_Post_contentHTML(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _Post_summary(ctx context.Context, field graphql.CollectedField, obj *ent.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_summary(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Summary, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_summary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Post_publishedAt(ctx context.Context, field graphql.CollectedField, obj *ent.Post) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Post_publishedAt(ctx, field)
 	if err != nil {
@@ -4656,6 +4781,8 @@ func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Post_content(ctx, field)
 			case "contentHTML":
 				return ec.fieldContext_Post_contentHTML(ctx, field)
+			case "summary":
+				return ec.fieldContext_Post_summary(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Post_publishedAt(ctx, field)
 			case "author":
@@ -9482,6 +9609,110 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
+		case "summary":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summary"))
+			it.Summary, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryNEQ":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryNEQ"))
+			it.SummaryNEQ, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryIn"))
+			it.SummaryIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryNotIn":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryNotIn"))
+			it.SummaryNotIn, err = ec.unmarshalOString2ᚕstringᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryGT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryGT"))
+			it.SummaryGT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryGTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryGTE"))
+			it.SummaryGTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryLT":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryLT"))
+			it.SummaryLT, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryLTE":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryLTE"))
+			it.SummaryLTE, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryContains":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryContains"))
+			it.SummaryContains, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryHasPrefix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryHasPrefix"))
+			it.SummaryHasPrefix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryHasSuffix":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryHasSuffix"))
+			it.SummaryHasSuffix, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryEqualFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryEqualFold"))
+			it.SummaryEqualFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "summaryContainsFold":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("summaryContainsFold"))
+			it.SummaryContainsFold, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "publishedAt":
 			var err error
 
@@ -11238,6 +11469,15 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "regeneratePosts":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_regeneratePosts(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11347,6 +11587,13 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 		case "contentHTML":
 
 			out.Values[i] = ec._Post_contentHTML(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "summary":
+
+			out.Values[i] = ec._Post_summary(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

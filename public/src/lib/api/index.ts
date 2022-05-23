@@ -172,6 +172,7 @@ export type Mutation = {
   deleteLabel: Scalars['ID'];
   deletePost: Scalars['ID'];
   ping?: Maybe<Scalars['String']>;
+  regeneratePosts: Scalars['Boolean'];
   updateLabel: Label;
   updatePost: Post;
 };
@@ -251,6 +252,7 @@ export type Post = Node & {
   labels: LabelConnection;
   publishedAt: Scalars['Time'];
   slug: Scalars['String'];
+  summary: Scalars['String'];
   title: Scalars['String'];
   updateTime: Scalars['Time'];
 };
@@ -383,6 +385,20 @@ export type PostWhereInput = {
   slugLTE?: InputMaybe<Scalars['String']>;
   slugNEQ?: InputMaybe<Scalars['String']>;
   slugNotIn?: InputMaybe<Array<Scalars['String']>>;
+  /** summary field predicates */
+  summary?: InputMaybe<Scalars['String']>;
+  summaryContains?: InputMaybe<Scalars['String']>;
+  summaryContainsFold?: InputMaybe<Scalars['String']>;
+  summaryEqualFold?: InputMaybe<Scalars['String']>;
+  summaryGT?: InputMaybe<Scalars['String']>;
+  summaryGTE?: InputMaybe<Scalars['String']>;
+  summaryHasPrefix?: InputMaybe<Scalars['String']>;
+  summaryHasSuffix?: InputMaybe<Scalars['String']>;
+  summaryIn?: InputMaybe<Array<Scalars['String']>>;
+  summaryLT?: InputMaybe<Scalars['String']>;
+  summaryLTE?: InputMaybe<Scalars['String']>;
+  summaryNEQ?: InputMaybe<Scalars['String']>;
+  summaryNotIn?: InputMaybe<Array<Scalars['String']>>;
   /** title field predicates */
   title?: InputMaybe<Scalars['String']>;
   titleContains?: InputMaybe<Scalars['String']>;
@@ -713,6 +729,11 @@ export type VersionInfo = {
   version: Scalars['String'];
 };
 
+export type RegeneratePostsMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RegeneratePostsMutation = { __typename?: 'Mutation', regeneratePosts: boolean };
+
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -766,10 +787,11 @@ export type GetPostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['Cursor']>;
   order?: InputMaybe<OrderDirection>;
   orderBy?: InputMaybe<PostOrderField>;
+  where?: InputMaybe<PostWhereInput>;
 }>;
 
 
-export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, slug: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null }, author: { __typename?: 'User', login: string, avatarURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
+export type GetPostsQuery = { __typename?: 'Query', posts: { __typename?: 'PostConnection', edges?: Array<{ __typename?: 'PostEdge', node?: { __typename?: 'Post', id: string, title: string, summary: string, slug: string, publishedAt: any, labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null }, author: { __typename?: 'User', name?: string | null, login: string, avatarURL?: string | null, htmlURL?: string | null } } | null } | null> | null, pageInfo: { __typename?: 'PageInfo', hasNextPage: boolean, hasPreviousPage: boolean, startCursor?: any | null, endCursor?: any | null } } };
 
 export type GetLabelsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -777,6 +799,15 @@ export type GetLabelsQueryVariables = Exact<{ [key: string]: never; }>;
 export type GetLabelsQuery = { __typename?: 'Query', labels: { __typename?: 'LabelConnection', edges?: Array<{ __typename?: 'LabelEdge', node?: { __typename?: 'Label', id: string, name: string } | null } | null> | null } };
 
 
+export const RegeneratePostsDocument = gql`
+    mutation regeneratePosts {
+  regeneratePosts
+}
+    `;
+
+export function useRegeneratePostsMutation() {
+  return Urql.useMutation<RegeneratePostsMutation, RegeneratePostsMutationVariables>(RegeneratePostsDocument);
+};
 export const DeletePostDocument = gql`
     mutation deletePost($id: ID!) {
   deletePost(id: $id)
@@ -883,6 +914,7 @@ export const GetPostContentDocument = gql`
         slug
         content
         contentHTML
+        publishedAt
         author {
           name
           login
@@ -897,7 +929,6 @@ export const GetPostContentDocument = gql`
             }
           }
         }
-        publishedAt
       }
     }
   }
@@ -908,16 +939,18 @@ export function useGetPostContentQuery(options: Omit<Urql.UseQueryArgs<never, Ge
   return Urql.useQuery<GetPostContentQuery>({ query: GetPostContentDocument, ...options });
 };
 export const GetPostsDocument = gql`
-    query getPosts($count: Int = 25, $cursor: Cursor, $order: OrderDirection = DESC, $orderBy: PostOrderField = DATE) {
+    query getPosts($count: Int = 25, $cursor: Cursor, $order: OrderDirection = DESC, $orderBy: PostOrderField = DATE, $where: PostWhereInput) {
   posts(
     first: $count
     after: $cursor
+    where: $where
     orderBy: {direction: $order, field: $orderBy}
   ) {
     edges {
       node {
         id
         title
+        summary
         slug
         publishedAt
         labels {
@@ -929,8 +962,10 @@ export const GetPostsDocument = gql`
           }
         }
         author {
+          name
           login
           avatarURL
+          htmlURL
         }
       }
     }

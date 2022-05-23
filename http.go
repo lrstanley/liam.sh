@@ -74,6 +74,7 @@ func httpServer() *http.Server {
 	r.Mount("/api/graphql", graphql.New(db, cli))
 	r.Mount("/api/playground", playground.Handler("GraphQL playground", "/api/graphql"))
 	r.Mount("/api/auth", auth)
+	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 
 	if !cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())

@@ -6,13 +6,19 @@ package database
 
 import (
 	"context"
+	"strings"
 
 	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/hook"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/markdown"
+	"github.com/microcosm-cc/bluemonday"
 )
+
+const summaryLen = 40
+
+var htmlPolicy = bluemonday.StrictPolicy()
 
 // RegisterHooks initializes all runtime hooks into the database client.
 func RegisterHooks(ctx context.Context, db *ent.Client) {
@@ -32,6 +38,13 @@ func RegisterHooks(ctx context.Context, db *ent.Client) {
 					}
 
 					m.SetContentHTML(md)
+
+					summary := strings.Fields(htmlPolicy.Sanitize(md))
+					if len(summary) > summaryLen {
+						m.SetSummary(strings.Join(summary[:summaryLen], " ") + "...")
+					} else {
+						m.SetSummary(strings.Join(summary, " ") + "...")
+					}
 
 					return next.Mutate(ctx, m)
 				})

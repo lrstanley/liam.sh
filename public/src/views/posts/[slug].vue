@@ -1,7 +1,7 @@
 <template>
   <LayoutDefault :loading="fetching" :error="error">
     <CoreTableOfContents :element="postRef" />
-    <n-page-header class="container mx-auto hidden md:inline-flex xl:px-200px mt-4 mb-8">
+    <n-page-header class="container hidden md:inline-flex mt-14 mb-2">
       <template #title>
         <CoreTerminal
           class="mb-4 text-size-38px md:text-size-34px"
@@ -12,7 +12,7 @@
       </template>
     </n-page-header>
 
-    <div class="container mx-auto px-15px xl:px-200px">
+    <div class="container">
       <n-alert v-if="error" title="Error fetching post" type="error">
         {{ error }}
       </n-alert>
@@ -24,16 +24,18 @@
           {{ post.title }}
         </div>
 
-        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-8">
+        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-20">
           <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
           <p>
             <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
             <br />
             <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
           </p>
-          <span class="ml-auto">
+          <span class="ml-auto inline-flex items-center">
+            <ObjectRender :value="post.labels" class="mr-1" />
             <router-link
               v-if="state.base?.self"
+              class="ml-1"
               :to="{ name: 'admin-edit-post-id', params: { id: post.id } }"
             >
               <n-button class="mr-3" type="secondary"> Edit post </n-button>
@@ -41,7 +43,7 @@
           </span>
         </div>
 
-        <div id="post-content" ref="postRef" v-html="post.contentHTML" />
+        <div id="post-content" ref="postRef" class="lg:mb-100px" v-html="post.contentHTML" />
       </div>
     </div>
   </LayoutDefault>
@@ -70,7 +72,7 @@ const postRef = ref(null)
 }
 
 #post-content :deep(img) {
-  max-width: 100%;
+  @apply max-w-[calc(100%)] lg: max-w-[calc(80%)] px-5 lg:px-0 !m-0;
   height: auto;
 }
 
@@ -98,16 +100,32 @@ const postRef = ref(null)
 
 #post-content :deep(h2),
 #post-content :deep(h3),
-#post-content :deep(h4) {
+#post-content :deep(h4),
+#post-content :deep(h5) {
   margin-top: 30px;
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
   @apply bg-gradient-to-r from-sky-400 to-blue-500;
 }
 
+#post-content :deep(h1)::before,
+#post-content :deep(h2)::before,
+#post-content :deep(h3)::before,
+#post-content :deep(h4)::before,
+#post-content :deep(h5)::before,
+#post-content :deep(h6)::before {
+  content: "#";
+  position: relative;
+  right: 10px;
+  @apply text-emerald-500;
+}
+
 #post-content :deep(pre) {
   border-radius: 7px;
   padding: 0.5rem 0.8rem;
-  white-space: pre-wrap;
-  @apply !bg-dark-400;
+  @apply !bg-dark-600 overflow-auto whitespace-nowrap !lg:overflow-hidden !lg:whitespace-pre-wrap;
+}
+
+#post-content :deep(ul) {
+  @apply ml-6 list-square list-inside;
 }
 </style>

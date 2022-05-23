@@ -1,3 +1,7 @@
+mutation regeneratePosts {
+    regeneratePosts
+}
+
 mutation deletePost($id: ID!) {
     deletePost(id: $id)
 }

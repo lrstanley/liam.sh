@@ -1,14 +1,19 @@
 <template>
   <LayoutAdmin :loading="fetching" :error="error">
     <div class="sm:container sm:mx-auto flex flex-auto flex-col flex-nowrap mt-7">
-      <n-table v-if="!fetching" v-motion-slide-top bordered single-line>
+      <n-table v-if="!fetching" v-motion-slide-top bordered single-line striped size="small">
         <thead>
           <tr>
             <th>Title</th>
             <th>Slug</th>
             <th>Labels</th>
             <th>Published</th>
-            <th>Actions</th>
+            <th>
+              Actions
+              <n-button class="ml-10" type="error" @click="regenerate">
+                <n-icon><i-mdi-reload /></n-icon>
+              </n-button>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -54,7 +59,7 @@
 <script setup>
 import { useDialog, useMessage } from "naive-ui"
 import { useTimeAgo } from "@vueuse/core"
-import { useGetPostsQuery, useDeletePostMutation } from "@/lib/api"
+import { useGetPostsQuery, useDeletePostMutation, useRegeneratePostsMutation } from "@/lib/api"
 
 const props = defineProps({
   cursor: {
@@ -96,6 +101,18 @@ function deletePost(row) {
         refetch()
       })
     },
+  })
+}
+
+const { executeMutation: regeneratePosts } = useRegeneratePostsMutation()
+function regenerate() {
+  message.info("Regenerating posts...")
+  regeneratePosts().then(({ error }) => {
+    if (!error) {
+      message.success("Regenerated posts")
+    } else {
+      message.error(error.toString())
+    }
   })
 }
 </script>

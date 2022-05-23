@@ -54,6 +54,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldTitle:       {Type: field.TypeString, Column: post.FieldTitle},
 			post.FieldContent:     {Type: field.TypeString, Column: post.FieldContent},
 			post.FieldContentHTML: {Type: field.TypeString, Column: post.FieldContentHTML},
+			post.FieldSummary:     {Type: field.TypeString, Column: post.FieldSummary},
 			post.FieldPublishedAt: {Type: field.TypeTime, Column: post.FieldPublishedAt},
 		},
 	}
@@ -274,6 +275,11 @@ func (f *PostFilter) WhereContent(p entql.StringP) {
 // WhereContentHTML applies the entql string predicate on the content_html field.
 func (f *PostFilter) WhereContentHTML(p entql.StringP) {
 	f.Where(p.Field(post.FieldContentHTML))
+}
+
+// WhereSummary applies the entql string predicate on the summary field.
+func (f *PostFilter) WhereSummary(p entql.StringP) {
+	f.Where(p.Field(post.FieldSummary))
 }
 
 // WherePublishedAt applies the entql time.Time predicate on the published_at field.

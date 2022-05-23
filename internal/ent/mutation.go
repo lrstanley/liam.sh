@@ -559,6 +559,7 @@ type PostMutation struct {
 	title         *string
 	content       *string
 	content_html  *string
+	summary       *string
 	published_at  *time.Time
 	clearedFields map[string]struct{}
 	author        *int
@@ -885,6 +886,42 @@ func (m *PostMutation) ResetContentHTML() {
 	m.content_html = nil
 }
 
+// SetSummary sets the "summary" field.
+func (m *PostMutation) SetSummary(s string) {
+	m.summary = &s
+}
+
+// Summary returns the value of the "summary" field in the mutation.
+func (m *PostMutation) Summary() (r string, exists bool) {
+	v := m.summary
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSummary returns the old "summary" field's value of the Post entity.
+// If the Post object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PostMutation) OldSummary(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSummary is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSummary requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSummary: %w", err)
+	}
+	return oldValue.Summary, nil
+}
+
+// ResetSummary resets all changes to the "summary" field.
+func (m *PostMutation) ResetSummary() {
+	m.summary = nil
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (m *PostMutation) SetPublishedAt(t time.Time) {
 	m.published_at = &t
@@ -1033,7 +1070,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 8)
 	if m.create_time != nil {
 		fields = append(fields, post.FieldCreateTime)
 	}
@@ -1051,6 +1088,9 @@ func (m *PostMutation) Fields() []string {
 	}
 	if m.content_html != nil {
 		fields = append(fields, post.FieldContentHTML)
+	}
+	if m.summary != nil {
+		fields = append(fields, post.FieldSummary)
 	}
 	if m.published_at != nil {
 		fields = append(fields, post.FieldPublishedAt)
@@ -1075,6 +1115,8 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.Content()
 	case post.FieldContentHTML:
 		return m.ContentHTML()
+	case post.FieldSummary:
+		return m.Summary()
 	case post.FieldPublishedAt:
 		return m.PublishedAt()
 	}
@@ -1098,6 +1140,8 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldContent(ctx)
 	case post.FieldContentHTML:
 		return m.OldContentHTML(ctx)
+	case post.FieldSummary:
+		return m.OldSummary(ctx)
 	case post.FieldPublishedAt:
 		return m.OldPublishedAt(ctx)
 	}
@@ -1150,6 +1194,13 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetContentHTML(v)
+		return nil
+	case post.FieldSummary:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSummary(v)
 		return nil
 	case post.FieldPublishedAt:
 		v, ok := value.(time.Time)
@@ -1224,6 +1275,9 @@ func (m *PostMutation) ResetField(name string) error {
 		return nil
 	case post.FieldContentHTML:
 		m.ResetContentHTML()
+		return nil
+	case post.FieldSummary:
+		m.ResetSummary()
 		return nil
 	case post.FieldPublishedAt:
 		m.ResetPublishedAt()

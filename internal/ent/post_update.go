@@ -64,6 +64,12 @@ func (pu *PostUpdate) SetContentHTML(s string) *PostUpdate {
 	return pu
 }
 
+// SetSummary sets the "summary" field.
+func (pu *PostUpdate) SetSummary(s string) *PostUpdate {
+	pu.mutation.SetSummary(s)
+	return pu
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (pu *PostUpdate) SetPublishedAt(t time.Time) *PostUpdate {
 	pu.mutation.SetPublishedAt(t)
@@ -233,6 +239,11 @@ func (pu *PostUpdate) check() error {
 			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.Summary(); ok {
+		if err := post.SummaryValidator(v); err != nil {
+			return &ValidationError{Name: "summary", err: fmt.Errorf(`ent: validator failed for field "Post.summary": %w`, err)}
+		}
+	}
 	if _, ok := pu.mutation.AuthorID(); pu.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -290,6 +301,13 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeString,
 			Value:  value,
 			Column: post.FieldContentHTML,
+		})
+	}
+	if value, ok := pu.mutation.Summary(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldSummary,
 		})
 	}
 	if value, ok := pu.mutation.PublishedAt(); ok {
@@ -434,6 +452,12 @@ func (puo *PostUpdateOne) SetContent(s string) *PostUpdateOne {
 // SetContentHTML sets the "content_html" field.
 func (puo *PostUpdateOne) SetContentHTML(s string) *PostUpdateOne {
 	puo.mutation.SetContentHTML(s)
+	return puo
+}
+
+// SetSummary sets the "summary" field.
+func (puo *PostUpdateOne) SetSummary(s string) *PostUpdateOne {
+	puo.mutation.SetSummary(s)
 	return puo
 }
 
@@ -619,6 +643,11 @@ func (puo *PostUpdateOne) check() error {
 			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.Summary(); ok {
+		if err := post.SummaryValidator(v); err != nil {
+			return &ValidationError{Name: "summary", err: fmt.Errorf(`ent: validator failed for field "Post.summary": %w`, err)}
+		}
+	}
 	if _, ok := puo.mutation.AuthorID(); puo.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -693,6 +722,13 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 			Type:   field.TypeString,
 			Value:  value,
 			Column: post.FieldContentHTML,
+		})
+	}
+	if value, ok := puo.mutation.Summary(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldSummary,
 		})
 	}
 	if value, ok := puo.mutation.PublishedAt(); ok {

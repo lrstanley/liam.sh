@@ -91,8 +91,12 @@ func init() {
 	postDescContentHTML := postFields[3].Descriptor()
 	// post.ContentHTMLValidator is a validator for the "content_html" field. It is called by the builders before save.
 	post.ContentHTMLValidator = postDescContentHTML.Validators[0].(func(string) error)
+	// postDescSummary is the schema descriptor for summary field.
+	postDescSummary := postFields[4].Descriptor()
+	// post.SummaryValidator is a validator for the "summary" field. It is called by the builders before save.
+	post.SummaryValidator = postDescSummary.Validators[0].(func(string) error)
 	// postDescPublishedAt is the schema descriptor for published_at field.
-	postDescPublishedAt := postFields[4].Descriptor()
+	postDescPublishedAt := postFields[5].Descriptor()
 	// post.DefaultPublishedAt holds the default value on creation for the published_at field.
 	post.DefaultPublishedAt = postDescPublishedAt.Default.(func() time.Time)
 	userMixin := schema.User{}.Mixin()

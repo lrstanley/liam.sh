@@ -1,4 +1,8 @@
 version: "3"
+
+volumes:
+  pgdata:
+
 services:
   devimage:
     image: devimage
@@ -39,3 +43,5 @@ services:
     ports: [5432:5432]
     environment:
       - PGDATA=/database
+    volumes:
+      - pgdata:/database

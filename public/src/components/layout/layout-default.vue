@@ -1,29 +1,29 @@
 <template>
   <LayoutBase>
     <div class="z-1 relative flex flex-auto flex-col">
-      <n-layout-header bordered class="absolute pt-1 h-45px z-10">
-        <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
-      </n-layout-header>
-
-      <n-alert
-        v-if="props.error"
-        v-motion-fade-visible
-        title="An error occurred"
-        type="error"
-        class="m-2 md:m-6"
+      <div
+        class="sm:container flex flex-auto flex-col mt-70px mb-45px max-w-100vw px-4 xl:px-200px sm:mx-auto"
       >
-        {{ props.error }}
-      </n-alert>
-      <template v-else-if="props.loading">
-        <n-spin class="flex-auto">
-          <template #description> Loading... </template>
-        </n-spin>
-      </template>
-      <template v-else>
-        <div class="sm:container sm:mx-auto flex flex-auto flex-col mt-70px mb-45px">
+        <CoreNavigation />
+
+        <n-alert
+          v-if="props.error"
+          v-motion-fade-visible
+          title="An error occurred"
+          type="error"
+          class="m-2 md:m-6"
+        >
+          {{ props.error }}
+        </n-alert>
+        <template v-else-if="props.loading">
+          <n-spin class="flex-auto">
+            <template #description> Loading... </template>
+          </n-spin>
+        </template>
+        <template v-else>
           <slot><router-view /></slot>
-        </div>
-      </template>
+        </template>
+      </div>
 
       <n-layout-footer bordered>
         <span class="flex flex-auto justify-end px-2">
@@ -39,8 +39,6 @@
 </template>
 
 <script setup>
-import { menuOptions } from "@/lib/navigation.js"
-
 const props = defineProps({
   loading: {
     type: Boolean,
@@ -51,6 +49,4 @@ const props = defineProps({
     default: null,
   },
 })
-
-const activeKey = ref(null)
 </script>

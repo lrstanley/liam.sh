@@ -34,6 +34,7 @@ var (
 		{Name: "title", Type: field.TypeString, Size: 100},
 		{Name: "content", Type: field.TypeString},
 		{Name: "content_html", Type: field.TypeString},
+		{Name: "summary", Type: field.TypeString},
 		{Name: "published_at", Type: field.TypeTime},
 		{Name: "user_posts", Type: field.TypeInt},
 	}
@@ -45,7 +46,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "posts_users_posts",
-				Columns:    []*schema.Column{PostsColumns[8]},
+				Columns:    []*schema.Column{PostsColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

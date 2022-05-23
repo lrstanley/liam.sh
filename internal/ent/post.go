@@ -33,6 +33,8 @@ type Post struct {
 	Content string `json:"content,omitempty"`
 	// ContentHTML holds the value of the "content_html" field.
 	ContentHTML string `json:"content_html,omitempty"`
+	// Summary holds the value of the "summary" field.
+	Summary string `json:"summary,omitempty"`
 	// PublishedAt holds the value of the "published_at" field.
 	PublishedAt time.Time `json:"published_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -84,7 +86,7 @@ func (*Post) scanValues(columns []string) ([]interface{}, error) {
 		switch columns[i] {
 		case post.FieldID:
 			values[i] = new(sql.NullInt64)
-		case post.FieldSlug, post.FieldTitle, post.FieldContent, post.FieldContentHTML:
+		case post.FieldSlug, post.FieldTitle, post.FieldContent, post.FieldContentHTML, post.FieldSummary:
 			values[i] = new(sql.NullString)
 		case post.FieldCreateTime, post.FieldUpdateTime, post.FieldPublishedAt:
 			values[i] = new(sql.NullTime)
@@ -146,6 +148,12 @@ func (po *Post) assignValues(columns []string, values []interface{}) error {
 				return fmt.Errorf("unexpected type %T for field content_html", values[i])
 			} else if value.Valid {
 				po.ContentHTML = value.String
+			}
+		case post.FieldSummary:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field summary", values[i])
+			} else if value.Valid {
+				po.Summary = value.String
 			}
 		case post.FieldPublishedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -210,6 +218,8 @@ func (po *Post) String() string {
 	builder.WriteString(po.Content)
 	builder.WriteString(", content_html=")
 	builder.WriteString(po.ContentHTML)
+	builder.WriteString(", summary=")
+	builder.WriteString(po.Summary)
 	builder.WriteString(", published_at=")
 	builder.WriteString(po.PublishedAt.Format(time.ANSIC))
 	builder.WriteByte(')')

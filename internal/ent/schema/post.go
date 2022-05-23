@@ -31,6 +31,7 @@ func (Post) Fields() []ent.Field {
 		),
 		field.String("content").NotEmpty(),
 		field.String("content_html").NotEmpty(),
+		field.String("summary").NotEmpty(),
 		field.Time("published_at").Default(time.Now).Annotations(
 			entgql.OrderField("DATE"),
 		),

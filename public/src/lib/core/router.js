@@ -11,7 +11,10 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const state = useState()
-  state.loading = true
+
+  if (from.name != to.name || JSON.stringify(from.params) != JSON.stringify(to.params)) {
+    state.loading = true
+  }
 
   let error
 

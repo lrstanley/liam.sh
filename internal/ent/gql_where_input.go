@@ -375,6 +375,21 @@ type PostWhereInput struct {
 	ContentHTMLEqualFold    *string  `json:"contentHTMLEqualFold,omitempty"`
 	ContentHTMLContainsFold *string  `json:"contentHTMLContainsFold,omitempty"`
 
+	// "summary" field predicates.
+	Summary             *string  `json:"summary,omitempty"`
+	SummaryNEQ          *string  `json:"summaryNEQ,omitempty"`
+	SummaryIn           []string `json:"summaryIn,omitempty"`
+	SummaryNotIn        []string `json:"summaryNotIn,omitempty"`
+	SummaryGT           *string  `json:"summaryGT,omitempty"`
+	SummaryGTE          *string  `json:"summaryGTE,omitempty"`
+	SummaryLT           *string  `json:"summaryLT,omitempty"`
+	SummaryLTE          *string  `json:"summaryLTE,omitempty"`
+	SummaryContains     *string  `json:"summaryContains,omitempty"`
+	SummaryHasPrefix    *string  `json:"summaryHasPrefix,omitempty"`
+	SummaryHasSuffix    *string  `json:"summaryHasSuffix,omitempty"`
+	SummaryEqualFold    *string  `json:"summaryEqualFold,omitempty"`
+	SummaryContainsFold *string  `json:"summaryContainsFold,omitempty"`
+
 	// "published_at" field predicates.
 	PublishedAt      *time.Time  `json:"publishedAt,omitempty"`
 	PublishedAtNEQ   *time.Time  `json:"publishedAtNEQ,omitempty"`
@@ -686,6 +701,45 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	}
 	if i.ContentHTMLContainsFold != nil {
 		predicates = append(predicates, post.ContentHTMLContainsFold(*i.ContentHTMLContainsFold))
+	}
+	if i.Summary != nil {
+		predicates = append(predicates, post.SummaryEQ(*i.Summary))
+	}
+	if i.SummaryNEQ != nil {
+		predicates = append(predicates, post.SummaryNEQ(*i.SummaryNEQ))
+	}
+	if len(i.SummaryIn) > 0 {
+		predicates = append(predicates, post.SummaryIn(i.SummaryIn...))
+	}
+	if len(i.SummaryNotIn) > 0 {
+		predicates = append(predicates, post.SummaryNotIn(i.SummaryNotIn...))
+	}
+	if i.SummaryGT != nil {
+		predicates = append(predicates, post.SummaryGT(*i.SummaryGT))
+	}
+	if i.SummaryGTE != nil {
+		predicates = append(predicates, post.SummaryGTE(*i.SummaryGTE))
+	}
+	if i.SummaryLT != nil {
+		predicates = append(predicates, post.SummaryLT(*i.SummaryLT))
+	}
+	if i.SummaryLTE != nil {
+		predicates = append(predicates, post.SummaryLTE(*i.SummaryLTE))
+	}
+	if i.SummaryContains != nil {
+		predicates = append(predicates, post.SummaryContains(*i.SummaryContains))
+	}
+	if i.SummaryHasPrefix != nil {
+		predicates = append(predicates, post.SummaryHasPrefix(*i.SummaryHasPrefix))
+	}
+	if i.SummaryHasSuffix != nil {
+		predicates = append(predicates, post.SummaryHasSuffix(*i.SummaryHasSuffix))
+	}
+	if i.SummaryEqualFold != nil {
+		predicates = append(predicates, post.SummaryEqualFold(*i.SummaryEqualFold))
+	}
+	if i.SummaryContainsFold != nil {
+		predicates = append(predicates, post.SummaryContainsFold(*i.SummaryContainsFold))
 	}
 	if i.PublishedAt != nil {
 		predicates = append(predicates, post.PublishedAtEQ(*i.PublishedAt))

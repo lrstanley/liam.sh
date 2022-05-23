@@ -22,10 +22,9 @@ var engine = goldmark.New(
 		extension.GFM,
 		extension.Footnote,
 		highlighting.NewHighlighting(
-			highlighting.WithStyle("dracula"),
+			highlighting.WithStyle("dracula"), // monokai
 			highlighting.WithFormatOptions(
 				chromahtml.WithLineNumbers(true),
-				// chromahtml.LinkableLineNumbers(true, "ln"),
 				chromahtml.TabWidth(4),
 			),
 		),
@@ -42,7 +41,6 @@ var engine = goldmark.New(
 	goldmark.WithRendererOptions(
 		html.WithUnsafe(),
 		html.WithXHTML(),
-		html.WithHardWraps(),
 	),
 	goldmark.WithParserOptions(
 		parser.WithAutoHeadingID(),

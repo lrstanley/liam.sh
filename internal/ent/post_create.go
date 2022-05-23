@@ -80,6 +80,12 @@ func (pc *PostCreate) SetContentHTML(s string) *PostCreate {
 	return pc
 }
 
+// SetSummary sets the "summary" field.
+func (pc *PostCreate) SetSummary(s string) *PostCreate {
+	pc.mutation.SetSummary(s)
+	return pc
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (pc *PostCreate) SetPublishedAt(t time.Time) *PostCreate {
 	pc.mutation.SetPublishedAt(t)
@@ -263,6 +269,14 @@ func (pc *PostCreate) check() error {
 			return &ValidationError{Name: "content_html", err: fmt.Errorf(`ent: validator failed for field "Post.content_html": %w`, err)}
 		}
 	}
+	if _, ok := pc.mutation.Summary(); !ok {
+		return &ValidationError{Name: "summary", err: errors.New(`ent: missing required field "Post.summary"`)}
+	}
+	if v, ok := pc.mutation.Summary(); ok {
+		if err := post.SummaryValidator(v); err != nil {
+			return &ValidationError{Name: "summary", err: fmt.Errorf(`ent: validator failed for field "Post.summary": %w`, err)}
+		}
+	}
 	if _, ok := pc.mutation.PublishedAt(); !ok {
 		return &ValidationError{Name: "published_at", err: errors.New(`ent: missing required field "Post.published_at"`)}
 	}
@@ -344,6 +358,14 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 			Column: post.FieldContentHTML,
 		})
 		_node.ContentHTML = value
+	}
+	if value, ok := pc.mutation.Summary(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: post.FieldSummary,
+		})
+		_node.Summary = value
 	}
 	if value, ok := pc.mutation.PublishedAt(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
@@ -518,6 +540,18 @@ func (u *PostUpsert) UpdateContentHTML() *PostUpsert {
 	return u
 }
 
+// SetSummary sets the "summary" field.
+func (u *PostUpsert) SetSummary(v string) *PostUpsert {
+	u.Set(post.FieldSummary, v)
+	return u
+}
+
+// UpdateSummary sets the "summary" field to the value that was provided on create.
+func (u *PostUpsert) UpdateSummary() *PostUpsert {
+	u.SetExcluded(post.FieldSummary)
+	return u
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (u *PostUpsert) SetPublishedAt(v time.Time) *PostUpsert {
 	u.Set(post.FieldPublishedAt, v)
@@ -658,6 +692,20 @@ func (u *PostUpsertOne) SetContentHTML(v string) *PostUpsertOne {
 func (u *PostUpsertOne) UpdateContentHTML() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateContentHTML()
+	})
+}
+
+// SetSummary sets the "summary" field.
+func (u *PostUpsertOne) SetSummary(v string) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetSummary(v)
+	})
+}
+
+// UpdateSummary sets the "summary" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateSummary() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateSummary()
 	})
 }
 
@@ -967,6 +1015,20 @@ func (u *PostUpsertBulk) SetContentHTML(v string) *PostUpsertBulk {
 func (u *PostUpsertBulk) UpdateContentHTML() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateContentHTML()
+	})
+}
+
+// SetSummary sets the "summary" field.
+func (u *PostUpsertBulk) SetSummary(v string) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetSummary(v)
+	})
+}
+
+// UpdateSummary sets the "summary" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateSummary() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateSummary()
 	})
 }
 

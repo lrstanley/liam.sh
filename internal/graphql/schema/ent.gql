@@ -147,6 +147,7 @@ type Post implements Node {
   title: String!
   content: String!
   contentHTML: String!
+  summary: String!
   publishedAt: Time!
   author: User!
   labels(
@@ -289,6 +290,20 @@ input PostWhereInput {
   contentHTMLHasSuffix: String
   contentHTMLEqualFold: String
   contentHTMLContainsFold: String
+  """summary field predicates"""
+  summary: String
+  summaryNEQ: String
+  summaryIn: [String!]
+  summaryNotIn: [String!]
+  summaryGT: String
+  summaryGTE: String
+  summaryLT: String
+  summaryLTE: String
+  summaryContains: String
+  summaryHasPrefix: String
+  summaryHasSuffix: String
+  summaryEqualFold: String
+  summaryContainsFold: String
   """published_at field predicates"""
   publishedAt: Time
   publishedAtNEQ: Time

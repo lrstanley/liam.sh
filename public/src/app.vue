@@ -43,11 +43,7 @@ body {
 }
 
 a {
-  color: #2dc581 !important;
-}
-
-a:hover {
-  color: #31a068 !important;
+  @apply !text-emerald-500 hover:!text-emerald-600;
 }
 
 .n-menu a {

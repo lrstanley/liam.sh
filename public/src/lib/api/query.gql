@@ -52,6 +52,7 @@ query getPostContent($slug: String!) {
                 slug
                 content
                 contentHTML
+                publishedAt
                 author {
                     name
                     login
@@ -66,7 +67,6 @@ query getPostContent($slug: String!) {
                         }
                     }
                 }
-                publishedAt
             }
         }
     }
@@ -77,12 +77,19 @@ query getPosts(
     $cursor: Cursor
     $order: OrderDirection = DESC
     $orderBy: PostOrderField = DATE
+    $where: PostWhereInput
 ) {
-    posts(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
+    posts(
+        first: $count
+        after: $cursor
+        where: $where
+        orderBy: { direction: $order, field: $orderBy }
+    ) {
         edges {
             node {
                 id
                 title
+                summary
                 slug
                 publishedAt
                 labels {
@@ -94,8 +101,10 @@ query getPosts(
                     }
                 }
                 author {
+                    name
                     login
                     avatarURL
+                    htmlURL
                 }
             }
         }

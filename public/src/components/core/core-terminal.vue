@@ -9,10 +9,11 @@
       <span v-else class="mr-2" />
       {{ props.prefix }}
     </span>
-    <span class="text-gradient from-teal-500 to-violet-600">
-      {{ props.value }}
+    <span class="cursor-wrap">
+      <span class="text-gradient bg-gradient-to-b from-blue-400 to-emerald-400 cursor">
+        {{ props.value }}
+      </span>
     </span>
-    <span class="text-size-0.9em text-gray-600 animate-pulse">▌</span>
   </div>
 </template>
 
@@ -34,3 +35,32 @@ const props = defineProps({
 
 const state = useState()
 </script>
+
+<style scoped>
+.cursor-wrap {
+  @apply w-auto inline-flex;
+}
+.cursor {
+  @apply whitespace-nowrap overflow-hidden inline-flex border-r-6 border-r-emerald-500 border-solid;
+  animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    @apply border-transparent;
+  }
+  50% {
+    @apply border-r-emerald-700;
+  }
+}
+</style>

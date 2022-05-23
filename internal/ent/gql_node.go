@@ -101,7 +101,7 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     po.ID,
 		Type:   "Post",
-		Fields: make([]*Field, 7),
+		Fields: make([]*Field, 8),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
@@ -153,10 +153,18 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 		Name:  "content_html",
 		Value: string(buf),
 	}
-	if buf, err = json.Marshal(po.PublishedAt); err != nil {
+	if buf, err = json.Marshal(po.Summary); err != nil {
 		return nil, err
 	}
 	node.Fields[6] = &Field{
+		Type:  "string",
+		Name:  "summary",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(po.PublishedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
 		Type:  "time.Time",
 		Name:  "published_at",
 		Value: string(buf),

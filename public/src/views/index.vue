@@ -4,18 +4,13 @@
       <div
         class="flex flex-col flex-auto max-w-3xl md:max-h-xl pt-7 md:py-7 items-stretch md:items-center"
       >
-        <!-- <div class="mb-4 text-size-38px md:text-size-45px">
-          <span class="inline-flex mr-10px text-green-600">
-            {{ state.base.githubUser.name.split(" ")[0].toLowerCase() }}
-            <span class="text-gray-500">:</span>
-            ~
-            <span class="text-gray-500 mr-4">$</span>
-            #
-          </span>
-          <span v-motion-slide-right class="text-gradient from-teal-500 to-violet-600">Hello!</span>
-          <span class="text-size-0.9em text-gray-600 animate-pulse">▌</span>
-        </div> -->
-        <CoreTerminal class="mb-4 text-size-38px md:text-size-45px" path="~" prefix="#" value="Hello!" />
+        <CoreNavigation />
+        <CoreTerminal
+          class="md:mt-5 mb-4 text-size-38px md:text-size-45px"
+          path="~"
+          prefix="#"
+          value="Hello!"
+        />
         <n-card content-style="padding: 0;display: flex;flex-direction: column" class="p-0 flex-auto">
           <n-space v-motion-slide-left vertical :size="12" class="p-5 flex-auto">
             <n-alert title="Default Text" type="info"> Gee it's good to be back home </n-alert>
@@ -55,13 +50,14 @@
                 </template>
                 built with Go and Vue.js
               </n-tooltip>
-              <router-link :to="'admin'">
+              <router-link to="admin">
                 <span class="hidden bar-item misc">sudo</span>
               </router-link>
               <n-tooltip trigger="hover">
                 <template #trigger>
                   <a
                     class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
+                    style="color: white !important"
                     :href="state.base.githubUser.htmlurl"
                   >
                     <n-icon class="align-middle">

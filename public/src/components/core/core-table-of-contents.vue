@@ -79,3 +79,20 @@ const links = computed({
   },
 })
 </script>
+
+<style scoped>
+.n-anchor :deep(a) {
+  white-space: pre-wrap !important;
+  line-height: 1.2em;
+  padding-bottom: 4px;
+}
+.n-anchor :deep(a)::before {
+  content: "·";
+  position: relative;
+  right: 3px;
+  font-weight: bold;
+  font-size: 1.5em;
+  top: 2px;
+  @apply text-pink-500;
+}
+</style>

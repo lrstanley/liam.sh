@@ -1,6 +1,9 @@
-import path from "path"
+/**
+ * @type {import('vite').UserConfig}
+ */
 import { defineConfig } from "vite"
 
+import path from "path"
 import Vue from "@vitejs/plugin-vue"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
@@ -66,11 +69,16 @@ export default defineConfig({
       },
       exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
     }),
-    WindiCSS(),
     Icons({
       autoInstall: true,
     }),
+    WindiCSS({
+      transformCSS: "pre",
+    }),
   ],
+  build: {
+    manifest: true,
+  },
   server: {
     port: 8081,
     strictPort: true,

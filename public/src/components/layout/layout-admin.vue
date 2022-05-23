@@ -1,14 +1,11 @@
 <template>
   <LayoutBase>
     <n-layout position="absolute" content-style="display: flex;flex: 1 1 auto;flex-direction: column">
-      <n-layout-header bordered>
-        <n-menu :options="menuOptions" mode="horizontal" class="mt-1" />
-      </n-layout-header>
       <n-layout has-sider>
         <n-layout-sider
           v-model:collapsed="state.sidebarCollapsed"
           :collapsed-width="54"
-          :width="270"
+          :width="220"
           bordered
           show-trigger
           collapse-mode="width"
@@ -52,7 +49,7 @@
 </template>
 
 <script setup>
-import { menuOptions, adminSidebarOptions } from "@/lib/navigation.js"
+import { adminSidebarOptions } from "@/lib/navigation.js"
 
 const state = useState()
 const props = defineProps({
