@@ -1,6 +1,6 @@
 <template>
   <LayoutDefault :error="error">
-    <div class="grid gap-25 mt-8">
+    <div class="grid gap-5 md:gap-25 mt-8">
       <div class="order-last md:order-first">
         <n-input
           v-model:value="search"
@@ -15,24 +15,21 @@
             </n-icon>
           </template>
         </n-input>
-        <div class="col-auto">
-          <ObjectRender v-if="data?.posts" :value="data.posts" linkable show-empty />
-        </div>
+
+        <ObjectRender v-if="data?.posts" :value="data.posts" linkable show-empty />
       </div>
-      <div class="col-auto">
-        <template v-if="allLabels">
-          <n-space size="small" inline>
-            <n-tag
-              v-for="label in allLabels"
-              :key="label.id"
-              :type="labels.includes(label.name) ? 'success' : ''"
-              class="cursor-pointer"
-              @click="toggleLabel(label.name)"
-            >
-              {{ label.name }}
-            </n-tag>
-          </n-space>
-        </template>
+      <div v-if="allLabels">
+        <n-space size="small" inline>
+          <n-tag
+            v-for="label in allLabels"
+            :key="label.id"
+            :type="labels.includes(label.name) ? 'success' : ''"
+            class="cursor-pointer"
+            @click="toggleLabel(label.name)"
+          >
+            {{ label.name }}
+          </n-tag>
+        </n-space>
       </div>
     </div>
   </LayoutDefault>

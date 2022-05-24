@@ -27,8 +27,14 @@
 
       <span v-html="props.value.summary" />
 
-      <template #action>
-        <ObjectRender :value="props.value.labels" linkable class="mr-1" />
+      <template v-if="props.value.labels" #action>
+        <ObjectLabel
+          v-for="label in props.value.labels.edges.map(({ node }) => node)"
+          :key="label.id"
+          :value="label"
+          linkable
+          class="mr-1"
+        />
       </template>
     </n-thing>
   </component>

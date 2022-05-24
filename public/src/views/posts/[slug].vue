@@ -4,7 +4,7 @@
     <n-page-header class="container hidden md:inline-flex mt-14 mb-2">
       <template #title>
         <CoreTerminal
-          class="mb-4 text-size-38px md:text-size-34px"
+          class="mb-4 text-size-20px"
           path="posts"
           prefix=""
           :value="'cat &quot;' + post.slug + '.md&quot;'"

@@ -10,7 +10,7 @@
       {{ props.prefix }}
     </span>
     <span class="cursor-wrap">
-      <span class="text-gradient bg-gradient-to-b from-blue-400 to-emerald-400 cursor">
+      <span class="text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor">
         {{ props.value }}
       </span>
     </span>

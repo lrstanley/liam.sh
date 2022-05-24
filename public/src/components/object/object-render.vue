@@ -1,12 +1,14 @@
 <template>
   <n-empty v-if="showEmpty && objects.length < 1" description="No items found matching filters" />
-  <component
-    :is="object.component"
-    v-for="object in objects"
-    v-else-if="objects.length > 0"
-    :key="object.id"
-    v-bind="$attrs"
-  />
+  <TransitionGroup v-else-if="objects.length > 0" appear>
+    <div
+      v-for="(object, i) in objects"
+      :key="object.object.id"
+      :style="{ '--i': i, '--total': objects.length }"
+    >
+      <component :is="object.component" v-bind="$attrs" />
+    </div>
+  </TransitionGroup>
 </template>
 
 <script setup>
@@ -67,3 +69,23 @@ function typeMapper(o) {
   }
 }
 </script>
+
+<style scoped>
+.v-move {
+  transition: opacity 0.2s linear, transform 0.2s ease-in;
+}
+
+.v-enter-active {
+  @apply transform transition-all duration-100;
+  transition-delay: calc(0.1s * (var(--total) - var(--i)));
+}
+
+.v-leave-active {
+  @apply transform transition-all duration-100 absolute max-w-90vw md:max-w-40vw;
+}
+
+.v-enter-from,
+.v-leave-to {
+  @apply opacity-0 -translate-x-50px;
+}
+</style>
