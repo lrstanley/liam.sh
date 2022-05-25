@@ -26,9 +26,9 @@
         </template>
       </div>
 
-      <span class="flex flex-auto justify-center px-2 py-2">
+      <span class="px-2 py-2 text-center">
         Made with
-        <n-icon class="text-green-600 mx-1">
+        <n-icon class="text-green-600 align-middle">
           <i-mdi-heart />
         </n-icon>
         by <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>
