@@ -28,7 +28,7 @@
                 {{ post.slug }}
               </router-link>
             </td>
-            <td class="hidden md:table-cell">
+            <td class="hidden md:flex">
               <ObjectRender :value="post.labels" linkable class="mr-1" />
             </td>
             <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
