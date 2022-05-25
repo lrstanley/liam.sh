@@ -26,15 +26,13 @@
         </template>
       </div>
 
-      <n-layout-footer bordered>
-        <span class="flex flex-auto justify-end px-2">
-          Made with
-          <n-icon class="text-green-600 mx-1">
-            <i-mdi-heart />
-          </n-icon>
-          by Liam
-        </span>
-      </n-layout-footer>
+      <span class="flex flex-auto justify-center px-2 py-2">
+        Made with
+        <n-icon class="text-green-600 mx-1">
+          <i-mdi-heart />
+        </n-icon>
+        by <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>
+      </span>
     </div>
   </LayoutBase>
 </template>
@@ -50,4 +48,6 @@ const props = defineProps({
     default: null,
   },
 })
+
+const state = useState()
 </script>
