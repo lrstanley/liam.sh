@@ -84,6 +84,27 @@ func (pu *PostUpdate) SetNillablePublishedAt(t *time.Time) *PostUpdate {
 	return pu
 }
 
+// SetViewCount sets the "view_count" field.
+func (pu *PostUpdate) SetViewCount(i int) *PostUpdate {
+	pu.mutation.ResetViewCount()
+	pu.mutation.SetViewCount(i)
+	return pu
+}
+
+// SetNillableViewCount sets the "view_count" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableViewCount(i *int) *PostUpdate {
+	if i != nil {
+		pu.SetViewCount(*i)
+	}
+	return pu
+}
+
+// AddViewCount adds i to the "view_count" field.
+func (pu *PostUpdate) AddViewCount(i int) *PostUpdate {
+	pu.mutation.AddViewCount(i)
+	return pu
+}
+
 // SetAuthorID sets the "author" edge to the User entity by ID.
 func (pu *PostUpdate) SetAuthorID(id int) *PostUpdate {
 	pu.mutation.SetAuthorID(id)
@@ -244,6 +265,11 @@ func (pu *PostUpdate) check() error {
 			return &ValidationError{Name: "summary", err: fmt.Errorf(`ent: validator failed for field "Post.summary": %w`, err)}
 		}
 	}
+	if v, ok := pu.mutation.ViewCount(); ok {
+		if err := post.ViewCountValidator(v); err != nil {
+			return &ValidationError{Name: "view_count", err: fmt.Errorf(`ent: validator failed for field "Post.view_count": %w`, err)}
+		}
+	}
 	if _, ok := pu.mutation.AuthorID(); pu.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -315,6 +341,20 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: post.FieldPublishedAt,
+		})
+	}
+	if value, ok := pu.mutation.ViewCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: post.FieldViewCount,
+		})
+	}
+	if value, ok := pu.mutation.AddedViewCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: post.FieldViewCount,
 		})
 	}
 	if pu.mutation.AuthorCleared() {
@@ -472,6 +512,27 @@ func (puo *PostUpdateOne) SetNillablePublishedAt(t *time.Time) *PostUpdateOne {
 	if t != nil {
 		puo.SetPublishedAt(*t)
 	}
+	return puo
+}
+
+// SetViewCount sets the "view_count" field.
+func (puo *PostUpdateOne) SetViewCount(i int) *PostUpdateOne {
+	puo.mutation.ResetViewCount()
+	puo.mutation.SetViewCount(i)
+	return puo
+}
+
+// SetNillableViewCount sets the "view_count" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableViewCount(i *int) *PostUpdateOne {
+	if i != nil {
+		puo.SetViewCount(*i)
+	}
+	return puo
+}
+
+// AddViewCount adds i to the "view_count" field.
+func (puo *PostUpdateOne) AddViewCount(i int) *PostUpdateOne {
+	puo.mutation.AddViewCount(i)
 	return puo
 }
 
@@ -648,6 +709,11 @@ func (puo *PostUpdateOne) check() error {
 			return &ValidationError{Name: "summary", err: fmt.Errorf(`ent: validator failed for field "Post.summary": %w`, err)}
 		}
 	}
+	if v, ok := puo.mutation.ViewCount(); ok {
+		if err := post.ViewCountValidator(v); err != nil {
+			return &ValidationError{Name: "view_count", err: fmt.Errorf(`ent: validator failed for field "Post.view_count": %w`, err)}
+		}
+	}
 	if _, ok := puo.mutation.AuthorID(); puo.mutation.AuthorCleared() && !ok {
 		return errors.New(`ent: clearing a required unique edge "Post.author"`)
 	}
@@ -736,6 +802,20 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 			Type:   field.TypeTime,
 			Value:  value,
 			Column: post.FieldPublishedAt,
+		})
+	}
+	if value, ok := puo.mutation.ViewCount(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: post.FieldViewCount,
+		})
+	}
+	if value, ok := puo.mutation.AddedViewCount(); ok {
+		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: post.FieldViewCount,
 		})
 	}
 	if puo.mutation.AuthorCleared() {

@@ -153,6 +153,13 @@ func PublishedAt(v time.Time) predicate.Post {
 	})
 }
 
+// ViewCount applies equality check predicate on the "view_count" field. It's identical to ViewCountEQ.
+func ViewCount(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldViewCount), v))
+	})
+}
+
 // CreateTimeEQ applies the EQ predicate on the "create_time" field.
 func CreateTimeEQ(v time.Time) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
@@ -933,6 +940,82 @@ func PublishedAtLT(v time.Time) predicate.Post {
 func PublishedAtLTE(v time.Time) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
 		s.Where(sql.LTE(s.C(FieldPublishedAt), v))
+	})
+}
+
+// ViewCountEQ applies the EQ predicate on the "view_count" field.
+func ViewCountEQ(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.EQ(s.C(FieldViewCount), v))
+	})
+}
+
+// ViewCountNEQ applies the NEQ predicate on the "view_count" field.
+func ViewCountNEQ(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.NEQ(s.C(FieldViewCount), v))
+	})
+}
+
+// ViewCountIn applies the In predicate on the "view_count" field.
+func ViewCountIn(vs ...int) predicate.Post {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Post(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.In(s.C(FieldViewCount), v...))
+	})
+}
+
+// ViewCountNotIn applies the NotIn predicate on the "view_count" field.
+func ViewCountNotIn(vs ...int) predicate.Post {
+	v := make([]interface{}, len(vs))
+	for i := range v {
+		v[i] = vs[i]
+	}
+	return predicate.Post(func(s *sql.Selector) {
+		// if not arguments were provided, append the FALSE constants,
+		// since we can't apply "IN ()". This will make this predicate falsy.
+		if len(v) == 0 {
+			s.Where(sql.False())
+			return
+		}
+		s.Where(sql.NotIn(s.C(FieldViewCount), v...))
+	})
+}
+
+// ViewCountGT applies the GT predicate on the "view_count" field.
+func ViewCountGT(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.GT(s.C(FieldViewCount), v))
+	})
+}
+
+// ViewCountGTE applies the GTE predicate on the "view_count" field.
+func ViewCountGTE(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.GTE(s.C(FieldViewCount), v))
+	})
+}
+
+// ViewCountLT applies the LT predicate on the "view_count" field.
+func ViewCountLT(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.LT(s.C(FieldViewCount), v))
+	})
+}
+
+// ViewCountLTE applies the LTE predicate on the "view_count" field.
+func ViewCountLTE(v int) predicate.Post {
+	return predicate.Post(func(s *sql.Selector) {
+		s.Where(sql.LTE(s.C(FieldViewCount), v))
 	})
 }
 

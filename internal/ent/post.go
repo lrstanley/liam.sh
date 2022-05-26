@@ -37,6 +37,8 @@ type Post struct {
 	Summary string `json:"summary,omitempty"`
 	// PublishedAt holds the value of the "published_at" field.
 	PublishedAt time.Time `json:"published_at,omitempty"`
+	// ViewCount holds the value of the "view_count" field.
+	ViewCount int `json:"view_count,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PostQuery when eager-loading is set.
 	Edges      PostEdges `json:"edges"`
@@ -84,7 +86,7 @@ func (*Post) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case post.FieldID:
+		case post.FieldID, post.FieldViewCount:
 			values[i] = new(sql.NullInt64)
 		case post.FieldSlug, post.FieldTitle, post.FieldContent, post.FieldContentHTML, post.FieldSummary:
 			values[i] = new(sql.NullString)
@@ -161,6 +163,12 @@ func (po *Post) assignValues(columns []string, values []interface{}) error {
 			} else if value.Valid {
 				po.PublishedAt = value.Time
 			}
+		case post.FieldViewCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field view_count", values[i])
+			} else if value.Valid {
+				po.ViewCount = int(value.Int64)
+			}
 		case post.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for edge-field user_posts", value)
@@ -222,6 +230,8 @@ func (po *Post) String() string {
 	builder.WriteString(po.Summary)
 	builder.WriteString(", published_at=")
 	builder.WriteString(po.PublishedAt.Format(time.ANSIC))
+	builder.WriteString(", view_count=")
+	builder.WriteString(fmt.Sprintf("%v", po.ViewCount))
 	builder.WriteByte(')')
 	return builder.String()
 }

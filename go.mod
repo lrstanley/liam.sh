@@ -18,7 +18,7 @@ require (
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/lrstanley/chix v0.0.0-20220511021550-4f323b2b239b
+	github.com/lrstanley/chix v0.0.0-20220525235530-a5ff249b1024
 	github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb
 	github.com/markbates/goth v1.72.0
 	github.com/microcosm-cc/bluemonday v1.0.18
@@ -26,7 +26,7 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.4.12
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
-	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
+	golang.org/x/oauth2 v0.0.0-20220524215830-622c5d57e401
 	golang.org/x/sync v0.0.0-20220513210516-0976fa681c29
 	mvdan.cc/xurls/v2 v2.4.0
 )
@@ -79,7 +79,7 @@ require (
 	github.com/zclconf/go-cty v1.10.0 // indirect
 	golang.org/x/crypto v0.0.0-20220513210258-46612604a0f9 // indirect
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
+	golang.org/x/net v0.0.0-20220524220425-1d687d428aca // indirect
 	golang.org/x/sys v0.0.0-20220513210249-45d2b4557a2a // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/tools v0.1.10 // indirect

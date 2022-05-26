@@ -6,6 +6,7 @@ package resolver
 import (
 	"context"
 
+	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 )
@@ -19,30 +20,39 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, erro
 }
 
 func (r *queryResolver) Labels(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) (*ent.LabelConnection, error) {
-	return r.client.Label.Query().
-		Paginate(
-			ctx, after, first, before, last,
-			ent.WithLabelOrder(orderBy),
-			ent.WithLabelFilter(where.Filter),
-		)
+	return r.client.Label.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithLabelOrder(orderBy),
+		ent.WithLabelFilter(where.Filter),
+	)
 }
 
 func (r *queryResolver) Posts(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.PostOrder, where *ent.PostWhereInput) (*ent.PostConnection, error) {
-	return r.client.Post.Query().
-		Paginate(
-			ctx, after, first, before, last,
-			ent.WithPostOrder(orderBy),
-			ent.WithPostFilter(where.Filter),
-		)
+	conn, err := r.client.Post.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithPostOrder(orderBy),
+		ent.WithPostFilter(where.Filter),
+	)
+
+	if err == nil && conn.TotalCount == 1 {
+		post := conn.Edges[0].Node
+
+		if post.ContentHTML == "" {
+			return conn, nil
+		}
+
+		go database.PostViewCounter(ctx, post)
+	}
+
+	return conn, err
 }
 
 func (r *queryResolver) Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error) {
-	return r.client.User.Query().
-		Paginate(
-			ctx, after, first, before, last,
-			ent.WithUserOrder(orderBy),
-			ent.WithUserFilter(where.Filter),
-		)
+	return r.client.User.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithUserOrder(orderBy),
+		ent.WithUserFilter(where.Filter),
+	)
 }
 
 // Query returns gqlhandler.QueryResolver implementation.

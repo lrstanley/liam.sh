@@ -34,6 +34,7 @@ func httpServer() *http.Server {
 		r.Use(chix.UseRealIP(cli.Flags.HTTP.TrustedProxies, chix.OptUseXForwardedFor))
 	}
 
+	r.Use(chix.UseContextIP)
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Recoverer)
 	r.Use(chix.UseStructuredLogger(logger))

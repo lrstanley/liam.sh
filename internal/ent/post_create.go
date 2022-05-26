@@ -100,6 +100,20 @@ func (pc *PostCreate) SetNillablePublishedAt(t *time.Time) *PostCreate {
 	return pc
 }
 
+// SetViewCount sets the "view_count" field.
+func (pc *PostCreate) SetViewCount(i int) *PostCreate {
+	pc.mutation.SetViewCount(i)
+	return pc
+}
+
+// SetNillableViewCount sets the "view_count" field if the given value is not nil.
+func (pc *PostCreate) SetNillableViewCount(i *int) *PostCreate {
+	if i != nil {
+		pc.SetViewCount(*i)
+	}
+	return pc
+}
+
 // SetAuthorID sets the "author" edge to the User entity by ID.
 func (pc *PostCreate) SetAuthorID(id int) *PostCreate {
 	pc.mutation.SetAuthorID(id)
@@ -226,6 +240,10 @@ func (pc *PostCreate) defaults() error {
 		v := post.DefaultPublishedAt()
 		pc.mutation.SetPublishedAt(v)
 	}
+	if _, ok := pc.mutation.ViewCount(); !ok {
+		v := post.DefaultViewCount
+		pc.mutation.SetViewCount(v)
+	}
 	return nil
 }
 
@@ -279,6 +297,14 @@ func (pc *PostCreate) check() error {
 	}
 	if _, ok := pc.mutation.PublishedAt(); !ok {
 		return &ValidationError{Name: "published_at", err: errors.New(`ent: missing required field "Post.published_at"`)}
+	}
+	if _, ok := pc.mutation.ViewCount(); !ok {
+		return &ValidationError{Name: "view_count", err: errors.New(`ent: missing required field "Post.view_count"`)}
+	}
+	if v, ok := pc.mutation.ViewCount(); ok {
+		if err := post.ViewCountValidator(v); err != nil {
+			return &ValidationError{Name: "view_count", err: fmt.Errorf(`ent: validator failed for field "Post.view_count": %w`, err)}
+		}
 	}
 	if _, ok := pc.mutation.AuthorID(); !ok {
 		return &ValidationError{Name: "author", err: errors.New(`ent: missing required edge "Post.author"`)}
@@ -374,6 +400,14 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 			Column: post.FieldPublishedAt,
 		})
 		_node.PublishedAt = value
+	}
+	if value, ok := pc.mutation.ViewCount(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeInt,
+			Value:  value,
+			Column: post.FieldViewCount,
+		})
+		_node.ViewCount = value
 	}
 	if nodes := pc.mutation.AuthorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -564,6 +598,24 @@ func (u *PostUpsert) UpdatePublishedAt() *PostUpsert {
 	return u
 }
 
+// SetViewCount sets the "view_count" field.
+func (u *PostUpsert) SetViewCount(v int) *PostUpsert {
+	u.Set(post.FieldViewCount, v)
+	return u
+}
+
+// UpdateViewCount sets the "view_count" field to the value that was provided on create.
+func (u *PostUpsert) UpdateViewCount() *PostUpsert {
+	u.SetExcluded(post.FieldViewCount)
+	return u
+}
+
+// AddViewCount adds v to the "view_count" field.
+func (u *PostUpsert) AddViewCount(v int) *PostUpsert {
+	u.Add(post.FieldViewCount, v)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -720,6 +772,27 @@ func (u *PostUpsertOne) SetPublishedAt(v time.Time) *PostUpsertOne {
 func (u *PostUpsertOne) UpdatePublishedAt() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdatePublishedAt()
+	})
+}
+
+// SetViewCount sets the "view_count" field.
+func (u *PostUpsertOne) SetViewCount(v int) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetViewCount(v)
+	})
+}
+
+// AddViewCount adds v to the "view_count" field.
+func (u *PostUpsertOne) AddViewCount(v int) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.AddViewCount(v)
+	})
+}
+
+// UpdateViewCount sets the "view_count" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdateViewCount() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateViewCount()
 	})
 }
 
@@ -1043,6 +1116,27 @@ func (u *PostUpsertBulk) SetPublishedAt(v time.Time) *PostUpsertBulk {
 func (u *PostUpsertBulk) UpdatePublishedAt() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdatePublishedAt()
+	})
+}
+
+// SetViewCount sets the "view_count" field.
+func (u *PostUpsertBulk) SetViewCount(v int) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetViewCount(v)
+	})
+}
+
+// AddViewCount adds v to the "view_count" field.
+func (u *PostUpsertBulk) AddViewCount(v int) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.AddViewCount(v)
+	})
+}
+
+// UpdateViewCount sets the "view_count" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdateViewCount() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdateViewCount()
 	})
 }
 

@@ -149,6 +149,7 @@ type Post implements Node {
   contentHTML: String!
   summary: String!
   publishedAt: Time!
+  viewCount: Int!
   author: User!
   labels(
     """Returns the elements in the list that come after the specified cursor."""
@@ -198,6 +199,7 @@ enum PostOrderField {
   SLUG
   TITLE
   DATE
+  VIEW_COUNT
 }
 """
 PostWhereInput is used for filtering Post objects.
@@ -313,6 +315,15 @@ input PostWhereInput {
   publishedAtGTE: Time
   publishedAtLT: Time
   publishedAtLTE: Time
+  """view_count field predicates"""
+  viewCount: Int
+  viewCountNEQ: Int
+  viewCountIn: [Int!]
+  viewCountNotIn: [Int!]
+  viewCountGT: Int
+  viewCountGTE: Int
+  viewCountLT: Int
+  viewCountLTE: Int
   """author edge predicates"""
   hasAuthor: Boolean
   hasAuthorWith: [UserWhereInput!]

@@ -35,6 +35,9 @@ func (Post) Fields() []ent.Field {
 		field.Time("published_at").Default(time.Now).Annotations(
 			entgql.OrderField("DATE"),
 		),
+		field.Int("view_count").Default(0).NonNegative().Annotations(
+			entgql.OrderField("VIEW_COUNT"),
+		),
 	}
 }
 

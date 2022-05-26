@@ -753,6 +753,16 @@ var (
 			}
 		},
 	}
+	// PostOrderFieldViewCount orders Post by view_count.
+	PostOrderFieldViewCount = &PostOrderField{
+		field: post.FieldViewCount,
+		toCursor: func(po *Post) Cursor {
+			return Cursor{
+				ID:    po.ID,
+				Value: po.ViewCount,
+			}
+		},
+	}
 )
 
 // String implement fmt.Stringer interface.
@@ -765,6 +775,8 @@ func (f PostOrderField) String() string {
 		str = "TITLE"
 	case post.FieldPublishedAt:
 		str = "DATE"
+	case post.FieldViewCount:
+		str = "VIEW_COUNT"
 	}
 	return str
 }
@@ -787,6 +799,8 @@ func (f *PostOrderField) UnmarshalGQL(v interface{}) error {
 		*f = *PostOrderFieldTitle
 	case "DATE":
 		*f = *PostOrderFieldPublishedAt
+	case "VIEW_COUNT":
+		*f = *PostOrderFieldViewCount
 	default:
 		return fmt.Errorf("%s is not a valid PostOrderField", str)
 	}

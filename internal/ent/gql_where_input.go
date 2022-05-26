@@ -400,6 +400,16 @@ type PostWhereInput struct {
 	PublishedAtLT    *time.Time  `json:"publishedAtLT,omitempty"`
 	PublishedAtLTE   *time.Time  `json:"publishedAtLTE,omitempty"`
 
+	// "view_count" field predicates.
+	ViewCount      *int  `json:"viewCount,omitempty"`
+	ViewCountNEQ   *int  `json:"viewCountNEQ,omitempty"`
+	ViewCountIn    []int `json:"viewCountIn,omitempty"`
+	ViewCountNotIn []int `json:"viewCountNotIn,omitempty"`
+	ViewCountGT    *int  `json:"viewCountGT,omitempty"`
+	ViewCountGTE   *int  `json:"viewCountGTE,omitempty"`
+	ViewCountLT    *int  `json:"viewCountLT,omitempty"`
+	ViewCountLTE   *int  `json:"viewCountLTE,omitempty"`
+
 	// "author" edge predicates.
 	HasAuthor     *bool             `json:"hasAuthor,omitempty"`
 	HasAuthorWith []*UserWhereInput `json:"hasAuthorWith,omitempty"`
@@ -764,6 +774,30 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	}
 	if i.PublishedAtLTE != nil {
 		predicates = append(predicates, post.PublishedAtLTE(*i.PublishedAtLTE))
+	}
+	if i.ViewCount != nil {
+		predicates = append(predicates, post.ViewCountEQ(*i.ViewCount))
+	}
+	if i.ViewCountNEQ != nil {
+		predicates = append(predicates, post.ViewCountNEQ(*i.ViewCountNEQ))
+	}
+	if len(i.ViewCountIn) > 0 {
+		predicates = append(predicates, post.ViewCountIn(i.ViewCountIn...))
+	}
+	if len(i.ViewCountNotIn) > 0 {
+		predicates = append(predicates, post.ViewCountNotIn(i.ViewCountNotIn...))
+	}
+	if i.ViewCountGT != nil {
+		predicates = append(predicates, post.ViewCountGT(*i.ViewCountGT))
+	}
+	if i.ViewCountGTE != nil {
+		predicates = append(predicates, post.ViewCountGTE(*i.ViewCountGTE))
+	}
+	if i.ViewCountLT != nil {
+		predicates = append(predicates, post.ViewCountLT(*i.ViewCountLT))
+	}
+	if i.ViewCountLTE != nil {
+		predicates = append(predicates, post.ViewCountLTE(*i.ViewCountLTE))
 	}
 
 	if i.HasAuthor != nil {

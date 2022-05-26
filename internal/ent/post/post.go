@@ -33,6 +33,8 @@ const (
 	FieldSummary = "summary"
 	// FieldPublishedAt holds the string denoting the published_at field in the database.
 	FieldPublishedAt = "published_at"
+	// FieldViewCount holds the string denoting the view_count field in the database.
+	FieldViewCount = "view_count"
 	// EdgeAuthor holds the string denoting the author edge name in mutations.
 	EdgeAuthor = "author"
 	// EdgeLabels holds the string denoting the labels edge name in mutations.
@@ -64,6 +66,7 @@ var Columns = []string{
 	FieldContentHTML,
 	FieldSummary,
 	FieldPublishedAt,
+	FieldViewCount,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "posts"
@@ -120,4 +123,8 @@ var (
 	SummaryValidator func(string) error
 	// DefaultPublishedAt holds the default value on creation for the "published_at" field.
 	DefaultPublishedAt func() time.Time
+	// DefaultViewCount holds the default value on creation for the "view_count" field.
+	DefaultViewCount int
+	// ViewCountValidator is a validator for the "view_count" field. It is called by the builders before save.
+	ViewCountValidator func(int) error
 )

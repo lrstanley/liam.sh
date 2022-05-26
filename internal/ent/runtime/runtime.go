@@ -99,6 +99,12 @@ func init() {
 	postDescPublishedAt := postFields[5].Descriptor()
 	// post.DefaultPublishedAt holds the default value on creation for the published_at field.
 	post.DefaultPublishedAt = postDescPublishedAt.Default.(func() time.Time)
+	// postDescViewCount is the schema descriptor for view_count field.
+	postDescViewCount := postFields[6].Descriptor()
+	// post.DefaultViewCount holds the default value on creation for the view_count field.
+	post.DefaultViewCount = postDescViewCount.Default.(int)
+	// post.ViewCountValidator is a validator for the "view_count" field. It is called by the builders before save.
+	post.ViewCountValidator = postDescViewCount.Validators[0].(func(int) error)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {

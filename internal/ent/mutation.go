@@ -561,6 +561,8 @@ type PostMutation struct {
 	content_html  *string
 	summary       *string
 	published_at  *time.Time
+	view_count    *int
+	addview_count *int
 	clearedFields map[string]struct{}
 	author        *int
 	clearedauthor bool
@@ -958,6 +960,62 @@ func (m *PostMutation) ResetPublishedAt() {
 	m.published_at = nil
 }
 
+// SetViewCount sets the "view_count" field.
+func (m *PostMutation) SetViewCount(i int) {
+	m.view_count = &i
+	m.addview_count = nil
+}
+
+// ViewCount returns the value of the "view_count" field in the mutation.
+func (m *PostMutation) ViewCount() (r int, exists bool) {
+	v := m.view_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldViewCount returns the old "view_count" field's value of the Post entity.
+// If the Post object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PostMutation) OldViewCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldViewCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldViewCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldViewCount: %w", err)
+	}
+	return oldValue.ViewCount, nil
+}
+
+// AddViewCount adds i to the "view_count" field.
+func (m *PostMutation) AddViewCount(i int) {
+	if m.addview_count != nil {
+		*m.addview_count += i
+	} else {
+		m.addview_count = &i
+	}
+}
+
+// AddedViewCount returns the value that was added to the "view_count" field in this mutation.
+func (m *PostMutation) AddedViewCount() (r int, exists bool) {
+	v := m.addview_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetViewCount resets all changes to the "view_count" field.
+func (m *PostMutation) ResetViewCount() {
+	m.view_count = nil
+	m.addview_count = nil
+}
+
 // SetAuthorID sets the "author" edge to the User entity by id.
 func (m *PostMutation) SetAuthorID(id int) {
 	m.author = &id
@@ -1070,7 +1128,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 8)
+	fields := make([]string, 0, 9)
 	if m.create_time != nil {
 		fields = append(fields, post.FieldCreateTime)
 	}
@@ -1094,6 +1152,9 @@ func (m *PostMutation) Fields() []string {
 	}
 	if m.published_at != nil {
 		fields = append(fields, post.FieldPublishedAt)
+	}
+	if m.view_count != nil {
+		fields = append(fields, post.FieldViewCount)
 	}
 	return fields
 }
@@ -1119,6 +1180,8 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.Summary()
 	case post.FieldPublishedAt:
 		return m.PublishedAt()
+	case post.FieldViewCount:
+		return m.ViewCount()
 	}
 	return nil, false
 }
@@ -1144,6 +1207,8 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldSummary(ctx)
 	case post.FieldPublishedAt:
 		return m.OldPublishedAt(ctx)
+	case post.FieldViewCount:
+		return m.OldViewCount(ctx)
 	}
 	return nil, fmt.Errorf("unknown Post field %s", name)
 }
@@ -1209,6 +1274,13 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPublishedAt(v)
 		return nil
+	case post.FieldViewCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetViewCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Post field %s", name)
 }
@@ -1216,13 +1288,21 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *PostMutation) AddedFields() []string {
-	return nil
+	var fields []string
+	if m.addview_count != nil {
+		fields = append(fields, post.FieldViewCount)
+	}
+	return fields
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *PostMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case post.FieldViewCount:
+		return m.AddedViewCount()
+	}
 	return nil, false
 }
 
@@ -1231,6 +1311,13 @@ func (m *PostMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *PostMutation) AddField(name string, value ent.Value) error {
 	switch name {
+	case post.FieldViewCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddViewCount(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Post numeric field %s", name)
 }
@@ -1281,6 +1368,9 @@ func (m *PostMutation) ResetField(name string) error {
 		return nil
 	case post.FieldPublishedAt:
 		m.ResetPublishedAt()
+		return nil
+	case post.FieldViewCount:
+		m.ResetViewCount()
 		return nil
 	}
 	return fmt.Errorf("unknown Post field %s", name)
