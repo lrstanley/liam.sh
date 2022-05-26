@@ -30,6 +30,8 @@ query getPost($id: ID!) {
             title
             slug
             content
+            viewCount
+            publishedAt
             labels {
                 edges {
                     node {
@@ -38,7 +40,6 @@ query getPost($id: ID!) {
                     }
                 }
             }
-            publishedAt
         }
     }
 }
@@ -52,6 +53,7 @@ query getPostContent($slug: String!) {
                 slug
                 content
                 contentHTML
+                viewCount
                 publishedAt
                 author {
                     name
@@ -92,6 +94,7 @@ query getPosts(
                 summary
                 slug
                 publishedAt
+                viewCount
                 labels {
                     edges {
                         node {

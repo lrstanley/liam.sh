@@ -18,18 +18,41 @@
 
         <ObjectRender v-if="data?.posts" :value="data.posts" linkable show-empty />
       </div>
-      <div v-if="allLabels">
-        <n-space size="small" inline>
+      <div>
+        <div class="text-emerald-500">Sort posts</div>
+        <n-space size="small" class="pb-4" inline>
           <n-tag
-            v-for="label in allLabels"
-            :key="label.id"
-            :type="labels.includes(label.name) ? 'success' : ''"
+            v-for="(name, key) in orderOptions.fields"
+            :key="key"
+            :type="orderOptions.selected.field.value == key ? 'success' : ''"
             class="cursor-pointer"
-            @click="toggleLabel(label.name)"
+            @click="changeOrder(key)"
           >
-            {{ label.name }}
+            <template #avatar>
+              <n-icon v-if="orderOptions.selected.field.value == key" class="">
+                <i-mdi-arrow-up v-if="orderOptions.selected.direction.value == 'asc'" />
+                <i-mdi-arrow-down v-else />
+              </n-icon>
+            </template>
+
+            {{ name }}
           </n-tag>
         </n-space>
+
+        <div v-if="allLabels">
+          <div class="text-emerald-500">Filter by label</div>
+          <n-space size="small" inline>
+            <n-tag
+              v-for="label in allLabels"
+              :key="label.id"
+              :type="labels.includes(label.name) ? 'success' : ''"
+              class="cursor-pointer"
+              @click="toggleLabel(label.name)"
+            >
+              {{ label.name }}
+            </n-tag>
+          </n-space>
+        </div>
       </div>
     </div>
   </LayoutDefault>
@@ -38,6 +61,47 @@
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
 import { useGetPostsQuery, useGetLabelsQuery } from "@/lib/api"
+
+const orderOptions = {
+  directions: ["desc", "asc"],
+  fields: {
+    date: "date",
+    title: "title",
+    view_count: "popularity",
+  },
+  selected: {
+    direction: useRouteQuery("dir", "desc"),
+    field: useRouteQuery("sort", "date"),
+  },
+  computed: {
+    direction: computed(() => {
+      return orderOptions.directions.includes(orderOptions.selected.direction.value)
+        ? orderOptions.selected.direction.value.toUpperCase()
+        : "DESC"
+    }),
+    field: computed(() => {
+      return Object.keys(orderOptions.fields).includes(orderOptions.selected.field.value)
+        ? orderOptions.selected.field.value.toUpperCase()
+        : "DATE"
+    }),
+  },
+}
+
+function changeOrder(key) {
+  if (key === orderOptions.selected.field.value) {
+    orderOptions.selected.direction.value =
+      orderOptions.selected.direction.value === "desc" ? "asc" : "desc"
+    return
+  }
+
+  // https://github.com/vueuse/vueuse/issues/901
+  orderOptions.selected.field.value = key
+  setTimeout(() => {
+    nextTick(() => {
+      orderOptions.selected.direction.value = "desc"
+    })
+  }, 1)
+}
 
 const search = useRouteQuery("q", "")
 const filterSearch = refDebounced(search, 300)
@@ -76,6 +140,8 @@ const { data, error, fetching } = useGetPostsQuery({
       or: [{ titleContainsFold: filterSearch }, { summaryContainsFold: filterSearch }],
       hasLabelsWith: filterLabels,
     },
+    order: orderOptions.computed.direction,
+    orderBy: orderOptions.computed.field,
   },
 })
 </script>

@@ -17,7 +17,7 @@
         </span>
       </template>
       <template #description>
-        <span class="">
+        <span>
           <i>
             Published {{ useTimeAgo(props.value.publishedAt).value }} by
             <a :href="props.value.author.htmlURL" target="_blank">{{ props.value.author.name }}</a>
@@ -28,13 +28,21 @@
       <span v-html="props.value.summary" />
 
       <template v-if="props.value.labels" #action>
-        <ObjectLabel
-          v-for="label in props.value.labels.edges.map(({ node }) => node)"
-          :key="label.id"
-          :value="label"
-          linkable
-          class="mr-1"
-        />
+        <div class="flex flex-auto justify-between">
+          <div>
+            <ObjectLabel
+              v-for="label in props.value.labels.edges.map(({ node }) => node)"
+              :key="label.id"
+              :value="label"
+              linkable
+              class="mr-1"
+            />
+          </div>
+
+          <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+            {{ props.value.viewCount.toLocaleString() }} views
+          </n-tag>
+        </div>
       </template>
     </n-thing>
   </component>

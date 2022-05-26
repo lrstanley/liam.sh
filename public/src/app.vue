@@ -30,7 +30,7 @@ body {
 }
 
 .text-gradient {
-  @apply text-transparent bg-gradient-to-tr bg-clip-text inline font-bold;
+  @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
 }
 
 .n-icon {
