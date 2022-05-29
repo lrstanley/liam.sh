@@ -55,9 +55,14 @@ func Open(logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	))
 }
 
-func Migrate(ctx context.Context, logger log.Interface, client *ent.Client) {
+func Migrate(ctx context.Context, logger log.Interface) {
 	logger.Info("initiating database schema migration")
-	if err := client.Schema.Create(
+	db := ent.FromContext(ctx)
+	if db == nil {
+		panic("database client is nil")
+	}
+
+	if err := db.Schema.Create(
 		entcache.Skip(ctx),
 		schema.WithAtlas(true),
 		schema.WithDropColumn(true),

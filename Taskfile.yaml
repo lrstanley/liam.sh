@@ -4,7 +4,7 @@ dotenv: [".env"]
 output: prefixed
 
 env:
-  BINARY: liam.sh
+  BINARY: httpserver
 
 tasks:
   default: "task --list-all"
@@ -13,8 +13,8 @@ tasks:
     deps: [fetch]
     cmds:
       - go generate -x ./...
-      - mkdir -vp public/dist
-      - touch public/dist/.gitkeep
+      - mkdir -vp cmd/httpserver/public/dist
+      - touch cmd/httpserver/public/dist/.gitkeep
   fetch:
     run: always
     cmds:
@@ -33,7 +33,7 @@ tasks:
       - |
         CGO_ENABLED=0 go build -ldflags '-d -s -w -extldflags=-static' \
           -tags=netgo,osusergo,static_build,go_json,nomsgpack \
-          -installsuffix netgo -buildvcs=false -trimpath -o "${BINARY}"
+          -installsuffix netgo -buildvcs=false -trimpath -o "${BINARY}" github.com/lrstanley/liam.sh/cmd/httpserver
   dlv:
     run: always
     interactive: true
@@ -46,8 +46,8 @@ tasks:
     ignore_error: true
     deps: [prepare]
     cmds:
-      - while kill $(pgrep http 2>/dev/null) 2>/dev/null;do sleep 1;done
-      - go run *.go --debug
+      - while kill $(pgrep httpserver 2>/dev/null) 2>/dev/null;do sleep 1;done
+      - go run github.com/lrstanley/liam.sh/cmd/httpserver --debug
     sources:
       - "**/*.go"
     generates:

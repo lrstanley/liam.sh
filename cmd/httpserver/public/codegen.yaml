@@ -1,4 +1,4 @@
-schema: ../internal/graphql/schema/*.gql
+schema: ../../../internal/graphql/schema/*.gql
 documents: ./src/lib/api/*.gql
 generates:
   ./src/lib/api/index.ts:

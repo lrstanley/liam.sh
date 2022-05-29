@@ -5,7 +5,6 @@
 package main
 
 import (
-	_ "embed"
 	"net/http"
 	"strings"
 	"time"
@@ -23,9 +22,6 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
-
-// go:embed internal/ent/openapi.json
-var openapi []byte
 
 func httpServer() *http.Server {
 	r := chi.NewRouter()

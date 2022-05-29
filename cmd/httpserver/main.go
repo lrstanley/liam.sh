@@ -30,16 +30,17 @@ func main() {
 	cli.Parse()
 	logger = cli.Logger
 
-	ctx := log.NewContext(context.Background(), logger)
+	db = database.Open(logger, cli.Flags.Database)
+	defer db.Close()
+
+	ctx := ent.NewContext(log.NewContext(context.Background(), logger), db)
+
+	database.RegisterHooks(ctx)
+	database.Migrate(ctx, logger)
 
 	gh.NewClient(ctx, cli.Flags.Github.Token)
 
-	db = database.Open(logger, cli.Flags.Database)
-	defer db.Close()
-	database.RegisterHooks(ctx, db)
-	database.Migrate(ctx, logger, db)
-
-	if err := chix.RunCtx(ctx, httpServer(), gh.Runner); err != nil {
+	if err := chix.RunCtx(ctx, httpServer(), gh.UserRunner, gh.EventsRunner); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}
 }

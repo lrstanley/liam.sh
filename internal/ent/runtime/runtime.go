@@ -10,6 +10,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/schema"
@@ -23,6 +24,29 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	githubevent.Policy = privacy.NewPolicies(schema.GithubEvent{})
+	githubevent.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := githubevent.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	githubeventFields := schema.GithubEvent{}.Fields()
+	_ = githubeventFields
+	// githubeventDescEventType is the schema descriptor for event_type field.
+	githubeventDescEventType := githubeventFields[1].Descriptor()
+	// githubevent.EventTypeValidator is a validator for the "event_type" field. It is called by the builders before save.
+	githubevent.EventTypeValidator = githubeventDescEventType.Validators[0].(func(string) error)
+	// githubeventDescPublic is the schema descriptor for public field.
+	githubeventDescPublic := githubeventFields[3].Descriptor()
+	// githubevent.DefaultPublic holds the default value on creation for the public field.
+	githubevent.DefaultPublic = githubeventDescPublic.Default.(bool)
+	// githubeventDescRepoID is the schema descriptor for repo_id field.
+	githubeventDescRepoID := githubeventFields[6].Descriptor()
+	// githubevent.RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
+	githubevent.RepoIDValidator = githubeventDescRepoID.Validators[0].(func(int64) error)
 	labelMixin := schema.Label{}.Mixin()
 	label.Policy = privacy.NewPolicies(schema.Label{})
 	label.Hooks[0] = func(next ent.Mutator) ent.Mutator {

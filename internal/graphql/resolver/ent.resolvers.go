@@ -19,6 +19,14 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, erro
 	return r.client.Noders(ctx, ids)
 }
 
+func (r *queryResolver) Githubevents(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) (*ent.GithubEventConnection, error) {
+	return r.client.GithubEvent.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithGithubEventOrder(orderBy),
+		ent.WithGithubEventFilter(where.Filter),
+	)
+}
+
 func (r *queryResolver) Labels(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) (*ent.LabelConnection, error) {
 	return r.client.Label.Query().Paginate(
 		ctx, after, first, before, last,

@@ -13,6 +13,7 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/migrate"
 
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -27,6 +28,8 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// GithubEvent is the client for interacting with the GithubEvent builders.
+	GithubEvent *GithubEventClient
 	// Label is the client for interacting with the Label builders.
 	Label *LabelClient
 	// Post is the client for interacting with the Post builders.
@@ -48,6 +51,7 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.GithubEvent = NewGithubEventClient(c.config)
 	c.Label = NewLabelClient(c.config)
 	c.Post = NewPostClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -82,11 +86,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Label:  NewLabelClient(cfg),
-		Post:   NewPostClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		GithubEvent: NewGithubEventClient(cfg),
+		Label:       NewLabelClient(cfg),
+		Post:        NewPostClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
@@ -104,18 +109,19 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Label:  NewLabelClient(cfg),
-		Post:   NewPostClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:         ctx,
+		config:      cfg,
+		GithubEvent: NewGithubEventClient(cfg),
+		Label:       NewLabelClient(cfg),
+		Post:        NewPostClient(cfg),
+		User:        NewUserClient(cfg),
 	}, nil
 }
 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		Label.
+//		GithubEvent.
 //		Query().
 //		Count(ctx)
 //
@@ -138,9 +144,101 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.GithubEvent.Use(hooks...)
 	c.Label.Use(hooks...)
 	c.Post.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// GithubEventClient is a client for the GithubEvent schema.
+type GithubEventClient struct {
+	config
+}
+
+// NewGithubEventClient returns a client for the GithubEvent from the given config.
+func NewGithubEventClient(c config) *GithubEventClient {
+	return &GithubEventClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `githubevent.Hooks(f(g(h())))`.
+func (c *GithubEventClient) Use(hooks ...Hook) {
+	c.hooks.GithubEvent = append(c.hooks.GithubEvent, hooks...)
+}
+
+// Create returns a create builder for GithubEvent.
+func (c *GithubEventClient) Create() *GithubEventCreate {
+	mutation := newGithubEventMutation(c.config, OpCreate)
+	return &GithubEventCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GithubEvent entities.
+func (c *GithubEventClient) CreateBulk(builders ...*GithubEventCreate) *GithubEventCreateBulk {
+	return &GithubEventCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GithubEvent.
+func (c *GithubEventClient) Update() *GithubEventUpdate {
+	mutation := newGithubEventMutation(c.config, OpUpdate)
+	return &GithubEventUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GithubEventClient) UpdateOne(ge *GithubEvent) *GithubEventUpdateOne {
+	mutation := newGithubEventMutation(c.config, OpUpdateOne, withGithubEvent(ge))
+	return &GithubEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GithubEventClient) UpdateOneID(id int) *GithubEventUpdateOne {
+	mutation := newGithubEventMutation(c.config, OpUpdateOne, withGithubEventID(id))
+	return &GithubEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GithubEvent.
+func (c *GithubEventClient) Delete() *GithubEventDelete {
+	mutation := newGithubEventMutation(c.config, OpDelete)
+	return &GithubEventDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GithubEventClient) DeleteOne(ge *GithubEvent) *GithubEventDeleteOne {
+	return c.DeleteOneID(ge.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GithubEventClient) DeleteOneID(id int) *GithubEventDeleteOne {
+	builder := c.Delete().Where(githubevent.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GithubEventDeleteOne{builder}
+}
+
+// Query returns a query builder for GithubEvent.
+func (c *GithubEventClient) Query() *GithubEventQuery {
+	return &GithubEventQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GithubEvent entity by its id.
+func (c *GithubEventClient) Get(ctx context.Context, id int) (*GithubEvent, error) {
+	return c.Query().Where(githubevent.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GithubEventClient) GetX(ctx context.Context, id int) *GithubEvent {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GithubEventClient) Hooks() []Hook {
+	hooks := c.hooks.GithubEvent
+	return append(hooks[:len(hooks):len(hooks)], githubevent.Hooks[:]...)
 }
 
 // LabelClient is a client for the Label schema.

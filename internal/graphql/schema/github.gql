@@ -1,17 +1,39 @@
 type GithubUser {
     id: Int!
     login: String!
-    name: String!
+    name: String
     avatarURL: String!
-    email: String!
-    location: String!
-    bio: String!
-    htmlurl: String!
-    publicRepos: Int!
-    followers: Int!
-    following: Int!
-    createdAt: Timestamp!
-    updatedAt: Timestamp!
+    email: String
+    location: String
+    bio: String
+    htmlurl: String
+    publicRepos: Int
+    followers: Int
+    following: Int
+    createdAt: Timestamp
+    updatedAt: Timestamp
+}
+
+type GithubRepository {
+    id: Int!
+    owner: GithubUser
+    name: String!
+    fullName: String
+    description: String
+    homepage: String
+    defaultBranch: String
+    createdAt: Timestamp
+    pushedAt: Timestamp
+    updatedAt: Timestamp
+    htmlURL: String
+    fork: Boolean
+    forksCount: Int
+    stargazersCount: Int
+    topics: [String!]
+    archived: Boolean
+    disabled: Boolean
+    private: Boolean
+    url: String!
 }
 
 extend type Query {

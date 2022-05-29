@@ -21,8 +21,14 @@ const summaryLen = 40
 var htmlPolicy = bluemonday.StrictPolicy()
 
 // RegisterHooks initializes all runtime hooks into the database client.
-func RegisterHooks(ctx context.Context, db *ent.Client) {
+func RegisterHooks(ctx context.Context) {
 	log.FromContext(ctx).Info("registering database hooks")
+
+	db := ent.FromContext(ctx)
+	if db == nil {
+		panic("database client is nil")
+	}
+
 	db.Use(
 		hook.On(
 			hook.If(func(next ent.Mutator) ent.Mutator {

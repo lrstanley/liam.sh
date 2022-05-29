@@ -18,6 +18,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -245,6 +246,338 @@ func paginateLimit(first, last *int) int {
 		limit = *last + 1
 	}
 	return limit
+}
+
+// GithubEventEdge is the edge representation of GithubEvent.
+type GithubEventEdge struct {
+	Node   *GithubEvent `json:"node"`
+	Cursor Cursor       `json:"cursor"`
+}
+
+// GithubEventConnection is the connection containing edges to GithubEvent.
+type GithubEventConnection struct {
+	Edges      []*GithubEventEdge `json:"edges"`
+	PageInfo   PageInfo           `json:"pageInfo"`
+	TotalCount int                `json:"totalCount"`
+}
+
+func (c *GithubEventConnection) build(nodes []*GithubEvent, pager *githubeventPager, first, last *int) {
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *GithubEvent
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *GithubEvent {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *GithubEvent {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*GithubEventEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &GithubEventEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// GithubEventPaginateOption enables pagination customization.
+type GithubEventPaginateOption func(*githubeventPager) error
+
+// WithGithubEventOrder configures pagination ordering.
+func WithGithubEventOrder(order *GithubEventOrder) GithubEventPaginateOption {
+	if order == nil {
+		order = DefaultGithubEventOrder
+	}
+	o := *order
+	return func(pager *githubeventPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultGithubEventOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithGithubEventFilter configures pagination filter.
+func WithGithubEventFilter(filter func(*GithubEventQuery) (*GithubEventQuery, error)) GithubEventPaginateOption {
+	return func(pager *githubeventPager) error {
+		if filter == nil {
+			return errors.New("GithubEventQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type githubeventPager struct {
+	order  *GithubEventOrder
+	filter func(*GithubEventQuery) (*GithubEventQuery, error)
+}
+
+func newGithubEventPager(opts []GithubEventPaginateOption) (*githubeventPager, error) {
+	pager := &githubeventPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultGithubEventOrder
+	}
+	return pager, nil
+}
+
+func (p *githubeventPager) applyFilter(query *GithubEventQuery) (*GithubEventQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *githubeventPager) toCursor(ge *GithubEvent) Cursor {
+	return p.order.Field.toCursor(ge)
+}
+
+func (p *githubeventPager) applyCursors(query *GithubEventQuery, after, before *Cursor) *GithubEventQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultGithubEventOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *githubeventPager) applyOrder(query *GithubEventQuery, reverse bool) *GithubEventQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultGithubEventOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultGithubEventOrder.Field.field))
+	}
+	return query
+}
+
+func (p *githubeventPager) orderExpr(reverse bool) sql.Querier {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultGithubEventOrder.Field {
+			b.Comma().Ident(DefaultGithubEventOrder.Field.field).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to GithubEvent.
+func (ge *GithubEventQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...GithubEventPaginateOption,
+) (*GithubEventConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newGithubEventPager(opts)
+	if err != nil {
+		return nil, err
+	}
+	if ge, err = pager.applyFilter(ge); err != nil {
+		return nil, err
+	}
+	conn := &GithubEventConnection{Edges: []*GithubEventEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+			if conn.TotalCount, err = ge.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := ge.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	ge = pager.applyCursors(ge, after, before)
+	ge = pager.applyOrder(ge, last != nil)
+	if limit := paginateLimit(first, last); limit != 0 {
+		ge.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := ge.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+
+	nodes, err := ge.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+	conn.build(nodes, pager, first, last)
+	return conn, nil
+}
+
+var (
+	// GithubEventOrderFieldEventID orders GithubEvent by event_id.
+	GithubEventOrderFieldEventID = &GithubEventOrderField{
+		field: githubevent.FieldEventID,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{
+				ID:    ge.ID,
+				Value: ge.EventID,
+			}
+		},
+	}
+	// GithubEventOrderFieldEventType orders GithubEvent by event_type.
+	GithubEventOrderFieldEventType = &GithubEventOrderField{
+		field: githubevent.FieldEventType,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{
+				ID:    ge.ID,
+				Value: ge.EventType,
+			}
+		},
+	}
+	// GithubEventOrderFieldCreatedAt orders GithubEvent by created_at.
+	GithubEventOrderFieldCreatedAt = &GithubEventOrderField{
+		field: githubevent.FieldCreatedAt,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{
+				ID:    ge.ID,
+				Value: ge.CreatedAt,
+			}
+		},
+	}
+	// GithubEventOrderFieldActorID orders GithubEvent by actor_id.
+	GithubEventOrderFieldActorID = &GithubEventOrderField{
+		field: githubevent.FieldActorID,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{
+				ID:    ge.ID,
+				Value: ge.ActorID,
+			}
+		},
+	}
+	// GithubEventOrderFieldRepoID orders GithubEvent by repo_id.
+	GithubEventOrderFieldRepoID = &GithubEventOrderField{
+		field: githubevent.FieldRepoID,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{
+				ID:    ge.ID,
+				Value: ge.RepoID,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f GithubEventOrderField) String() string {
+	var str string
+	switch f.field {
+	case githubevent.FieldEventID:
+		str = "EVENT_ID"
+	case githubevent.FieldEventType:
+		str = "EVENT_TYPE"
+	case githubevent.FieldCreatedAt:
+		str = "CREATED_AT"
+	case githubevent.FieldActorID:
+		str = "ACTOR_ID"
+	case githubevent.FieldRepoID:
+		str = "REPO_ID"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f GithubEventOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *GithubEventOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("GithubEventOrderField %T must be a string", v)
+	}
+	switch str {
+	case "EVENT_ID":
+		*f = *GithubEventOrderFieldEventID
+	case "EVENT_TYPE":
+		*f = *GithubEventOrderFieldEventType
+	case "CREATED_AT":
+		*f = *GithubEventOrderFieldCreatedAt
+	case "ACTOR_ID":
+		*f = *GithubEventOrderFieldActorID
+	case "REPO_ID":
+		*f = *GithubEventOrderFieldRepoID
+	default:
+		return fmt.Errorf("%s is not a valid GithubEventOrderField", str)
+	}
+	return nil
+}
+
+// GithubEventOrderField defines the ordering field of GithubEvent.
+type GithubEventOrderField struct {
+	field    string
+	toCursor func(*GithubEvent) Cursor
+}
+
+// GithubEventOrder defines the ordering of GithubEvent.
+type GithubEventOrder struct {
+	Direction OrderDirection         `json:"direction"`
+	Field     *GithubEventOrderField `json:"field"`
+}
+
+// DefaultGithubEventOrder is the default ordering of GithubEvent.
+var DefaultGithubEventOrder = &GithubEventOrder{
+	Direction: OrderDirectionAsc,
+	Field: &GithubEventOrderField{
+		field: githubevent.FieldID,
+		toCursor: func(ge *GithubEvent) Cursor {
+			return Cursor{ID: ge.ID}
+		},
+	},
+}
+
+// ToEdge converts GithubEvent into GithubEventEdge.
+func (ge *GithubEvent) ToEdge(order *GithubEventOrder) *GithubEventEdge {
+	if order == nil {
+		order = DefaultGithubEventOrder
+	}
+	return &GithubEventEdge{
+		Node:   ge,
+		Cursor: order.Field.toCursor(ge),
+	}
 }
 
 // LabelEdge is the edge representation of Label.

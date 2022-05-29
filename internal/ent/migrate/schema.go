@@ -12,6 +12,25 @@ import (
 )
 
 var (
+	// GithubEventsColumns holds the columns for the "github_events" table.
+	GithubEventsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "event_id", Type: field.TypeString, Unique: true},
+		{Name: "event_type", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "public", Type: field.TypeBool, Default: false},
+		{Name: "actor_id", Type: field.TypeInt64},
+		{Name: "actor", Type: field.TypeJSON},
+		{Name: "repo_id", Type: field.TypeInt64},
+		{Name: "repo", Type: field.TypeJSON},
+		{Name: "payload", Type: field.TypeJSON},
+	}
+	// GithubEventsTable holds the schema information for the "github_events" table.
+	GithubEventsTable = &schema.Table{
+		Name:       "github_events",
+		Columns:    GithubEventsColumns,
+		PrimaryKey: []*schema.Column{GithubEventsColumns[0]},
+	}
 	// LabelsColumns holds the columns for the "labels" table.
 	LabelsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -100,6 +119,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		GithubEventsTable,
 		LabelsTable,
 		PostsTable,
 		UsersTable,

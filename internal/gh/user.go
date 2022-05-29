@@ -17,8 +17,8 @@ var (
 	User models.Atomic[*github.User]
 )
 
-func Runner(ctx context.Context) error {
-	logger := log.FromContext(ctx).WithField("runner", "github")
+func UserRunner(ctx context.Context) error {
+	logger := log.FromContext(ctx).WithField("runner", "github_user")
 
 	getUser(ctx, logger)
 

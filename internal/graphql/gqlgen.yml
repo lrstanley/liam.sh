@@ -41,6 +41,9 @@ models:
   Duration:
     model:
       - entgo.io/contrib/entgql/internal/todo/ent/schema/durationgql.Duration
+  GithubRepository:
+    model:
+      - github.com/google/go-github/v44/github.Repository
   GithubUser:
     model:
       - github.com/google/go-github/v44/github.User

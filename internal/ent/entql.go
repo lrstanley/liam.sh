@@ -7,6 +7,7 @@
 package ent
 
 import (
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -20,8 +21,30 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 3)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 4)}
 	graph.Nodes[0] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   githubevent.Table,
+			Columns: githubevent.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeInt,
+				Column: githubevent.FieldID,
+			},
+		},
+		Type: "GithubEvent",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			githubevent.FieldEventID:   {Type: field.TypeString, Column: githubevent.FieldEventID},
+			githubevent.FieldEventType: {Type: field.TypeString, Column: githubevent.FieldEventType},
+			githubevent.FieldCreatedAt: {Type: field.TypeTime, Column: githubevent.FieldCreatedAt},
+			githubevent.FieldPublic:    {Type: field.TypeBool, Column: githubevent.FieldPublic},
+			githubevent.FieldActorID:   {Type: field.TypeInt64, Column: githubevent.FieldActorID},
+			githubevent.FieldActor:     {Type: field.TypeJSON, Column: githubevent.FieldActor},
+			githubevent.FieldRepoID:    {Type: field.TypeInt64, Column: githubevent.FieldRepoID},
+			githubevent.FieldRepo:      {Type: field.TypeJSON, Column: githubevent.FieldRepo},
+			githubevent.FieldPayload:   {Type: field.TypeJSON, Column: githubevent.FieldPayload},
+		},
+	}
+	graph.Nodes[1] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   label.Table,
 			Columns: label.Columns,
@@ -37,7 +60,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			label.FieldName:       {Type: field.TypeString, Column: label.FieldName},
 		},
 	}
-	graph.Nodes[1] = &sqlgraph.Node{
+	graph.Nodes[2] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   post.Table,
 			Columns: post.Columns,
@@ -59,7 +82,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldViewCount:   {Type: field.TypeInt, Column: post.FieldViewCount},
 		},
 	}
-	graph.Nodes[2] = &sqlgraph.Node{
+	graph.Nodes[3] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -140,6 +163,91 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (geq *GithubEventQuery) addPredicate(pred func(s *sql.Selector)) {
+	geq.predicates = append(geq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GithubEventQuery builder.
+func (geq *GithubEventQuery) Filter() *GithubEventFilter {
+	return &GithubEventFilter{geq.config, geq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GithubEventMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GithubEventMutation builder.
+func (m *GithubEventMutation) Filter() *GithubEventFilter {
+	return &GithubEventFilter{m.config, m}
+}
+
+// GithubEventFilter provides a generic filtering capability at runtime for GithubEventQuery.
+type GithubEventFilter struct {
+	config
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GithubEventFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql int predicate on the id field.
+func (f *GithubEventFilter) WhereID(p entql.IntP) {
+	f.Where(p.Field(githubevent.FieldID))
+}
+
+// WhereEventID applies the entql string predicate on the event_id field.
+func (f *GithubEventFilter) WhereEventID(p entql.StringP) {
+	f.Where(p.Field(githubevent.FieldEventID))
+}
+
+// WhereEventType applies the entql string predicate on the event_type field.
+func (f *GithubEventFilter) WhereEventType(p entql.StringP) {
+	f.Where(p.Field(githubevent.FieldEventType))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *GithubEventFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubevent.FieldCreatedAt))
+}
+
+// WherePublic applies the entql bool predicate on the public field.
+func (f *GithubEventFilter) WherePublic(p entql.BoolP) {
+	f.Where(p.Field(githubevent.FieldPublic))
+}
+
+// WhereActorID applies the entql int64 predicate on the actor_id field.
+func (f *GithubEventFilter) WhereActorID(p entql.Int64P) {
+	f.Where(p.Field(githubevent.FieldActorID))
+}
+
+// WhereActor applies the entql json.RawMessage predicate on the actor field.
+func (f *GithubEventFilter) WhereActor(p entql.BytesP) {
+	f.Where(p.Field(githubevent.FieldActor))
+}
+
+// WhereRepoID applies the entql int64 predicate on the repo_id field.
+func (f *GithubEventFilter) WhereRepoID(p entql.Int64P) {
+	f.Where(p.Field(githubevent.FieldRepoID))
+}
+
+// WhereRepo applies the entql json.RawMessage predicate on the repo field.
+func (f *GithubEventFilter) WhereRepo(p entql.BytesP) {
+	f.Where(p.Field(githubevent.FieldRepo))
+}
+
+// WherePayload applies the entql json.RawMessage predicate on the payload field.
+func (f *GithubEventFilter) WherePayload(p entql.BytesP) {
+	f.Where(p.Field(githubevent.FieldPayload))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (lq *LabelQuery) addPredicate(pred func(s *sql.Selector)) {
 	lq.predicates = append(lq.predicates, pred)
 }
@@ -168,7 +276,7 @@ type LabelFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LabelFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -237,7 +345,7 @@ type PostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -350,7 +458,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

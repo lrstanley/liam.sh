@@ -10,6 +10,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
+// GithubEvent is the predicate function for githubevent builders.
+type GithubEvent func(*sql.Selector)
+
 // Label is the predicate function for label builders.
 type Label func(*sql.Selector)
 

@@ -10,11 +10,350 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 )
+
+// GithubEventWhereInput represents a where input for filtering GithubEvent queries.
+type GithubEventWhereInput struct {
+	Predicates []predicate.GithubEvent  `json:"-"`
+	Not        *GithubEventWhereInput   `json:"not,omitempty"`
+	Or         []*GithubEventWhereInput `json:"or,omitempty"`
+	And        []*GithubEventWhereInput `json:"and,omitempty"`
+
+	// "id" field predicates.
+	ID      *int  `json:"id,omitempty"`
+	IDNEQ   *int  `json:"idNEQ,omitempty"`
+	IDIn    []int `json:"idIn,omitempty"`
+	IDNotIn []int `json:"idNotIn,omitempty"`
+	IDGT    *int  `json:"idGT,omitempty"`
+	IDGTE   *int  `json:"idGTE,omitempty"`
+	IDLT    *int  `json:"idLT,omitempty"`
+	IDLTE   *int  `json:"idLTE,omitempty"`
+
+	// "event_id" field predicates.
+	EventID             *string  `json:"eventID,omitempty"`
+	EventIDNEQ          *string  `json:"eventIDNEQ,omitempty"`
+	EventIDIn           []string `json:"eventIDIn,omitempty"`
+	EventIDNotIn        []string `json:"eventIDNotIn,omitempty"`
+	EventIDGT           *string  `json:"eventIDGT,omitempty"`
+	EventIDGTE          *string  `json:"eventIDGTE,omitempty"`
+	EventIDLT           *string  `json:"eventIDLT,omitempty"`
+	EventIDLTE          *string  `json:"eventIDLTE,omitempty"`
+	EventIDContains     *string  `json:"eventIDContains,omitempty"`
+	EventIDHasPrefix    *string  `json:"eventIDHasPrefix,omitempty"`
+	EventIDHasSuffix    *string  `json:"eventIDHasSuffix,omitempty"`
+	EventIDEqualFold    *string  `json:"eventIDEqualFold,omitempty"`
+	EventIDContainsFold *string  `json:"eventIDContainsFold,omitempty"`
+
+	// "event_type" field predicates.
+	EventType             *string  `json:"eventType,omitempty"`
+	EventTypeNEQ          *string  `json:"eventTypeNEQ,omitempty"`
+	EventTypeIn           []string `json:"eventTypeIn,omitempty"`
+	EventTypeNotIn        []string `json:"eventTypeNotIn,omitempty"`
+	EventTypeGT           *string  `json:"eventTypeGT,omitempty"`
+	EventTypeGTE          *string  `json:"eventTypeGTE,omitempty"`
+	EventTypeLT           *string  `json:"eventTypeLT,omitempty"`
+	EventTypeLTE          *string  `json:"eventTypeLTE,omitempty"`
+	EventTypeContains     *string  `json:"eventTypeContains,omitempty"`
+	EventTypeHasPrefix    *string  `json:"eventTypeHasPrefix,omitempty"`
+	EventTypeHasSuffix    *string  `json:"eventTypeHasSuffix,omitempty"`
+	EventTypeEqualFold    *string  `json:"eventTypeEqualFold,omitempty"`
+	EventTypeContainsFold *string  `json:"eventTypeContainsFold,omitempty"`
+
+	// "created_at" field predicates.
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
+
+	// "public" field predicates.
+	Public    *bool `json:"public,omitempty"`
+	PublicNEQ *bool `json:"publicNEQ,omitempty"`
+
+	// "actor_id" field predicates.
+	ActorID      *int64  `json:"actorID,omitempty"`
+	ActorIDNEQ   *int64  `json:"actorIDNEQ,omitempty"`
+	ActorIDIn    []int64 `json:"actorIDIn,omitempty"`
+	ActorIDNotIn []int64 `json:"actorIDNotIn,omitempty"`
+	ActorIDGT    *int64  `json:"actorIDGT,omitempty"`
+	ActorIDGTE   *int64  `json:"actorIDGTE,omitempty"`
+	ActorIDLT    *int64  `json:"actorIDLT,omitempty"`
+	ActorIDLTE   *int64  `json:"actorIDLTE,omitempty"`
+
+	// "repo_id" field predicates.
+	RepoID      *int64  `json:"repoID,omitempty"`
+	RepoIDNEQ   *int64  `json:"repoIDNEQ,omitempty"`
+	RepoIDIn    []int64 `json:"repoIDIn,omitempty"`
+	RepoIDNotIn []int64 `json:"repoIDNotIn,omitempty"`
+	RepoIDGT    *int64  `json:"repoIDGT,omitempty"`
+	RepoIDGTE   *int64  `json:"repoIDGTE,omitempty"`
+	RepoIDLT    *int64  `json:"repoIDLT,omitempty"`
+	RepoIDLTE   *int64  `json:"repoIDLTE,omitempty"`
+}
+
+// AddPredicates adds custom predicates to the where input to be used during the filtering phase.
+func (i *GithubEventWhereInput) AddPredicates(predicates ...predicate.GithubEvent) {
+	i.Predicates = append(i.Predicates, predicates...)
+}
+
+// Filter applies the GithubEventWhereInput filter on the GithubEventQuery builder.
+func (i *GithubEventWhereInput) Filter(q *GithubEventQuery) (*GithubEventQuery, error) {
+	if i == nil {
+		return q, nil
+	}
+	p, err := i.P()
+	if err != nil {
+		return nil, err
+	}
+	return q.Where(p), nil
+}
+
+// P returns a predicate for filtering githubevents.
+// An error is returned if the input is empty or invalid.
+func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
+	var predicates []predicate.GithubEvent
+	if i.Not != nil {
+		p, err := i.Not.P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, githubevent.Not(p))
+	}
+	switch n := len(i.Or); {
+	case n == 1:
+		p, err := i.Or[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		or := make([]predicate.GithubEvent, 0, n)
+		for _, w := range i.Or {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			or = append(or, p)
+		}
+		predicates = append(predicates, githubevent.Or(or...))
+	}
+	switch n := len(i.And); {
+	case n == 1:
+		p, err := i.And[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		and := make([]predicate.GithubEvent, 0, n)
+		for _, w := range i.And {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			and = append(and, p)
+		}
+		predicates = append(predicates, githubevent.And(and...))
+	}
+	predicates = append(predicates, i.Predicates...)
+	if i.ID != nil {
+		predicates = append(predicates, githubevent.IDEQ(*i.ID))
+	}
+	if i.IDNEQ != nil {
+		predicates = append(predicates, githubevent.IDNEQ(*i.IDNEQ))
+	}
+	if len(i.IDIn) > 0 {
+		predicates = append(predicates, githubevent.IDIn(i.IDIn...))
+	}
+	if len(i.IDNotIn) > 0 {
+		predicates = append(predicates, githubevent.IDNotIn(i.IDNotIn...))
+	}
+	if i.IDGT != nil {
+		predicates = append(predicates, githubevent.IDGT(*i.IDGT))
+	}
+	if i.IDGTE != nil {
+		predicates = append(predicates, githubevent.IDGTE(*i.IDGTE))
+	}
+	if i.IDLT != nil {
+		predicates = append(predicates, githubevent.IDLT(*i.IDLT))
+	}
+	if i.IDLTE != nil {
+		predicates = append(predicates, githubevent.IDLTE(*i.IDLTE))
+	}
+	if i.EventID != nil {
+		predicates = append(predicates, githubevent.EventIDEQ(*i.EventID))
+	}
+	if i.EventIDNEQ != nil {
+		predicates = append(predicates, githubevent.EventIDNEQ(*i.EventIDNEQ))
+	}
+	if len(i.EventIDIn) > 0 {
+		predicates = append(predicates, githubevent.EventIDIn(i.EventIDIn...))
+	}
+	if len(i.EventIDNotIn) > 0 {
+		predicates = append(predicates, githubevent.EventIDNotIn(i.EventIDNotIn...))
+	}
+	if i.EventIDGT != nil {
+		predicates = append(predicates, githubevent.EventIDGT(*i.EventIDGT))
+	}
+	if i.EventIDGTE != nil {
+		predicates = append(predicates, githubevent.EventIDGTE(*i.EventIDGTE))
+	}
+	if i.EventIDLT != nil {
+		predicates = append(predicates, githubevent.EventIDLT(*i.EventIDLT))
+	}
+	if i.EventIDLTE != nil {
+		predicates = append(predicates, githubevent.EventIDLTE(*i.EventIDLTE))
+	}
+	if i.EventIDContains != nil {
+		predicates = append(predicates, githubevent.EventIDContains(*i.EventIDContains))
+	}
+	if i.EventIDHasPrefix != nil {
+		predicates = append(predicates, githubevent.EventIDHasPrefix(*i.EventIDHasPrefix))
+	}
+	if i.EventIDHasSuffix != nil {
+		predicates = append(predicates, githubevent.EventIDHasSuffix(*i.EventIDHasSuffix))
+	}
+	if i.EventIDEqualFold != nil {
+		predicates = append(predicates, githubevent.EventIDEqualFold(*i.EventIDEqualFold))
+	}
+	if i.EventIDContainsFold != nil {
+		predicates = append(predicates, githubevent.EventIDContainsFold(*i.EventIDContainsFold))
+	}
+	if i.EventType != nil {
+		predicates = append(predicates, githubevent.EventTypeEQ(*i.EventType))
+	}
+	if i.EventTypeNEQ != nil {
+		predicates = append(predicates, githubevent.EventTypeNEQ(*i.EventTypeNEQ))
+	}
+	if len(i.EventTypeIn) > 0 {
+		predicates = append(predicates, githubevent.EventTypeIn(i.EventTypeIn...))
+	}
+	if len(i.EventTypeNotIn) > 0 {
+		predicates = append(predicates, githubevent.EventTypeNotIn(i.EventTypeNotIn...))
+	}
+	if i.EventTypeGT != nil {
+		predicates = append(predicates, githubevent.EventTypeGT(*i.EventTypeGT))
+	}
+	if i.EventTypeGTE != nil {
+		predicates = append(predicates, githubevent.EventTypeGTE(*i.EventTypeGTE))
+	}
+	if i.EventTypeLT != nil {
+		predicates = append(predicates, githubevent.EventTypeLT(*i.EventTypeLT))
+	}
+	if i.EventTypeLTE != nil {
+		predicates = append(predicates, githubevent.EventTypeLTE(*i.EventTypeLTE))
+	}
+	if i.EventTypeContains != nil {
+		predicates = append(predicates, githubevent.EventTypeContains(*i.EventTypeContains))
+	}
+	if i.EventTypeHasPrefix != nil {
+		predicates = append(predicates, githubevent.EventTypeHasPrefix(*i.EventTypeHasPrefix))
+	}
+	if i.EventTypeHasSuffix != nil {
+		predicates = append(predicates, githubevent.EventTypeHasSuffix(*i.EventTypeHasSuffix))
+	}
+	if i.EventTypeEqualFold != nil {
+		predicates = append(predicates, githubevent.EventTypeEqualFold(*i.EventTypeEqualFold))
+	}
+	if i.EventTypeContainsFold != nil {
+		predicates = append(predicates, githubevent.EventTypeContainsFold(*i.EventTypeContainsFold))
+	}
+	if i.CreatedAt != nil {
+		predicates = append(predicates, githubevent.CreatedAtEQ(*i.CreatedAt))
+	}
+	if i.CreatedAtNEQ != nil {
+		predicates = append(predicates, githubevent.CreatedAtNEQ(*i.CreatedAtNEQ))
+	}
+	if len(i.CreatedAtIn) > 0 {
+		predicates = append(predicates, githubevent.CreatedAtIn(i.CreatedAtIn...))
+	}
+	if len(i.CreatedAtNotIn) > 0 {
+		predicates = append(predicates, githubevent.CreatedAtNotIn(i.CreatedAtNotIn...))
+	}
+	if i.CreatedAtGT != nil {
+		predicates = append(predicates, githubevent.CreatedAtGT(*i.CreatedAtGT))
+	}
+	if i.CreatedAtGTE != nil {
+		predicates = append(predicates, githubevent.CreatedAtGTE(*i.CreatedAtGTE))
+	}
+	if i.CreatedAtLT != nil {
+		predicates = append(predicates, githubevent.CreatedAtLT(*i.CreatedAtLT))
+	}
+	if i.CreatedAtLTE != nil {
+		predicates = append(predicates, githubevent.CreatedAtLTE(*i.CreatedAtLTE))
+	}
+	if i.Public != nil {
+		predicates = append(predicates, githubevent.PublicEQ(*i.Public))
+	}
+	if i.PublicNEQ != nil {
+		predicates = append(predicates, githubevent.PublicNEQ(*i.PublicNEQ))
+	}
+	if i.ActorID != nil {
+		predicates = append(predicates, githubevent.ActorIDEQ(*i.ActorID))
+	}
+	if i.ActorIDNEQ != nil {
+		predicates = append(predicates, githubevent.ActorIDNEQ(*i.ActorIDNEQ))
+	}
+	if len(i.ActorIDIn) > 0 {
+		predicates = append(predicates, githubevent.ActorIDIn(i.ActorIDIn...))
+	}
+	if len(i.ActorIDNotIn) > 0 {
+		predicates = append(predicates, githubevent.ActorIDNotIn(i.ActorIDNotIn...))
+	}
+	if i.ActorIDGT != nil {
+		predicates = append(predicates, githubevent.ActorIDGT(*i.ActorIDGT))
+	}
+	if i.ActorIDGTE != nil {
+		predicates = append(predicates, githubevent.ActorIDGTE(*i.ActorIDGTE))
+	}
+	if i.ActorIDLT != nil {
+		predicates = append(predicates, githubevent.ActorIDLT(*i.ActorIDLT))
+	}
+	if i.ActorIDLTE != nil {
+		predicates = append(predicates, githubevent.ActorIDLTE(*i.ActorIDLTE))
+	}
+	if i.RepoID != nil {
+		predicates = append(predicates, githubevent.RepoIDEQ(*i.RepoID))
+	}
+	if i.RepoIDNEQ != nil {
+		predicates = append(predicates, githubevent.RepoIDNEQ(*i.RepoIDNEQ))
+	}
+	if len(i.RepoIDIn) > 0 {
+		predicates = append(predicates, githubevent.RepoIDIn(i.RepoIDIn...))
+	}
+	if len(i.RepoIDNotIn) > 0 {
+		predicates = append(predicates, githubevent.RepoIDNotIn(i.RepoIDNotIn...))
+	}
+	if i.RepoIDGT != nil {
+		predicates = append(predicates, githubevent.RepoIDGT(*i.RepoIDGT))
+	}
+	if i.RepoIDGTE != nil {
+		predicates = append(predicates, githubevent.RepoIDGTE(*i.RepoIDGTE))
+	}
+	if i.RepoIDLT != nil {
+		predicates = append(predicates, githubevent.RepoIDLT(*i.RepoIDLT))
+	}
+	if i.RepoIDLTE != nil {
+		predicates = append(predicates, githubevent.RepoIDLTE(*i.RepoIDLTE))
+	}
+
+	switch len(predicates) {
+	case 0:
+		return nil, fmt.Errorf("empty predicate GithubEventWhereInput")
+	case 1:
+		return predicates[0], nil
+	default:
+		return githubevent.And(predicates...), nil
+	}
+}
 
 // LabelWhereInput represents a where input for filtering Label queries.
 type LabelWhereInput struct {
