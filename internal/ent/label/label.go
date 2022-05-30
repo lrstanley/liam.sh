@@ -25,6 +25,8 @@ const (
 	FieldName = "name"
 	// EdgePosts holds the string denoting the posts edge name in mutations.
 	EdgePosts = "posts"
+	// EdgeGithubRepositories holds the string denoting the github_repositories edge name in mutations.
+	EdgeGithubRepositories = "github_repositories"
 	// Table holds the table name of the label in the database.
 	Table = "labels"
 	// PostsTable is the table that holds the posts relation/edge. The primary key declared below.
@@ -32,6 +34,11 @@ const (
 	// PostsInverseTable is the table name for the Post entity.
 	// It exists in this package in order to avoid circular dependency with the "post" package.
 	PostsInverseTable = "posts"
+	// GithubRepositoriesTable is the table that holds the github_repositories relation/edge. The primary key declared below.
+	GithubRepositoriesTable = "label_github_repositories"
+	// GithubRepositoriesInverseTable is the table name for the GithubRepository entity.
+	// It exists in this package in order to avoid circular dependency with the "githubrepository" package.
+	GithubRepositoriesInverseTable = "github_repositories"
 )
 
 // Columns holds all SQL columns for label fields.
@@ -46,6 +53,9 @@ var (
 	// PostsPrimaryKey and PostsColumn2 are the table columns denoting the
 	// primary key for the posts relation (M2M).
 	PostsPrimaryKey = []string{"label_id", "post_id"}
+	// GithubRepositoriesPrimaryKey and GithubRepositoriesColumn2 are the table columns denoting the
+	// primary key for the github_repositories relation (M2M).
+	GithubRepositoriesPrimaryKey = []string{"label_id", "github_repository_id"}
 )
 
 // ValidColumn reports if the column name is valid (part of the table columns).

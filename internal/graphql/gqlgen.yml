@@ -41,12 +41,15 @@ models:
   Duration:
     model:
       - entgo.io/contrib/entgql/internal/todo/ent/schema/durationgql.Duration
-  GithubRepository:
+  GithubEventRepo:
     model:
       - github.com/google/go-github/v44/github.Repository
   GithubUser:
     model:
       - github.com/google/go-github/v44/github.User
+  GithubLicense:
+    model:
+      - github.com/google/go-github/v44/github.License
   Timestamp:
     model:
       - github.com/google/go-github/v44/github.Timestamp

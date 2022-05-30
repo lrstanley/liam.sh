@@ -40,7 +40,12 @@ func main() {
 
 	gh.NewClient(ctx, cli.Flags.Github.Token)
 
-	if err := chix.RunCtx(ctx, httpServer(), gh.UserRunner, gh.EventsRunner); err != nil {
+	if err := chix.RunCtx(
+		ctx, httpServer(),
+		gh.UserRunner,
+		gh.EventsRunner,
+		gh.RepositoryRunner,
+	); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}
 }

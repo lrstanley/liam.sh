@@ -14,6 +14,6 @@ release
 .task
 node_modules
 internal/graphql/gqlhandler
-public/dist
-public/src/lib/api/index.ts
-public/.eslintrc-auto-import.json
+cmd/httpserver/public/src/lib/api/index.ts
+dist
+.eslintrc-auto-import.json

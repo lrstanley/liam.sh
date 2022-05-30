@@ -27,6 +27,14 @@ func (r *queryResolver) Githubevents(ctx context.Context, after *ent.Cursor, fir
 	)
 }
 
+func (r *queryResolver) Githubrepositories(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) (*ent.GithubRepositoryConnection, error) {
+	return r.client.GithubRepository.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithGithubRepositoryOrder(orderBy),
+		ent.WithGithubRepositoryFilter(where.Filter),
+	)
+}
+
 func (r *queryResolver) Labels(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) (*ent.LabelConnection, error) {
 	return r.client.Label.Query().Paginate(
 		ctx, after, first, before, last,

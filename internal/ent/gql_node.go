@@ -20,6 +20,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -136,12 +137,185 @@ func (ge *GithubEvent) Node(ctx context.Context) (node *Node, err error) {
 	return node, nil
 }
 
+func (gr *GithubRepository) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     gr.ID,
+		Type:   "GithubRepository",
+		Fields: make([]*Field, 19),
+		Edges:  make([]*Edge, 1),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(gr.RepoID); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "int64",
+		Name:  "repo_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Name); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.FullName); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
+		Type:  "string",
+		Name:  "full_name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.OwnerLogin); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "string",
+		Name:  "owner_login",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Owner); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "*github.User",
+		Name:  "owner",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Public); err != nil {
+		return nil, err
+	}
+	node.Fields[5] = &Field{
+		Type:  "bool",
+		Name:  "public",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.HTMLURL); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
+		Type:  "string",
+		Name:  "html_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Description); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
+		Type:  "string",
+		Name:  "description",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Fork); err != nil {
+		return nil, err
+	}
+	node.Fields[8] = &Field{
+		Type:  "bool",
+		Name:  "fork",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Homepage); err != nil {
+		return nil, err
+	}
+	node.Fields[9] = &Field{
+		Type:  "string",
+		Name:  "homepage",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.StarCount); err != nil {
+		return nil, err
+	}
+	node.Fields[10] = &Field{
+		Type:  "int",
+		Name:  "star_count",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.DefaultBranch); err != nil {
+		return nil, err
+	}
+	node.Fields[11] = &Field{
+		Type:  "string",
+		Name:  "default_branch",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.IsTemplate); err != nil {
+		return nil, err
+	}
+	node.Fields[12] = &Field{
+		Type:  "bool",
+		Name:  "is_template",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.HasIssues); err != nil {
+		return nil, err
+	}
+	node.Fields[13] = &Field{
+		Type:  "bool",
+		Name:  "has_issues",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Archived); err != nil {
+		return nil, err
+	}
+	node.Fields[14] = &Field{
+		Type:  "bool",
+		Name:  "archived",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.PushedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[15] = &Field{
+		Type:  "time.Time",
+		Name:  "pushed_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.CreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[16] = &Field{
+		Type:  "time.Time",
+		Name:  "created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.UpdatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[17] = &Field{
+		Type:  "time.Time",
+		Name:  "updated_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.License); err != nil {
+		return nil, err
+	}
+	node.Fields[18] = &Field{
+		Type:  "*github.License",
+		Name:  "license",
+		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "Label",
+		Name: "labels",
+	}
+	err = gr.QueryLabels().
+		Select(label.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
 func (l *Label) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     l.ID,
 		Type:   "Label",
 		Fields: make([]*Field, 3),
-		Edges:  make([]*Edge, 1),
+		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(l.CreateTime); err != nil {
@@ -175,6 +349,16 @@ func (l *Label) Node(ctx context.Context) (node *Node, err error) {
 	err = l.QueryPosts().
 		Select(post.FieldID).
 		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
+		Type: "GithubRepository",
+		Name: "github_repositories",
+	}
+	err = l.QueryGithubRepositories().
+		Select(githubrepository.FieldID).
+		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -464,6 +648,18 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 			return nil, err
 		}
 		return n, nil
+	case githubrepository.Table:
+		query := c.GithubRepository.Query().
+			Where(githubrepository.ID(id))
+		query, err := query.CollectFields(ctx, "GithubRepository")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case label.Table:
 		query := c.Label.Query().
 			Where(label.ID(id))
@@ -577,6 +773,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		query := c.GithubEvent.Query().
 			Where(githubevent.IDIn(ids...))
 		query, err := query.CollectFields(ctx, "GithubEvent")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case githubrepository.Table:
+		query := c.GithubRepository.Query().
+			Where(githubrepository.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "GithubRepository")
 		if err != nil {
 			return nil, err
 		}

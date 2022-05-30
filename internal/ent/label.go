@@ -35,11 +35,13 @@ type Label struct {
 type LabelEdges struct {
 	// Posts holds the value of the posts edge.
 	Posts []*Post `json:"posts,omitempty"`
+	// GithubRepositories holds the value of the github_repositories edge.
+	GithubRepositories []*GithubRepository `json:"github_repositories,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [1]*int
+	totalCount [2]*int
 }
 
 // PostsOrErr returns the Posts value or an error if the edge
@@ -49,6 +51,15 @@ func (e LabelEdges) PostsOrErr() ([]*Post, error) {
 		return e.Posts, nil
 	}
 	return nil, &NotLoadedError{edge: "posts"}
+}
+
+// GithubRepositoriesOrErr returns the GithubRepositories value or an error if the edge
+// was not loaded in eager-loading.
+func (e LabelEdges) GithubRepositoriesOrErr() ([]*GithubRepository, error) {
+	if e.loadedTypes[1] {
+		return e.GithubRepositories, nil
+	}
+	return nil, &NotLoadedError{edge: "github_repositories"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -109,6 +120,11 @@ func (l *Label) assignValues(columns []string, values []interface{}) error {
 // QueryPosts queries the "posts" edge of the Label entity.
 func (l *Label) QueryPosts() *PostQuery {
 	return (&LabelClient{config: l.config}).QueryPosts(l)
+}
+
+// QueryGithubRepositories queries the "github_repositories" edge of the Label entity.
+func (l *Label) QueryGithubRepositories() *GithubRepositoryQuery {
+	return (&LabelClient{config: l.config}).QueryGithubRepositories(l)
 }
 
 // Update returns a builder for updating this Label.

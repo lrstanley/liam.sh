@@ -15,6 +15,7 @@ import (
 
 	"github.com/google/go-github/v44/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -32,10 +33,11 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
-	TypeGithubEvent = "GithubEvent"
-	TypeLabel       = "Label"
-	TypePost        = "Post"
-	TypeUser        = "User"
+	TypeGithubEvent      = "GithubEvent"
+	TypeGithubRepository = "GithubRepository"
+	TypeLabel            = "Label"
+	TypePost             = "Post"
+	TypeUser             = "User"
 )
 
 // GithubEventMutation represents an operation that mutates the GithubEvent nodes in the graph.
@@ -850,22 +852,1568 @@ func (m *GithubEventMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GithubEvent edge %s", name)
 }
 
+// GithubRepositoryMutation represents an operation that mutates the GithubRepository nodes in the graph.
+type GithubRepositoryMutation struct {
+	config
+	op             Op
+	typ            string
+	id             *int
+	repo_id        *int64
+	addrepo_id     *int64
+	name           *string
+	full_name      *string
+	owner_login    *string
+	owner          **github.User
+	public         *bool
+	html_url       *string
+	description    *string
+	fork           *bool
+	homepage       *string
+	star_count     *int
+	addstar_count  *int
+	default_branch *string
+	is_template    *bool
+	has_issues     *bool
+	archived       *bool
+	pushed_at      *time.Time
+	created_at     *time.Time
+	updated_at     *time.Time
+	license        **github.License
+	clearedFields  map[string]struct{}
+	labels         map[int]struct{}
+	removedlabels  map[int]struct{}
+	clearedlabels  bool
+	done           bool
+	oldValue       func(context.Context) (*GithubRepository, error)
+	predicates     []predicate.GithubRepository
+}
+
+var _ ent.Mutation = (*GithubRepositoryMutation)(nil)
+
+// githubrepositoryOption allows management of the mutation configuration using functional options.
+type githubrepositoryOption func(*GithubRepositoryMutation)
+
+// newGithubRepositoryMutation creates new mutation for the GithubRepository entity.
+func newGithubRepositoryMutation(c config, op Op, opts ...githubrepositoryOption) *GithubRepositoryMutation {
+	m := &GithubRepositoryMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGithubRepository,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGithubRepositoryID sets the ID field of the mutation.
+func withGithubRepositoryID(id int) githubrepositoryOption {
+	return func(m *GithubRepositoryMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *GithubRepository
+		)
+		m.oldValue = func(ctx context.Context) (*GithubRepository, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().GithubRepository.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGithubRepository sets the old GithubRepository of the mutation.
+func withGithubRepository(node *GithubRepository) githubrepositoryOption {
+	return func(m *GithubRepositoryMutation) {
+		m.oldValue = func(context.Context) (*GithubRepository, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GithubRepositoryMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GithubRepositoryMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *GithubRepositoryMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *GithubRepositoryMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().GithubRepository.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetRepoID sets the "repo_id" field.
+func (m *GithubRepositoryMutation) SetRepoID(i int64) {
+	m.repo_id = &i
+	m.addrepo_id = nil
+}
+
+// RepoID returns the value of the "repo_id" field in the mutation.
+func (m *GithubRepositoryMutation) RepoID() (r int64, exists bool) {
+	v := m.repo_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRepoID returns the old "repo_id" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldRepoID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRepoID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRepoID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRepoID: %w", err)
+	}
+	return oldValue.RepoID, nil
+}
+
+// AddRepoID adds i to the "repo_id" field.
+func (m *GithubRepositoryMutation) AddRepoID(i int64) {
+	if m.addrepo_id != nil {
+		*m.addrepo_id += i
+	} else {
+		m.addrepo_id = &i
+	}
+}
+
+// AddedRepoID returns the value that was added to the "repo_id" field in this mutation.
+func (m *GithubRepositoryMutation) AddedRepoID() (r int64, exists bool) {
+	v := m.addrepo_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetRepoID resets all changes to the "repo_id" field.
+func (m *GithubRepositoryMutation) ResetRepoID() {
+	m.repo_id = nil
+	m.addrepo_id = nil
+}
+
+// SetName sets the "name" field.
+func (m *GithubRepositoryMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *GithubRepositoryMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *GithubRepositoryMutation) ResetName() {
+	m.name = nil
+}
+
+// SetFullName sets the "full_name" field.
+func (m *GithubRepositoryMutation) SetFullName(s string) {
+	m.full_name = &s
+}
+
+// FullName returns the value of the "full_name" field in the mutation.
+func (m *GithubRepositoryMutation) FullName() (r string, exists bool) {
+	v := m.full_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFullName returns the old "full_name" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldFullName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFullName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFullName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFullName: %w", err)
+	}
+	return oldValue.FullName, nil
+}
+
+// ResetFullName resets all changes to the "full_name" field.
+func (m *GithubRepositoryMutation) ResetFullName() {
+	m.full_name = nil
+}
+
+// SetOwnerLogin sets the "owner_login" field.
+func (m *GithubRepositoryMutation) SetOwnerLogin(s string) {
+	m.owner_login = &s
+}
+
+// OwnerLogin returns the value of the "owner_login" field in the mutation.
+func (m *GithubRepositoryMutation) OwnerLogin() (r string, exists bool) {
+	v := m.owner_login
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOwnerLogin returns the old "owner_login" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldOwnerLogin(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOwnerLogin is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOwnerLogin requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOwnerLogin: %w", err)
+	}
+	return oldValue.OwnerLogin, nil
+}
+
+// ResetOwnerLogin resets all changes to the "owner_login" field.
+func (m *GithubRepositoryMutation) ResetOwnerLogin() {
+	m.owner_login = nil
+}
+
+// SetOwner sets the "owner" field.
+func (m *GithubRepositoryMutation) SetOwner(gi *github.User) {
+	m.owner = &gi
+}
+
+// Owner returns the value of the "owner" field in the mutation.
+func (m *GithubRepositoryMutation) Owner() (r *github.User, exists bool) {
+	v := m.owner
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOwner returns the old "owner" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldOwner(ctx context.Context) (v *github.User, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOwner is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOwner requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOwner: %w", err)
+	}
+	return oldValue.Owner, nil
+}
+
+// ResetOwner resets all changes to the "owner" field.
+func (m *GithubRepositoryMutation) ResetOwner() {
+	m.owner = nil
+}
+
+// SetPublic sets the "public" field.
+func (m *GithubRepositoryMutation) SetPublic(b bool) {
+	m.public = &b
+}
+
+// Public returns the value of the "public" field in the mutation.
+func (m *GithubRepositoryMutation) Public() (r bool, exists bool) {
+	v := m.public
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublic returns the old "public" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldPublic(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublic: %w", err)
+	}
+	return oldValue.Public, nil
+}
+
+// ResetPublic resets all changes to the "public" field.
+func (m *GithubRepositoryMutation) ResetPublic() {
+	m.public = nil
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (m *GithubRepositoryMutation) SetHTMLURL(s string) {
+	m.html_url = &s
+}
+
+// HTMLURL returns the value of the "html_url" field in the mutation.
+func (m *GithubRepositoryMutation) HTMLURL() (r string, exists bool) {
+	v := m.html_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHTMLURL returns the old "html_url" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldHTMLURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHTMLURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHTMLURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHTMLURL: %w", err)
+	}
+	return oldValue.HTMLURL, nil
+}
+
+// ResetHTMLURL resets all changes to the "html_url" field.
+func (m *GithubRepositoryMutation) ResetHTMLURL() {
+	m.html_url = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *GithubRepositoryMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *GithubRepositoryMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ClearDescription clears the value of the "description" field.
+func (m *GithubRepositoryMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[githubrepository.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *GithubRepositoryMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[githubrepository.FieldDescription]
+	return ok
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *GithubRepositoryMutation) ResetDescription() {
+	m.description = nil
+	delete(m.clearedFields, githubrepository.FieldDescription)
+}
+
+// SetFork sets the "fork" field.
+func (m *GithubRepositoryMutation) SetFork(b bool) {
+	m.fork = &b
+}
+
+// Fork returns the value of the "fork" field in the mutation.
+func (m *GithubRepositoryMutation) Fork() (r bool, exists bool) {
+	v := m.fork
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldFork returns the old "fork" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldFork(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldFork is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldFork requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldFork: %w", err)
+	}
+	return oldValue.Fork, nil
+}
+
+// ResetFork resets all changes to the "fork" field.
+func (m *GithubRepositoryMutation) ResetFork() {
+	m.fork = nil
+}
+
+// SetHomepage sets the "homepage" field.
+func (m *GithubRepositoryMutation) SetHomepage(s string) {
+	m.homepage = &s
+}
+
+// Homepage returns the value of the "homepage" field in the mutation.
+func (m *GithubRepositoryMutation) Homepage() (r string, exists bool) {
+	v := m.homepage
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHomepage returns the old "homepage" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldHomepage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHomepage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHomepage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHomepage: %w", err)
+	}
+	return oldValue.Homepage, nil
+}
+
+// ClearHomepage clears the value of the "homepage" field.
+func (m *GithubRepositoryMutation) ClearHomepage() {
+	m.homepage = nil
+	m.clearedFields[githubrepository.FieldHomepage] = struct{}{}
+}
+
+// HomepageCleared returns if the "homepage" field was cleared in this mutation.
+func (m *GithubRepositoryMutation) HomepageCleared() bool {
+	_, ok := m.clearedFields[githubrepository.FieldHomepage]
+	return ok
+}
+
+// ResetHomepage resets all changes to the "homepage" field.
+func (m *GithubRepositoryMutation) ResetHomepage() {
+	m.homepage = nil
+	delete(m.clearedFields, githubrepository.FieldHomepage)
+}
+
+// SetStarCount sets the "star_count" field.
+func (m *GithubRepositoryMutation) SetStarCount(i int) {
+	m.star_count = &i
+	m.addstar_count = nil
+}
+
+// StarCount returns the value of the "star_count" field in the mutation.
+func (m *GithubRepositoryMutation) StarCount() (r int, exists bool) {
+	v := m.star_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStarCount returns the old "star_count" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldStarCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStarCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStarCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStarCount: %w", err)
+	}
+	return oldValue.StarCount, nil
+}
+
+// AddStarCount adds i to the "star_count" field.
+func (m *GithubRepositoryMutation) AddStarCount(i int) {
+	if m.addstar_count != nil {
+		*m.addstar_count += i
+	} else {
+		m.addstar_count = &i
+	}
+}
+
+// AddedStarCount returns the value that was added to the "star_count" field in this mutation.
+func (m *GithubRepositoryMutation) AddedStarCount() (r int, exists bool) {
+	v := m.addstar_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetStarCount resets all changes to the "star_count" field.
+func (m *GithubRepositoryMutation) ResetStarCount() {
+	m.star_count = nil
+	m.addstar_count = nil
+}
+
+// SetDefaultBranch sets the "default_branch" field.
+func (m *GithubRepositoryMutation) SetDefaultBranch(s string) {
+	m.default_branch = &s
+}
+
+// DefaultBranch returns the value of the "default_branch" field in the mutation.
+func (m *GithubRepositoryMutation) DefaultBranch() (r string, exists bool) {
+	v := m.default_branch
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDefaultBranch returns the old "default_branch" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldDefaultBranch(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDefaultBranch is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDefaultBranch requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDefaultBranch: %w", err)
+	}
+	return oldValue.DefaultBranch, nil
+}
+
+// ResetDefaultBranch resets all changes to the "default_branch" field.
+func (m *GithubRepositoryMutation) ResetDefaultBranch() {
+	m.default_branch = nil
+}
+
+// SetIsTemplate sets the "is_template" field.
+func (m *GithubRepositoryMutation) SetIsTemplate(b bool) {
+	m.is_template = &b
+}
+
+// IsTemplate returns the value of the "is_template" field in the mutation.
+func (m *GithubRepositoryMutation) IsTemplate() (r bool, exists bool) {
+	v := m.is_template
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsTemplate returns the old "is_template" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldIsTemplate(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsTemplate is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsTemplate requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsTemplate: %w", err)
+	}
+	return oldValue.IsTemplate, nil
+}
+
+// ResetIsTemplate resets all changes to the "is_template" field.
+func (m *GithubRepositoryMutation) ResetIsTemplate() {
+	m.is_template = nil
+}
+
+// SetHasIssues sets the "has_issues" field.
+func (m *GithubRepositoryMutation) SetHasIssues(b bool) {
+	m.has_issues = &b
+}
+
+// HasIssues returns the value of the "has_issues" field in the mutation.
+func (m *GithubRepositoryMutation) HasIssues() (r bool, exists bool) {
+	v := m.has_issues
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHasIssues returns the old "has_issues" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldHasIssues(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHasIssues is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHasIssues requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHasIssues: %w", err)
+	}
+	return oldValue.HasIssues, nil
+}
+
+// ResetHasIssues resets all changes to the "has_issues" field.
+func (m *GithubRepositoryMutation) ResetHasIssues() {
+	m.has_issues = nil
+}
+
+// SetArchived sets the "archived" field.
+func (m *GithubRepositoryMutation) SetArchived(b bool) {
+	m.archived = &b
+}
+
+// Archived returns the value of the "archived" field in the mutation.
+func (m *GithubRepositoryMutation) Archived() (r bool, exists bool) {
+	v := m.archived
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldArchived returns the old "archived" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldArchived(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldArchived is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldArchived requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldArchived: %w", err)
+	}
+	return oldValue.Archived, nil
+}
+
+// ResetArchived resets all changes to the "archived" field.
+func (m *GithubRepositoryMutation) ResetArchived() {
+	m.archived = nil
+}
+
+// SetPushedAt sets the "pushed_at" field.
+func (m *GithubRepositoryMutation) SetPushedAt(t time.Time) {
+	m.pushed_at = &t
+}
+
+// PushedAt returns the value of the "pushed_at" field in the mutation.
+func (m *GithubRepositoryMutation) PushedAt() (r time.Time, exists bool) {
+	v := m.pushed_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPushedAt returns the old "pushed_at" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldPushedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPushedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPushedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPushedAt: %w", err)
+	}
+	return oldValue.PushedAt, nil
+}
+
+// ClearPushedAt clears the value of the "pushed_at" field.
+func (m *GithubRepositoryMutation) ClearPushedAt() {
+	m.pushed_at = nil
+	m.clearedFields[githubrepository.FieldPushedAt] = struct{}{}
+}
+
+// PushedAtCleared returns if the "pushed_at" field was cleared in this mutation.
+func (m *GithubRepositoryMutation) PushedAtCleared() bool {
+	_, ok := m.clearedFields[githubrepository.FieldPushedAt]
+	return ok
+}
+
+// ResetPushedAt resets all changes to the "pushed_at" field.
+func (m *GithubRepositoryMutation) ResetPushedAt() {
+	m.pushed_at = nil
+	delete(m.clearedFields, githubrepository.FieldPushedAt)
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *GithubRepositoryMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *GithubRepositoryMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *GithubRepositoryMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *GithubRepositoryMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *GithubRepositoryMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (m *GithubRepositoryMutation) ClearUpdatedAt() {
+	m.updated_at = nil
+	m.clearedFields[githubrepository.FieldUpdatedAt] = struct{}{}
+}
+
+// UpdatedAtCleared returns if the "updated_at" field was cleared in this mutation.
+func (m *GithubRepositoryMutation) UpdatedAtCleared() bool {
+	_, ok := m.clearedFields[githubrepository.FieldUpdatedAt]
+	return ok
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *GithubRepositoryMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	delete(m.clearedFields, githubrepository.FieldUpdatedAt)
+}
+
+// SetLicense sets the "license" field.
+func (m *GithubRepositoryMutation) SetLicense(gi *github.License) {
+	m.license = &gi
+}
+
+// License returns the value of the "license" field in the mutation.
+func (m *GithubRepositoryMutation) License() (r *github.License, exists bool) {
+	v := m.license
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLicense returns the old "license" field's value of the GithubRepository entity.
+// If the GithubRepository object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubRepositoryMutation) OldLicense(ctx context.Context) (v *github.License, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLicense is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLicense requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLicense: %w", err)
+	}
+	return oldValue.License, nil
+}
+
+// ClearLicense clears the value of the "license" field.
+func (m *GithubRepositoryMutation) ClearLicense() {
+	m.license = nil
+	m.clearedFields[githubrepository.FieldLicense] = struct{}{}
+}
+
+// LicenseCleared returns if the "license" field was cleared in this mutation.
+func (m *GithubRepositoryMutation) LicenseCleared() bool {
+	_, ok := m.clearedFields[githubrepository.FieldLicense]
+	return ok
+}
+
+// ResetLicense resets all changes to the "license" field.
+func (m *GithubRepositoryMutation) ResetLicense() {
+	m.license = nil
+	delete(m.clearedFields, githubrepository.FieldLicense)
+}
+
+// AddLabelIDs adds the "labels" edge to the Label entity by ids.
+func (m *GithubRepositoryMutation) AddLabelIDs(ids ...int) {
+	if m.labels == nil {
+		m.labels = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.labels[ids[i]] = struct{}{}
+	}
+}
+
+// ClearLabels clears the "labels" edge to the Label entity.
+func (m *GithubRepositoryMutation) ClearLabels() {
+	m.clearedlabels = true
+}
+
+// LabelsCleared reports if the "labels" edge to the Label entity was cleared.
+func (m *GithubRepositoryMutation) LabelsCleared() bool {
+	return m.clearedlabels
+}
+
+// RemoveLabelIDs removes the "labels" edge to the Label entity by IDs.
+func (m *GithubRepositoryMutation) RemoveLabelIDs(ids ...int) {
+	if m.removedlabels == nil {
+		m.removedlabels = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.labels, ids[i])
+		m.removedlabels[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedLabels returns the removed IDs of the "labels" edge to the Label entity.
+func (m *GithubRepositoryMutation) RemovedLabelsIDs() (ids []int) {
+	for id := range m.removedlabels {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// LabelsIDs returns the "labels" edge IDs in the mutation.
+func (m *GithubRepositoryMutation) LabelsIDs() (ids []int) {
+	for id := range m.labels {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetLabels resets all changes to the "labels" edge.
+func (m *GithubRepositoryMutation) ResetLabels() {
+	m.labels = nil
+	m.clearedlabels = false
+	m.removedlabels = nil
+}
+
+// Where appends a list predicates to the GithubRepositoryMutation builder.
+func (m *GithubRepositoryMutation) Where(ps ...predicate.GithubRepository) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *GithubRepositoryMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (GithubRepository).
+func (m *GithubRepositoryMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *GithubRepositoryMutation) Fields() []string {
+	fields := make([]string, 0, 19)
+	if m.repo_id != nil {
+		fields = append(fields, githubrepository.FieldRepoID)
+	}
+	if m.name != nil {
+		fields = append(fields, githubrepository.FieldName)
+	}
+	if m.full_name != nil {
+		fields = append(fields, githubrepository.FieldFullName)
+	}
+	if m.owner_login != nil {
+		fields = append(fields, githubrepository.FieldOwnerLogin)
+	}
+	if m.owner != nil {
+		fields = append(fields, githubrepository.FieldOwner)
+	}
+	if m.public != nil {
+		fields = append(fields, githubrepository.FieldPublic)
+	}
+	if m.html_url != nil {
+		fields = append(fields, githubrepository.FieldHTMLURL)
+	}
+	if m.description != nil {
+		fields = append(fields, githubrepository.FieldDescription)
+	}
+	if m.fork != nil {
+		fields = append(fields, githubrepository.FieldFork)
+	}
+	if m.homepage != nil {
+		fields = append(fields, githubrepository.FieldHomepage)
+	}
+	if m.star_count != nil {
+		fields = append(fields, githubrepository.FieldStarCount)
+	}
+	if m.default_branch != nil {
+		fields = append(fields, githubrepository.FieldDefaultBranch)
+	}
+	if m.is_template != nil {
+		fields = append(fields, githubrepository.FieldIsTemplate)
+	}
+	if m.has_issues != nil {
+		fields = append(fields, githubrepository.FieldHasIssues)
+	}
+	if m.archived != nil {
+		fields = append(fields, githubrepository.FieldArchived)
+	}
+	if m.pushed_at != nil {
+		fields = append(fields, githubrepository.FieldPushedAt)
+	}
+	if m.created_at != nil {
+		fields = append(fields, githubrepository.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, githubrepository.FieldUpdatedAt)
+	}
+	if m.license != nil {
+		fields = append(fields, githubrepository.FieldLicense)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *GithubRepositoryMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case githubrepository.FieldRepoID:
+		return m.RepoID()
+	case githubrepository.FieldName:
+		return m.Name()
+	case githubrepository.FieldFullName:
+		return m.FullName()
+	case githubrepository.FieldOwnerLogin:
+		return m.OwnerLogin()
+	case githubrepository.FieldOwner:
+		return m.Owner()
+	case githubrepository.FieldPublic:
+		return m.Public()
+	case githubrepository.FieldHTMLURL:
+		return m.HTMLURL()
+	case githubrepository.FieldDescription:
+		return m.Description()
+	case githubrepository.FieldFork:
+		return m.Fork()
+	case githubrepository.FieldHomepage:
+		return m.Homepage()
+	case githubrepository.FieldStarCount:
+		return m.StarCount()
+	case githubrepository.FieldDefaultBranch:
+		return m.DefaultBranch()
+	case githubrepository.FieldIsTemplate:
+		return m.IsTemplate()
+	case githubrepository.FieldHasIssues:
+		return m.HasIssues()
+	case githubrepository.FieldArchived:
+		return m.Archived()
+	case githubrepository.FieldPushedAt:
+		return m.PushedAt()
+	case githubrepository.FieldCreatedAt:
+		return m.CreatedAt()
+	case githubrepository.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case githubrepository.FieldLicense:
+		return m.License()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *GithubRepositoryMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case githubrepository.FieldRepoID:
+		return m.OldRepoID(ctx)
+	case githubrepository.FieldName:
+		return m.OldName(ctx)
+	case githubrepository.FieldFullName:
+		return m.OldFullName(ctx)
+	case githubrepository.FieldOwnerLogin:
+		return m.OldOwnerLogin(ctx)
+	case githubrepository.FieldOwner:
+		return m.OldOwner(ctx)
+	case githubrepository.FieldPublic:
+		return m.OldPublic(ctx)
+	case githubrepository.FieldHTMLURL:
+		return m.OldHTMLURL(ctx)
+	case githubrepository.FieldDescription:
+		return m.OldDescription(ctx)
+	case githubrepository.FieldFork:
+		return m.OldFork(ctx)
+	case githubrepository.FieldHomepage:
+		return m.OldHomepage(ctx)
+	case githubrepository.FieldStarCount:
+		return m.OldStarCount(ctx)
+	case githubrepository.FieldDefaultBranch:
+		return m.OldDefaultBranch(ctx)
+	case githubrepository.FieldIsTemplate:
+		return m.OldIsTemplate(ctx)
+	case githubrepository.FieldHasIssues:
+		return m.OldHasIssues(ctx)
+	case githubrepository.FieldArchived:
+		return m.OldArchived(ctx)
+	case githubrepository.FieldPushedAt:
+		return m.OldPushedAt(ctx)
+	case githubrepository.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case githubrepository.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case githubrepository.FieldLicense:
+		return m.OldLicense(ctx)
+	}
+	return nil, fmt.Errorf("unknown GithubRepository field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubRepositoryMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case githubrepository.FieldRepoID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRepoID(v)
+		return nil
+	case githubrepository.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case githubrepository.FieldFullName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFullName(v)
+		return nil
+	case githubrepository.FieldOwnerLogin:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOwnerLogin(v)
+		return nil
+	case githubrepository.FieldOwner:
+		v, ok := value.(*github.User)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOwner(v)
+		return nil
+	case githubrepository.FieldPublic:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublic(v)
+		return nil
+	case githubrepository.FieldHTMLURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHTMLURL(v)
+		return nil
+	case githubrepository.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case githubrepository.FieldFork:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetFork(v)
+		return nil
+	case githubrepository.FieldHomepage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHomepage(v)
+		return nil
+	case githubrepository.FieldStarCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStarCount(v)
+		return nil
+	case githubrepository.FieldDefaultBranch:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDefaultBranch(v)
+		return nil
+	case githubrepository.FieldIsTemplate:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsTemplate(v)
+		return nil
+	case githubrepository.FieldHasIssues:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHasIssues(v)
+		return nil
+	case githubrepository.FieldArchived:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetArchived(v)
+		return nil
+	case githubrepository.FieldPushedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPushedAt(v)
+		return nil
+	case githubrepository.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case githubrepository.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case githubrepository.FieldLicense:
+		v, ok := value.(*github.License)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLicense(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRepository field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *GithubRepositoryMutation) AddedFields() []string {
+	var fields []string
+	if m.addrepo_id != nil {
+		fields = append(fields, githubrepository.FieldRepoID)
+	}
+	if m.addstar_count != nil {
+		fields = append(fields, githubrepository.FieldStarCount)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *GithubRepositoryMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case githubrepository.FieldRepoID:
+		return m.AddedRepoID()
+	case githubrepository.FieldStarCount:
+		return m.AddedStarCount()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubRepositoryMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case githubrepository.FieldRepoID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddRepoID(v)
+		return nil
+	case githubrepository.FieldStarCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddStarCount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRepository numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *GithubRepositoryMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(githubrepository.FieldDescription) {
+		fields = append(fields, githubrepository.FieldDescription)
+	}
+	if m.FieldCleared(githubrepository.FieldHomepage) {
+		fields = append(fields, githubrepository.FieldHomepage)
+	}
+	if m.FieldCleared(githubrepository.FieldPushedAt) {
+		fields = append(fields, githubrepository.FieldPushedAt)
+	}
+	if m.FieldCleared(githubrepository.FieldUpdatedAt) {
+		fields = append(fields, githubrepository.FieldUpdatedAt)
+	}
+	if m.FieldCleared(githubrepository.FieldLicense) {
+		fields = append(fields, githubrepository.FieldLicense)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *GithubRepositoryMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GithubRepositoryMutation) ClearField(name string) error {
+	switch name {
+	case githubrepository.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case githubrepository.FieldHomepage:
+		m.ClearHomepage()
+		return nil
+	case githubrepository.FieldPushedAt:
+		m.ClearPushedAt()
+		return nil
+	case githubrepository.FieldUpdatedAt:
+		m.ClearUpdatedAt()
+		return nil
+	case githubrepository.FieldLicense:
+		m.ClearLicense()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRepository nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *GithubRepositoryMutation) ResetField(name string) error {
+	switch name {
+	case githubrepository.FieldRepoID:
+		m.ResetRepoID()
+		return nil
+	case githubrepository.FieldName:
+		m.ResetName()
+		return nil
+	case githubrepository.FieldFullName:
+		m.ResetFullName()
+		return nil
+	case githubrepository.FieldOwnerLogin:
+		m.ResetOwnerLogin()
+		return nil
+	case githubrepository.FieldOwner:
+		m.ResetOwner()
+		return nil
+	case githubrepository.FieldPublic:
+		m.ResetPublic()
+		return nil
+	case githubrepository.FieldHTMLURL:
+		m.ResetHTMLURL()
+		return nil
+	case githubrepository.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case githubrepository.FieldFork:
+		m.ResetFork()
+		return nil
+	case githubrepository.FieldHomepage:
+		m.ResetHomepage()
+		return nil
+	case githubrepository.FieldStarCount:
+		m.ResetStarCount()
+		return nil
+	case githubrepository.FieldDefaultBranch:
+		m.ResetDefaultBranch()
+		return nil
+	case githubrepository.FieldIsTemplate:
+		m.ResetIsTemplate()
+		return nil
+	case githubrepository.FieldHasIssues:
+		m.ResetHasIssues()
+		return nil
+	case githubrepository.FieldArchived:
+		m.ResetArchived()
+		return nil
+	case githubrepository.FieldPushedAt:
+		m.ResetPushedAt()
+		return nil
+	case githubrepository.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case githubrepository.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case githubrepository.FieldLicense:
+		m.ResetLicense()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRepository field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *GithubRepositoryMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.labels != nil {
+		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *GithubRepositoryMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case githubrepository.EdgeLabels:
+		ids := make([]ent.Value, 0, len(m.labels))
+		for id := range m.labels {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *GithubRepositoryMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.removedlabels != nil {
+		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *GithubRepositoryMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case githubrepository.EdgeLabels:
+		ids := make([]ent.Value, 0, len(m.removedlabels))
+		for id := range m.removedlabels {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *GithubRepositoryMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedlabels {
+		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *GithubRepositoryMutation) EdgeCleared(name string) bool {
+	switch name {
+	case githubrepository.EdgeLabels:
+		return m.clearedlabels
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *GithubRepositoryMutation) ClearEdge(name string) error {
+	switch name {
+	}
+	return fmt.Errorf("unknown GithubRepository unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *GithubRepositoryMutation) ResetEdge(name string) error {
+	switch name {
+	case githubrepository.EdgeLabels:
+		m.ResetLabels()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRepository edge %s", name)
+}
+
 // LabelMutation represents an operation that mutates the Label nodes in the graph.
 type LabelMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *int
-	create_time   *time.Time
-	update_time   *time.Time
-	name          *string
-	clearedFields map[string]struct{}
-	posts         map[int]struct{}
-	removedposts  map[int]struct{}
-	clearedposts  bool
-	done          bool
-	oldValue      func(context.Context) (*Label, error)
-	predicates    []predicate.Label
+	op                         Op
+	typ                        string
+	id                         *int
+	create_time                *time.Time
+	update_time                *time.Time
+	name                       *string
+	clearedFields              map[string]struct{}
+	posts                      map[int]struct{}
+	removedposts               map[int]struct{}
+	clearedposts               bool
+	github_repositories        map[int]struct{}
+	removedgithub_repositories map[int]struct{}
+	clearedgithub_repositories bool
+	done                       bool
+	oldValue                   func(context.Context) (*Label, error)
+	predicates                 []predicate.Label
 }
 
 var _ ent.Mutation = (*LabelMutation)(nil)
@@ -1128,6 +2676,60 @@ func (m *LabelMutation) ResetPosts() {
 	m.removedposts = nil
 }
 
+// AddGithubRepositoryIDs adds the "github_repositories" edge to the GithubRepository entity by ids.
+func (m *LabelMutation) AddGithubRepositoryIDs(ids ...int) {
+	if m.github_repositories == nil {
+		m.github_repositories = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.github_repositories[ids[i]] = struct{}{}
+	}
+}
+
+// ClearGithubRepositories clears the "github_repositories" edge to the GithubRepository entity.
+func (m *LabelMutation) ClearGithubRepositories() {
+	m.clearedgithub_repositories = true
+}
+
+// GithubRepositoriesCleared reports if the "github_repositories" edge to the GithubRepository entity was cleared.
+func (m *LabelMutation) GithubRepositoriesCleared() bool {
+	return m.clearedgithub_repositories
+}
+
+// RemoveGithubRepositoryIDs removes the "github_repositories" edge to the GithubRepository entity by IDs.
+func (m *LabelMutation) RemoveGithubRepositoryIDs(ids ...int) {
+	if m.removedgithub_repositories == nil {
+		m.removedgithub_repositories = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.github_repositories, ids[i])
+		m.removedgithub_repositories[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedGithubRepositories returns the removed IDs of the "github_repositories" edge to the GithubRepository entity.
+func (m *LabelMutation) RemovedGithubRepositoriesIDs() (ids []int) {
+	for id := range m.removedgithub_repositories {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// GithubRepositoriesIDs returns the "github_repositories" edge IDs in the mutation.
+func (m *LabelMutation) GithubRepositoriesIDs() (ids []int) {
+	for id := range m.github_repositories {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetGithubRepositories resets all changes to the "github_repositories" edge.
+func (m *LabelMutation) ResetGithubRepositories() {
+	m.github_repositories = nil
+	m.clearedgithub_repositories = false
+	m.removedgithub_repositories = nil
+}
+
 // Where appends a list predicates to the LabelMutation builder.
 func (m *LabelMutation) Where(ps ...predicate.Label) {
 	m.predicates = append(m.predicates, ps...)
@@ -1280,9 +2882,12 @@ func (m *LabelMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *LabelMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.posts != nil {
 		edges = append(edges, label.EdgePosts)
+	}
+	if m.github_repositories != nil {
+		edges = append(edges, label.EdgeGithubRepositories)
 	}
 	return edges
 }
@@ -1297,15 +2902,24 @@ func (m *LabelMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case label.EdgeGithubRepositories:
+		ids := make([]ent.Value, 0, len(m.github_repositories))
+		for id := range m.github_repositories {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *LabelMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedposts != nil {
 		edges = append(edges, label.EdgePosts)
+	}
+	if m.removedgithub_repositories != nil {
+		edges = append(edges, label.EdgeGithubRepositories)
 	}
 	return edges
 }
@@ -1320,15 +2934,24 @@ func (m *LabelMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case label.EdgeGithubRepositories:
+		ids := make([]ent.Value, 0, len(m.removedgithub_repositories))
+		for id := range m.removedgithub_repositories {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *LabelMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedposts {
 		edges = append(edges, label.EdgePosts)
+	}
+	if m.clearedgithub_repositories {
+		edges = append(edges, label.EdgeGithubRepositories)
 	}
 	return edges
 }
@@ -1339,6 +2962,8 @@ func (m *LabelMutation) EdgeCleared(name string) bool {
 	switch name {
 	case label.EdgePosts:
 		return m.clearedposts
+	case label.EdgeGithubRepositories:
+		return m.clearedgithub_repositories
 	}
 	return false
 }
@@ -1357,6 +2982,9 @@ func (m *LabelMutation) ResetEdge(name string) error {
 	switch name {
 	case label.EdgePosts:
 		m.ResetPosts()
+		return nil
+	case label.EdgeGithubRepositories:
+		m.ResetGithubRepositories()
 		return nil
 	}
 	return fmt.Errorf("unknown Label edge %s", name)

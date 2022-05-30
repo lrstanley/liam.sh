@@ -18,6 +18,8 @@ type Tx struct {
 	config
 	// GithubEvent is the client for interacting with the GithubEvent builders.
 	GithubEvent *GithubEventClient
+	// GithubRepository is the client for interacting with the GithubRepository builders.
+	GithubRepository *GithubRepositoryClient
 	// Label is the client for interacting with the Label builders.
 	Label *LabelClient
 	// Post is the client for interacting with the Post builders.
@@ -160,6 +162,7 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.GithubEvent = NewGithubEventClient(tx.config)
+	tx.GithubRepository = NewGithubRepositoryClient(tx.config)
 	tx.Label = NewLabelClient(tx.config)
 	tx.Post = NewPostClient(tx.config)
 	tx.User = NewUserClient(tx.config)

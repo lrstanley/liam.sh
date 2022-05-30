@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	reLabel = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{1,30}$`)
+	reLabel = regexp.MustCompile(`^[a-z\d][a-z\d-]*$`)
 )
 
 type Label struct {
@@ -48,6 +48,9 @@ func (Label) Policy() ent.Policy {
 func (Label) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("posts", Post.Type).Annotations(
+			entgql.RelayConnection(),
+		),
+		edge.To("github_repositories", GithubRepository.Type).Annotations(
 			entgql.RelayConnection(),
 		),
 	}

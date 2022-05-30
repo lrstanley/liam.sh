@@ -1,3 +1,12 @@
+extend type Query {
+    githubUser: GithubUser!
+}
+
+# the Github API client aliases the time.Time type.
+type Timestamp {
+    Time: Time!
+}
+
 type GithubUser {
     id: Int!
     login: String!
@@ -14,33 +23,15 @@ type GithubUser {
     updatedAt: Timestamp
 }
 
-type GithubRepository {
+type GithubEventRepo {
     id: Int!
-    owner: GithubUser
     name: String!
-    fullName: String
-    description: String
-    homepage: String
-    defaultBranch: String
-    createdAt: Timestamp
-    pushedAt: Timestamp
-    updatedAt: Timestamp
-    htmlURL: String
-    fork: Boolean
-    forksCount: Int
-    stargazersCount: Int
-    topics: [String!]
-    archived: Boolean
-    disabled: Boolean
-    private: Boolean
     url: String!
 }
 
-extend type Query {
-    githubUser: GithubUser!
-}
-
-# the Github API client aliases the time.Time type.
-type Timestamp {
-    Time: Time!
+type GithubLicense {
+    key: String!
+    name: String!
+    spdxId: String
+    htmlURL: String!
 }

@@ -31,6 +31,35 @@ var (
 		Columns:    GithubEventsColumns,
 		PrimaryKey: []*schema.Column{GithubEventsColumns[0]},
 	}
+	// GithubRepositoriesColumns holds the columns for the "github_repositories" table.
+	GithubRepositoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "repo_id", Type: field.TypeInt64, Unique: true},
+		{Name: "name", Type: field.TypeString},
+		{Name: "full_name", Type: field.TypeString},
+		{Name: "owner_login", Type: field.TypeString},
+		{Name: "owner", Type: field.TypeJSON},
+		{Name: "public", Type: field.TypeBool, Default: false},
+		{Name: "html_url", Type: field.TypeString},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "fork", Type: field.TypeBool, Default: false},
+		{Name: "homepage", Type: field.TypeString, Nullable: true},
+		{Name: "star_count", Type: field.TypeInt, Default: 0},
+		{Name: "default_branch", Type: field.TypeString},
+		{Name: "is_template", Type: field.TypeBool, Default: false},
+		{Name: "has_issues", Type: field.TypeBool, Default: true},
+		{Name: "archived", Type: field.TypeBool, Default: false},
+		{Name: "pushed_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "license", Type: field.TypeJSON, Nullable: true},
+	}
+	// GithubRepositoriesTable holds the schema information for the "github_repositories" table.
+	GithubRepositoriesTable = &schema.Table{
+		Name:       "github_repositories",
+		Columns:    GithubRepositoriesColumns,
+		PrimaryKey: []*schema.Column{GithubRepositoriesColumns[0]},
+	}
 	// LabelsColumns holds the columns for the "labels" table.
 	LabelsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -117,13 +146,40 @@ var (
 			},
 		},
 	}
+	// LabelGithubRepositoriesColumns holds the columns for the "label_github_repositories" table.
+	LabelGithubRepositoriesColumns = []*schema.Column{
+		{Name: "label_id", Type: field.TypeInt},
+		{Name: "github_repository_id", Type: field.TypeInt},
+	}
+	// LabelGithubRepositoriesTable holds the schema information for the "label_github_repositories" table.
+	LabelGithubRepositoriesTable = &schema.Table{
+		Name:       "label_github_repositories",
+		Columns:    LabelGithubRepositoriesColumns,
+		PrimaryKey: []*schema.Column{LabelGithubRepositoriesColumns[0], LabelGithubRepositoriesColumns[1]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "label_github_repositories_label_id",
+				Columns:    []*schema.Column{LabelGithubRepositoriesColumns[0]},
+				RefColumns: []*schema.Column{LabelsColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+			{
+				Symbol:     "label_github_repositories_github_repository_id",
+				Columns:    []*schema.Column{LabelGithubRepositoriesColumns[1]},
+				RefColumns: []*schema.Column{GithubRepositoriesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		GithubEventsTable,
+		GithubRepositoriesTable,
 		LabelsTable,
 		PostsTable,
 		UsersTable,
 		LabelPostsTable,
+		LabelGithubRepositoriesTable,
 	}
 )
 
@@ -131,4 +187,6 @@ func init() {
 	PostsTable.ForeignKeys[0].RefTable = UsersTable
 	LabelPostsTable.ForeignKeys[0].RefTable = LabelsTable
 	LabelPostsTable.ForeignKeys[1].RefTable = PostsTable
+	LabelGithubRepositoriesTable.ForeignKeys[0].RefTable = LabelsTable
+	LabelGithubRepositoriesTable.ForeignKeys[1].RefTable = GithubRepositoriesTable
 }

@@ -13,6 +13,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -82,6 +83,181 @@ func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateA
 	}
 	if v, ok := rv[whereField].(*GithubEventWhereInput); ok {
 		args.opts = append(args.opts, WithGithubEventFilter(v.Filter))
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (gr *GithubRepositoryQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubRepositoryQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return gr, nil
+	}
+	if err := gr.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return gr, nil
+}
+
+func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+		switch field.Name {
+		case "labels":
+			var (
+				path  = append(path, field.Name)
+				query = &LabelQuery{config: gr.config}
+			)
+			args := newLabelPaginateArgs(fieldArgs(ctx, new(LabelWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newLabelPager(args.opts)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
+				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+					query := query.Clone()
+					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID int `sql:"github_repository_id"`
+							Count  int `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							joinT := sql.Table(githubrepository.LabelsTable)
+							s.Join(joinT).On(s.C(label.FieldID), joinT.C(githubrepository.LabelsPrimaryKey[0]))
+							s.Where(sql.InValues(joinT.C(githubrepository.LabelsPrimaryKey[1]), ids...))
+							s.Select(joinT.C(githubrepository.LabelsPrimaryKey[1]), sql.Count("*"))
+							s.GroupBy(joinT.C(githubrepository.LabelsPrimaryKey[1]))
+						})
+						if err := query.Select().Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[int]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							nodes[i].Edges.totalCount[0] = &n
+						}
+						return nil
+					})
+				}
+				continue
+			}
+			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
+				query := query.Clone()
+				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
+					ids := make([]driver.Value, len(nodes))
+					for i := range nodes {
+						ids[i] = nodes[i].ID
+					}
+					var v []struct {
+						NodeID int `sql:"github_repository_id"`
+						Count  int `sql:"count"`
+					}
+					query.Where(func(s *sql.Selector) {
+						joinT := sql.Table(githubrepository.LabelsTable)
+						s.Join(joinT).On(s.C(label.FieldID), joinT.C(githubrepository.LabelsPrimaryKey[0]))
+						s.Where(sql.InValues(joinT.C(githubrepository.LabelsPrimaryKey[1]), ids...))
+						s.Select(joinT.C(githubrepository.LabelsPrimaryKey[1]), sql.Count("*"))
+						s.GroupBy(joinT.C(githubrepository.LabelsPrimaryKey[1]))
+					})
+					if err := query.Select().Scan(ctx, &v); err != nil {
+						return err
+					}
+					m := make(map[int]int, len(v))
+					for i := range v {
+						m[v[i].NodeID] = v[i].Count
+					}
+					for i := range nodes {
+						n := m[nodes[i].ID]
+						nodes[i].Edges.totalCount[0] = &n
+					}
+					return nil
+				})
+			} else {
+				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
+					for i := range nodes {
+						n := len(nodes[i].Edges.Labels)
+						nodes[i].Edges.totalCount[0] = &n
+					}
+					return nil
+				})
+			}
+			query = pager.applyCursors(query, args.after, args.before)
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(args.last != nil))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query, args.last != nil)
+			}
+			path = append(path, edgesField, nodeField)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			gr.withLabels = query
+		}
+	}
+	return nil
+}
+
+type githubrepositoryPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []GithubRepositoryPaginateOption
+}
+
+func newGithubRepositoryPaginateArgs(rv map[string]interface{}) *githubrepositoryPaginateArgs {
+	args := &githubrepositoryPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]interface{}:
+			var (
+				err1, err2 error
+				order      = &GithubRepositoryOrder{Field: &GithubRepositoryOrderField{}}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithGithubRepositoryOrder(order))
+			}
+		case *GithubRepositoryOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithGithubRepositoryOrder(v))
+			}
+		}
+	}
+	if v, ok := rv[whereField].(*GithubRepositoryWhereInput); ok {
+		args.opts = append(args.opts, WithGithubRepositoryFilter(v.Filter))
 	}
 	return args
 }
@@ -205,6 +381,109 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				return err
 			}
 			l.withPosts = query
+		case "githubRepositories", "github_repositories":
+			var (
+				path  = append(path, field.Name)
+				query = &GithubRepositoryQuery{config: l.config}
+			)
+			args := newGithubRepositoryPaginateArgs(fieldArgs(ctx, new(GithubRepositoryWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newGithubRepositoryPager(args.opts)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
+				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+					query := query.Clone()
+					l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID int `sql:"label_id"`
+							Count  int `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							joinT := sql.Table(label.GithubRepositoriesTable)
+							s.Join(joinT).On(s.C(githubrepository.FieldID), joinT.C(label.GithubRepositoriesPrimaryKey[1]))
+							s.Where(sql.InValues(joinT.C(label.GithubRepositoriesPrimaryKey[0]), ids...))
+							s.Select(joinT.C(label.GithubRepositoriesPrimaryKey[0]), sql.Count("*"))
+							s.GroupBy(joinT.C(label.GithubRepositoriesPrimaryKey[0]))
+						})
+						if err := query.Select().Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[int]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							nodes[i].Edges.totalCount[1] = &n
+						}
+						return nil
+					})
+				}
+				continue
+			}
+			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
+				query := query.Clone()
+				l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
+					ids := make([]driver.Value, len(nodes))
+					for i := range nodes {
+						ids[i] = nodes[i].ID
+					}
+					var v []struct {
+						NodeID int `sql:"label_id"`
+						Count  int `sql:"count"`
+					}
+					query.Where(func(s *sql.Selector) {
+						joinT := sql.Table(label.GithubRepositoriesTable)
+						s.Join(joinT).On(s.C(githubrepository.FieldID), joinT.C(label.GithubRepositoriesPrimaryKey[1]))
+						s.Where(sql.InValues(joinT.C(label.GithubRepositoriesPrimaryKey[0]), ids...))
+						s.Select(joinT.C(label.GithubRepositoriesPrimaryKey[0]), sql.Count("*"))
+						s.GroupBy(joinT.C(label.GithubRepositoriesPrimaryKey[0]))
+					})
+					if err := query.Select().Scan(ctx, &v); err != nil {
+						return err
+					}
+					m := make(map[int]int, len(v))
+					for i := range v {
+						m[v[i].NodeID] = v[i].Count
+					}
+					for i := range nodes {
+						n := m[nodes[i].ID]
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			} else {
+				l.loadTotal = append(l.loadTotal, func(_ context.Context, nodes []*Label) error {
+					for i := range nodes {
+						n := len(nodes[i].Edges.GithubRepositories)
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			}
+			query = pager.applyCursors(query, args.after, args.before)
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(args.last != nil))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query, args.last != nil)
+			}
+			path = append(path, edgesField, nodeField)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			l.withGithubRepositories = query
 		}
 	}
 	return nil

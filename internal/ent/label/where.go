@@ -409,6 +409,34 @@ func HasPostsWith(preds ...predicate.Post) predicate.Label {
 	})
 }
 
+// HasGithubRepositories applies the HasEdge predicate on the "github_repositories" edge.
+func HasGithubRepositories() predicate.Label {
+	return predicate.Label(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(GithubRepositoriesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, GithubRepositoriesTable, GithubRepositoriesPrimaryKey...),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasGithubRepositoriesWith applies the HasEdge predicate on the "github_repositories" edge with a given conditions (other predicates).
+func HasGithubRepositoriesWith(preds ...predicate.GithubRepository) predicate.Label {
+	return predicate.Label(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(GithubRepositoriesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, GithubRepositoriesTable, GithubRepositoriesPrimaryKey...),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.Label) predicate.Label {
 	return predicate.Label(func(s *sql.Selector) {

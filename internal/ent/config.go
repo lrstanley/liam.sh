@@ -28,10 +28,11 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
-	GithubEvent []ent.Hook
-	Label       []ent.Hook
-	Post        []ent.Hook
-	User        []ent.Hook
+	GithubEvent      []ent.Hook
+	GithubRepository []ent.Hook
+	Label            []ent.Hook
+	Post             []ent.Hook
+	User             []ent.Hook
 }
 
 // Options applies the options on the config object.

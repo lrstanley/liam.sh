@@ -26,6 +26,19 @@ func (f GithubEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return f(ctx, mv)
 }
 
+// The GithubRepositoryFunc type is an adapter to allow the use of ordinary
+// function as GithubRepository mutator.
+type GithubRepositoryFunc func(context.Context, *ent.GithubRepositoryMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GithubRepositoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GithubRepositoryMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubRepositoryMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The LabelFunc type is an adapter to allow the use of ordinary
 // function as Label mutator.
 type LabelFunc func(context.Context, *ent.LabelMutation) (ent.Value, error)

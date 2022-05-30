@@ -14,6 +14,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/migrate"
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -30,6 +31,8 @@ type Client struct {
 	Schema *migrate.Schema
 	// GithubEvent is the client for interacting with the GithubEvent builders.
 	GithubEvent *GithubEventClient
+	// GithubRepository is the client for interacting with the GithubRepository builders.
+	GithubRepository *GithubRepositoryClient
 	// Label is the client for interacting with the Label builders.
 	Label *LabelClient
 	// Post is the client for interacting with the Post builders.
@@ -52,6 +55,7 @@ func NewClient(opts ...Option) *Client {
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.GithubEvent = NewGithubEventClient(c.config)
+	c.GithubRepository = NewGithubRepositoryClient(c.config)
 	c.Label = NewLabelClient(c.config)
 	c.Post = NewPostClient(c.config)
 	c.User = NewUserClient(c.config)
@@ -86,12 +90,13 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		GithubEvent: NewGithubEventClient(cfg),
-		Label:       NewLabelClient(cfg),
-		Post:        NewPostClient(cfg),
-		User:        NewUserClient(cfg),
+		ctx:              ctx,
+		config:           cfg,
+		GithubEvent:      NewGithubEventClient(cfg),
+		GithubRepository: NewGithubRepositoryClient(cfg),
+		Label:            NewLabelClient(cfg),
+		Post:             NewPostClient(cfg),
+		User:             NewUserClient(cfg),
 	}, nil
 }
 
@@ -109,12 +114,13 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:         ctx,
-		config:      cfg,
-		GithubEvent: NewGithubEventClient(cfg),
-		Label:       NewLabelClient(cfg),
-		Post:        NewPostClient(cfg),
-		User:        NewUserClient(cfg),
+		ctx:              ctx,
+		config:           cfg,
+		GithubEvent:      NewGithubEventClient(cfg),
+		GithubRepository: NewGithubRepositoryClient(cfg),
+		Label:            NewLabelClient(cfg),
+		Post:             NewPostClient(cfg),
+		User:             NewUserClient(cfg),
 	}, nil
 }
 
@@ -145,6 +151,7 @@ func (c *Client) Close() error {
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
 	c.GithubEvent.Use(hooks...)
+	c.GithubRepository.Use(hooks...)
 	c.Label.Use(hooks...)
 	c.Post.Use(hooks...)
 	c.User.Use(hooks...)
@@ -241,6 +248,113 @@ func (c *GithubEventClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubevent.Hooks[:]...)
 }
 
+// GithubRepositoryClient is a client for the GithubRepository schema.
+type GithubRepositoryClient struct {
+	config
+}
+
+// NewGithubRepositoryClient returns a client for the GithubRepository from the given config.
+func NewGithubRepositoryClient(c config) *GithubRepositoryClient {
+	return &GithubRepositoryClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `githubrepository.Hooks(f(g(h())))`.
+func (c *GithubRepositoryClient) Use(hooks ...Hook) {
+	c.hooks.GithubRepository = append(c.hooks.GithubRepository, hooks...)
+}
+
+// Create returns a create builder for GithubRepository.
+func (c *GithubRepositoryClient) Create() *GithubRepositoryCreate {
+	mutation := newGithubRepositoryMutation(c.config, OpCreate)
+	return &GithubRepositoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GithubRepository entities.
+func (c *GithubRepositoryClient) CreateBulk(builders ...*GithubRepositoryCreate) *GithubRepositoryCreateBulk {
+	return &GithubRepositoryCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GithubRepository.
+func (c *GithubRepositoryClient) Update() *GithubRepositoryUpdate {
+	mutation := newGithubRepositoryMutation(c.config, OpUpdate)
+	return &GithubRepositoryUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GithubRepositoryClient) UpdateOne(gr *GithubRepository) *GithubRepositoryUpdateOne {
+	mutation := newGithubRepositoryMutation(c.config, OpUpdateOne, withGithubRepository(gr))
+	return &GithubRepositoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GithubRepositoryClient) UpdateOneID(id int) *GithubRepositoryUpdateOne {
+	mutation := newGithubRepositoryMutation(c.config, OpUpdateOne, withGithubRepositoryID(id))
+	return &GithubRepositoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GithubRepository.
+func (c *GithubRepositoryClient) Delete() *GithubRepositoryDelete {
+	mutation := newGithubRepositoryMutation(c.config, OpDelete)
+	return &GithubRepositoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a delete builder for the given entity.
+func (c *GithubRepositoryClient) DeleteOne(gr *GithubRepository) *GithubRepositoryDeleteOne {
+	return c.DeleteOneID(gr.ID)
+}
+
+// DeleteOneID returns a delete builder for the given id.
+func (c *GithubRepositoryClient) DeleteOneID(id int) *GithubRepositoryDeleteOne {
+	builder := c.Delete().Where(githubrepository.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GithubRepositoryDeleteOne{builder}
+}
+
+// Query returns a query builder for GithubRepository.
+func (c *GithubRepositoryClient) Query() *GithubRepositoryQuery {
+	return &GithubRepositoryQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GithubRepository entity by its id.
+func (c *GithubRepositoryClient) Get(ctx context.Context, id int) (*GithubRepository, error) {
+	return c.Query().Where(githubrepository.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GithubRepositoryClient) GetX(ctx context.Context, id int) *GithubRepository {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryLabels queries the labels edge of a GithubRepository.
+func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
+	query := &LabelQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := gr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(githubrepository.Table, githubrepository.FieldID, id),
+			sqlgraph.To(label.Table, label.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, githubrepository.LabelsTable, githubrepository.LabelsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *GithubRepositoryClient) Hooks() []Hook {
+	hooks := c.hooks.GithubRepository
+	return append(hooks[:len(hooks):len(hooks)], githubrepository.Hooks[:]...)
+}
+
 // LabelClient is a client for the Label schema.
 type LabelClient struct {
 	config
@@ -335,6 +449,22 @@ func (c *LabelClient) QueryPosts(l *Label) *PostQuery {
 			sqlgraph.From(label.Table, label.FieldID, id),
 			sqlgraph.To(post.Table, post.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, label.PostsTable, label.PostsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryGithubRepositories queries the github_repositories edge of a Label.
+func (c *LabelClient) QueryGithubRepositories(l *Label) *GithubRepositoryQuery {
+	query := &GithubRepositoryQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := l.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(label.Table, label.FieldID, id),
+			sqlgraph.To(githubrepository.Table, githubrepository.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, label.GithubRepositoriesTable, label.GithubRepositoriesPrimaryKey...),
 		)
 		fromV = sqlgraph.Neighbors(l.driver.Dialect(), step)
 		return fromV, nil

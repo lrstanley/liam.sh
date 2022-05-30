@@ -15,6 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -60,6 +61,21 @@ func (lu *LabelUpdate) AddPosts(p ...*Post) *LabelUpdate {
 	return lu.AddPostIDs(ids...)
 }
 
+// AddGithubRepositoryIDs adds the "github_repositories" edge to the GithubRepository entity by IDs.
+func (lu *LabelUpdate) AddGithubRepositoryIDs(ids ...int) *LabelUpdate {
+	lu.mutation.AddGithubRepositoryIDs(ids...)
+	return lu
+}
+
+// AddGithubRepositories adds the "github_repositories" edges to the GithubRepository entity.
+func (lu *LabelUpdate) AddGithubRepositories(g ...*GithubRepository) *LabelUpdate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return lu.AddGithubRepositoryIDs(ids...)
+}
+
 // Mutation returns the LabelMutation object of the builder.
 func (lu *LabelUpdate) Mutation() *LabelMutation {
 	return lu.mutation
@@ -84,6 +100,27 @@ func (lu *LabelUpdate) RemovePosts(p ...*Post) *LabelUpdate {
 		ids[i] = p[i].ID
 	}
 	return lu.RemovePostIDs(ids...)
+}
+
+// ClearGithubRepositories clears all "github_repositories" edges to the GithubRepository entity.
+func (lu *LabelUpdate) ClearGithubRepositories() *LabelUpdate {
+	lu.mutation.ClearGithubRepositories()
+	return lu
+}
+
+// RemoveGithubRepositoryIDs removes the "github_repositories" edge to GithubRepository entities by IDs.
+func (lu *LabelUpdate) RemoveGithubRepositoryIDs(ids ...int) *LabelUpdate {
+	lu.mutation.RemoveGithubRepositoryIDs(ids...)
+	return lu
+}
+
+// RemoveGithubRepositories removes "github_repositories" edges to GithubRepository entities.
+func (lu *LabelUpdate) RemoveGithubRepositories(g ...*GithubRepository) *LabelUpdate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return lu.RemoveGithubRepositoryIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -257,6 +294,60 @@ func (lu *LabelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if lu.mutation.GithubRepositoriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.RemovedGithubRepositoriesIDs(); len(nodes) > 0 && !lu.mutation.GithubRepositoriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := lu.mutation.GithubRepositoriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, lu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{label.Label}
@@ -303,6 +394,21 @@ func (luo *LabelUpdateOne) AddPosts(p ...*Post) *LabelUpdateOne {
 	return luo.AddPostIDs(ids...)
 }
 
+// AddGithubRepositoryIDs adds the "github_repositories" edge to the GithubRepository entity by IDs.
+func (luo *LabelUpdateOne) AddGithubRepositoryIDs(ids ...int) *LabelUpdateOne {
+	luo.mutation.AddGithubRepositoryIDs(ids...)
+	return luo
+}
+
+// AddGithubRepositories adds the "github_repositories" edges to the GithubRepository entity.
+func (luo *LabelUpdateOne) AddGithubRepositories(g ...*GithubRepository) *LabelUpdateOne {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return luo.AddGithubRepositoryIDs(ids...)
+}
+
 // Mutation returns the LabelMutation object of the builder.
 func (luo *LabelUpdateOne) Mutation() *LabelMutation {
 	return luo.mutation
@@ -327,6 +433,27 @@ func (luo *LabelUpdateOne) RemovePosts(p ...*Post) *LabelUpdateOne {
 		ids[i] = p[i].ID
 	}
 	return luo.RemovePostIDs(ids...)
+}
+
+// ClearGithubRepositories clears all "github_repositories" edges to the GithubRepository entity.
+func (luo *LabelUpdateOne) ClearGithubRepositories() *LabelUpdateOne {
+	luo.mutation.ClearGithubRepositories()
+	return luo
+}
+
+// RemoveGithubRepositoryIDs removes the "github_repositories" edge to GithubRepository entities by IDs.
+func (luo *LabelUpdateOne) RemoveGithubRepositoryIDs(ids ...int) *LabelUpdateOne {
+	luo.mutation.RemoveGithubRepositoryIDs(ids...)
+	return luo
+}
+
+// RemoveGithubRepositories removes "github_repositories" edges to GithubRepository entities.
+func (luo *LabelUpdateOne) RemoveGithubRepositories(g ...*GithubRepository) *LabelUpdateOne {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return luo.RemoveGithubRepositoryIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -522,6 +649,60 @@ func (luo *LabelUpdateOne) sqlSave(ctx context.Context) (_node *Label, err error
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if luo.mutation.GithubRepositoriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.RemovedGithubRepositoriesIDs(); len(nodes) > 0 && !luo.mutation.GithubRepositoriesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := luo.mutation.GithubRepositoriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
 				},
 			},
 		}

@@ -19,6 +19,7 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -577,6 +578,366 @@ func (ge *GithubEvent) ToEdge(order *GithubEventOrder) *GithubEventEdge {
 	return &GithubEventEdge{
 		Node:   ge,
 		Cursor: order.Field.toCursor(ge),
+	}
+}
+
+// GithubRepositoryEdge is the edge representation of GithubRepository.
+type GithubRepositoryEdge struct {
+	Node   *GithubRepository `json:"node"`
+	Cursor Cursor            `json:"cursor"`
+}
+
+// GithubRepositoryConnection is the connection containing edges to GithubRepository.
+type GithubRepositoryConnection struct {
+	Edges      []*GithubRepositoryEdge `json:"edges"`
+	PageInfo   PageInfo                `json:"pageInfo"`
+	TotalCount int                     `json:"totalCount"`
+}
+
+func (c *GithubRepositoryConnection) build(nodes []*GithubRepository, pager *githubrepositoryPager, first, last *int) {
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *GithubRepository
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *GithubRepository {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *GithubRepository {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*GithubRepositoryEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &GithubRepositoryEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// GithubRepositoryPaginateOption enables pagination customization.
+type GithubRepositoryPaginateOption func(*githubrepositoryPager) error
+
+// WithGithubRepositoryOrder configures pagination ordering.
+func WithGithubRepositoryOrder(order *GithubRepositoryOrder) GithubRepositoryPaginateOption {
+	if order == nil {
+		order = DefaultGithubRepositoryOrder
+	}
+	o := *order
+	return func(pager *githubrepositoryPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultGithubRepositoryOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithGithubRepositoryFilter configures pagination filter.
+func WithGithubRepositoryFilter(filter func(*GithubRepositoryQuery) (*GithubRepositoryQuery, error)) GithubRepositoryPaginateOption {
+	return func(pager *githubrepositoryPager) error {
+		if filter == nil {
+			return errors.New("GithubRepositoryQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type githubrepositoryPager struct {
+	order  *GithubRepositoryOrder
+	filter func(*GithubRepositoryQuery) (*GithubRepositoryQuery, error)
+}
+
+func newGithubRepositoryPager(opts []GithubRepositoryPaginateOption) (*githubrepositoryPager, error) {
+	pager := &githubrepositoryPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultGithubRepositoryOrder
+	}
+	return pager, nil
+}
+
+func (p *githubrepositoryPager) applyFilter(query *GithubRepositoryQuery) (*GithubRepositoryQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *githubrepositoryPager) toCursor(gr *GithubRepository) Cursor {
+	return p.order.Field.toCursor(gr)
+}
+
+func (p *githubrepositoryPager) applyCursors(query *GithubRepositoryQuery, after, before *Cursor) *GithubRepositoryQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultGithubRepositoryOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *githubrepositoryPager) applyOrder(query *GithubRepositoryQuery, reverse bool) *GithubRepositoryQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultGithubRepositoryOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultGithubRepositoryOrder.Field.field))
+	}
+	return query
+}
+
+func (p *githubrepositoryPager) orderExpr(reverse bool) sql.Querier {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultGithubRepositoryOrder.Field {
+			b.Comma().Ident(DefaultGithubRepositoryOrder.Field.field).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to GithubRepository.
+func (gr *GithubRepositoryQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...GithubRepositoryPaginateOption,
+) (*GithubRepositoryConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newGithubRepositoryPager(opts)
+	if err != nil {
+		return nil, err
+	}
+	if gr, err = pager.applyFilter(gr); err != nil {
+		return nil, err
+	}
+	conn := &GithubRepositoryConnection{Edges: []*GithubRepositoryEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+			if conn.TotalCount, err = gr.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := gr.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	gr = pager.applyCursors(gr, after, before)
+	gr = pager.applyOrder(gr, last != nil)
+	if limit := paginateLimit(first, last); limit != 0 {
+		gr.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := gr.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+
+	nodes, err := gr.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+	conn.build(nodes, pager, first, last)
+	return conn, nil
+}
+
+var (
+	// GithubRepositoryOrderFieldName orders GithubRepository by name.
+	GithubRepositoryOrderFieldName = &GithubRepositoryOrderField{
+		field: githubrepository.FieldName,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.Name,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldFullName orders GithubRepository by full_name.
+	GithubRepositoryOrderFieldFullName = &GithubRepositoryOrderField{
+		field: githubrepository.FieldFullName,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.FullName,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldOwnerLogin orders GithubRepository by owner_login.
+	GithubRepositoryOrderFieldOwnerLogin = &GithubRepositoryOrderField{
+		field: githubrepository.FieldOwnerLogin,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.OwnerLogin,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldStarCount orders GithubRepository by star_count.
+	GithubRepositoryOrderFieldStarCount = &GithubRepositoryOrderField{
+		field: githubrepository.FieldStarCount,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.StarCount,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldPushedAt orders GithubRepository by pushed_at.
+	GithubRepositoryOrderFieldPushedAt = &GithubRepositoryOrderField{
+		field: githubrepository.FieldPushedAt,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.PushedAt,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldCreatedAt orders GithubRepository by created_at.
+	GithubRepositoryOrderFieldCreatedAt = &GithubRepositoryOrderField{
+		field: githubrepository.FieldCreatedAt,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.CreatedAt,
+			}
+		},
+	}
+	// GithubRepositoryOrderFieldUpdatedAt orders GithubRepository by updated_at.
+	GithubRepositoryOrderFieldUpdatedAt = &GithubRepositoryOrderField{
+		field: githubrepository.FieldUpdatedAt,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.UpdatedAt,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f GithubRepositoryOrderField) String() string {
+	var str string
+	switch f.field {
+	case githubrepository.FieldName:
+		str = "NAME"
+	case githubrepository.FieldFullName:
+		str = "FULL_NAME"
+	case githubrepository.FieldOwnerLogin:
+		str = "OWNER_LOGIN"
+	case githubrepository.FieldStarCount:
+		str = "STAR_COUNT"
+	case githubrepository.FieldPushedAt:
+		str = "PUSHED_AT"
+	case githubrepository.FieldCreatedAt:
+		str = "CREATED_AT"
+	case githubrepository.FieldUpdatedAt:
+		str = "UPDATED_AT"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f GithubRepositoryOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *GithubRepositoryOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("GithubRepositoryOrderField %T must be a string", v)
+	}
+	switch str {
+	case "NAME":
+		*f = *GithubRepositoryOrderFieldName
+	case "FULL_NAME":
+		*f = *GithubRepositoryOrderFieldFullName
+	case "OWNER_LOGIN":
+		*f = *GithubRepositoryOrderFieldOwnerLogin
+	case "STAR_COUNT":
+		*f = *GithubRepositoryOrderFieldStarCount
+	case "PUSHED_AT":
+		*f = *GithubRepositoryOrderFieldPushedAt
+	case "CREATED_AT":
+		*f = *GithubRepositoryOrderFieldCreatedAt
+	case "UPDATED_AT":
+		*f = *GithubRepositoryOrderFieldUpdatedAt
+	default:
+		return fmt.Errorf("%s is not a valid GithubRepositoryOrderField", str)
+	}
+	return nil
+}
+
+// GithubRepositoryOrderField defines the ordering field of GithubRepository.
+type GithubRepositoryOrderField struct {
+	field    string
+	toCursor func(*GithubRepository) Cursor
+}
+
+// GithubRepositoryOrder defines the ordering of GithubRepository.
+type GithubRepositoryOrder struct {
+	Direction OrderDirection              `json:"direction"`
+	Field     *GithubRepositoryOrderField `json:"field"`
+}
+
+// DefaultGithubRepositoryOrder is the default ordering of GithubRepository.
+var DefaultGithubRepositoryOrder = &GithubRepositoryOrder{
+	Direction: OrderDirectionAsc,
+	Field: &GithubRepositoryOrderField{
+		field: githubrepository.FieldID,
+		toCursor: func(gr *GithubRepository) Cursor {
+			return Cursor{ID: gr.ID}
+		},
+	},
+}
+
+// ToEdge converts GithubRepository into GithubRepositoryEdge.
+func (gr *GithubRepository) ToEdge(order *GithubRepositoryOrder) *GithubRepositoryEdge {
+	if order == nil {
+		order = DefaultGithubRepositoryOrder
+	}
+	return &GithubRepositoryEdge{
+		Node:   gr,
+		Cursor: order.Field.toCursor(gr),
 	}
 }
 

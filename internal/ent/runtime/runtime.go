@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/schema"
@@ -47,6 +48,63 @@ func init() {
 	githubeventDescRepoID := githubeventFields[6].Descriptor()
 	// githubevent.RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
 	githubevent.RepoIDValidator = githubeventDescRepoID.Validators[0].(func(int64) error)
+	githubrepository.Policy = privacy.NewPolicies(schema.GithubRepository{})
+	githubrepository.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := githubrepository.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	githubrepositoryFields := schema.GithubRepository{}.Fields()
+	_ = githubrepositoryFields
+	// githubrepositoryDescRepoID is the schema descriptor for repo_id field.
+	githubrepositoryDescRepoID := githubrepositoryFields[0].Descriptor()
+	// githubrepository.RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
+	githubrepository.RepoIDValidator = githubrepositoryDescRepoID.Validators[0].(func(int64) error)
+	// githubrepositoryDescName is the schema descriptor for name field.
+	githubrepositoryDescName := githubrepositoryFields[1].Descriptor()
+	// githubrepository.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	githubrepository.NameValidator = githubrepositoryDescName.Validators[0].(func(string) error)
+	// githubrepositoryDescFullName is the schema descriptor for full_name field.
+	githubrepositoryDescFullName := githubrepositoryFields[2].Descriptor()
+	// githubrepository.FullNameValidator is a validator for the "full_name" field. It is called by the builders before save.
+	githubrepository.FullNameValidator = githubrepositoryDescFullName.Validators[0].(func(string) error)
+	// githubrepositoryDescOwnerLogin is the schema descriptor for owner_login field.
+	githubrepositoryDescOwnerLogin := githubrepositoryFields[3].Descriptor()
+	// githubrepository.OwnerLoginValidator is a validator for the "owner_login" field. It is called by the builders before save.
+	githubrepository.OwnerLoginValidator = githubrepositoryDescOwnerLogin.Validators[0].(func(string) error)
+	// githubrepositoryDescPublic is the schema descriptor for public field.
+	githubrepositoryDescPublic := githubrepositoryFields[5].Descriptor()
+	// githubrepository.DefaultPublic holds the default value on creation for the public field.
+	githubrepository.DefaultPublic = githubrepositoryDescPublic.Default.(bool)
+	// githubrepositoryDescHTMLURL is the schema descriptor for html_url field.
+	githubrepositoryDescHTMLURL := githubrepositoryFields[6].Descriptor()
+	// githubrepository.HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
+	githubrepository.HTMLURLValidator = githubrepositoryDescHTMLURL.Validators[0].(func(string) error)
+	// githubrepositoryDescFork is the schema descriptor for fork field.
+	githubrepositoryDescFork := githubrepositoryFields[8].Descriptor()
+	// githubrepository.DefaultFork holds the default value on creation for the fork field.
+	githubrepository.DefaultFork = githubrepositoryDescFork.Default.(bool)
+	// githubrepositoryDescStarCount is the schema descriptor for star_count field.
+	githubrepositoryDescStarCount := githubrepositoryFields[10].Descriptor()
+	// githubrepository.DefaultStarCount holds the default value on creation for the star_count field.
+	githubrepository.DefaultStarCount = githubrepositoryDescStarCount.Default.(int)
+	// githubrepository.StarCountValidator is a validator for the "star_count" field. It is called by the builders before save.
+	githubrepository.StarCountValidator = githubrepositoryDescStarCount.Validators[0].(func(int) error)
+	// githubrepositoryDescIsTemplate is the schema descriptor for is_template field.
+	githubrepositoryDescIsTemplate := githubrepositoryFields[12].Descriptor()
+	// githubrepository.DefaultIsTemplate holds the default value on creation for the is_template field.
+	githubrepository.DefaultIsTemplate = githubrepositoryDescIsTemplate.Default.(bool)
+	// githubrepositoryDescHasIssues is the schema descriptor for has_issues field.
+	githubrepositoryDescHasIssues := githubrepositoryFields[13].Descriptor()
+	// githubrepository.DefaultHasIssues holds the default value on creation for the has_issues field.
+	githubrepository.DefaultHasIssues = githubrepositoryDescHasIssues.Default.(bool)
+	// githubrepositoryDescArchived is the schema descriptor for archived field.
+	githubrepositoryDescArchived := githubrepositoryFields[14].Descriptor()
+	// githubrepository.DefaultArchived holds the default value on creation for the archived field.
+	githubrepository.DefaultArchived = githubrepositoryDescArchived.Default.(bool)
 	labelMixin := schema.Label{}.Mixin()
 	label.Policy = privacy.NewPolicies(schema.Label{})
 	label.Hooks[0] = func(next ent.Mutator) ent.Mutator {

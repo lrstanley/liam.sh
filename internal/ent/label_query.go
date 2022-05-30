@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -31,9 +32,10 @@ type LabelQuery struct {
 	fields     []string
 	predicates []predicate.Label
 	// eager-loading edges.
-	withPosts *PostQuery
-	modifiers []func(*sql.Selector)
-	loadTotal []func(context.Context, []*Label) error
+	withPosts              *PostQuery
+	withGithubRepositories *GithubRepositoryQuery
+	modifiers              []func(*sql.Selector)
+	loadTotal              []func(context.Context, []*Label) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -85,6 +87,28 @@ func (lq *LabelQuery) QueryPosts() *PostQuery {
 			sqlgraph.From(label.Table, label.FieldID, selector),
 			sqlgraph.To(post.Table, post.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, false, label.PostsTable, label.PostsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryGithubRepositories chains the current query on the "github_repositories" edge.
+func (lq *LabelQuery) QueryGithubRepositories() *GithubRepositoryQuery {
+	query := &GithubRepositoryQuery{config: lq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := lq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := lq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(label.Table, label.FieldID, selector),
+			sqlgraph.To(githubrepository.Table, githubrepository.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, label.GithubRepositoriesTable, label.GithubRepositoriesPrimaryKey...),
 		)
 		fromU = sqlgraph.SetNeighbors(lq.driver.Dialect(), step)
 		return fromU, nil
@@ -268,12 +292,13 @@ func (lq *LabelQuery) Clone() *LabelQuery {
 		return nil
 	}
 	return &LabelQuery{
-		config:     lq.config,
-		limit:      lq.limit,
-		offset:     lq.offset,
-		order:      append([]OrderFunc{}, lq.order...),
-		predicates: append([]predicate.Label{}, lq.predicates...),
-		withPosts:  lq.withPosts.Clone(),
+		config:                 lq.config,
+		limit:                  lq.limit,
+		offset:                 lq.offset,
+		order:                  append([]OrderFunc{}, lq.order...),
+		predicates:             append([]predicate.Label{}, lq.predicates...),
+		withPosts:              lq.withPosts.Clone(),
+		withGithubRepositories: lq.withGithubRepositories.Clone(),
 		// clone intermediate query.
 		sql:    lq.sql.Clone(),
 		path:   lq.path,
@@ -289,6 +314,17 @@ func (lq *LabelQuery) WithPosts(opts ...func(*PostQuery)) *LabelQuery {
 		opt(query)
 	}
 	lq.withPosts = query
+	return lq
+}
+
+// WithGithubRepositories tells the query-builder to eager-load the nodes that are connected to
+// the "github_repositories" edge. The optional arguments are used to configure the query builder of the edge.
+func (lq *LabelQuery) WithGithubRepositories(opts ...func(*GithubRepositoryQuery)) *LabelQuery {
+	query := &GithubRepositoryQuery{config: lq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	lq.withGithubRepositories = query
 	return lq
 }
 
@@ -368,8 +404,9 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 	var (
 		nodes       = []*Label{}
 		_spec       = lq.querySpec()
-		loadedTypes = [1]bool{
+		loadedTypes = [2]bool{
 			lq.withPosts != nil,
+			lq.withGithubRepositories != nil,
 		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
@@ -443,6 +480,59 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 			}
 			for kn := range nodes {
 				kn.Edges.Posts = append(kn.Edges.Posts, n)
+			}
+		}
+	}
+
+	if query := lq.withGithubRepositories; query != nil {
+		edgeids := make([]driver.Value, len(nodes))
+		byid := make(map[int]*Label)
+		nids := make(map[int]map[*Label]struct{})
+		for i, node := range nodes {
+			edgeids[i] = node.ID
+			byid[node.ID] = node
+			node.Edges.GithubRepositories = []*GithubRepository{}
+		}
+		query.Where(func(s *sql.Selector) {
+			joinT := sql.Table(label.GithubRepositoriesTable)
+			s.Join(joinT).On(s.C(githubrepository.FieldID), joinT.C(label.GithubRepositoriesPrimaryKey[1]))
+			s.Where(sql.InValues(joinT.C(label.GithubRepositoriesPrimaryKey[0]), edgeids...))
+			columns := s.SelectedColumns()
+			s.Select(joinT.C(label.GithubRepositoriesPrimaryKey[0]))
+			s.AppendSelect(columns...)
+			s.SetDistinct(false)
+		})
+		neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]interface{}, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]interface{}{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []interface{}) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Label]struct{}{byid[outValue]: struct{}{}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byid[outValue]] = struct{}{}
+				return nil
+			}
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "github_repositories" node returned %v`, n.ID)
+			}
+			for kn := range nodes {
+				kn.Edges.GithubRepositories = append(kn.Edges.GithubRepositories, n)
 			}
 		}
 	}

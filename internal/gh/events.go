@@ -17,6 +17,8 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
 )
 
+const eventsInterval = 30 * time.Minute
+
 func EventsRunner(ctx context.Context) error {
 	logger := log.FromContext(ctx).WithField("runner", "github_events")
 	db := ent.FromContext(ctx)
@@ -35,7 +37,7 @@ func EventsRunner(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
 			return nil
-		case <-time.After(30 * time.Minute):
+		case <-time.After(eventsInterval):
 			err = database.RunWithTx(ctx, logger, db, getEvents)
 			if err != nil {
 				logger.WithError(err).Error("failed to get events")
@@ -71,7 +73,14 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 
 	var allEvents []*github.Event
 	var resp *github.Response
+	var user *github.User
 	var err error
+
+	user, _, err = Client.Users.Get(ctx, "")
+	if err != nil {
+		logger.WithError(err).Error("failed to get user")
+		return err
+	}
 
 	for {
 		select {
@@ -85,7 +94,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		var events []*github.Event
 
 		logger.WithField("page", opts.Page).Info("querying events")
-		events, resp, err = Client.Activity.ListEventsPerformedByUser(ctx, "lrstanley", false, opts)
+		events, resp, err = Client.Activity.ListEventsPerformedByUser(ctx, user.GetLogin(), false, opts)
 		if err != nil {
 			return err
 		}
@@ -150,6 +159,6 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		}
 	}
 
-	logger.WithField("events", count).Info("got newest events")
+	logger.WithField("events", count).Info("fetched newest events")
 	return nil
 }

@@ -15,6 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 )
@@ -74,6 +75,21 @@ func (lc *LabelCreate) AddPosts(p ...*Post) *LabelCreate {
 		ids[i] = p[i].ID
 	}
 	return lc.AddPostIDs(ids...)
+}
+
+// AddGithubRepositoryIDs adds the "github_repositories" edge to the GithubRepository entity by IDs.
+func (lc *LabelCreate) AddGithubRepositoryIDs(ids ...int) *LabelCreate {
+	lc.mutation.AddGithubRepositoryIDs(ids...)
+	return lc
+}
+
+// AddGithubRepositories adds the "github_repositories" edges to the GithubRepository entity.
+func (lc *LabelCreate) AddGithubRepositories(g ...*GithubRepository) *LabelCreate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return lc.AddGithubRepositoryIDs(ids...)
 }
 
 // Mutation returns the LabelMutation object of the builder.
@@ -251,6 +267,25 @@ func (lc *LabelCreate) createSpec() (*Label, *sqlgraph.CreateSpec) {
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: post.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := lc.mutation.GithubRepositoriesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrepository.FieldID,
 				},
 			},
 		}

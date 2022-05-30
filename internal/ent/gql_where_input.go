@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -355,6 +356,776 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 	}
 }
 
+// GithubRepositoryWhereInput represents a where input for filtering GithubRepository queries.
+type GithubRepositoryWhereInput struct {
+	Predicates []predicate.GithubRepository  `json:"-"`
+	Not        *GithubRepositoryWhereInput   `json:"not,omitempty"`
+	Or         []*GithubRepositoryWhereInput `json:"or,omitempty"`
+	And        []*GithubRepositoryWhereInput `json:"and,omitempty"`
+
+	// "id" field predicates.
+	ID      *int  `json:"id,omitempty"`
+	IDNEQ   *int  `json:"idNEQ,omitempty"`
+	IDIn    []int `json:"idIn,omitempty"`
+	IDNotIn []int `json:"idNotIn,omitempty"`
+	IDGT    *int  `json:"idGT,omitempty"`
+	IDGTE   *int  `json:"idGTE,omitempty"`
+	IDLT    *int  `json:"idLT,omitempty"`
+	IDLTE   *int  `json:"idLTE,omitempty"`
+
+	// "repo_id" field predicates.
+	RepoID      *int64  `json:"repoID,omitempty"`
+	RepoIDNEQ   *int64  `json:"repoIDNEQ,omitempty"`
+	RepoIDIn    []int64 `json:"repoIDIn,omitempty"`
+	RepoIDNotIn []int64 `json:"repoIDNotIn,omitempty"`
+	RepoIDGT    *int64  `json:"repoIDGT,omitempty"`
+	RepoIDGTE   *int64  `json:"repoIDGTE,omitempty"`
+	RepoIDLT    *int64  `json:"repoIDLT,omitempty"`
+	RepoIDLTE   *int64  `json:"repoIDLTE,omitempty"`
+
+	// "name" field predicates.
+	Name             *string  `json:"name,omitempty"`
+	NameNEQ          *string  `json:"nameNEQ,omitempty"`
+	NameIn           []string `json:"nameIn,omitempty"`
+	NameNotIn        []string `json:"nameNotIn,omitempty"`
+	NameGT           *string  `json:"nameGT,omitempty"`
+	NameGTE          *string  `json:"nameGTE,omitempty"`
+	NameLT           *string  `json:"nameLT,omitempty"`
+	NameLTE          *string  `json:"nameLTE,omitempty"`
+	NameContains     *string  `json:"nameContains,omitempty"`
+	NameHasPrefix    *string  `json:"nameHasPrefix,omitempty"`
+	NameHasSuffix    *string  `json:"nameHasSuffix,omitempty"`
+	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
+	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
+
+	// "full_name" field predicates.
+	FullName             *string  `json:"fullName,omitempty"`
+	FullNameNEQ          *string  `json:"fullNameNEQ,omitempty"`
+	FullNameIn           []string `json:"fullNameIn,omitempty"`
+	FullNameNotIn        []string `json:"fullNameNotIn,omitempty"`
+	FullNameGT           *string  `json:"fullNameGT,omitempty"`
+	FullNameGTE          *string  `json:"fullNameGTE,omitempty"`
+	FullNameLT           *string  `json:"fullNameLT,omitempty"`
+	FullNameLTE          *string  `json:"fullNameLTE,omitempty"`
+	FullNameContains     *string  `json:"fullNameContains,omitempty"`
+	FullNameHasPrefix    *string  `json:"fullNameHasPrefix,omitempty"`
+	FullNameHasSuffix    *string  `json:"fullNameHasSuffix,omitempty"`
+	FullNameEqualFold    *string  `json:"fullNameEqualFold,omitempty"`
+	FullNameContainsFold *string  `json:"fullNameContainsFold,omitempty"`
+
+	// "owner_login" field predicates.
+	OwnerLogin             *string  `json:"ownerLogin,omitempty"`
+	OwnerLoginNEQ          *string  `json:"ownerLoginNEQ,omitempty"`
+	OwnerLoginIn           []string `json:"ownerLoginIn,omitempty"`
+	OwnerLoginNotIn        []string `json:"ownerLoginNotIn,omitempty"`
+	OwnerLoginGT           *string  `json:"ownerLoginGT,omitempty"`
+	OwnerLoginGTE          *string  `json:"ownerLoginGTE,omitempty"`
+	OwnerLoginLT           *string  `json:"ownerLoginLT,omitempty"`
+	OwnerLoginLTE          *string  `json:"ownerLoginLTE,omitempty"`
+	OwnerLoginContains     *string  `json:"ownerLoginContains,omitempty"`
+	OwnerLoginHasPrefix    *string  `json:"ownerLoginHasPrefix,omitempty"`
+	OwnerLoginHasSuffix    *string  `json:"ownerLoginHasSuffix,omitempty"`
+	OwnerLoginEqualFold    *string  `json:"ownerLoginEqualFold,omitempty"`
+	OwnerLoginContainsFold *string  `json:"ownerLoginContainsFold,omitempty"`
+
+	// "public" field predicates.
+	Public    *bool `json:"public,omitempty"`
+	PublicNEQ *bool `json:"publicNEQ,omitempty"`
+
+	// "html_url" field predicates.
+	HTMLURL             *string  `json:"htmlURL,omitempty"`
+	HTMLURLNEQ          *string  `json:"htmlURLNEQ,omitempty"`
+	HTMLURLIn           []string `json:"htmlURLIn,omitempty"`
+	HTMLURLNotIn        []string `json:"htmlURLNotIn,omitempty"`
+	HTMLURLGT           *string  `json:"htmlURLGT,omitempty"`
+	HTMLURLGTE          *string  `json:"htmlURLGTE,omitempty"`
+	HTMLURLLT           *string  `json:"htmlURLLT,omitempty"`
+	HTMLURLLTE          *string  `json:"htmlURLLTE,omitempty"`
+	HTMLURLContains     *string  `json:"htmlURLContains,omitempty"`
+	HTMLURLHasPrefix    *string  `json:"htmlURLHasPrefix,omitempty"`
+	HTMLURLHasSuffix    *string  `json:"htmlURLHasSuffix,omitempty"`
+	HTMLURLEqualFold    *string  `json:"htmlURLEqualFold,omitempty"`
+	HTMLURLContainsFold *string  `json:"htmlURLContainsFold,omitempty"`
+
+	// "description" field predicates.
+	Description             *string  `json:"description,omitempty"`
+	DescriptionNEQ          *string  `json:"descriptionNEQ,omitempty"`
+	DescriptionIn           []string `json:"descriptionIn,omitempty"`
+	DescriptionNotIn        []string `json:"descriptionNotIn,omitempty"`
+	DescriptionGT           *string  `json:"descriptionGT,omitempty"`
+	DescriptionGTE          *string  `json:"descriptionGTE,omitempty"`
+	DescriptionLT           *string  `json:"descriptionLT,omitempty"`
+	DescriptionLTE          *string  `json:"descriptionLTE,omitempty"`
+	DescriptionContains     *string  `json:"descriptionContains,omitempty"`
+	DescriptionHasPrefix    *string  `json:"descriptionHasPrefix,omitempty"`
+	DescriptionHasSuffix    *string  `json:"descriptionHasSuffix,omitempty"`
+	DescriptionIsNil        bool     `json:"descriptionIsNil,omitempty"`
+	DescriptionNotNil       bool     `json:"descriptionNotNil,omitempty"`
+	DescriptionEqualFold    *string  `json:"descriptionEqualFold,omitempty"`
+	DescriptionContainsFold *string  `json:"descriptionContainsFold,omitempty"`
+
+	// "fork" field predicates.
+	Fork    *bool `json:"fork,omitempty"`
+	ForkNEQ *bool `json:"forkNEQ,omitempty"`
+
+	// "homepage" field predicates.
+	Homepage             *string  `json:"homepage,omitempty"`
+	HomepageNEQ          *string  `json:"homepageNEQ,omitempty"`
+	HomepageIn           []string `json:"homepageIn,omitempty"`
+	HomepageNotIn        []string `json:"homepageNotIn,omitempty"`
+	HomepageGT           *string  `json:"homepageGT,omitempty"`
+	HomepageGTE          *string  `json:"homepageGTE,omitempty"`
+	HomepageLT           *string  `json:"homepageLT,omitempty"`
+	HomepageLTE          *string  `json:"homepageLTE,omitempty"`
+	HomepageContains     *string  `json:"homepageContains,omitempty"`
+	HomepageHasPrefix    *string  `json:"homepageHasPrefix,omitempty"`
+	HomepageHasSuffix    *string  `json:"homepageHasSuffix,omitempty"`
+	HomepageIsNil        bool     `json:"homepageIsNil,omitempty"`
+	HomepageNotNil       bool     `json:"homepageNotNil,omitempty"`
+	HomepageEqualFold    *string  `json:"homepageEqualFold,omitempty"`
+	HomepageContainsFold *string  `json:"homepageContainsFold,omitempty"`
+
+	// "star_count" field predicates.
+	StarCount      *int  `json:"starCount,omitempty"`
+	StarCountNEQ   *int  `json:"starCountNEQ,omitempty"`
+	StarCountIn    []int `json:"starCountIn,omitempty"`
+	StarCountNotIn []int `json:"starCountNotIn,omitempty"`
+	StarCountGT    *int  `json:"starCountGT,omitempty"`
+	StarCountGTE   *int  `json:"starCountGTE,omitempty"`
+	StarCountLT    *int  `json:"starCountLT,omitempty"`
+	StarCountLTE   *int  `json:"starCountLTE,omitempty"`
+
+	// "default_branch" field predicates.
+	DefaultBranch             *string  `json:"defaultBranch,omitempty"`
+	DefaultBranchNEQ          *string  `json:"defaultBranchNEQ,omitempty"`
+	DefaultBranchIn           []string `json:"defaultBranchIn,omitempty"`
+	DefaultBranchNotIn        []string `json:"defaultBranchNotIn,omitempty"`
+	DefaultBranchGT           *string  `json:"defaultBranchGT,omitempty"`
+	DefaultBranchGTE          *string  `json:"defaultBranchGTE,omitempty"`
+	DefaultBranchLT           *string  `json:"defaultBranchLT,omitempty"`
+	DefaultBranchLTE          *string  `json:"defaultBranchLTE,omitempty"`
+	DefaultBranchContains     *string  `json:"defaultBranchContains,omitempty"`
+	DefaultBranchHasPrefix    *string  `json:"defaultBranchHasPrefix,omitempty"`
+	DefaultBranchHasSuffix    *string  `json:"defaultBranchHasSuffix,omitempty"`
+	DefaultBranchEqualFold    *string  `json:"defaultBranchEqualFold,omitempty"`
+	DefaultBranchContainsFold *string  `json:"defaultBranchContainsFold,omitempty"`
+
+	// "is_template" field predicates.
+	IsTemplate    *bool `json:"isTemplate,omitempty"`
+	IsTemplateNEQ *bool `json:"isTemplateNEQ,omitempty"`
+
+	// "has_issues" field predicates.
+	HasIssues    *bool `json:"hasIssues,omitempty"`
+	HasIssuesNEQ *bool `json:"hasIssuesNEQ,omitempty"`
+
+	// "archived" field predicates.
+	Archived    *bool `json:"archived,omitempty"`
+	ArchivedNEQ *bool `json:"archivedNEQ,omitempty"`
+
+	// "pushed_at" field predicates.
+	PushedAt       *time.Time  `json:"pushedAt,omitempty"`
+	PushedAtNEQ    *time.Time  `json:"pushedAtNEQ,omitempty"`
+	PushedAtIn     []time.Time `json:"pushedAtIn,omitempty"`
+	PushedAtNotIn  []time.Time `json:"pushedAtNotIn,omitempty"`
+	PushedAtGT     *time.Time  `json:"pushedAtGT,omitempty"`
+	PushedAtGTE    *time.Time  `json:"pushedAtGTE,omitempty"`
+	PushedAtLT     *time.Time  `json:"pushedAtLT,omitempty"`
+	PushedAtLTE    *time.Time  `json:"pushedAtLTE,omitempty"`
+	PushedAtIsNil  bool        `json:"pushedAtIsNil,omitempty"`
+	PushedAtNotNil bool        `json:"pushedAtNotNil,omitempty"`
+
+	// "created_at" field predicates.
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
+
+	// "updated_at" field predicates.
+	UpdatedAt       *time.Time  `json:"updatedAt,omitempty"`
+	UpdatedAtNEQ    *time.Time  `json:"updatedAtNEQ,omitempty"`
+	UpdatedAtIn     []time.Time `json:"updatedAtIn,omitempty"`
+	UpdatedAtNotIn  []time.Time `json:"updatedAtNotIn,omitempty"`
+	UpdatedAtGT     *time.Time  `json:"updatedAtGT,omitempty"`
+	UpdatedAtGTE    *time.Time  `json:"updatedAtGTE,omitempty"`
+	UpdatedAtLT     *time.Time  `json:"updatedAtLT,omitempty"`
+	UpdatedAtLTE    *time.Time  `json:"updatedAtLTE,omitempty"`
+	UpdatedAtIsNil  bool        `json:"updatedAtIsNil,omitempty"`
+	UpdatedAtNotNil bool        `json:"updatedAtNotNil,omitempty"`
+
+	// "labels" edge predicates.
+	HasLabels     *bool              `json:"hasLabels,omitempty"`
+	HasLabelsWith []*LabelWhereInput `json:"hasLabelsWith,omitempty"`
+}
+
+// AddPredicates adds custom predicates to the where input to be used during the filtering phase.
+func (i *GithubRepositoryWhereInput) AddPredicates(predicates ...predicate.GithubRepository) {
+	i.Predicates = append(i.Predicates, predicates...)
+}
+
+// Filter applies the GithubRepositoryWhereInput filter on the GithubRepositoryQuery builder.
+func (i *GithubRepositoryWhereInput) Filter(q *GithubRepositoryQuery) (*GithubRepositoryQuery, error) {
+	if i == nil {
+		return q, nil
+	}
+	p, err := i.P()
+	if err != nil {
+		return nil, err
+	}
+	return q.Where(p), nil
+}
+
+// P returns a predicate for filtering githubrepositories.
+// An error is returned if the input is empty or invalid.
+func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
+	var predicates []predicate.GithubRepository
+	if i.Not != nil {
+		p, err := i.Not.P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, githubrepository.Not(p))
+	}
+	switch n := len(i.Or); {
+	case n == 1:
+		p, err := i.Or[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		or := make([]predicate.GithubRepository, 0, n)
+		for _, w := range i.Or {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			or = append(or, p)
+		}
+		predicates = append(predicates, githubrepository.Or(or...))
+	}
+	switch n := len(i.And); {
+	case n == 1:
+		p, err := i.And[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		and := make([]predicate.GithubRepository, 0, n)
+		for _, w := range i.And {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			and = append(and, p)
+		}
+		predicates = append(predicates, githubrepository.And(and...))
+	}
+	predicates = append(predicates, i.Predicates...)
+	if i.ID != nil {
+		predicates = append(predicates, githubrepository.IDEQ(*i.ID))
+	}
+	if i.IDNEQ != nil {
+		predicates = append(predicates, githubrepository.IDNEQ(*i.IDNEQ))
+	}
+	if len(i.IDIn) > 0 {
+		predicates = append(predicates, githubrepository.IDIn(i.IDIn...))
+	}
+	if len(i.IDNotIn) > 0 {
+		predicates = append(predicates, githubrepository.IDNotIn(i.IDNotIn...))
+	}
+	if i.IDGT != nil {
+		predicates = append(predicates, githubrepository.IDGT(*i.IDGT))
+	}
+	if i.IDGTE != nil {
+		predicates = append(predicates, githubrepository.IDGTE(*i.IDGTE))
+	}
+	if i.IDLT != nil {
+		predicates = append(predicates, githubrepository.IDLT(*i.IDLT))
+	}
+	if i.IDLTE != nil {
+		predicates = append(predicates, githubrepository.IDLTE(*i.IDLTE))
+	}
+	if i.RepoID != nil {
+		predicates = append(predicates, githubrepository.RepoIDEQ(*i.RepoID))
+	}
+	if i.RepoIDNEQ != nil {
+		predicates = append(predicates, githubrepository.RepoIDNEQ(*i.RepoIDNEQ))
+	}
+	if len(i.RepoIDIn) > 0 {
+		predicates = append(predicates, githubrepository.RepoIDIn(i.RepoIDIn...))
+	}
+	if len(i.RepoIDNotIn) > 0 {
+		predicates = append(predicates, githubrepository.RepoIDNotIn(i.RepoIDNotIn...))
+	}
+	if i.RepoIDGT != nil {
+		predicates = append(predicates, githubrepository.RepoIDGT(*i.RepoIDGT))
+	}
+	if i.RepoIDGTE != nil {
+		predicates = append(predicates, githubrepository.RepoIDGTE(*i.RepoIDGTE))
+	}
+	if i.RepoIDLT != nil {
+		predicates = append(predicates, githubrepository.RepoIDLT(*i.RepoIDLT))
+	}
+	if i.RepoIDLTE != nil {
+		predicates = append(predicates, githubrepository.RepoIDLTE(*i.RepoIDLTE))
+	}
+	if i.Name != nil {
+		predicates = append(predicates, githubrepository.NameEQ(*i.Name))
+	}
+	if i.NameNEQ != nil {
+		predicates = append(predicates, githubrepository.NameNEQ(*i.NameNEQ))
+	}
+	if len(i.NameIn) > 0 {
+		predicates = append(predicates, githubrepository.NameIn(i.NameIn...))
+	}
+	if len(i.NameNotIn) > 0 {
+		predicates = append(predicates, githubrepository.NameNotIn(i.NameNotIn...))
+	}
+	if i.NameGT != nil {
+		predicates = append(predicates, githubrepository.NameGT(*i.NameGT))
+	}
+	if i.NameGTE != nil {
+		predicates = append(predicates, githubrepository.NameGTE(*i.NameGTE))
+	}
+	if i.NameLT != nil {
+		predicates = append(predicates, githubrepository.NameLT(*i.NameLT))
+	}
+	if i.NameLTE != nil {
+		predicates = append(predicates, githubrepository.NameLTE(*i.NameLTE))
+	}
+	if i.NameContains != nil {
+		predicates = append(predicates, githubrepository.NameContains(*i.NameContains))
+	}
+	if i.NameHasPrefix != nil {
+		predicates = append(predicates, githubrepository.NameHasPrefix(*i.NameHasPrefix))
+	}
+	if i.NameHasSuffix != nil {
+		predicates = append(predicates, githubrepository.NameHasSuffix(*i.NameHasSuffix))
+	}
+	if i.NameEqualFold != nil {
+		predicates = append(predicates, githubrepository.NameEqualFold(*i.NameEqualFold))
+	}
+	if i.NameContainsFold != nil {
+		predicates = append(predicates, githubrepository.NameContainsFold(*i.NameContainsFold))
+	}
+	if i.FullName != nil {
+		predicates = append(predicates, githubrepository.FullNameEQ(*i.FullName))
+	}
+	if i.FullNameNEQ != nil {
+		predicates = append(predicates, githubrepository.FullNameNEQ(*i.FullNameNEQ))
+	}
+	if len(i.FullNameIn) > 0 {
+		predicates = append(predicates, githubrepository.FullNameIn(i.FullNameIn...))
+	}
+	if len(i.FullNameNotIn) > 0 {
+		predicates = append(predicates, githubrepository.FullNameNotIn(i.FullNameNotIn...))
+	}
+	if i.FullNameGT != nil {
+		predicates = append(predicates, githubrepository.FullNameGT(*i.FullNameGT))
+	}
+	if i.FullNameGTE != nil {
+		predicates = append(predicates, githubrepository.FullNameGTE(*i.FullNameGTE))
+	}
+	if i.FullNameLT != nil {
+		predicates = append(predicates, githubrepository.FullNameLT(*i.FullNameLT))
+	}
+	if i.FullNameLTE != nil {
+		predicates = append(predicates, githubrepository.FullNameLTE(*i.FullNameLTE))
+	}
+	if i.FullNameContains != nil {
+		predicates = append(predicates, githubrepository.FullNameContains(*i.FullNameContains))
+	}
+	if i.FullNameHasPrefix != nil {
+		predicates = append(predicates, githubrepository.FullNameHasPrefix(*i.FullNameHasPrefix))
+	}
+	if i.FullNameHasSuffix != nil {
+		predicates = append(predicates, githubrepository.FullNameHasSuffix(*i.FullNameHasSuffix))
+	}
+	if i.FullNameEqualFold != nil {
+		predicates = append(predicates, githubrepository.FullNameEqualFold(*i.FullNameEqualFold))
+	}
+	if i.FullNameContainsFold != nil {
+		predicates = append(predicates, githubrepository.FullNameContainsFold(*i.FullNameContainsFold))
+	}
+	if i.OwnerLogin != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginEQ(*i.OwnerLogin))
+	}
+	if i.OwnerLoginNEQ != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginNEQ(*i.OwnerLoginNEQ))
+	}
+	if len(i.OwnerLoginIn) > 0 {
+		predicates = append(predicates, githubrepository.OwnerLoginIn(i.OwnerLoginIn...))
+	}
+	if len(i.OwnerLoginNotIn) > 0 {
+		predicates = append(predicates, githubrepository.OwnerLoginNotIn(i.OwnerLoginNotIn...))
+	}
+	if i.OwnerLoginGT != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginGT(*i.OwnerLoginGT))
+	}
+	if i.OwnerLoginGTE != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginGTE(*i.OwnerLoginGTE))
+	}
+	if i.OwnerLoginLT != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginLT(*i.OwnerLoginLT))
+	}
+	if i.OwnerLoginLTE != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginLTE(*i.OwnerLoginLTE))
+	}
+	if i.OwnerLoginContains != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginContains(*i.OwnerLoginContains))
+	}
+	if i.OwnerLoginHasPrefix != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginHasPrefix(*i.OwnerLoginHasPrefix))
+	}
+	if i.OwnerLoginHasSuffix != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginHasSuffix(*i.OwnerLoginHasSuffix))
+	}
+	if i.OwnerLoginEqualFold != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginEqualFold(*i.OwnerLoginEqualFold))
+	}
+	if i.OwnerLoginContainsFold != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginContainsFold(*i.OwnerLoginContainsFold))
+	}
+	if i.Public != nil {
+		predicates = append(predicates, githubrepository.PublicEQ(*i.Public))
+	}
+	if i.PublicNEQ != nil {
+		predicates = append(predicates, githubrepository.PublicNEQ(*i.PublicNEQ))
+	}
+	if i.HTMLURL != nil {
+		predicates = append(predicates, githubrepository.HTMLURLEQ(*i.HTMLURL))
+	}
+	if i.HTMLURLNEQ != nil {
+		predicates = append(predicates, githubrepository.HTMLURLNEQ(*i.HTMLURLNEQ))
+	}
+	if len(i.HTMLURLIn) > 0 {
+		predicates = append(predicates, githubrepository.HTMLURLIn(i.HTMLURLIn...))
+	}
+	if len(i.HTMLURLNotIn) > 0 {
+		predicates = append(predicates, githubrepository.HTMLURLNotIn(i.HTMLURLNotIn...))
+	}
+	if i.HTMLURLGT != nil {
+		predicates = append(predicates, githubrepository.HTMLURLGT(*i.HTMLURLGT))
+	}
+	if i.HTMLURLGTE != nil {
+		predicates = append(predicates, githubrepository.HTMLURLGTE(*i.HTMLURLGTE))
+	}
+	if i.HTMLURLLT != nil {
+		predicates = append(predicates, githubrepository.HTMLURLLT(*i.HTMLURLLT))
+	}
+	if i.HTMLURLLTE != nil {
+		predicates = append(predicates, githubrepository.HTMLURLLTE(*i.HTMLURLLTE))
+	}
+	if i.HTMLURLContains != nil {
+		predicates = append(predicates, githubrepository.HTMLURLContains(*i.HTMLURLContains))
+	}
+	if i.HTMLURLHasPrefix != nil {
+		predicates = append(predicates, githubrepository.HTMLURLHasPrefix(*i.HTMLURLHasPrefix))
+	}
+	if i.HTMLURLHasSuffix != nil {
+		predicates = append(predicates, githubrepository.HTMLURLHasSuffix(*i.HTMLURLHasSuffix))
+	}
+	if i.HTMLURLEqualFold != nil {
+		predicates = append(predicates, githubrepository.HTMLURLEqualFold(*i.HTMLURLEqualFold))
+	}
+	if i.HTMLURLContainsFold != nil {
+		predicates = append(predicates, githubrepository.HTMLURLContainsFold(*i.HTMLURLContainsFold))
+	}
+	if i.Description != nil {
+		predicates = append(predicates, githubrepository.DescriptionEQ(*i.Description))
+	}
+	if i.DescriptionNEQ != nil {
+		predicates = append(predicates, githubrepository.DescriptionNEQ(*i.DescriptionNEQ))
+	}
+	if len(i.DescriptionIn) > 0 {
+		predicates = append(predicates, githubrepository.DescriptionIn(i.DescriptionIn...))
+	}
+	if len(i.DescriptionNotIn) > 0 {
+		predicates = append(predicates, githubrepository.DescriptionNotIn(i.DescriptionNotIn...))
+	}
+	if i.DescriptionGT != nil {
+		predicates = append(predicates, githubrepository.DescriptionGT(*i.DescriptionGT))
+	}
+	if i.DescriptionGTE != nil {
+		predicates = append(predicates, githubrepository.DescriptionGTE(*i.DescriptionGTE))
+	}
+	if i.DescriptionLT != nil {
+		predicates = append(predicates, githubrepository.DescriptionLT(*i.DescriptionLT))
+	}
+	if i.DescriptionLTE != nil {
+		predicates = append(predicates, githubrepository.DescriptionLTE(*i.DescriptionLTE))
+	}
+	if i.DescriptionContains != nil {
+		predicates = append(predicates, githubrepository.DescriptionContains(*i.DescriptionContains))
+	}
+	if i.DescriptionHasPrefix != nil {
+		predicates = append(predicates, githubrepository.DescriptionHasPrefix(*i.DescriptionHasPrefix))
+	}
+	if i.DescriptionHasSuffix != nil {
+		predicates = append(predicates, githubrepository.DescriptionHasSuffix(*i.DescriptionHasSuffix))
+	}
+	if i.DescriptionIsNil {
+		predicates = append(predicates, githubrepository.DescriptionIsNil())
+	}
+	if i.DescriptionNotNil {
+		predicates = append(predicates, githubrepository.DescriptionNotNil())
+	}
+	if i.DescriptionEqualFold != nil {
+		predicates = append(predicates, githubrepository.DescriptionEqualFold(*i.DescriptionEqualFold))
+	}
+	if i.DescriptionContainsFold != nil {
+		predicates = append(predicates, githubrepository.DescriptionContainsFold(*i.DescriptionContainsFold))
+	}
+	if i.Fork != nil {
+		predicates = append(predicates, githubrepository.ForkEQ(*i.Fork))
+	}
+	if i.ForkNEQ != nil {
+		predicates = append(predicates, githubrepository.ForkNEQ(*i.ForkNEQ))
+	}
+	if i.Homepage != nil {
+		predicates = append(predicates, githubrepository.HomepageEQ(*i.Homepage))
+	}
+	if i.HomepageNEQ != nil {
+		predicates = append(predicates, githubrepository.HomepageNEQ(*i.HomepageNEQ))
+	}
+	if len(i.HomepageIn) > 0 {
+		predicates = append(predicates, githubrepository.HomepageIn(i.HomepageIn...))
+	}
+	if len(i.HomepageNotIn) > 0 {
+		predicates = append(predicates, githubrepository.HomepageNotIn(i.HomepageNotIn...))
+	}
+	if i.HomepageGT != nil {
+		predicates = append(predicates, githubrepository.HomepageGT(*i.HomepageGT))
+	}
+	if i.HomepageGTE != nil {
+		predicates = append(predicates, githubrepository.HomepageGTE(*i.HomepageGTE))
+	}
+	if i.HomepageLT != nil {
+		predicates = append(predicates, githubrepository.HomepageLT(*i.HomepageLT))
+	}
+	if i.HomepageLTE != nil {
+		predicates = append(predicates, githubrepository.HomepageLTE(*i.HomepageLTE))
+	}
+	if i.HomepageContains != nil {
+		predicates = append(predicates, githubrepository.HomepageContains(*i.HomepageContains))
+	}
+	if i.HomepageHasPrefix != nil {
+		predicates = append(predicates, githubrepository.HomepageHasPrefix(*i.HomepageHasPrefix))
+	}
+	if i.HomepageHasSuffix != nil {
+		predicates = append(predicates, githubrepository.HomepageHasSuffix(*i.HomepageHasSuffix))
+	}
+	if i.HomepageIsNil {
+		predicates = append(predicates, githubrepository.HomepageIsNil())
+	}
+	if i.HomepageNotNil {
+		predicates = append(predicates, githubrepository.HomepageNotNil())
+	}
+	if i.HomepageEqualFold != nil {
+		predicates = append(predicates, githubrepository.HomepageEqualFold(*i.HomepageEqualFold))
+	}
+	if i.HomepageContainsFold != nil {
+		predicates = append(predicates, githubrepository.HomepageContainsFold(*i.HomepageContainsFold))
+	}
+	if i.StarCount != nil {
+		predicates = append(predicates, githubrepository.StarCountEQ(*i.StarCount))
+	}
+	if i.StarCountNEQ != nil {
+		predicates = append(predicates, githubrepository.StarCountNEQ(*i.StarCountNEQ))
+	}
+	if len(i.StarCountIn) > 0 {
+		predicates = append(predicates, githubrepository.StarCountIn(i.StarCountIn...))
+	}
+	if len(i.StarCountNotIn) > 0 {
+		predicates = append(predicates, githubrepository.StarCountNotIn(i.StarCountNotIn...))
+	}
+	if i.StarCountGT != nil {
+		predicates = append(predicates, githubrepository.StarCountGT(*i.StarCountGT))
+	}
+	if i.StarCountGTE != nil {
+		predicates = append(predicates, githubrepository.StarCountGTE(*i.StarCountGTE))
+	}
+	if i.StarCountLT != nil {
+		predicates = append(predicates, githubrepository.StarCountLT(*i.StarCountLT))
+	}
+	if i.StarCountLTE != nil {
+		predicates = append(predicates, githubrepository.StarCountLTE(*i.StarCountLTE))
+	}
+	if i.DefaultBranch != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchEQ(*i.DefaultBranch))
+	}
+	if i.DefaultBranchNEQ != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchNEQ(*i.DefaultBranchNEQ))
+	}
+	if len(i.DefaultBranchIn) > 0 {
+		predicates = append(predicates, githubrepository.DefaultBranchIn(i.DefaultBranchIn...))
+	}
+	if len(i.DefaultBranchNotIn) > 0 {
+		predicates = append(predicates, githubrepository.DefaultBranchNotIn(i.DefaultBranchNotIn...))
+	}
+	if i.DefaultBranchGT != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchGT(*i.DefaultBranchGT))
+	}
+	if i.DefaultBranchGTE != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchGTE(*i.DefaultBranchGTE))
+	}
+	if i.DefaultBranchLT != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchLT(*i.DefaultBranchLT))
+	}
+	if i.DefaultBranchLTE != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchLTE(*i.DefaultBranchLTE))
+	}
+	if i.DefaultBranchContains != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchContains(*i.DefaultBranchContains))
+	}
+	if i.DefaultBranchHasPrefix != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchHasPrefix(*i.DefaultBranchHasPrefix))
+	}
+	if i.DefaultBranchHasSuffix != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchHasSuffix(*i.DefaultBranchHasSuffix))
+	}
+	if i.DefaultBranchEqualFold != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchEqualFold(*i.DefaultBranchEqualFold))
+	}
+	if i.DefaultBranchContainsFold != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchContainsFold(*i.DefaultBranchContainsFold))
+	}
+	if i.IsTemplate != nil {
+		predicates = append(predicates, githubrepository.IsTemplateEQ(*i.IsTemplate))
+	}
+	if i.IsTemplateNEQ != nil {
+		predicates = append(predicates, githubrepository.IsTemplateNEQ(*i.IsTemplateNEQ))
+	}
+	if i.HasIssues != nil {
+		predicates = append(predicates, githubrepository.HasIssuesEQ(*i.HasIssues))
+	}
+	if i.HasIssuesNEQ != nil {
+		predicates = append(predicates, githubrepository.HasIssuesNEQ(*i.HasIssuesNEQ))
+	}
+	if i.Archived != nil {
+		predicates = append(predicates, githubrepository.ArchivedEQ(*i.Archived))
+	}
+	if i.ArchivedNEQ != nil {
+		predicates = append(predicates, githubrepository.ArchivedNEQ(*i.ArchivedNEQ))
+	}
+	if i.PushedAt != nil {
+		predicates = append(predicates, githubrepository.PushedAtEQ(*i.PushedAt))
+	}
+	if i.PushedAtNEQ != nil {
+		predicates = append(predicates, githubrepository.PushedAtNEQ(*i.PushedAtNEQ))
+	}
+	if len(i.PushedAtIn) > 0 {
+		predicates = append(predicates, githubrepository.PushedAtIn(i.PushedAtIn...))
+	}
+	if len(i.PushedAtNotIn) > 0 {
+		predicates = append(predicates, githubrepository.PushedAtNotIn(i.PushedAtNotIn...))
+	}
+	if i.PushedAtGT != nil {
+		predicates = append(predicates, githubrepository.PushedAtGT(*i.PushedAtGT))
+	}
+	if i.PushedAtGTE != nil {
+		predicates = append(predicates, githubrepository.PushedAtGTE(*i.PushedAtGTE))
+	}
+	if i.PushedAtLT != nil {
+		predicates = append(predicates, githubrepository.PushedAtLT(*i.PushedAtLT))
+	}
+	if i.PushedAtLTE != nil {
+		predicates = append(predicates, githubrepository.PushedAtLTE(*i.PushedAtLTE))
+	}
+	if i.PushedAtIsNil {
+		predicates = append(predicates, githubrepository.PushedAtIsNil())
+	}
+	if i.PushedAtNotNil {
+		predicates = append(predicates, githubrepository.PushedAtNotNil())
+	}
+	if i.CreatedAt != nil {
+		predicates = append(predicates, githubrepository.CreatedAtEQ(*i.CreatedAt))
+	}
+	if i.CreatedAtNEQ != nil {
+		predicates = append(predicates, githubrepository.CreatedAtNEQ(*i.CreatedAtNEQ))
+	}
+	if len(i.CreatedAtIn) > 0 {
+		predicates = append(predicates, githubrepository.CreatedAtIn(i.CreatedAtIn...))
+	}
+	if len(i.CreatedAtNotIn) > 0 {
+		predicates = append(predicates, githubrepository.CreatedAtNotIn(i.CreatedAtNotIn...))
+	}
+	if i.CreatedAtGT != nil {
+		predicates = append(predicates, githubrepository.CreatedAtGT(*i.CreatedAtGT))
+	}
+	if i.CreatedAtGTE != nil {
+		predicates = append(predicates, githubrepository.CreatedAtGTE(*i.CreatedAtGTE))
+	}
+	if i.CreatedAtLT != nil {
+		predicates = append(predicates, githubrepository.CreatedAtLT(*i.CreatedAtLT))
+	}
+	if i.CreatedAtLTE != nil {
+		predicates = append(predicates, githubrepository.CreatedAtLTE(*i.CreatedAtLTE))
+	}
+	if i.UpdatedAt != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtEQ(*i.UpdatedAt))
+	}
+	if i.UpdatedAtNEQ != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtNEQ(*i.UpdatedAtNEQ))
+	}
+	if len(i.UpdatedAtIn) > 0 {
+		predicates = append(predicates, githubrepository.UpdatedAtIn(i.UpdatedAtIn...))
+	}
+	if len(i.UpdatedAtNotIn) > 0 {
+		predicates = append(predicates, githubrepository.UpdatedAtNotIn(i.UpdatedAtNotIn...))
+	}
+	if i.UpdatedAtGT != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtGT(*i.UpdatedAtGT))
+	}
+	if i.UpdatedAtGTE != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtGTE(*i.UpdatedAtGTE))
+	}
+	if i.UpdatedAtLT != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtLT(*i.UpdatedAtLT))
+	}
+	if i.UpdatedAtLTE != nil {
+		predicates = append(predicates, githubrepository.UpdatedAtLTE(*i.UpdatedAtLTE))
+	}
+	if i.UpdatedAtIsNil {
+		predicates = append(predicates, githubrepository.UpdatedAtIsNil())
+	}
+	if i.UpdatedAtNotNil {
+		predicates = append(predicates, githubrepository.UpdatedAtNotNil())
+	}
+
+	if i.HasLabels != nil {
+		p := githubrepository.HasLabels()
+		if !*i.HasLabels {
+			p = githubrepository.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasLabelsWith) > 0 {
+		with := make([]predicate.Label, 0, len(i.HasLabelsWith))
+		for _, w := range i.HasLabelsWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, githubrepository.HasLabelsWith(with...))
+	}
+	switch len(predicates) {
+	case 0:
+		return nil, fmt.Errorf("empty predicate GithubRepositoryWhereInput")
+	case 1:
+		return predicates[0], nil
+	default:
+		return githubrepository.And(predicates...), nil
+	}
+}
+
 // LabelWhereInput represents a where input for filtering Label queries.
 type LabelWhereInput struct {
 	Predicates []predicate.Label  `json:"-"`
@@ -410,6 +1181,10 @@ type LabelWhereInput struct {
 	// "posts" edge predicates.
 	HasPosts     *bool             `json:"hasPosts,omitempty"`
 	HasPostsWith []*PostWhereInput `json:"hasPostsWith,omitempty"`
+
+	// "github_repositories" edge predicates.
+	HasGithubRepositories     *bool                         `json:"hasGithubRepositories,omitempty"`
+	HasGithubRepositoriesWith []*GithubRepositoryWhereInput `json:"hasGithubRepositoriesWith,omitempty"`
 }
 
 // AddPredicates adds custom predicates to the where input to be used during the filtering phase.
@@ -606,6 +1381,24 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 			with = append(with, p)
 		}
 		predicates = append(predicates, label.HasPostsWith(with...))
+	}
+	if i.HasGithubRepositories != nil {
+		p := label.HasGithubRepositories()
+		if !*i.HasGithubRepositories {
+			p = label.Not(p)
+		}
+		predicates = append(predicates, p)
+	}
+	if len(i.HasGithubRepositoriesWith) > 0 {
+		with := make([]predicate.GithubRepository, 0, len(i.HasGithubRepositoriesWith))
+		for _, w := range i.HasGithubRepositoriesWith {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			with = append(with, p)
+		}
+		predicates = append(predicates, label.HasGithubRepositoriesWith(with...))
 	}
 	switch len(predicates) {
 	case 0:

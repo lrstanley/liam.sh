@@ -8,6 +8,7 @@ package ent
 
 import (
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -21,7 +22,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 4)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 5)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubevent.Table,
@@ -46,6 +47,38 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[1] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   githubrepository.Table,
+			Columns: githubrepository.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeInt,
+				Column: githubrepository.FieldID,
+			},
+		},
+		Type: "GithubRepository",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			githubrepository.FieldRepoID:        {Type: field.TypeInt64, Column: githubrepository.FieldRepoID},
+			githubrepository.FieldName:          {Type: field.TypeString, Column: githubrepository.FieldName},
+			githubrepository.FieldFullName:      {Type: field.TypeString, Column: githubrepository.FieldFullName},
+			githubrepository.FieldOwnerLogin:    {Type: field.TypeString, Column: githubrepository.FieldOwnerLogin},
+			githubrepository.FieldOwner:         {Type: field.TypeJSON, Column: githubrepository.FieldOwner},
+			githubrepository.FieldPublic:        {Type: field.TypeBool, Column: githubrepository.FieldPublic},
+			githubrepository.FieldHTMLURL:       {Type: field.TypeString, Column: githubrepository.FieldHTMLURL},
+			githubrepository.FieldDescription:   {Type: field.TypeString, Column: githubrepository.FieldDescription},
+			githubrepository.FieldFork:          {Type: field.TypeBool, Column: githubrepository.FieldFork},
+			githubrepository.FieldHomepage:      {Type: field.TypeString, Column: githubrepository.FieldHomepage},
+			githubrepository.FieldStarCount:     {Type: field.TypeInt, Column: githubrepository.FieldStarCount},
+			githubrepository.FieldDefaultBranch: {Type: field.TypeString, Column: githubrepository.FieldDefaultBranch},
+			githubrepository.FieldIsTemplate:    {Type: field.TypeBool, Column: githubrepository.FieldIsTemplate},
+			githubrepository.FieldHasIssues:     {Type: field.TypeBool, Column: githubrepository.FieldHasIssues},
+			githubrepository.FieldArchived:      {Type: field.TypeBool, Column: githubrepository.FieldArchived},
+			githubrepository.FieldPushedAt:      {Type: field.TypeTime, Column: githubrepository.FieldPushedAt},
+			githubrepository.FieldCreatedAt:     {Type: field.TypeTime, Column: githubrepository.FieldCreatedAt},
+			githubrepository.FieldUpdatedAt:     {Type: field.TypeTime, Column: githubrepository.FieldUpdatedAt},
+			githubrepository.FieldLicense:       {Type: field.TypeJSON, Column: githubrepository.FieldLicense},
+		},
+	}
+	graph.Nodes[2] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   label.Table,
 			Columns: label.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -60,7 +93,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			label.FieldName:       {Type: field.TypeString, Column: label.FieldName},
 		},
 	}
-	graph.Nodes[2] = &sqlgraph.Node{
+	graph.Nodes[3] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   post.Table,
 			Columns: post.Columns,
@@ -82,7 +115,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldViewCount:   {Type: field.TypeInt, Column: post.FieldViewCount},
 		},
 	}
-	graph.Nodes[3] = &sqlgraph.Node{
+	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -106,6 +139,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.MustAddE(
+		"labels",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   githubrepository.LabelsTable,
+			Columns: githubrepository.LabelsPrimaryKey,
+			Bidi:    false,
+		},
+		"GithubRepository",
+		"Label",
+	)
+	graph.MustAddE(
 		"posts",
 		&sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -116,6 +161,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		"Label",
 		"Post",
+	)
+	graph.MustAddE(
+		"github_repositories",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: false,
+			Table:   label.GithubRepositoriesTable,
+			Columns: label.GithubRepositoriesPrimaryKey,
+			Bidi:    false,
+		},
+		"Label",
+		"GithubRepository",
 	)
 	graph.MustAddE(
 		"author",
@@ -248,6 +305,155 @@ func (f *GithubEventFilter) WherePayload(p entql.BytesP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (grq *GithubRepositoryQuery) addPredicate(pred func(s *sql.Selector)) {
+	grq.predicates = append(grq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GithubRepositoryQuery builder.
+func (grq *GithubRepositoryQuery) Filter() *GithubRepositoryFilter {
+	return &GithubRepositoryFilter{grq.config, grq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GithubRepositoryMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GithubRepositoryMutation builder.
+func (m *GithubRepositoryMutation) Filter() *GithubRepositoryFilter {
+	return &GithubRepositoryFilter{m.config, m}
+}
+
+// GithubRepositoryFilter provides a generic filtering capability at runtime for GithubRepositoryQuery.
+type GithubRepositoryFilter struct {
+	config
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GithubRepositoryFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql int predicate on the id field.
+func (f *GithubRepositoryFilter) WhereID(p entql.IntP) {
+	f.Where(p.Field(githubrepository.FieldID))
+}
+
+// WhereRepoID applies the entql int64 predicate on the repo_id field.
+func (f *GithubRepositoryFilter) WhereRepoID(p entql.Int64P) {
+	f.Where(p.Field(githubrepository.FieldRepoID))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *GithubRepositoryFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldName))
+}
+
+// WhereFullName applies the entql string predicate on the full_name field.
+func (f *GithubRepositoryFilter) WhereFullName(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldFullName))
+}
+
+// WhereOwnerLogin applies the entql string predicate on the owner_login field.
+func (f *GithubRepositoryFilter) WhereOwnerLogin(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldOwnerLogin))
+}
+
+// WhereOwner applies the entql json.RawMessage predicate on the owner field.
+func (f *GithubRepositoryFilter) WhereOwner(p entql.BytesP) {
+	f.Where(p.Field(githubrepository.FieldOwner))
+}
+
+// WherePublic applies the entql bool predicate on the public field.
+func (f *GithubRepositoryFilter) WherePublic(p entql.BoolP) {
+	f.Where(p.Field(githubrepository.FieldPublic))
+}
+
+// WhereHTMLURL applies the entql string predicate on the html_url field.
+func (f *GithubRepositoryFilter) WhereHTMLURL(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldHTMLURL))
+}
+
+// WhereDescription applies the entql string predicate on the description field.
+func (f *GithubRepositoryFilter) WhereDescription(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldDescription))
+}
+
+// WhereFork applies the entql bool predicate on the fork field.
+func (f *GithubRepositoryFilter) WhereFork(p entql.BoolP) {
+	f.Where(p.Field(githubrepository.FieldFork))
+}
+
+// WhereHomepage applies the entql string predicate on the homepage field.
+func (f *GithubRepositoryFilter) WhereHomepage(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldHomepage))
+}
+
+// WhereStarCount applies the entql int predicate on the star_count field.
+func (f *GithubRepositoryFilter) WhereStarCount(p entql.IntP) {
+	f.Where(p.Field(githubrepository.FieldStarCount))
+}
+
+// WhereDefaultBranch applies the entql string predicate on the default_branch field.
+func (f *GithubRepositoryFilter) WhereDefaultBranch(p entql.StringP) {
+	f.Where(p.Field(githubrepository.FieldDefaultBranch))
+}
+
+// WhereIsTemplate applies the entql bool predicate on the is_template field.
+func (f *GithubRepositoryFilter) WhereIsTemplate(p entql.BoolP) {
+	f.Where(p.Field(githubrepository.FieldIsTemplate))
+}
+
+// WhereHasIssues applies the entql bool predicate on the has_issues field.
+func (f *GithubRepositoryFilter) WhereHasIssues(p entql.BoolP) {
+	f.Where(p.Field(githubrepository.FieldHasIssues))
+}
+
+// WhereArchived applies the entql bool predicate on the archived field.
+func (f *GithubRepositoryFilter) WhereArchived(p entql.BoolP) {
+	f.Where(p.Field(githubrepository.FieldArchived))
+}
+
+// WherePushedAt applies the entql time.Time predicate on the pushed_at field.
+func (f *GithubRepositoryFilter) WherePushedAt(p entql.TimeP) {
+	f.Where(p.Field(githubrepository.FieldPushedAt))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *GithubRepositoryFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubrepository.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *GithubRepositoryFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubrepository.FieldUpdatedAt))
+}
+
+// WhereLicense applies the entql json.RawMessage predicate on the license field.
+func (f *GithubRepositoryFilter) WhereLicense(p entql.BytesP) {
+	f.Where(p.Field(githubrepository.FieldLicense))
+}
+
+// WhereHasLabels applies a predicate to check if query has an edge labels.
+func (f *GithubRepositoryFilter) WhereHasLabels() {
+	f.Where(entql.HasEdge("labels"))
+}
+
+// WhereHasLabelsWith applies a predicate to check if query has an edge labels with a given conditions (other predicates).
+func (f *GithubRepositoryFilter) WhereHasLabelsWith(preds ...predicate.Label) {
+	f.Where(entql.HasEdgeWith("labels", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (lq *LabelQuery) addPredicate(pred func(s *sql.Selector)) {
 	lq.predicates = append(lq.predicates, pred)
 }
@@ -276,7 +482,7 @@ type LabelFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LabelFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -316,6 +522,20 @@ func (f *LabelFilter) WhereHasPostsWith(preds ...predicate.Post) {
 	})))
 }
 
+// WhereHasGithubRepositories applies a predicate to check if query has an edge github_repositories.
+func (f *LabelFilter) WhereHasGithubRepositories() {
+	f.Where(entql.HasEdge("github_repositories"))
+}
+
+// WhereHasGithubRepositoriesWith applies a predicate to check if query has an edge github_repositories with a given conditions (other predicates).
+func (f *LabelFilter) WhereHasGithubRepositoriesWith(preds ...predicate.GithubRepository) {
+	f.Where(entql.HasEdgeWith("github_repositories", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
 // addPredicate implements the predicateAdder interface.
 func (pq *PostQuery) addPredicate(pred func(s *sql.Selector)) {
 	pq.predicates = append(pq.predicates, pred)
@@ -345,7 +565,7 @@ type PostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -458,7 +678,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

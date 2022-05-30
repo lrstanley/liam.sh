@@ -13,6 +13,9 @@ import (
 // GithubEvent is the predicate function for githubevent builders.
 type GithubEvent func(*sql.Selector)
 
+// GithubRepository is the predicate function for githubrepository builders.
+type GithubRepository func(*sql.Selector)
+
 // Label is the predicate function for label builders.
 type Label func(*sql.Selector)
 

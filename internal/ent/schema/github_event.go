@@ -32,7 +32,7 @@ func (GithubEvent) Fields() []ent.Field {
 		field.Int64("repo_id").Positive().Annotations(
 			entgql.OrderField("REPO_ID"),
 		),
-		field.JSON("repo", &github.Repository{}).Annotations(entgql.Type("GithubRepository")),
+		field.JSON("repo", &github.Repository{}).Annotations(entgql.Type("GithubEventRepo")),
 		field.JSON("payload", map[string]interface{}{}).Annotations(entgql.Type("Map")),
 	}
 }

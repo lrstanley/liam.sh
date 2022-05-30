@@ -13,6 +13,8 @@ import (
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 
+const userInterval = 10 * time.Minute
+
 var (
 	User models.Atomic[*github.User]
 )
@@ -26,7 +28,7 @@ func UserRunner(ctx context.Context) error {
 		select {
 		case <-ctx.Done():
 			return nil
-		case <-time.After(10 * time.Minute):
+		case <-time.After(userInterval):
 			getUser(ctx, logger)
 		}
 	}
