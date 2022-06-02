@@ -35,7 +35,7 @@ export const adminSidebarOptions = [
     .map((option) => renderLink(option.to, option.name, IconMdiLink)),
   { key: "divider-2", type: "divider" },
   {
-    label: () => h("a", { href: "/api/auth/logout" }, { default: () => "Logout" }),
+    label: () => h("a", { href: "/-/auth/logout" }, { default: () => "Logout" }),
     key: "logout",
     icon: renderIcon(IconMdiLogout),
   },

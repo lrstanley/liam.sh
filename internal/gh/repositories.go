@@ -50,7 +50,7 @@ func RepositoryRunner(ctx context.Context) error {
 }
 
 var (
-	reStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
+	ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
 )
 
 func getRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) error {
@@ -147,7 +147,7 @@ func storeRepository(ctx context.Context, db *ent.Tx, lc *database.LabelCreator,
 		SetOwner(repo.GetOwner()).
 		SetPublic(!repo.GetPrivate()).
 		SetHTMLURL(repo.GetHTMLURL()).
-		SetDescription(strings.TrimSpace(reStripEmoji.ReplaceAllString(repo.GetDescription(), " "))).
+		SetDescription(strings.TrimSpace(ReStripEmoji.ReplaceAllString(repo.GetDescription(), " "))).
 		SetFork(repo.GetFork()).
 		SetHomepage(repo.GetHomepage()).
 		SetStarCount(repo.GetStargazersCount()).

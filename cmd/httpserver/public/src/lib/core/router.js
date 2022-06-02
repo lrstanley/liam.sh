@@ -32,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.auth == true && state.base.self == null) {
-    window.location.href = `/api/auth/providers/github?next=${window.location.origin + to.path}`
+    window.location.href = `/-/auth/providers/github?next=${window.location.origin + to.path}`
     return
   }
 

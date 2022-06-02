@@ -80,7 +80,7 @@ export default defineConfig({
     port: 8081,
     strictPort: true,
     proxy: {
-      "^/api/.*": {
+      "^/(-|security\\.txt|robots\\.txt)(/.*|$)": {
         target: "http://localhost:8080",
         xfwd: true,
       },

@@ -18,6 +18,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/graphql"
+	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
@@ -66,11 +67,12 @@ func httpServer() *http.Server {
 		cli.Flags.HTTP.EncryptionKey,
 	)
 	r.Use(auth.AddToContext)
-	r.Use(httpware.EvictCacheAdmin)
+	r.Use(httpware.UseEvictCacheAdmin)
 
-	r.Mount("/api/graphql", graphql.New(db, cli))
-	r.Mount("/api/playground", playground.Handler("GraphQL playground", "/api/graphql"))
-	r.Mount("/api/auth", auth)
+	r.Mount("/-/graphql", graphql.New(db, cli))
+	r.Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
+	r.Mount("/-/auth", auth)
+	r.Route("/-/gh", ghhandler.New(db).Route)
 	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 
 	if !cli.Debug {
@@ -89,7 +91,7 @@ func httpServer() *http.Server {
 }
 
 func catchAll(w http.ResponseWriter, r *http.Request) {
-	if strings.HasPrefix(r.URL.Path, "/api/") {
+	if strings.HasPrefix(r.URL.Path, "/-/") {
 		chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
 		return
 	}

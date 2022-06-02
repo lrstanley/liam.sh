@@ -11,7 +11,7 @@ import (
 	"github.com/lrstanley/chix"
 )
 
-func EvictCacheAdmin(next http.Handler) http.Handler {
+func UseEvictCacheAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if chix.RolesFromContext(r.Context()).Has("admin") {
 			next.ServeHTTP(w, r.WithContext(entcache.Evict(r.Context())))
@@ -22,7 +22,7 @@ func EvictCacheAdmin(next http.Handler) http.Handler {
 	})
 }
 
-func SkipCache(next http.Handler) http.Handler {
+func UseSkipCache(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		next.ServeHTTP(w, r.WithContext(entcache.Skip(r.Context())))
 	})

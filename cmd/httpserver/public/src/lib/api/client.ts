@@ -23,7 +23,7 @@ function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<any> {
 }
 
 export const client = createClient({
-    url: "/api/graphql",
+    url: "/-/graphql",
     requestPolicy: "cache-and-network",
     fetch: fetchWithTimeout,
     exchanges: [
