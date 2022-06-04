@@ -2,7 +2,6 @@
 import { createClient, provideClient } from '@urql/vue'
 import { dedupExchange, cacheExchange, fetchExchange } from "@urql/vue"
 import { retryExchange } from "@urql/exchange-retry"
-import { devtoolsExchange } from "@urql/devtools"
 
 function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<any> {
     const controller = new AbortController()
@@ -27,7 +26,6 @@ export const client = createClient({
     requestPolicy: "cache-and-network",
     fetch: fetchWithTimeout,
     exchanges: [
-        devtoolsExchange,
         dedupExchange,
         cacheExchange,
         retryExchange({
