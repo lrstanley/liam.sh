@@ -15,10 +15,7 @@
         <div class="flex-none">
           <EventHoverItem placement="right">
             <template #value>
-              <i-mdi-clock-time-two-outline
-                :style="{ '--i': fetched.length - i, '--total': fetched.length }"
-                class="timestamp"
-              />
+              <i-mdi-clock-time-two-outline class="timestamp" />
             </template>
 
             {{ useTimeAgo(e.createdAt).value }}
