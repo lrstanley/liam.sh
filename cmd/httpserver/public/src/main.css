@@ -1,29 +1,15 @@
-<template>
-  <n-config-provider :theme="darkTheme" :abstract="true">
-    <n-loading-bar-provider>
-      <n-message-provider>
-        <n-dialog-provider>
-          <router-view />
-        </n-dialog-provider>
-      </n-message-provider>
-    </n-loading-bar-provider>
-  </n-config-provider>
-</template>
-
-<script setup>
-import { darkTheme } from "naive-ui"
-</script>
-
-<style>
 html,
 body {
   height: 100%;
   width: 100%;
   @apply flex flex-auto;
   @apply bg-dark-300 text-light-600;
+  font-family: Consolas, monaco, monospace;
 }
 
 #app {
+  max-height: 100%;
+  max-width: 100%;
   font-family: Consolas, monaco, monospace;
   @apply antialiased;
   @apply flex flex-auto;
@@ -42,12 +28,16 @@ body {
   font-size: 1.1em;
 }
 
-a {
-  @apply !text-emerald-500 hover:!text-emerald-600;
+.icon {
+  @apply align-middle;
 }
 
-.n-menu a {
-  color: inherit !important;
+.n-popover {
+  padding: 2px 6px !important;
+}
+
+a {
+  @apply text-emerald-500 hover:text-emerald-600;
 }
 
 * {
@@ -77,4 +67,3 @@ a {
 *::-webkit-scrollbar-corner {
   background-color: transparent;
 }
-</style>

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router"
 import routes from "~pages"
+import { loadingBar } from "@/lib/core/status"
 import { titleCase } from "@/lib/core/util"
 import { client } from "@/lib/api/client"
 import { BaseDocument } from "@/lib/api"
@@ -13,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
   const state = useState()
 
   if (from.name != to.name || JSON.stringify(from.params) != JSON.stringify(to.params)) {
-    state.loading = true
+    loadingBar.start()
   }
 
   let error
@@ -83,7 +84,7 @@ router.afterEach((to) => {
   state.history.push({ title, path: to.path, timestamp: new Date().toISOString() })
 
   setTimeout(() => {
-    state.loading = false
+    loadingBar.finish()
   }, 100)
   return
 })

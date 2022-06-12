@@ -1,26 +1,24 @@
 <template>
-  <LayoutBase>
-    <div class="flex flex-auto flex-col justify-center">
-      <n-result
-        :status="errorCode"
-        :title="'Error code: ' + errorTitle"
-        :description="props.error ? props.error.toString() : 'You know life is always ridiculous.'"
-      >
-        <template #footer>
-          <n-button-group>
-            <n-button @click="$router.back()">
-              <n-icon class="mr-1"><i-mdi-undo-variant /></n-icon>
-              Go back
-            </n-button>
-            <n-button @click="$router.push('/')">
-              <n-icon class="mr-1"><i-mdi-home /></n-icon>
-              Home
-            </n-button>
-          </n-button-group>
-        </template>
-      </n-result>
-    </div>
-  </LayoutBase>
+  <div class="flex flex-auto flex-col justify-center">
+    <n-result
+      :status="errorCode"
+      :title="'Error code: ' + errorTitle"
+      :description="props.error ? props.error.toString() : 'You know life is always ridiculous.'"
+    >
+      <template #footer>
+        <n-button-group>
+          <n-button @click="$router.back()">
+            <n-icon class="mr-1"><i-mdi-undo-variant /></n-icon>
+            Go back
+          </n-button>
+          <n-button @click="$router.push('/')">
+            <n-icon class="mr-1"><i-mdi-home /></n-icon>
+            Home
+          </n-button>
+        </n-button-group>
+      </template>
+    </n-result>
+  </div>
 </template>
 
 <script setup>

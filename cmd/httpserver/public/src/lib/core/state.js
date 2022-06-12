@@ -5,7 +5,6 @@ export const useState = defineStore("state", {
   state: () => {
     return useStorage("state", {
       base: null,
-      loading: false,
       history: [],
       sidebarCollapsed: false,
     })

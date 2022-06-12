@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import { useDialog, useMessage } from "naive-ui"
+import { message, dialog } from "@/lib/core/status"
 import { useTimeAgo } from "@vueuse/core"
 import { useGetPostsQuery, useDeletePostMutation, useRegeneratePostsMutation } from "@/lib/api"
 
@@ -66,8 +66,6 @@ const props = defineProps({
   },
 })
 
-const dialog = useDialog()
-const message = useMessage()
 const {
   data,
   fetching,

@@ -130,3 +130,37 @@ query getLabels($where: LabelWhereInput) {
         }
     }
 }
+
+query getEvents(
+    $count: Int = 25
+    $cursor: Cursor = null
+    $order: OrderDirection = DESC
+    $orderBy: GithubEventOrderField = CREATED_AT
+) {
+    githubevents(
+        first: $count
+        after: $cursor
+        where: { public: true }
+        orderBy: { direction: $order, field: $orderBy }
+    ) {
+        edges {
+            node {
+                id
+                eventType
+                createdAt
+                actor {
+                    login
+                    avatarURL
+                }
+                repo {
+                    name
+                }
+                payload
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}

@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { useMessage } from "naive-ui"
+import { message } from "@/lib/core/status"
 import { useGetLabelsQuery, useCreateLabelMutation } from "@/lib/api"
 
 const props = defineProps({
@@ -55,7 +55,6 @@ const labels = computed(() =>
   })
 )
 
-const message = useMessage()
 const newLabelInput = ref("")
 const createLabel = useCreateLabelMutation()
 function createNewLabel(val) {

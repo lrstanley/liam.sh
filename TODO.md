@@ -2,10 +2,11 @@
 
 - brotli wrapper inside of chix
 - meta html head tags
+- application/ld+json (like <https://martinheinz.dev/> to denote related sites?)
+- generate sitemap? if we link properly, shouldn't be needed?
 - add preview to editor?
 - resumeeeee
 - add multi-error alert component
-- application/ld+json (like <https://martinheinz.dev/> to denote related sites?)
 - run through security checks
 - git release redirects
 - git release version redirects

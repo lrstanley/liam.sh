@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { useMessage } from "naive-ui"
+import { message } from "@/lib/core/status"
 import { useGetPostQuery, useUpdatePostMutation } from "@/lib/api"
 
 const props = defineProps({
@@ -35,7 +35,6 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const message = useMessage()
 const { data, error, fetching } = useGetPostQuery({ variables: { id: props.id } })
 const update = useUpdatePostMutation()
 

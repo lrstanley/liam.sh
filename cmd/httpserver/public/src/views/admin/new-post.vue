@@ -16,11 +16,10 @@
 </template>
 
 <script setup>
-import { useMessage } from "naive-ui"
+import { message } from "@/lib/core/status"
 import { useCreatePostMutation } from "@/lib/api"
 
 const router = useRouter()
-const message = useMessage()
 const post = useCreatePostMutation()
 
 function createPost(val) {
