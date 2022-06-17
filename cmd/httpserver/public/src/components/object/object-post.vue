@@ -1,7 +1,7 @@
 <template>
   <component
     :is="props.linkable ? 'router-link' : 'div'"
-    :to="{ name: 'posts-slug', params: { slug: props.value.slug } }"
+    :to="{ name: 'p-slug', params: { slug: post.slug } }"
   >
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
@@ -13,34 +13,34 @@
       </template>
       <template #header>
         <span class="post-title text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-          {{ props.value.title }}
+          {{ post.title }}
         </span>
       </template>
       <template #description>
         <span>
           <i>
-            Published {{ useTimeAgo(props.value.publishedAt).value }} by
-            <a :href="props.value.author.htmlURL" target="_blank">{{ props.value.author.name }}</a>
+            Published {{ useTimeAgo(post.publishedAt).value }} by
+            <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
           </i>
         </span>
       </template>
 
-      <span v-html="props.value.summary" />
+      <span v-html="post.summary" />
 
-      <template v-if="props.value.labels" #action>
+      <template v-if="post.labels" #action>
         <div class="flex flex-auto justify-between">
-          <div>
+          <div class="inline-flex flex-auto flex-wrap gap-1">
             <ObjectLabel
-              v-for="label in props.value.labels.edges.map(({ node }) => node)"
+              v-for="label in post.labels.edges.map(({ node }) => node)"
               :key="label.id"
               :value="label"
               linkable
-              class="mr-1"
             />
           </div>
 
           <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-            {{ props.value.viewCount.toLocaleString() }} views
+            {{ post.viewCount.toLocaleString() }}
+            {{ post.viewCount === 1 ? "view" : "views" }}
           </n-tag>
         </div>
       </template>
@@ -61,6 +61,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const post = ref(props.value)
 </script>
 
 <style scoped>

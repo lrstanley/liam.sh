@@ -19,12 +19,12 @@
         <tbody>
           <tr v-for="post in posts" :key="post.id">
             <td>
-              <router-link :to="{ name: 'posts-slug', params: { slug: post.slug } }">
+              <router-link :to="{ name: 'p-slug', params: { slug: post.slug } }">
                 {{ post.title }}
               </router-link>
             </td>
             <td class="hidden md:table-cell">
-              <router-link :to="{ name: 'posts-slug', params: { slug: post.slug } }">
+              <router-link :to="{ name: 'p-slug', params: { slug: post.slug } }">
                 {{ post.slug }}
               </router-link>
             </td>

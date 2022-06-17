@@ -1,10 +1,10 @@
 <template>
   <component
     :is="props.linkable ? 'router-link' : 'span'"
-    :to="{ name: 'posts', query: { label: props.value.name } }"
+    :to="{ name: props.route, query: { [props.query]: label.name } }"
   >
     <n-tag v-bind="$attrs" class="hover:bg-emerald-700 cursor-pointer">
-      {{ props.value.name }}
+      {{ label.name }}
     </n-tag>
   </component>
 </template>
@@ -19,7 +19,15 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  route: {
+    type: String,
+    default: "posts",
+  },
+  query: {
+    type: String,
+    default: "label",
+  },
 })
-</script>
 
-<style scoped></style>
+const label = ref(props.value)
+</script>

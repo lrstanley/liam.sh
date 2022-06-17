@@ -164,3 +164,48 @@ query getEvents(
         }
     }
 }
+
+query getRepos(
+    $count: Int = 100
+    $order: OrderDirection = DESC
+    $orderBy: GithubRepositoryOrderField = STAR_COUNT
+    $where: GithubRepositoryWhereInput
+) {
+    githubrepositories(
+        first: $count
+        where: $where
+        orderBy: { direction: $order, field: $orderBy }
+    ) {
+        edges {
+            node {
+                id
+                name
+                fullName
+                owner {
+                    login
+                    avatarURL
+                    htmlurl
+                }
+                htmlURL
+                description
+                homepage
+                starCount
+                archived
+                fork
+                pushedAt
+                license {
+                    key
+                    name
+                }
+                labels(orderBy: { direction: ASC, field: NAME }) {
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

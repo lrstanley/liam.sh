@@ -7,6 +7,7 @@
       :style="{ '--i': i, '--total': objects.length }"
     >
       <component :is="object.component" v-bind="$attrs" />
+      <n-divider v-if="divider && i != objects.length - 1" />
     </div>
   </TransitionGroup>
 </template>
@@ -15,6 +16,7 @@
 import { h } from "vue"
 import ObjectPost from "@/components/object/object-post.vue"
 import ObjectLabel from "@/components/object/object-label.vue"
+import ObjectRepo from "@/components/object/object-repo.vue"
 
 const props = defineProps({
   value: {
@@ -22,6 +24,10 @@ const props = defineProps({
     required: true,
   },
   showEmpty: {
+    type: Boolean,
+    default: false,
+  },
+  divider: {
     type: Boolean,
     default: false,
   },
@@ -64,6 +70,9 @@ function typeMapper(o) {
     case "Label":
       return { component: h(ObjectLabel, { value: o }), object: o }
 
+    case "GithubRepository":
+      return { component: h(ObjectRepo, { value: o }), object: o }
+
     default:
       return []
   }
@@ -77,7 +86,7 @@ function typeMapper(o) {
 
 .v-enter-active {
   @apply transform transition-all duration-100;
-  transition-delay: calc(0.1s * (var(--total) - var(--i)));
+  transition-delay: calc(min(0.1s, 0.1s * (var(--total) - var(--i))));
 }
 
 .v-leave-active {
