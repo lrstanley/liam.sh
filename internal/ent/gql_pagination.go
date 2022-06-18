@@ -262,7 +262,9 @@ type GithubEventConnection struct {
 	TotalCount int                `json:"totalCount"`
 }
 
-func (c *GithubEventConnection) build(nodes []*GithubEvent, pager *githubeventPager, first, last *int) {
+func (c *GithubEventConnection) build(nodes []*GithubEvent, pager *githubeventPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
 	if first != nil && *first+1 == len(nodes) {
 		c.PageInfo.HasNextPage = true
 		nodes = nodes[:len(nodes)-1]
@@ -444,7 +446,7 @@ func (ge *GithubEventQuery) Paginate(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -594,7 +596,9 @@ type GithubRepositoryConnection struct {
 	TotalCount int                     `json:"totalCount"`
 }
 
-func (c *GithubRepositoryConnection) build(nodes []*GithubRepository, pager *githubrepositoryPager, first, last *int) {
+func (c *GithubRepositoryConnection) build(nodes []*GithubRepository, pager *githubrepositoryPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
 	if first != nil && *first+1 == len(nodes) {
 		c.PageInfo.HasNextPage = true
 		nodes = nodes[:len(nodes)-1]
@@ -776,7 +780,7 @@ func (gr *GithubRepositoryQuery) Paginate(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -954,7 +958,9 @@ type LabelConnection struct {
 	TotalCount int          `json:"totalCount"`
 }
 
-func (c *LabelConnection) build(nodes []*Label, pager *labelPager, first, last *int) {
+func (c *LabelConnection) build(nodes []*Label, pager *labelPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
 	if first != nil && *first+1 == len(nodes) {
 		c.PageInfo.HasNextPage = true
 		nodes = nodes[:len(nodes)-1]
@@ -1136,7 +1142,7 @@ func (l *LabelQuery) Paginate(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -1230,7 +1236,9 @@ type PostConnection struct {
 	TotalCount int         `json:"totalCount"`
 }
 
-func (c *PostConnection) build(nodes []*Post, pager *postPager, first, last *int) {
+func (c *PostConnection) build(nodes []*Post, pager *postPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
 	if first != nil && *first+1 == len(nodes) {
 		c.PageInfo.HasNextPage = true
 		nodes = nodes[:len(nodes)-1]
@@ -1412,7 +1420,7 @@ func (po *PostQuery) Paginate(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -1548,7 +1556,9 @@ type UserConnection struct {
 	TotalCount int         `json:"totalCount"`
 }
 
-func (c *UserConnection) build(nodes []*User, pager *userPager, first, last *int) {
+func (c *UserConnection) build(nodes []*User, pager *userPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
 	if first != nil && *first+1 == len(nodes) {
 		c.PageInfo.HasNextPage = true
 		nodes = nodes[:len(nodes)-1]
@@ -1730,7 +1740,7 @@ func (u *UserQuery) Paginate(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 

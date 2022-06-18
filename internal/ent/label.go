@@ -149,12 +149,14 @@ func (l *Label) Unwrap() *Label {
 func (l *Label) String() string {
 	var builder strings.Builder
 	builder.WriteString("Label(")
-	builder.WriteString(fmt.Sprintf("id=%v", l.ID))
-	builder.WriteString(", create_time=")
+	builder.WriteString(fmt.Sprintf("id=%v, ", l.ID))
+	builder.WriteString("create_time=")
 	builder.WriteString(l.CreateTime.Format(time.ANSIC))
-	builder.WriteString(", update_time=")
+	builder.WriteString(", ")
+	builder.WriteString("update_time=")
 	builder.WriteString(l.UpdateTime.Format(time.ANSIC))
-	builder.WriteString(", name=")
+	builder.WriteString(", ")
+	builder.WriteString("name=")
 	builder.WriteString(l.Name)
 	builder.WriteByte(')')
 	return builder.String()

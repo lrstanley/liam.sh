@@ -173,7 +173,7 @@ func (c *GithubEventClient) Use(hooks ...Hook) {
 	c.hooks.GithubEvent = append(c.hooks.GithubEvent, hooks...)
 }
 
-// Create returns a create builder for GithubEvent.
+// Create returns a builder for creating a GithubEvent entity.
 func (c *GithubEventClient) Create() *GithubEventCreate {
 	mutation := newGithubEventMutation(c.config, OpCreate)
 	return &GithubEventCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
@@ -208,12 +208,12 @@ func (c *GithubEventClient) Delete() *GithubEventDelete {
 	return &GithubEventDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// DeleteOne returns a delete builder for the given entity.
+// DeleteOne returns a builder for deleting the given entity.
 func (c *GithubEventClient) DeleteOne(ge *GithubEvent) *GithubEventDeleteOne {
 	return c.DeleteOneID(ge.ID)
 }
 
-// DeleteOneID returns a delete builder for the given id.
+// DeleteOne returns a builder for deleting the given entity by its id.
 func (c *GithubEventClient) DeleteOneID(id int) *GithubEventDeleteOne {
 	builder := c.Delete().Where(githubevent.ID(id))
 	builder.mutation.id = &id
@@ -264,7 +264,7 @@ func (c *GithubRepositoryClient) Use(hooks ...Hook) {
 	c.hooks.GithubRepository = append(c.hooks.GithubRepository, hooks...)
 }
 
-// Create returns a create builder for GithubRepository.
+// Create returns a builder for creating a GithubRepository entity.
 func (c *GithubRepositoryClient) Create() *GithubRepositoryCreate {
 	mutation := newGithubRepositoryMutation(c.config, OpCreate)
 	return &GithubRepositoryCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
@@ -299,12 +299,12 @@ func (c *GithubRepositoryClient) Delete() *GithubRepositoryDelete {
 	return &GithubRepositoryDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// DeleteOne returns a delete builder for the given entity.
+// DeleteOne returns a builder for deleting the given entity.
 func (c *GithubRepositoryClient) DeleteOne(gr *GithubRepository) *GithubRepositoryDeleteOne {
 	return c.DeleteOneID(gr.ID)
 }
 
-// DeleteOneID returns a delete builder for the given id.
+// DeleteOne returns a builder for deleting the given entity by its id.
 func (c *GithubRepositoryClient) DeleteOneID(id int) *GithubRepositoryDeleteOne {
 	builder := c.Delete().Where(githubrepository.ID(id))
 	builder.mutation.id = &id
@@ -371,7 +371,7 @@ func (c *LabelClient) Use(hooks ...Hook) {
 	c.hooks.Label = append(c.hooks.Label, hooks...)
 }
 
-// Create returns a create builder for Label.
+// Create returns a builder for creating a Label entity.
 func (c *LabelClient) Create() *LabelCreate {
 	mutation := newLabelMutation(c.config, OpCreate)
 	return &LabelCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
@@ -406,12 +406,12 @@ func (c *LabelClient) Delete() *LabelDelete {
 	return &LabelDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// DeleteOne returns a delete builder for the given entity.
+// DeleteOne returns a builder for deleting the given entity.
 func (c *LabelClient) DeleteOne(l *Label) *LabelDeleteOne {
 	return c.DeleteOneID(l.ID)
 }
 
-// DeleteOneID returns a delete builder for the given id.
+// DeleteOne returns a builder for deleting the given entity by its id.
 func (c *LabelClient) DeleteOneID(id int) *LabelDeleteOne {
 	builder := c.Delete().Where(label.ID(id))
 	builder.mutation.id = &id
@@ -494,7 +494,7 @@ func (c *PostClient) Use(hooks ...Hook) {
 	c.hooks.Post = append(c.hooks.Post, hooks...)
 }
 
-// Create returns a create builder for Post.
+// Create returns a builder for creating a Post entity.
 func (c *PostClient) Create() *PostCreate {
 	mutation := newPostMutation(c.config, OpCreate)
 	return &PostCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
@@ -529,12 +529,12 @@ func (c *PostClient) Delete() *PostDelete {
 	return &PostDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// DeleteOne returns a delete builder for the given entity.
+// DeleteOne returns a builder for deleting the given entity.
 func (c *PostClient) DeleteOne(po *Post) *PostDeleteOne {
 	return c.DeleteOneID(po.ID)
 }
 
-// DeleteOneID returns a delete builder for the given id.
+// DeleteOne returns a builder for deleting the given entity by its id.
 func (c *PostClient) DeleteOneID(id int) *PostDeleteOne {
 	builder := c.Delete().Where(post.ID(id))
 	builder.mutation.id = &id
@@ -617,7 +617,7 @@ func (c *UserClient) Use(hooks ...Hook) {
 	c.hooks.User = append(c.hooks.User, hooks...)
 }
 
-// Create returns a create builder for User.
+// Create returns a builder for creating a User entity.
 func (c *UserClient) Create() *UserCreate {
 	mutation := newUserMutation(c.config, OpCreate)
 	return &UserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
@@ -652,12 +652,12 @@ func (c *UserClient) Delete() *UserDelete {
 	return &UserDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// DeleteOne returns a delete builder for the given entity.
+// DeleteOne returns a builder for deleting the given entity.
 func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
 	return c.DeleteOneID(u.ID)
 }
 
-// DeleteOneID returns a delete builder for the given id.
+// DeleteOne returns a builder for deleting the given entity by its id.
 func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
 	builder := c.Delete().Where(user.ID(id))
 	builder.mutation.id = &id

@@ -27,7 +27,7 @@ func (gr *GithubRepository) Labels(
 		if err != nil {
 			return nil, err
 		}
-		conn.build(nodes, pager, first, last)
+		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
 	query := gr.QueryLabels()
@@ -78,7 +78,7 @@ func (gr *GithubRepository) Labels(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -97,7 +97,7 @@ func (l *Label) Posts(
 		if err != nil {
 			return nil, err
 		}
-		conn.build(nodes, pager, first, last)
+		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
 	query := l.QueryPosts()
@@ -148,7 +148,7 @@ func (l *Label) Posts(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -167,7 +167,7 @@ func (l *Label) GithubRepositories(
 		if err != nil {
 			return nil, err
 		}
-		conn.build(nodes, pager, first, last)
+		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
 	query := l.QueryGithubRepositories()
@@ -218,7 +218,7 @@ func (l *Label) GithubRepositories(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -245,7 +245,7 @@ func (po *Post) Labels(
 		if err != nil {
 			return nil, err
 		}
-		conn.build(nodes, pager, first, last)
+		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
 	query := po.QueryLabels()
@@ -296,7 +296,7 @@ func (po *Post) Labels(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
 
@@ -315,7 +315,7 @@ func (u *User) Posts(
 		if err != nil {
 			return nil, err
 		}
-		conn.build(nodes, pager, first, last)
+		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
 	query := u.QueryPosts()
@@ -366,6 +366,6 @@ func (u *User) Posts(
 	if err != nil || len(nodes) == 0 {
 		return conn, err
 	}
-	conn.build(nodes, pager, first, last)
+	conn.build(nodes, pager, after, first, before, last)
 	return conn, nil
 }
