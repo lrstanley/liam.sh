@@ -2,19 +2,23 @@
   <LayoutDefault :error="error">
     <div class="grid gap-5 md:gap-25 mt-8">
       <div class="order-last md:order-first">
-        <n-input
-          v-model:value="search"
-          type="text"
-          placeholder="Search for a post"
-          :loading="fetching"
-          class="mb-8"
-        >
-          <template #prefix>
-            <n-icon>
-              <i-mdi-search />
-            </n-icon>
-          </template>
-        </n-input>
+        <div class="mb-8 flex flex-auto gap-2">
+          <n-input
+            v-model:value="search"
+            type="text"
+            placeholder="Search for a post"
+            :loading="fetching"
+            class="mb-8"
+          >
+            <template #prefix>
+              <n-icon>
+                <i-mdi-search />
+              </n-icon>
+            </template>
+          </n-input>
+
+          <CorePagination v-model="cursor" :page-info="data?.posts?.pageInfo" />
+        </div>
 
         <CoreObjectRender v-if="data?.posts" :value="data.posts" linkable show-empty divider />
       </div>
@@ -49,6 +53,7 @@
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
 import { useGetPostsQuery } from "@/lib/api"
+import { usePagination } from "@/lib/pagination"
 
 const orderOptions = {
   directions: ["desc", "asc"],
@@ -91,14 +96,14 @@ function changeOrder(key) {
   }, 1)
 }
 
+const cursor = useRouteQuery("cur", null)
+const labels = useRouteQuery("label", [])
 const search = useRouteQuery("q", "")
 const filterSearch = refDebounced(search, 300)
 
-const labels = useRouteQuery("label", [])
-
 const { data, error, fetching } = useGetPostsQuery({
   variables: {
-    first: 10,
+    ...usePagination(cursor, 10),
     where: {
       or: [{ titleContainsFold: filterSearch }, { summaryContainsFold: filterSearch }],
       hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),

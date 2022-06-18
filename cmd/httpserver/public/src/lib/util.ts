@@ -1,5 +1,5 @@
-export function titleCase(str) {
-  return str
+export function titleCase(input: string): string {
+  return input
     .toLowerCase()
     .split(" ")
     .map(function (word) {

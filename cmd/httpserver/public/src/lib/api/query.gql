@@ -75,15 +75,19 @@ query getPostContent($slug: String!) {
 }
 
 query getPosts(
-    $count: Int = 25
-    $cursor: Cursor
+    $first: Int = null
+    $last: Int = null
+    $before: Cursor = null
+    $after: Cursor = null
     $order: OrderDirection = DESC
     $orderBy: PostOrderField = DATE
     $where: PostWhereInput
 ) {
     posts(
-        first: $count
-        after: $cursor
+        first: $first
+        last: $last
+        before: $before
+        after: $after
         where: $where
         orderBy: { direction: $order, field: $orderBy }
     ) {
@@ -173,13 +177,19 @@ query getEvents(
 }
 
 query getRepos(
-    $count: Int = 100
+    $first: Int = null
+    $last: Int = null
+    $before: Cursor = null
+    $after: Cursor = null
     $order: OrderDirection = DESC
     $orderBy: GithubRepositoryOrderField = STAR_COUNT
     $where: GithubRepositoryWhereInput
 ) {
     githubrepositories(
-        first: $count
+        first: $first
+        last: $last
+        before: $before
+        after: $after
         where: $where
         orderBy: { direction: $order, field: $orderBy }
     ) {
@@ -213,6 +223,12 @@ query getRepos(
                     }
                 }
             }
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
         }
     }
 }

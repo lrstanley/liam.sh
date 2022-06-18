@@ -2,19 +2,22 @@
   <LayoutDefault :error="error">
     <div class="grid gap-5 md:gap-25 mt-8">
       <div class="order-last md:order-first">
-        <n-input
-          v-model:value="search"
-          type="text"
-          placeholder="Search for a repo"
-          :loading="fetching"
-          class="mb-8"
-        >
-          <template #prefix>
-            <n-icon>
-              <i-mdi-search />
-            </n-icon>
-          </template>
-        </n-input>
+        <div class="mb-8 flex flex-auto gap-2">
+          <n-input
+            v-model:value="search"
+            :loading="fetching"
+            type="text"
+            placeholder="Search for a repo"
+          >
+            <template #prefix>
+              <n-icon>
+                <i-mdi-search />
+              </n-icon>
+            </template>
+          </n-input>
+
+          <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+        </div>
 
         <CoreObjectRender
           v-if="data?.githubrepositories"
@@ -74,6 +77,7 @@
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
+import { usePagination } from "@/lib/pagination"
 
 const orderOptions = {
   directions: ["desc", "asc"],
@@ -117,12 +121,12 @@ function changeOrder(key) {
   }, 1)
 }
 
-const search = useRouteQuery("q", "")
-const filterSearch = refDebounced(search, 300)
-
+const cursor = useRouteQuery("cur", null)
 const labels = useRouteQuery("label", [])
 const archived = useRouteQuery("archived", false)
 const forks = useRouteQuery("forks", false)
+const search = useRouteQuery("q", "")
+const filterSearch = refDebounced(search, 300)
 
 const where = ref({
   or: [
@@ -138,7 +142,7 @@ const where = ref({
 
 const { data, error, fetching } = useGetReposQuery({
   variables: {
-    first: 100,
+    ...usePagination(cursor, 10),
     where: where,
     order: orderOptions.computed.direction,
     orderBy: orderOptions.computed.field,

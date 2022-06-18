@@ -8,7 +8,7 @@
 
       <n-alert
         v-if="props.error"
-        v-motion-fade-visible
+        v-motion-fade
         title="An error occurred"
         type="error"
         class="m-2 md:m-6"

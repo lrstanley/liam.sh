@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router"
 import routes from "~pages"
 import { loadingBar } from "@/lib/core/status"
-import { titleCase } from "@/lib/core/util"
+import { titleCase } from "@/lib/util"
 import { client } from "@/lib/api/client"
 import { BaseDocument } from "@/lib/api"
 
