@@ -3,7 +3,7 @@
     class="flex flex-wrap justify-center md:justify-start md:gap-x-2 md:gap-y-4 px-4 md:px-0 pb-5 md:pb-0"
   >
     <li v-for="link in menuOptions" :key="link.name">
-      <router-link :to="link.to">
+      <router-link :to="link.to" active-class="active">
         {{ link.alias }}
       </router-link>
     </li>
@@ -30,7 +30,8 @@ ul :deep(a) {
   @apply !text-violet-400 transition duration-100;
 }
 
-ul :deep(a):hover {
+ul :deep(a):hover,
+ul :deep(a).active {
   padding-right: 4ch;
   @apply !text-violet-500;
 }
