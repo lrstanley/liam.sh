@@ -126,6 +126,13 @@ query getLabels($where: LabelWhereInput) {
             node {
                 id
                 name
+
+                posts {
+                    totalCount
+                }
+                githubRepositories {
+                    totalCount
+                }
             }
         }
     }

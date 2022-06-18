@@ -38,7 +38,7 @@
       />
     </n-card>
     <div>
-      <n-card size="small">
+      <n-card size="small" class="md:sticky md:top-5 md:left-0">
         <n-form-item
           label="Post published date"
           :required="true"
@@ -47,7 +47,7 @@
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>
 
-        <PostLabelEdit v-model="post.labelIDs" class="pb-5" />
+        <LabelInput v-model="post.labelIDs" class="pb-5" />
 
         <n-button block strong secondary type="primary" @click="emit('update:post', post)">
           <n-icon class="mr-1"><i-mdi-content-save /></n-icon>

@@ -22,8 +22,9 @@ function renderLink(target, title, icon) {
 
 export const menuOptions = [
   { to: { name: "index" }, name: "Home", alias: "main" },
-  { to: { name: "about" }, name: "About", alias: "about" },
   { to: { name: "posts" }, name: "Posts", alias: "posts" },
+  { to: { name: "repos" }, name: "Repos", alias: "repos" },
+  { to: { name: "about" }, name: "About", alias: "about" },
 ]
 
 export const adminSidebarOptions = [

@@ -16,7 +16,7 @@
           </template>
         </n-input>
 
-        <ObjectRender
+        <CoreObjectRender
           v-if="data?.githubrepositories"
           :value="data.githubrepositories"
           linkable
@@ -47,28 +47,25 @@
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
-          <n-checkbox @update:checked="(v) => (where.archived = v ? null : false)">
+          <n-checkbox :checked="archived == 'true'" @update:checked="(v) => (archived = !!v)">
             include archived
           </n-checkbox>
-          <n-checkbox @update:checked="(v) => (where.fork = v ? null : false)">
+          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = !!v)">
             include forks
           </n-checkbox>
         </n-space>
 
-        <div v-if="allLabels">
-          <div class="text-emerald-500">Filter by label</div>
-          <n-space size="small" inline>
-            <n-tag
-              v-for="label in allLabels"
-              :key="label.id"
-              :type="labels.includes(label.name) ? 'success' : ''"
-              class="cursor-pointer"
-              @click="toggleLabel(label.name)"
-            >
-              {{ label.name }}
-            </n-tag>
-          </n-space>
-        </div>
+        <div class="text-emerald-500">Filter by label</div>
+        <LabelSelect
+          v-model="labels"
+          :where="{
+            hasGithubRepositoriesWith: {
+              fork: where.fork,
+              archived: where.archived,
+              public: where.public,
+            },
+          }"
+        />
       </div>
     </div>
   </LayoutDefault>
@@ -76,7 +73,7 @@
 
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
-import { useGetReposQuery, useGetLabelsQuery } from "@/lib/api"
+import { useGetReposQuery } from "@/lib/api"
 
 const orderOptions = {
   directions: ["desc", "asc"],
@@ -124,31 +121,8 @@ const search = useRouteQuery("q", "")
 const filterSearch = refDebounced(search, 300)
 
 const labels = useRouteQuery("label", [])
-const filterLabels = computed(() => (labels.value.length ? { nameIn: labels.value } : null))
-
-const labelQuery = useGetLabelsQuery({
-  variables: {
-    where: {
-      hasGithubRepositories: true,
-    },
-  },
-})
-const allLabels = computed(() => labelQuery.data.value?.labels.edges.map(({ node }) => node))
-
-function toggleLabel(name) {
-  let active = labels.value
-  if (!Array.isArray(labels.value)) {
-    active = [labels.value]
-  }
-
-  if (active.includes(name)) {
-    active = active.filter((l) => l !== name)
-  } else {
-    active = [...active, name]
-  }
-
-  labels.value = active
-}
+const archived = useRouteQuery("archived", false)
+const forks = useRouteQuery("forks", false)
 
 const where = ref({
   or: [
@@ -156,10 +130,10 @@ const where = ref({
     { descriptionContainsFold: filterSearch },
     { homepageContainsFold: filterSearch },
   ],
-  hasLabelsWith: filterLabels,
+  hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
   public: true,
-  fork: false,
-  archived: false,
+  fork: computed(() => (forks.value ? null : false)),
+  archived: computed(() => (archived.value ? null : false)),
 })
 
 const { data, error, fetching } = useGetReposQuery({

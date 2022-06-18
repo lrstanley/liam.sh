@@ -37,7 +37,7 @@ func httpServer() *http.Server {
 	r.Use(chix.UseStructuredLogger(logger))
 	r.Use(chix.UseNextURL)
 	r.Use(middleware.StripSlashes)
-	r.Use(middleware.Compress(5))
+	r.Use(middleware.Compress(9))
 	r.Use(httprate.LimitByIP(400, 5*time.Minute))
 	r.Use(chix.UseRobotsTxt(""))
 	r.Use(chix.UseSecurityTxt(&chix.SecurityConfig{

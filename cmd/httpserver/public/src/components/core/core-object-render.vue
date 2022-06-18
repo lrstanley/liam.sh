@@ -14,9 +14,9 @@
 
 <script setup>
 import { h } from "vue"
-import ObjectPost from "@/components/object/object-post.vue"
-import ObjectLabel from "@/components/object/object-label.vue"
-import ObjectRepo from "@/components/object/object-repo.vue"
+import PostObject from "@/components/post/post-object.vue"
+import LabelObject from "@/components/label/label-object.vue"
+import RepoObject from "@/components/repo/repo-object.vue"
 
 const props = defineProps({
   value: {
@@ -65,13 +65,13 @@ function typeMapper(o) {
 
   switch (o.__typename) {
     case "Post":
-      return { component: h(ObjectPost, { value: o }), object: o }
+      return { component: h(PostObject, { value: o }), object: o }
 
     case "Label":
-      return { component: h(ObjectLabel, { value: o }), object: o }
+      return { component: h(LabelObject, { value: o }), object: o }
 
     case "GithubRepository":
-      return { component: h(ObjectRepo, { value: o }), object: o }
+      return { component: h(RepoObject, { value: o }), object: o }
 
     default:
       return []

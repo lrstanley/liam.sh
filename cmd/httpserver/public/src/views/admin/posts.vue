@@ -29,7 +29,7 @@
               </router-link>
             </td>
             <td class="hidden md:flex">
-              <ObjectRender :value="post.labels" linkable class="mr-1" />
+              <CoreObjectRender :value="post.labels" linkable class="mr-1" />
             </td>
             <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
             <td>

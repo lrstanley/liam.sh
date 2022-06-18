@@ -53,7 +53,7 @@
       <template v-if="repo.labels" #action>
         <div class="flex flex-auto justify-between">
           <div class="inline-flex flex-auto flex-wrap gap-1">
-            <ObjectLabel
+            <LabelObject
               v-for="label in repo.labels.edges.map(({ node }) => node)"
               :key="label.id"
               :value="label"
