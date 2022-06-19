@@ -1,11 +1,11 @@
 import { NIcon } from "naive-ui"
 import { RouterLink } from "vue-router"
 
-function renderIcon(icon) {
+function renderIcon(icon: any) {
   return () => h(NIcon, { style: "margin-top: -3px" }, { default: () => h(icon) })
 }
 
-function renderLink(target, title, icon) {
+function renderLink(target: any, title: string, icon: any) {
   return {
     label: () =>
       h(

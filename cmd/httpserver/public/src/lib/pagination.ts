@@ -1,10 +1,11 @@
 import type { ComputedRef, Ref, WatchStopHandle } from "vue"
+import { shallowEqual } from "@/lib/util"
 
 type Filter = {
-  first: ComputedRef<any>;
-  last: ComputedRef<any>;
-  before: ComputedRef<any>;
-  after: ComputedRef<any>;
+  first: ComputedRef<any>
+  last: ComputedRef<any>
+  before: ComputedRef<any>
+  after: ComputedRef<any>
 }
 
 /**
@@ -19,9 +20,7 @@ type Filter = {
  */
 export function usePagination(cursor: Ref<any>, size: number = 10): Filter {
   return {
-    first: computed(() =>
-      !cursor.value ? size : cursor.value?.startsWith("a.") ? size : null
-    ),
+    first: computed(() => (!cursor.value ? size : cursor.value?.startsWith("a.") ? size : null)),
     last: computed(() => (cursor.value?.startsWith("b.") ? size : null)),
     before: computed(() => (cursor.value?.startsWith("b.") ? cursor.value.split(".")[1] : null)),
     after: computed(() => (cursor.value?.startsWith("a.") ? cursor.value.split(".")[1] : null)),
@@ -40,7 +39,7 @@ export function usePagination(cursor: Ref<any>, size: number = 10): Filter {
 export function resetCursor(cursor: Ref<any>, refs: Ref<any>[]): WatchStopHandle {
   return watch(refs, (newv, oldv) => {
     for (let i = 0; i < newv.length; i++) {
-      if (newv[i] !== oldv[i]) {
+      if (!shallowEqual(newv[i], oldv[i])) {
         cursor.value = null
         return
       }
