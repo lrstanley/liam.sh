@@ -65,6 +65,12 @@ router.afterEach((to) => {
     args = args.slice(0, 2)
   }
 
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] == "p") {
+      args[i] = "Posts"
+    }
+  }
+
   let title = titleCase(args.reverse().join(" · ").replace(/-/g, " "))
 
   if (title.length < 2) {
