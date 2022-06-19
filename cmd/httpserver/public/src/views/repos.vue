@@ -29,24 +29,7 @@
       </div>
       <div>
         <div class="text-emerald-500">Sort repos</div>
-        <n-space size="small" class="pb-4" inline>
-          <n-tag
-            v-for="(name, key) in orderOptions.fields"
-            :key="key"
-            :type="orderOptions.selected.field.value == key ? 'success' : ''"
-            class="cursor-pointer"
-            @click="changeOrder(key)"
-          >
-            <template #avatar>
-              <n-icon v-if="orderOptions.selected.field.value == key" class="">
-                <i-mdi-arrow-up v-if="orderOptions.selected.direction.value == 'asc'" />
-                <i-mdi-arrow-down v-else />
-              </n-icon>
-            </template>
-
-            {{ name }}
-          </n-tag>
-        </n-space>
+        <CoreSorter :sorter="sorter" class="pb-4" />
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
@@ -78,48 +61,7 @@
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
 import { usePagination } from "@/lib/pagination"
-
-const orderOptions = {
-  directions: ["desc", "asc"],
-  fields: {
-    star_count: "stars",
-    pushed_at: "updated",
-    created_at: "created",
-    name: "name",
-  },
-  selected: {
-    direction: useRouteQuery("dir", "desc"),
-    field: useRouteQuery("sort", "pushed_at"),
-  },
-  computed: {
-    direction: computed(() => {
-      return orderOptions.directions.includes(orderOptions.selected.direction.value)
-        ? orderOptions.selected.direction.value.toUpperCase()
-        : "DESC"
-    }),
-    field: computed(() => {
-      return Object.keys(orderOptions.fields).includes(orderOptions.selected.field.value)
-        ? orderOptions.selected.field.value.toUpperCase()
-        : "DATE"
-    }),
-  },
-}
-
-function changeOrder(key) {
-  if (key === orderOptions.selected.field.value) {
-    orderOptions.selected.direction.value =
-      orderOptions.selected.direction.value === "desc" ? "asc" : "desc"
-    return
-  }
-
-  // https://github.com/vueuse/vueuse/issues/901
-  orderOptions.selected.field.value = key
-  setTimeout(() => {
-    nextTick(() => {
-      orderOptions.selected.direction.value = "desc"
-    })
-  }, 1)
-}
+import { useSorter } from "@/lib/sorter"
 
 const cursor = useRouteQuery("cur", null)
 const labels = useRouteQuery("label", [])
@@ -127,6 +69,18 @@ const archived = useRouteQuery("archived", false)
 const forks = useRouteQuery("forks", false)
 const search = useRouteQuery("q", "")
 const filterSearch = refDebounced(search, 300)
+const direction = useRouteQuery("dir", "desc")
+const field = useRouteQuery("sort", "pushed_at")
+const sorter = useSorter(
+  {
+    pushed_at: "updated",
+    star_count: "stars",
+    created_at: "created",
+    name: "name",
+  },
+  direction,
+  field
+)
 
 const where = ref({
   or: [
@@ -143,9 +97,8 @@ const where = ref({
 const { data, error, fetching } = useGetReposQuery({
   variables: {
     ...usePagination(cursor, 10),
+    ...sorter.filter,
     where: where,
-    order: orderOptions.computed.direction,
-    orderBy: orderOptions.computed.field,
   },
 })
 </script>
