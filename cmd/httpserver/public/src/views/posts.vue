@@ -36,7 +36,7 @@
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
 import { useGetPostsQuery } from "@/lib/api"
-import { usePagination } from "@/lib/pagination"
+import { usePagination, resetCursor } from "@/lib/pagination"
 import { useSorter } from "@/lib/sorter"
 
 const cursor = useRouteQuery("cur", null)
@@ -54,6 +54,8 @@ const sorter = useSorter(
   direction,
   field
 )
+
+resetCursor(cursor, [labels, search, direction, field])
 
 const { data, error, fetching } = useGetPostsQuery({
   variables: {

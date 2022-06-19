@@ -1,4 +1,4 @@
-import { computed, nextTick, Ref, ComputedRef } from "vue";
+import { computed, ComputedRef, nextTick, Ref } from "vue"
 
 const desc: string = "desc"
 const asc: string = "asc"
@@ -20,6 +20,18 @@ export type Sorter = {
     filter: Filter
 }
 
+/**
+ * useSorter - generates the necessary sorting and ordering data for a graphql
+ * query.
+ *
+ * @export
+ * @param {SortFields<string>} fields
+ * @param {Ref<string>} direction
+ * @param {Ref<string>} field
+ * @param {string} [defaultField=null] - the default field will be the first key in 'fields'.
+ * @param {string} [defaultDirection=desc]
+ * @return {*}  {Sorter}
+ */
 export function useSorter(
     fields: SortFields<string>, direction: Ref<string>, field: Ref<string>,
     defaultField: string = null, defaultDirection: string = desc

@@ -60,7 +60,7 @@
 <script setup>
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
-import { usePagination } from "@/lib/pagination"
+import { usePagination, resetCursor } from "@/lib/pagination"
 import { useSorter } from "@/lib/sorter"
 
 const cursor = useRouteQuery("cur", null)
@@ -81,6 +81,8 @@ const sorter = useSorter(
   direction,
   field
 )
+
+resetCursor(cursor, [labels, archived, forks, search, direction, field])
 
 const where = ref({
   or: [
