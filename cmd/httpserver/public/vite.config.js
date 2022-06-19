@@ -42,7 +42,7 @@ export default defineConfig({
       reactivityTransform: true,
     }),
     Components({
-      dts: false,
+      dts: true,
       directives: true,
       directoryAsNamespace: false,
       resolvers: [
@@ -52,7 +52,7 @@ export default defineConfig({
       ],
     }),
     AutoImport({
-      dts: false,
+      dts: true,
       imports: [
         "vue",
         "vue/macros",
@@ -62,14 +62,13 @@ export default defineConfig({
           pinia: ["storeToRefs"],
         },
         {
-          "@/lib/core/state.js": ["useState"],
+          "@/lib/core/state.ts": ["useState"],
         },
       ],
       resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi"] })],
       eslintrc: {
         enabled: true,
       },
-      exclude: [/[\\/]node_modules[\\/]/, /[\\/]\.git[\\/]/],
     }),
     Icons({
       autoInstall: true,

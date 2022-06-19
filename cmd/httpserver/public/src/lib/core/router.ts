@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router"
 import routes from "~pages"
+import { BaseDocument } from "@/lib/api"
+import { client } from "@/lib/api/client"
+import { useState } from "@/lib/core/state"
 import { loadingBar } from "@/lib/core/status"
 import { titleCase } from "@/lib/util"
-import { client } from "@/lib/api/client"
-import { BaseDocument } from "@/lib/api"
+
+import type { CombinedError } from "@urql/vue"
 
 const router = createRouter({
   history: createWebHistory("/"),
@@ -17,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
     loadingBar.start()
   }
 
-  let error
+  let error: CombinedError
 
   if (state.base == null || (from.path == "/" && from.name == undefined)) {
     await client
@@ -53,22 +56,22 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to) => {
   const state = useState()
 
-  let title = to.path
+  let args = to.path
     .split("/")
     .reverse()
     .filter((item) => item != "")
 
-  if (title.length > 2) {
-    title = title.slice(0, 2)
+  if (args.length > 2) {
+    args = args.slice(0, 2)
   }
 
-  title = titleCase(title.reverse().join(" · ").replace(/-/g, " "))
+  let title = titleCase(args.reverse().join(" · ").replace(/-/g, " "))
 
   if (title.length < 2) {
     title = "Home"
   }
 
-  document.title = `${title} · Liam Stanley`
+  document.title = `${title} · Liam Stanley` // TODO: switch to dynamic name.
 
   if (state.history.length > 4) {
     state.history.shift()

@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import { menuOptions } from "@/lib/navigation.js"
+import { menuOptions } from "@/lib/navigation"
 
 const state = useState()
 </script>

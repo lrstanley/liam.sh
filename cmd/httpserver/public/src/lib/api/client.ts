@@ -1,7 +1,5 @@
-// import urql from "@urql/vue"
-import { createClient, provideClient } from '@urql/vue'
-import { dedupExchange, cacheExchange, fetchExchange } from "@urql/vue"
 import { retryExchange } from "@urql/exchange-retry"
+import { cacheExchange, createClient, dedupExchange, fetchExchange } from "@urql/vue"
 
 function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<any> {
     const controller = new AbortController()

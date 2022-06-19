@@ -1,5 +1,5 @@
-import { RouterLink } from "vue-router"
 import { NIcon } from "naive-ui"
+import { RouterLink } from "vue-router"
 
 function renderIcon(icon) {
   return () => h(NIcon, { style: "margin-top: -3px" }, { default: () => h(icon) })

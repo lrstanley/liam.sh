@@ -1,4 +1,4 @@
-import { computed, ComputedRef, nextTick, Ref } from "vue"
+import type { ComputedRef, Ref } from "vue"
 
 const desc: string = "desc"
 const asc: string = "asc"
