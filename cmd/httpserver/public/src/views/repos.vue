@@ -91,7 +91,6 @@ const where = ref({
     { homepageContainsFold: filterSearch },
   ],
   hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-  public: true,
   fork: computed(() => (forks.value ? null : false)),
   archived: computed(() => (archived.value ? null : false)),
 })

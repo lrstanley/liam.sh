@@ -148,12 +148,7 @@ query getEvents(
     $order: OrderDirection = DESC
     $orderBy: GithubEventOrderField = CREATED_AT
 ) {
-    githubevents(
-        first: $count
-        after: $cursor
-        where: { public: true }
-        orderBy: { direction: $order, field: $orderBy }
-    ) {
+    githubevents(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
         edges {
             node {
                 id

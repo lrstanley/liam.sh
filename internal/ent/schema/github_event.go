@@ -43,6 +43,7 @@ func (GithubEvent) Policy() ent.Policy {
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
+			AllowPublicOnly(),
 			privacy.AlwaysAllowRule(),
 		},
 	}

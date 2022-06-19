@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"entgo.io/ent/entql"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
 )
@@ -26,6 +27,21 @@ func AllowRoles(allowed []string, deny bool) privacy.QueryMutationRule {
 		if deny {
 			return privacy.Deny
 		}
+		return privacy.Skip
+	})
+}
+
+func AllowPublicOnly() privacy.QueryRule {
+	type PublicFilter interface {
+		WherePublic(p entql.BoolP)
+	}
+	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
+		public, ok := f.(PublicFilter)
+		if !ok {
+			return privacy.Denyf("missing public field in filter")
+		}
+
+		public.WherePublic(entql.BoolEQ(true))
 		return privacy.Skip
 	})
 }
