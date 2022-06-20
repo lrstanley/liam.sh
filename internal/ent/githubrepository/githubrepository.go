@@ -55,6 +55,8 @@ const (
 	FieldLicense = "license"
 	// EdgeLabels holds the string denoting the labels edge name in mutations.
 	EdgeLabels = "labels"
+	// EdgeReleases holds the string denoting the releases edge name in mutations.
+	EdgeReleases = "releases"
 	// Table holds the table name of the githubrepository in the database.
 	Table = "github_repositories"
 	// LabelsTable is the table that holds the labels relation/edge. The primary key declared below.
@@ -62,6 +64,13 @@ const (
 	// LabelsInverseTable is the table name for the Label entity.
 	// It exists in this package in order to avoid circular dependency with the "label" package.
 	LabelsInverseTable = "labels"
+	// ReleasesTable is the table that holds the releases relation/edge.
+	ReleasesTable = "github_releases"
+	// ReleasesInverseTable is the table name for the GithubRelease entity.
+	// It exists in this package in order to avoid circular dependency with the "githubrelease" package.
+	ReleasesInverseTable = "github_releases"
+	// ReleasesColumn is the table column denoting the releases relation/edge.
+	ReleasesColumn = "github_repository_releases"
 )
 
 // Columns holds all SQL columns for githubrepository fields.

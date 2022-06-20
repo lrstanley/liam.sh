@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/go-github/v44/github"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 )
@@ -235,6 +236,21 @@ func (grc *GithubRepositoryCreate) AddLabels(l ...*Label) *GithubRepositoryCreat
 		ids[i] = l[i].ID
 	}
 	return grc.AddLabelIDs(ids...)
+}
+
+// AddReleaseIDs adds the "releases" edge to the GithubRelease entity by IDs.
+func (grc *GithubRepositoryCreate) AddReleaseIDs(ids ...int) *GithubRepositoryCreate {
+	grc.mutation.AddReleaseIDs(ids...)
+	return grc
+}
+
+// AddReleases adds the "releases" edges to the GithubRelease entity.
+func (grc *GithubRepositoryCreate) AddReleases(g ...*GithubRelease) *GithubRepositoryCreate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return grc.AddReleaseIDs(ids...)
 }
 
 // Mutation returns the GithubRepositoryMutation object of the builder.
@@ -608,6 +624,25 @@ func (grc *GithubRepositoryCreate) createSpec() (*GithubRepository, *sqlgraph.Cr
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: label.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := grc.mutation.ReleasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
 				},
 			},
 		}

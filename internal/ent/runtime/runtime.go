@@ -10,7 +10,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -25,6 +27,29 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	githubasset.Policy = privacy.NewPolicies(schema.GithubAsset{})
+	githubasset.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := githubasset.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	githubassetFields := schema.GithubAsset{}.Fields()
+	_ = githubassetFields
+	// githubassetDescAssetID is the schema descriptor for asset_id field.
+	githubassetDescAssetID := githubassetFields[0].Descriptor()
+	// githubasset.AssetIDValidator is a validator for the "asset_id" field. It is called by the builders before save.
+	githubasset.AssetIDValidator = githubassetDescAssetID.Validators[0].(func(int64) error)
+	// githubassetDescBrowserDownloadURL is the schema descriptor for browser_download_url field.
+	githubassetDescBrowserDownloadURL := githubassetFields[1].Descriptor()
+	// githubasset.BrowserDownloadURLValidator is a validator for the "browser_download_url" field. It is called by the builders before save.
+	githubasset.BrowserDownloadURLValidator = githubassetDescBrowserDownloadURL.Validators[0].(func(string) error)
+	// githubassetDescName is the schema descriptor for name field.
+	githubassetDescName := githubassetFields[2].Descriptor()
+	// githubasset.NameValidator is a validator for the "name" field. It is called by the builders before save.
+	githubasset.NameValidator = githubassetDescName.Validators[0].(func(string) error)
 	githubevent.Policy = privacy.NewPolicies(schema.GithubEvent{})
 	githubevent.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
@@ -48,6 +73,33 @@ func init() {
 	githubeventDescRepoID := githubeventFields[6].Descriptor()
 	// githubevent.RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
 	githubevent.RepoIDValidator = githubeventDescRepoID.Validators[0].(func(int64) error)
+	githubrelease.Policy = privacy.NewPolicies(schema.GithubRelease{})
+	githubrelease.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := githubrelease.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	githubreleaseFields := schema.GithubRelease{}.Fields()
+	_ = githubreleaseFields
+	// githubreleaseDescReleaseID is the schema descriptor for release_id field.
+	githubreleaseDescReleaseID := githubreleaseFields[0].Descriptor()
+	// githubrelease.ReleaseIDValidator is a validator for the "release_id" field. It is called by the builders before save.
+	githubrelease.ReleaseIDValidator = githubreleaseDescReleaseID.Validators[0].(func(int64) error)
+	// githubreleaseDescHTMLURL is the schema descriptor for html_url field.
+	githubreleaseDescHTMLURL := githubreleaseFields[1].Descriptor()
+	// githubrelease.HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
+	githubrelease.HTMLURLValidator = githubreleaseDescHTMLURL.Validators[0].(func(string) error)
+	// githubreleaseDescTagName is the schema descriptor for tag_name field.
+	githubreleaseDescTagName := githubreleaseFields[2].Descriptor()
+	// githubrelease.TagNameValidator is a validator for the "tag_name" field. It is called by the builders before save.
+	githubrelease.TagNameValidator = githubreleaseDescTagName.Validators[0].(func(string) error)
+	// githubreleaseDescTargetCommitish is the schema descriptor for target_commitish field.
+	githubreleaseDescTargetCommitish := githubreleaseFields[3].Descriptor()
+	// githubrelease.TargetCommitishValidator is a validator for the "target_commitish" field. It is called by the builders before save.
+	githubrelease.TargetCommitishValidator = githubreleaseDescTargetCommitish.Validators[0].(func(string) error)
 	githubrepository.Policy = privacy.NewPolicies(schema.GithubRepository{})
 	githubrepository.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {

@@ -3,6 +3,7 @@ package schema
 import (
 	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -72,6 +73,12 @@ func (GithubRepository) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.From("labels", Label.Type).Ref("github_repositories").Annotations(
 			entgql.RelayConnection(),
+		),
+		edge.To("releases", GithubRelease.Type).Annotations(
+			entgql.RelayConnection(),
+			entsql.Annotation{
+				OnDelete: entsql.Cascade,
+			},
 		),
 	}
 }

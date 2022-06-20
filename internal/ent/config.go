@@ -28,7 +28,9 @@ type config struct {
 
 // hooks per client, for fast access.
 type hooks struct {
+	GithubAsset      []ent.Hook
 	GithubEvent      []ent.Hook
+	GithubRelease    []ent.Hook
 	GithubRepository []ent.Hook
 	Label            []ent.Hook
 	Post             []ent.Hook

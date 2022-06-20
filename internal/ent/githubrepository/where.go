@@ -1541,6 +1541,34 @@ func HasLabelsWith(preds ...predicate.Label) predicate.GithubRepository {
 	})
 }
 
+// HasReleases applies the HasEdge predicate on the "releases" edge.
+func HasReleases() predicate.GithubRepository {
+	return predicate.GithubRepository(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReleasesTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ReleasesTable, ReleasesColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasReleasesWith applies the HasEdge predicate on the "releases" edge with a given conditions (other predicates).
+func HasReleasesWith(preds ...predicate.GithubRelease) predicate.GithubRepository {
+	return predicate.GithubRepository(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.To(ReleasesInverseTable, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, ReleasesTable, ReleasesColumn),
+		)
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
 // And groups predicates with the AND operator between them.
 func And(predicates ...predicate.GithubRepository) predicate.GithubRepository {
 	return predicate.GithubRepository(func(s *sql.Selector) {

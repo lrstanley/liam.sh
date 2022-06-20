@@ -14,7 +14,9 @@ import (
 	"time"
 
 	"github.com/google/go-github/v44/github"
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -33,12 +35,1096 @@ const (
 	OpUpdateOne = ent.OpUpdateOne
 
 	// Node types.
+	TypeGithubAsset      = "GithubAsset"
 	TypeGithubEvent      = "GithubEvent"
+	TypeGithubRelease    = "GithubRelease"
 	TypeGithubRepository = "GithubRepository"
 	TypeLabel            = "Label"
 	TypePost             = "Post"
 	TypeUser             = "User"
 )
+
+// GithubAssetMutation represents an operation that mutates the GithubAsset nodes in the graph.
+type GithubAssetMutation struct {
+	config
+	op                   Op
+	typ                  string
+	id                   *int
+	asset_id             *int64
+	addasset_id          *int64
+	browser_download_url *string
+	name                 *string
+	label                *string
+	state                *string
+	content_type         *string
+	size                 *int64
+	addsize              *int64
+	download_count       *int64
+	adddownload_count    *int64
+	created_at           *time.Time
+	updated_at           *time.Time
+	uploader             **github.User
+	clearedFields        map[string]struct{}
+	release              *int
+	clearedrelease       bool
+	done                 bool
+	oldValue             func(context.Context) (*GithubAsset, error)
+	predicates           []predicate.GithubAsset
+}
+
+var _ ent.Mutation = (*GithubAssetMutation)(nil)
+
+// githubassetOption allows management of the mutation configuration using functional options.
+type githubassetOption func(*GithubAssetMutation)
+
+// newGithubAssetMutation creates new mutation for the GithubAsset entity.
+func newGithubAssetMutation(c config, op Op, opts ...githubassetOption) *GithubAssetMutation {
+	m := &GithubAssetMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGithubAsset,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGithubAssetID sets the ID field of the mutation.
+func withGithubAssetID(id int) githubassetOption {
+	return func(m *GithubAssetMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *GithubAsset
+		)
+		m.oldValue = func(ctx context.Context) (*GithubAsset, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().GithubAsset.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGithubAsset sets the old GithubAsset of the mutation.
+func withGithubAsset(node *GithubAsset) githubassetOption {
+	return func(m *GithubAssetMutation) {
+		m.oldValue = func(context.Context) (*GithubAsset, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GithubAssetMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GithubAssetMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *GithubAssetMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *GithubAssetMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().GithubAsset.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetAssetID sets the "asset_id" field.
+func (m *GithubAssetMutation) SetAssetID(i int64) {
+	m.asset_id = &i
+	m.addasset_id = nil
+}
+
+// AssetID returns the value of the "asset_id" field in the mutation.
+func (m *GithubAssetMutation) AssetID() (r int64, exists bool) {
+	v := m.asset_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAssetID returns the old "asset_id" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldAssetID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAssetID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAssetID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAssetID: %w", err)
+	}
+	return oldValue.AssetID, nil
+}
+
+// AddAssetID adds i to the "asset_id" field.
+func (m *GithubAssetMutation) AddAssetID(i int64) {
+	if m.addasset_id != nil {
+		*m.addasset_id += i
+	} else {
+		m.addasset_id = &i
+	}
+}
+
+// AddedAssetID returns the value that was added to the "asset_id" field in this mutation.
+func (m *GithubAssetMutation) AddedAssetID() (r int64, exists bool) {
+	v := m.addasset_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetAssetID resets all changes to the "asset_id" field.
+func (m *GithubAssetMutation) ResetAssetID() {
+	m.asset_id = nil
+	m.addasset_id = nil
+}
+
+// SetBrowserDownloadURL sets the "browser_download_url" field.
+func (m *GithubAssetMutation) SetBrowserDownloadURL(s string) {
+	m.browser_download_url = &s
+}
+
+// BrowserDownloadURL returns the value of the "browser_download_url" field in the mutation.
+func (m *GithubAssetMutation) BrowserDownloadURL() (r string, exists bool) {
+	v := m.browser_download_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldBrowserDownloadURL returns the old "browser_download_url" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldBrowserDownloadURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldBrowserDownloadURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldBrowserDownloadURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldBrowserDownloadURL: %w", err)
+	}
+	return oldValue.BrowserDownloadURL, nil
+}
+
+// ResetBrowserDownloadURL resets all changes to the "browser_download_url" field.
+func (m *GithubAssetMutation) ResetBrowserDownloadURL() {
+	m.browser_download_url = nil
+}
+
+// SetName sets the "name" field.
+func (m *GithubAssetMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *GithubAssetMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *GithubAssetMutation) ResetName() {
+	m.name = nil
+}
+
+// SetLabel sets the "label" field.
+func (m *GithubAssetMutation) SetLabel(s string) {
+	m.label = &s
+}
+
+// Label returns the value of the "label" field in the mutation.
+func (m *GithubAssetMutation) Label() (r string, exists bool) {
+	v := m.label
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLabel returns the old "label" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldLabel(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLabel is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLabel requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLabel: %w", err)
+	}
+	return oldValue.Label, nil
+}
+
+// ClearLabel clears the value of the "label" field.
+func (m *GithubAssetMutation) ClearLabel() {
+	m.label = nil
+	m.clearedFields[githubasset.FieldLabel] = struct{}{}
+}
+
+// LabelCleared returns if the "label" field was cleared in this mutation.
+func (m *GithubAssetMutation) LabelCleared() bool {
+	_, ok := m.clearedFields[githubasset.FieldLabel]
+	return ok
+}
+
+// ResetLabel resets all changes to the "label" field.
+func (m *GithubAssetMutation) ResetLabel() {
+	m.label = nil
+	delete(m.clearedFields, githubasset.FieldLabel)
+}
+
+// SetState sets the "state" field.
+func (m *GithubAssetMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *GithubAssetMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ClearState clears the value of the "state" field.
+func (m *GithubAssetMutation) ClearState() {
+	m.state = nil
+	m.clearedFields[githubasset.FieldState] = struct{}{}
+}
+
+// StateCleared returns if the "state" field was cleared in this mutation.
+func (m *GithubAssetMutation) StateCleared() bool {
+	_, ok := m.clearedFields[githubasset.FieldState]
+	return ok
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *GithubAssetMutation) ResetState() {
+	m.state = nil
+	delete(m.clearedFields, githubasset.FieldState)
+}
+
+// SetContentType sets the "content_type" field.
+func (m *GithubAssetMutation) SetContentType(s string) {
+	m.content_type = &s
+}
+
+// ContentType returns the value of the "content_type" field in the mutation.
+func (m *GithubAssetMutation) ContentType() (r string, exists bool) {
+	v := m.content_type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContentType returns the old "content_type" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldContentType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContentType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContentType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContentType: %w", err)
+	}
+	return oldValue.ContentType, nil
+}
+
+// ResetContentType resets all changes to the "content_type" field.
+func (m *GithubAssetMutation) ResetContentType() {
+	m.content_type = nil
+}
+
+// SetSize sets the "size" field.
+func (m *GithubAssetMutation) SetSize(i int64) {
+	m.size = &i
+	m.addsize = nil
+}
+
+// Size returns the value of the "size" field in the mutation.
+func (m *GithubAssetMutation) Size() (r int64, exists bool) {
+	v := m.size
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSize returns the old "size" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldSize(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSize is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSize requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSize: %w", err)
+	}
+	return oldValue.Size, nil
+}
+
+// AddSize adds i to the "size" field.
+func (m *GithubAssetMutation) AddSize(i int64) {
+	if m.addsize != nil {
+		*m.addsize += i
+	} else {
+		m.addsize = &i
+	}
+}
+
+// AddedSize returns the value that was added to the "size" field in this mutation.
+func (m *GithubAssetMutation) AddedSize() (r int64, exists bool) {
+	v := m.addsize
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSize resets all changes to the "size" field.
+func (m *GithubAssetMutation) ResetSize() {
+	m.size = nil
+	m.addsize = nil
+}
+
+// SetDownloadCount sets the "download_count" field.
+func (m *GithubAssetMutation) SetDownloadCount(i int64) {
+	m.download_count = &i
+	m.adddownload_count = nil
+}
+
+// DownloadCount returns the value of the "download_count" field in the mutation.
+func (m *GithubAssetMutation) DownloadCount() (r int64, exists bool) {
+	v := m.download_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDownloadCount returns the old "download_count" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldDownloadCount(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDownloadCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDownloadCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDownloadCount: %w", err)
+	}
+	return oldValue.DownloadCount, nil
+}
+
+// AddDownloadCount adds i to the "download_count" field.
+func (m *GithubAssetMutation) AddDownloadCount(i int64) {
+	if m.adddownload_count != nil {
+		*m.adddownload_count += i
+	} else {
+		m.adddownload_count = &i
+	}
+}
+
+// AddedDownloadCount returns the value that was added to the "download_count" field in this mutation.
+func (m *GithubAssetMutation) AddedDownloadCount() (r int64, exists bool) {
+	v := m.adddownload_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDownloadCount resets all changes to the "download_count" field.
+func (m *GithubAssetMutation) ResetDownloadCount() {
+	m.download_count = nil
+	m.adddownload_count = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *GithubAssetMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *GithubAssetMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *GithubAssetMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *GithubAssetMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *GithubAssetMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ClearUpdatedAt clears the value of the "updated_at" field.
+func (m *GithubAssetMutation) ClearUpdatedAt() {
+	m.updated_at = nil
+	m.clearedFields[githubasset.FieldUpdatedAt] = struct{}{}
+}
+
+// UpdatedAtCleared returns if the "updated_at" field was cleared in this mutation.
+func (m *GithubAssetMutation) UpdatedAtCleared() bool {
+	_, ok := m.clearedFields[githubasset.FieldUpdatedAt]
+	return ok
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *GithubAssetMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+	delete(m.clearedFields, githubasset.FieldUpdatedAt)
+}
+
+// SetUploader sets the "uploader" field.
+func (m *GithubAssetMutation) SetUploader(gi *github.User) {
+	m.uploader = &gi
+}
+
+// Uploader returns the value of the "uploader" field in the mutation.
+func (m *GithubAssetMutation) Uploader() (r *github.User, exists bool) {
+	v := m.uploader
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUploader returns the old "uploader" field's value of the GithubAsset entity.
+// If the GithubAsset object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubAssetMutation) OldUploader(ctx context.Context) (v *github.User, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUploader is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUploader requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUploader: %w", err)
+	}
+	return oldValue.Uploader, nil
+}
+
+// ResetUploader resets all changes to the "uploader" field.
+func (m *GithubAssetMutation) ResetUploader() {
+	m.uploader = nil
+}
+
+// SetReleaseID sets the "release" edge to the GithubRelease entity by id.
+func (m *GithubAssetMutation) SetReleaseID(id int) {
+	m.release = &id
+}
+
+// ClearRelease clears the "release" edge to the GithubRelease entity.
+func (m *GithubAssetMutation) ClearRelease() {
+	m.clearedrelease = true
+}
+
+// ReleaseCleared reports if the "release" edge to the GithubRelease entity was cleared.
+func (m *GithubAssetMutation) ReleaseCleared() bool {
+	return m.clearedrelease
+}
+
+// ReleaseID returns the "release" edge ID in the mutation.
+func (m *GithubAssetMutation) ReleaseID() (id int, exists bool) {
+	if m.release != nil {
+		return *m.release, true
+	}
+	return
+}
+
+// ReleaseIDs returns the "release" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// ReleaseID instead. It exists only for internal usage by the builders.
+func (m *GithubAssetMutation) ReleaseIDs() (ids []int) {
+	if id := m.release; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRelease resets all changes to the "release" edge.
+func (m *GithubAssetMutation) ResetRelease() {
+	m.release = nil
+	m.clearedrelease = false
+}
+
+// Where appends a list predicates to the GithubAssetMutation builder.
+func (m *GithubAssetMutation) Where(ps ...predicate.GithubAsset) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *GithubAssetMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (GithubAsset).
+func (m *GithubAssetMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *GithubAssetMutation) Fields() []string {
+	fields := make([]string, 0, 11)
+	if m.asset_id != nil {
+		fields = append(fields, githubasset.FieldAssetID)
+	}
+	if m.browser_download_url != nil {
+		fields = append(fields, githubasset.FieldBrowserDownloadURL)
+	}
+	if m.name != nil {
+		fields = append(fields, githubasset.FieldName)
+	}
+	if m.label != nil {
+		fields = append(fields, githubasset.FieldLabel)
+	}
+	if m.state != nil {
+		fields = append(fields, githubasset.FieldState)
+	}
+	if m.content_type != nil {
+		fields = append(fields, githubasset.FieldContentType)
+	}
+	if m.size != nil {
+		fields = append(fields, githubasset.FieldSize)
+	}
+	if m.download_count != nil {
+		fields = append(fields, githubasset.FieldDownloadCount)
+	}
+	if m.created_at != nil {
+		fields = append(fields, githubasset.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, githubasset.FieldUpdatedAt)
+	}
+	if m.uploader != nil {
+		fields = append(fields, githubasset.FieldUploader)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *GithubAssetMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case githubasset.FieldAssetID:
+		return m.AssetID()
+	case githubasset.FieldBrowserDownloadURL:
+		return m.BrowserDownloadURL()
+	case githubasset.FieldName:
+		return m.Name()
+	case githubasset.FieldLabel:
+		return m.Label()
+	case githubasset.FieldState:
+		return m.State()
+	case githubasset.FieldContentType:
+		return m.ContentType()
+	case githubasset.FieldSize:
+		return m.Size()
+	case githubasset.FieldDownloadCount:
+		return m.DownloadCount()
+	case githubasset.FieldCreatedAt:
+		return m.CreatedAt()
+	case githubasset.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case githubasset.FieldUploader:
+		return m.Uploader()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *GithubAssetMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case githubasset.FieldAssetID:
+		return m.OldAssetID(ctx)
+	case githubasset.FieldBrowserDownloadURL:
+		return m.OldBrowserDownloadURL(ctx)
+	case githubasset.FieldName:
+		return m.OldName(ctx)
+	case githubasset.FieldLabel:
+		return m.OldLabel(ctx)
+	case githubasset.FieldState:
+		return m.OldState(ctx)
+	case githubasset.FieldContentType:
+		return m.OldContentType(ctx)
+	case githubasset.FieldSize:
+		return m.OldSize(ctx)
+	case githubasset.FieldDownloadCount:
+		return m.OldDownloadCount(ctx)
+	case githubasset.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case githubasset.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case githubasset.FieldUploader:
+		return m.OldUploader(ctx)
+	}
+	return nil, fmt.Errorf("unknown GithubAsset field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubAssetMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case githubasset.FieldAssetID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAssetID(v)
+		return nil
+	case githubasset.FieldBrowserDownloadURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetBrowserDownloadURL(v)
+		return nil
+	case githubasset.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case githubasset.FieldLabel:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLabel(v)
+		return nil
+	case githubasset.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case githubasset.FieldContentType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContentType(v)
+		return nil
+	case githubasset.FieldSize:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSize(v)
+		return nil
+	case githubasset.FieldDownloadCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDownloadCount(v)
+		return nil
+	case githubasset.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case githubasset.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case githubasset.FieldUploader:
+		v, ok := value.(*github.User)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUploader(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *GithubAssetMutation) AddedFields() []string {
+	var fields []string
+	if m.addasset_id != nil {
+		fields = append(fields, githubasset.FieldAssetID)
+	}
+	if m.addsize != nil {
+		fields = append(fields, githubasset.FieldSize)
+	}
+	if m.adddownload_count != nil {
+		fields = append(fields, githubasset.FieldDownloadCount)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *GithubAssetMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case githubasset.FieldAssetID:
+		return m.AddedAssetID()
+	case githubasset.FieldSize:
+		return m.AddedSize()
+	case githubasset.FieldDownloadCount:
+		return m.AddedDownloadCount()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubAssetMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case githubasset.FieldAssetID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddAssetID(v)
+		return nil
+	case githubasset.FieldSize:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSize(v)
+		return nil
+	case githubasset.FieldDownloadCount:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDownloadCount(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *GithubAssetMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(githubasset.FieldLabel) {
+		fields = append(fields, githubasset.FieldLabel)
+	}
+	if m.FieldCleared(githubasset.FieldState) {
+		fields = append(fields, githubasset.FieldState)
+	}
+	if m.FieldCleared(githubasset.FieldUpdatedAt) {
+		fields = append(fields, githubasset.FieldUpdatedAt)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *GithubAssetMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GithubAssetMutation) ClearField(name string) error {
+	switch name {
+	case githubasset.FieldLabel:
+		m.ClearLabel()
+		return nil
+	case githubasset.FieldState:
+		m.ClearState()
+		return nil
+	case githubasset.FieldUpdatedAt:
+		m.ClearUpdatedAt()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *GithubAssetMutation) ResetField(name string) error {
+	switch name {
+	case githubasset.FieldAssetID:
+		m.ResetAssetID()
+		return nil
+	case githubasset.FieldBrowserDownloadURL:
+		m.ResetBrowserDownloadURL()
+		return nil
+	case githubasset.FieldName:
+		m.ResetName()
+		return nil
+	case githubasset.FieldLabel:
+		m.ResetLabel()
+		return nil
+	case githubasset.FieldState:
+		m.ResetState()
+		return nil
+	case githubasset.FieldContentType:
+		m.ResetContentType()
+		return nil
+	case githubasset.FieldSize:
+		m.ResetSize()
+		return nil
+	case githubasset.FieldDownloadCount:
+		m.ResetDownloadCount()
+		return nil
+	case githubasset.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case githubasset.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case githubasset.FieldUploader:
+		m.ResetUploader()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *GithubAssetMutation) AddedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.release != nil {
+		edges = append(edges, githubasset.EdgeRelease)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *GithubAssetMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case githubasset.EdgeRelease:
+		if id := m.release; id != nil {
+			return []ent.Value{*id}
+		}
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *GithubAssetMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 1)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *GithubAssetMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *GithubAssetMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 1)
+	if m.clearedrelease {
+		edges = append(edges, githubasset.EdgeRelease)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *GithubAssetMutation) EdgeCleared(name string) bool {
+	switch name {
+	case githubasset.EdgeRelease:
+		return m.clearedrelease
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *GithubAssetMutation) ClearEdge(name string) error {
+	switch name {
+	case githubasset.EdgeRelease:
+		m.ClearRelease()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *GithubAssetMutation) ResetEdge(name string) error {
+	switch name {
+	case githubasset.EdgeRelease:
+		m.ResetRelease()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubAsset edge %s", name)
+}
 
 // GithubEventMutation represents an operation that mutates the GithubEvent nodes in the graph.
 type GithubEventMutation struct {
@@ -852,40 +1938,1050 @@ func (m *GithubEventMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GithubEvent edge %s", name)
 }
 
+// GithubReleaseMutation represents an operation that mutates the GithubRelease nodes in the graph.
+type GithubReleaseMutation struct {
+	config
+	op                Op
+	typ               string
+	id                *int
+	release_id        *int64
+	addrelease_id     *int64
+	html_url          *string
+	tag_name          *string
+	target_commitish  *string
+	name              *string
+	draft             *bool
+	prerelease        *bool
+	created_at        *time.Time
+	published_at      *time.Time
+	author            **github.User
+	clearedFields     map[string]struct{}
+	repository        *int
+	clearedrepository bool
+	assets            map[int]struct{}
+	removedassets     map[int]struct{}
+	clearedassets     bool
+	done              bool
+	oldValue          func(context.Context) (*GithubRelease, error)
+	predicates        []predicate.GithubRelease
+}
+
+var _ ent.Mutation = (*GithubReleaseMutation)(nil)
+
+// githubreleaseOption allows management of the mutation configuration using functional options.
+type githubreleaseOption func(*GithubReleaseMutation)
+
+// newGithubReleaseMutation creates new mutation for the GithubRelease entity.
+func newGithubReleaseMutation(c config, op Op, opts ...githubreleaseOption) *GithubReleaseMutation {
+	m := &GithubReleaseMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGithubRelease,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGithubReleaseID sets the ID field of the mutation.
+func withGithubReleaseID(id int) githubreleaseOption {
+	return func(m *GithubReleaseMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *GithubRelease
+		)
+		m.oldValue = func(ctx context.Context) (*GithubRelease, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().GithubRelease.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGithubRelease sets the old GithubRelease of the mutation.
+func withGithubRelease(node *GithubRelease) githubreleaseOption {
+	return func(m *GithubReleaseMutation) {
+		m.oldValue = func(context.Context) (*GithubRelease, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GithubReleaseMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GithubReleaseMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *GithubReleaseMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *GithubReleaseMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().GithubRelease.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetReleaseID sets the "release_id" field.
+func (m *GithubReleaseMutation) SetReleaseID(i int64) {
+	m.release_id = &i
+	m.addrelease_id = nil
+}
+
+// ReleaseID returns the value of the "release_id" field in the mutation.
+func (m *GithubReleaseMutation) ReleaseID() (r int64, exists bool) {
+	v := m.release_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldReleaseID returns the old "release_id" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldReleaseID(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldReleaseID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldReleaseID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldReleaseID: %w", err)
+	}
+	return oldValue.ReleaseID, nil
+}
+
+// AddReleaseID adds i to the "release_id" field.
+func (m *GithubReleaseMutation) AddReleaseID(i int64) {
+	if m.addrelease_id != nil {
+		*m.addrelease_id += i
+	} else {
+		m.addrelease_id = &i
+	}
+}
+
+// AddedReleaseID returns the value that was added to the "release_id" field in this mutation.
+func (m *GithubReleaseMutation) AddedReleaseID() (r int64, exists bool) {
+	v := m.addrelease_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetReleaseID resets all changes to the "release_id" field.
+func (m *GithubReleaseMutation) ResetReleaseID() {
+	m.release_id = nil
+	m.addrelease_id = nil
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (m *GithubReleaseMutation) SetHTMLURL(s string) {
+	m.html_url = &s
+}
+
+// HTMLURL returns the value of the "html_url" field in the mutation.
+func (m *GithubReleaseMutation) HTMLURL() (r string, exists bool) {
+	v := m.html_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHTMLURL returns the old "html_url" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldHTMLURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHTMLURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHTMLURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHTMLURL: %w", err)
+	}
+	return oldValue.HTMLURL, nil
+}
+
+// ResetHTMLURL resets all changes to the "html_url" field.
+func (m *GithubReleaseMutation) ResetHTMLURL() {
+	m.html_url = nil
+}
+
+// SetTagName sets the "tag_name" field.
+func (m *GithubReleaseMutation) SetTagName(s string) {
+	m.tag_name = &s
+}
+
+// TagName returns the value of the "tag_name" field in the mutation.
+func (m *GithubReleaseMutation) TagName() (r string, exists bool) {
+	v := m.tag_name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTagName returns the old "tag_name" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldTagName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTagName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTagName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTagName: %w", err)
+	}
+	return oldValue.TagName, nil
+}
+
+// ResetTagName resets all changes to the "tag_name" field.
+func (m *GithubReleaseMutation) ResetTagName() {
+	m.tag_name = nil
+}
+
+// SetTargetCommitish sets the "target_commitish" field.
+func (m *GithubReleaseMutation) SetTargetCommitish(s string) {
+	m.target_commitish = &s
+}
+
+// TargetCommitish returns the value of the "target_commitish" field in the mutation.
+func (m *GithubReleaseMutation) TargetCommitish() (r string, exists bool) {
+	v := m.target_commitish
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldTargetCommitish returns the old "target_commitish" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldTargetCommitish(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldTargetCommitish is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldTargetCommitish requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldTargetCommitish: %w", err)
+	}
+	return oldValue.TargetCommitish, nil
+}
+
+// ResetTargetCommitish resets all changes to the "target_commitish" field.
+func (m *GithubReleaseMutation) ResetTargetCommitish() {
+	m.target_commitish = nil
+}
+
+// SetName sets the "name" field.
+func (m *GithubReleaseMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *GithubReleaseMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ClearName clears the value of the "name" field.
+func (m *GithubReleaseMutation) ClearName() {
+	m.name = nil
+	m.clearedFields[githubrelease.FieldName] = struct{}{}
+}
+
+// NameCleared returns if the "name" field was cleared in this mutation.
+func (m *GithubReleaseMutation) NameCleared() bool {
+	_, ok := m.clearedFields[githubrelease.FieldName]
+	return ok
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *GithubReleaseMutation) ResetName() {
+	m.name = nil
+	delete(m.clearedFields, githubrelease.FieldName)
+}
+
+// SetDraft sets the "draft" field.
+func (m *GithubReleaseMutation) SetDraft(b bool) {
+	m.draft = &b
+}
+
+// Draft returns the value of the "draft" field in the mutation.
+func (m *GithubReleaseMutation) Draft() (r bool, exists bool) {
+	v := m.draft
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDraft returns the old "draft" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldDraft(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDraft is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDraft requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDraft: %w", err)
+	}
+	return oldValue.Draft, nil
+}
+
+// ResetDraft resets all changes to the "draft" field.
+func (m *GithubReleaseMutation) ResetDraft() {
+	m.draft = nil
+}
+
+// SetPrerelease sets the "prerelease" field.
+func (m *GithubReleaseMutation) SetPrerelease(b bool) {
+	m.prerelease = &b
+}
+
+// Prerelease returns the value of the "prerelease" field in the mutation.
+func (m *GithubReleaseMutation) Prerelease() (r bool, exists bool) {
+	v := m.prerelease
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPrerelease returns the old "prerelease" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldPrerelease(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPrerelease is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPrerelease requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPrerelease: %w", err)
+	}
+	return oldValue.Prerelease, nil
+}
+
+// ResetPrerelease resets all changes to the "prerelease" field.
+func (m *GithubReleaseMutation) ResetPrerelease() {
+	m.prerelease = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *GithubReleaseMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *GithubReleaseMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *GithubReleaseMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetPublishedAt sets the "published_at" field.
+func (m *GithubReleaseMutation) SetPublishedAt(t time.Time) {
+	m.published_at = &t
+}
+
+// PublishedAt returns the value of the "published_at" field in the mutation.
+func (m *GithubReleaseMutation) PublishedAt() (r time.Time, exists bool) {
+	v := m.published_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublishedAt returns the old "published_at" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldPublishedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublishedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublishedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublishedAt: %w", err)
+	}
+	return oldValue.PublishedAt, nil
+}
+
+// ResetPublishedAt resets all changes to the "published_at" field.
+func (m *GithubReleaseMutation) ResetPublishedAt() {
+	m.published_at = nil
+}
+
+// SetAuthor sets the "author" field.
+func (m *GithubReleaseMutation) SetAuthor(gi *github.User) {
+	m.author = &gi
+}
+
+// Author returns the value of the "author" field in the mutation.
+func (m *GithubReleaseMutation) Author() (r *github.User, exists bool) {
+	v := m.author
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAuthor returns the old "author" field's value of the GithubRelease entity.
+// If the GithubRelease object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubReleaseMutation) OldAuthor(ctx context.Context) (v *github.User, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAuthor is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAuthor requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAuthor: %w", err)
+	}
+	return oldValue.Author, nil
+}
+
+// ResetAuthor resets all changes to the "author" field.
+func (m *GithubReleaseMutation) ResetAuthor() {
+	m.author = nil
+}
+
+// SetRepositoryID sets the "repository" edge to the GithubRepository entity by id.
+func (m *GithubReleaseMutation) SetRepositoryID(id int) {
+	m.repository = &id
+}
+
+// ClearRepository clears the "repository" edge to the GithubRepository entity.
+func (m *GithubReleaseMutation) ClearRepository() {
+	m.clearedrepository = true
+}
+
+// RepositoryCleared reports if the "repository" edge to the GithubRepository entity was cleared.
+func (m *GithubReleaseMutation) RepositoryCleared() bool {
+	return m.clearedrepository
+}
+
+// RepositoryID returns the "repository" edge ID in the mutation.
+func (m *GithubReleaseMutation) RepositoryID() (id int, exists bool) {
+	if m.repository != nil {
+		return *m.repository, true
+	}
+	return
+}
+
+// RepositoryIDs returns the "repository" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// RepositoryID instead. It exists only for internal usage by the builders.
+func (m *GithubReleaseMutation) RepositoryIDs() (ids []int) {
+	if id := m.repository; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetRepository resets all changes to the "repository" edge.
+func (m *GithubReleaseMutation) ResetRepository() {
+	m.repository = nil
+	m.clearedrepository = false
+}
+
+// AddAssetIDs adds the "assets" edge to the GithubAsset entity by ids.
+func (m *GithubReleaseMutation) AddAssetIDs(ids ...int) {
+	if m.assets == nil {
+		m.assets = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.assets[ids[i]] = struct{}{}
+	}
+}
+
+// ClearAssets clears the "assets" edge to the GithubAsset entity.
+func (m *GithubReleaseMutation) ClearAssets() {
+	m.clearedassets = true
+}
+
+// AssetsCleared reports if the "assets" edge to the GithubAsset entity was cleared.
+func (m *GithubReleaseMutation) AssetsCleared() bool {
+	return m.clearedassets
+}
+
+// RemoveAssetIDs removes the "assets" edge to the GithubAsset entity by IDs.
+func (m *GithubReleaseMutation) RemoveAssetIDs(ids ...int) {
+	if m.removedassets == nil {
+		m.removedassets = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.assets, ids[i])
+		m.removedassets[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedAssets returns the removed IDs of the "assets" edge to the GithubAsset entity.
+func (m *GithubReleaseMutation) RemovedAssetsIDs() (ids []int) {
+	for id := range m.removedassets {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// AssetsIDs returns the "assets" edge IDs in the mutation.
+func (m *GithubReleaseMutation) AssetsIDs() (ids []int) {
+	for id := range m.assets {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetAssets resets all changes to the "assets" edge.
+func (m *GithubReleaseMutation) ResetAssets() {
+	m.assets = nil
+	m.clearedassets = false
+	m.removedassets = nil
+}
+
+// Where appends a list predicates to the GithubReleaseMutation builder.
+func (m *GithubReleaseMutation) Where(ps ...predicate.GithubRelease) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *GithubReleaseMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (GithubRelease).
+func (m *GithubReleaseMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *GithubReleaseMutation) Fields() []string {
+	fields := make([]string, 0, 10)
+	if m.release_id != nil {
+		fields = append(fields, githubrelease.FieldReleaseID)
+	}
+	if m.html_url != nil {
+		fields = append(fields, githubrelease.FieldHTMLURL)
+	}
+	if m.tag_name != nil {
+		fields = append(fields, githubrelease.FieldTagName)
+	}
+	if m.target_commitish != nil {
+		fields = append(fields, githubrelease.FieldTargetCommitish)
+	}
+	if m.name != nil {
+		fields = append(fields, githubrelease.FieldName)
+	}
+	if m.draft != nil {
+		fields = append(fields, githubrelease.FieldDraft)
+	}
+	if m.prerelease != nil {
+		fields = append(fields, githubrelease.FieldPrerelease)
+	}
+	if m.created_at != nil {
+		fields = append(fields, githubrelease.FieldCreatedAt)
+	}
+	if m.published_at != nil {
+		fields = append(fields, githubrelease.FieldPublishedAt)
+	}
+	if m.author != nil {
+		fields = append(fields, githubrelease.FieldAuthor)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *GithubReleaseMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		return m.ReleaseID()
+	case githubrelease.FieldHTMLURL:
+		return m.HTMLURL()
+	case githubrelease.FieldTagName:
+		return m.TagName()
+	case githubrelease.FieldTargetCommitish:
+		return m.TargetCommitish()
+	case githubrelease.FieldName:
+		return m.Name()
+	case githubrelease.FieldDraft:
+		return m.Draft()
+	case githubrelease.FieldPrerelease:
+		return m.Prerelease()
+	case githubrelease.FieldCreatedAt:
+		return m.CreatedAt()
+	case githubrelease.FieldPublishedAt:
+		return m.PublishedAt()
+	case githubrelease.FieldAuthor:
+		return m.Author()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *GithubReleaseMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		return m.OldReleaseID(ctx)
+	case githubrelease.FieldHTMLURL:
+		return m.OldHTMLURL(ctx)
+	case githubrelease.FieldTagName:
+		return m.OldTagName(ctx)
+	case githubrelease.FieldTargetCommitish:
+		return m.OldTargetCommitish(ctx)
+	case githubrelease.FieldName:
+		return m.OldName(ctx)
+	case githubrelease.FieldDraft:
+		return m.OldDraft(ctx)
+	case githubrelease.FieldPrerelease:
+		return m.OldPrerelease(ctx)
+	case githubrelease.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case githubrelease.FieldPublishedAt:
+		return m.OldPublishedAt(ctx)
+	case githubrelease.FieldAuthor:
+		return m.OldAuthor(ctx)
+	}
+	return nil, fmt.Errorf("unknown GithubRelease field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubReleaseMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetReleaseID(v)
+		return nil
+	case githubrelease.FieldHTMLURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHTMLURL(v)
+		return nil
+	case githubrelease.FieldTagName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTagName(v)
+		return nil
+	case githubrelease.FieldTargetCommitish:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetTargetCommitish(v)
+		return nil
+	case githubrelease.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case githubrelease.FieldDraft:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDraft(v)
+		return nil
+	case githubrelease.FieldPrerelease:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPrerelease(v)
+		return nil
+	case githubrelease.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case githubrelease.FieldPublishedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublishedAt(v)
+		return nil
+	case githubrelease.FieldAuthor:
+		v, ok := value.(*github.User)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAuthor(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *GithubReleaseMutation) AddedFields() []string {
+	var fields []string
+	if m.addrelease_id != nil {
+		fields = append(fields, githubrelease.FieldReleaseID)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *GithubReleaseMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		return m.AddedReleaseID()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubReleaseMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddReleaseID(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *GithubReleaseMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(githubrelease.FieldName) {
+		fields = append(fields, githubrelease.FieldName)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *GithubReleaseMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GithubReleaseMutation) ClearField(name string) error {
+	switch name {
+	case githubrelease.FieldName:
+		m.ClearName()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *GithubReleaseMutation) ResetField(name string) error {
+	switch name {
+	case githubrelease.FieldReleaseID:
+		m.ResetReleaseID()
+		return nil
+	case githubrelease.FieldHTMLURL:
+		m.ResetHTMLURL()
+		return nil
+	case githubrelease.FieldTagName:
+		m.ResetTagName()
+		return nil
+	case githubrelease.FieldTargetCommitish:
+		m.ResetTargetCommitish()
+		return nil
+	case githubrelease.FieldName:
+		m.ResetName()
+		return nil
+	case githubrelease.FieldDraft:
+		m.ResetDraft()
+		return nil
+	case githubrelease.FieldPrerelease:
+		m.ResetPrerelease()
+		return nil
+	case githubrelease.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case githubrelease.FieldPublishedAt:
+		m.ResetPublishedAt()
+		return nil
+	case githubrelease.FieldAuthor:
+		m.ResetAuthor()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *GithubReleaseMutation) AddedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.repository != nil {
+		edges = append(edges, githubrelease.EdgeRepository)
+	}
+	if m.assets != nil {
+		edges = append(edges, githubrelease.EdgeAssets)
+	}
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *GithubReleaseMutation) AddedIDs(name string) []ent.Value {
+	switch name {
+	case githubrelease.EdgeRepository:
+		if id := m.repository; id != nil {
+			return []ent.Value{*id}
+		}
+	case githubrelease.EdgeAssets:
+		ids := make([]ent.Value, 0, len(m.assets))
+		for id := range m.assets {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *GithubReleaseMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.removedassets != nil {
+		edges = append(edges, githubrelease.EdgeAssets)
+	}
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *GithubReleaseMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case githubrelease.EdgeAssets:
+		ids := make([]ent.Value, 0, len(m.removedassets))
+		for id := range m.removedassets {
+			ids = append(ids, id)
+		}
+		return ids
+	}
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *GithubReleaseMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 2)
+	if m.clearedrepository {
+		edges = append(edges, githubrelease.EdgeRepository)
+	}
+	if m.clearedassets {
+		edges = append(edges, githubrelease.EdgeAssets)
+	}
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *GithubReleaseMutation) EdgeCleared(name string) bool {
+	switch name {
+	case githubrelease.EdgeRepository:
+		return m.clearedrepository
+	case githubrelease.EdgeAssets:
+		return m.clearedassets
+	}
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *GithubReleaseMutation) ClearEdge(name string) error {
+	switch name {
+	case githubrelease.EdgeRepository:
+		m.ClearRepository()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *GithubReleaseMutation) ResetEdge(name string) error {
+	switch name {
+	case githubrelease.EdgeRepository:
+		m.ResetRepository()
+		return nil
+	case githubrelease.EdgeAssets:
+		m.ResetAssets()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubRelease edge %s", name)
+}
+
 // GithubRepositoryMutation represents an operation that mutates the GithubRepository nodes in the graph.
 type GithubRepositoryMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	repo_id        *int64
-	addrepo_id     *int64
-	name           *string
-	full_name      *string
-	owner_login    *string
-	owner          **github.User
-	public         *bool
-	html_url       *string
-	description    *string
-	fork           *bool
-	homepage       *string
-	star_count     *int
-	addstar_count  *int
-	default_branch *string
-	is_template    *bool
-	has_issues     *bool
-	archived       *bool
-	pushed_at      *time.Time
-	created_at     *time.Time
-	updated_at     *time.Time
-	license        **github.License
-	clearedFields  map[string]struct{}
-	labels         map[int]struct{}
-	removedlabels  map[int]struct{}
-	clearedlabels  bool
-	done           bool
-	oldValue       func(context.Context) (*GithubRepository, error)
-	predicates     []predicate.GithubRepository
+	op              Op
+	typ             string
+	id              *int
+	repo_id         *int64
+	addrepo_id      *int64
+	name            *string
+	full_name       *string
+	owner_login     *string
+	owner           **github.User
+	public          *bool
+	html_url        *string
+	description     *string
+	fork            *bool
+	homepage        *string
+	star_count      *int
+	addstar_count   *int
+	default_branch  *string
+	is_template     *bool
+	has_issues      *bool
+	archived        *bool
+	pushed_at       *time.Time
+	created_at      *time.Time
+	updated_at      *time.Time
+	license         **github.License
+	clearedFields   map[string]struct{}
+	labels          map[int]struct{}
+	removedlabels   map[int]struct{}
+	clearedlabels   bool
+	releases        map[int]struct{}
+	removedreleases map[int]struct{}
+	clearedreleases bool
+	done            bool
+	oldValue        func(context.Context) (*GithubRepository, error)
+	predicates      []predicate.GithubRepository
 }
 
 var _ ent.Mutation = (*GithubRepositoryMutation)(nil)
@@ -1829,6 +3925,60 @@ func (m *GithubRepositoryMutation) ResetLabels() {
 	m.removedlabels = nil
 }
 
+// AddReleaseIDs adds the "releases" edge to the GithubRelease entity by ids.
+func (m *GithubRepositoryMutation) AddReleaseIDs(ids ...int) {
+	if m.releases == nil {
+		m.releases = make(map[int]struct{})
+	}
+	for i := range ids {
+		m.releases[ids[i]] = struct{}{}
+	}
+}
+
+// ClearReleases clears the "releases" edge to the GithubRelease entity.
+func (m *GithubRepositoryMutation) ClearReleases() {
+	m.clearedreleases = true
+}
+
+// ReleasesCleared reports if the "releases" edge to the GithubRelease entity was cleared.
+func (m *GithubRepositoryMutation) ReleasesCleared() bool {
+	return m.clearedreleases
+}
+
+// RemoveReleaseIDs removes the "releases" edge to the GithubRelease entity by IDs.
+func (m *GithubRepositoryMutation) RemoveReleaseIDs(ids ...int) {
+	if m.removedreleases == nil {
+		m.removedreleases = make(map[int]struct{})
+	}
+	for i := range ids {
+		delete(m.releases, ids[i])
+		m.removedreleases[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedReleases returns the removed IDs of the "releases" edge to the GithubRelease entity.
+func (m *GithubRepositoryMutation) RemovedReleasesIDs() (ids []int) {
+	for id := range m.removedreleases {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ReleasesIDs returns the "releases" edge IDs in the mutation.
+func (m *GithubRepositoryMutation) ReleasesIDs() (ids []int) {
+	for id := range m.releases {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetReleases resets all changes to the "releases" edge.
+func (m *GithubRepositoryMutation) ResetReleases() {
+	m.releases = nil
+	m.clearedreleases = false
+	m.removedreleases = nil
+}
+
 // Where appends a list predicates to the GithubRepositoryMutation builder.
 func (m *GithubRepositoryMutation) Where(ps ...predicate.GithubRepository) {
 	m.predicates = append(m.predicates, ps...)
@@ -2313,9 +4463,12 @@ func (m *GithubRepositoryMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *GithubRepositoryMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.labels != nil {
 		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	if m.releases != nil {
+		edges = append(edges, githubrepository.EdgeReleases)
 	}
 	return edges
 }
@@ -2330,15 +4483,24 @@ func (m *GithubRepositoryMutation) AddedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case githubrepository.EdgeReleases:
+		ids := make([]ent.Value, 0, len(m.releases))
+		for id := range m.releases {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *GithubRepositoryMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.removedlabels != nil {
 		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	if m.removedreleases != nil {
+		edges = append(edges, githubrepository.EdgeReleases)
 	}
 	return edges
 }
@@ -2353,15 +4515,24 @@ func (m *GithubRepositoryMutation) RemovedIDs(name string) []ent.Value {
 			ids = append(ids, id)
 		}
 		return ids
+	case githubrepository.EdgeReleases:
+		ids := make([]ent.Value, 0, len(m.removedreleases))
+		for id := range m.removedreleases {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *GithubRepositoryMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.clearedlabels {
 		edges = append(edges, githubrepository.EdgeLabels)
+	}
+	if m.clearedreleases {
+		edges = append(edges, githubrepository.EdgeReleases)
 	}
 	return edges
 }
@@ -2372,6 +4543,8 @@ func (m *GithubRepositoryMutation) EdgeCleared(name string) bool {
 	switch name {
 	case githubrepository.EdgeLabels:
 		return m.clearedlabels
+	case githubrepository.EdgeReleases:
+		return m.clearedreleases
 	}
 	return false
 }
@@ -2390,6 +4563,9 @@ func (m *GithubRepositoryMutation) ResetEdge(name string) error {
 	switch name {
 	case githubrepository.EdgeLabels:
 		m.ResetLabels()
+		return nil
+	case githubrepository.EdgeReleases:
+		m.ResetReleases()
 		return nil
 	}
 	return fmt.Errorf("unknown GithubRepository edge %s", name)

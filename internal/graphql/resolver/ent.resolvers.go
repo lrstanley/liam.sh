@@ -19,11 +19,27 @@ func (r *queryResolver) Nodes(ctx context.Context, ids []int) ([]ent.Noder, erro
 	return r.client.Noders(ctx, ids)
 }
 
+func (r *queryResolver) Githubassets(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) (*ent.GithubAssetConnection, error) {
+	return r.client.GithubAsset.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithGithubAssetOrder(orderBy),
+		ent.WithGithubAssetFilter(where.Filter),
+	)
+}
+
 func (r *queryResolver) Githubevents(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) (*ent.GithubEventConnection, error) {
 	return r.client.GithubEvent.Query().Paginate(
 		ctx, after, first, before, last,
 		ent.WithGithubEventOrder(orderBy),
 		ent.WithGithubEventFilter(where.Filter),
+	)
+}
+
+func (r *queryResolver) Githubreleases(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) (*ent.GithubReleaseConnection, error) {
+	return r.client.GithubRelease.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithGithubReleaseOrder(orderBy),
+		ent.WithGithubReleaseFilter(where.Filter),
 	)
 }
 

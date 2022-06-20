@@ -19,7 +19,9 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/hashicorp/go-multierror"
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -52,6 +54,115 @@ type Edge struct {
 	Type string `json:"type,omitempty"` // edge type.
 	Name string `json:"name,omitempty"` // edge name.
 	IDs  []int  `json:"ids,omitempty"`  // node ids (where this edge point to).
+}
+
+func (ga *GithubAsset) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     ga.ID,
+		Type:   "GithubAsset",
+		Fields: make([]*Field, 11),
+		Edges:  make([]*Edge, 1),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(ga.AssetID); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "int64",
+		Name:  "asset_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.BrowserDownloadURL); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "browser_download_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.Name); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
+		Type:  "string",
+		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.Label); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "string",
+		Name:  "label",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.State); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "string",
+		Name:  "state",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.ContentType); err != nil {
+		return nil, err
+	}
+	node.Fields[5] = &Field{
+		Type:  "string",
+		Name:  "content_type",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.Size); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
+		Type:  "int64",
+		Name:  "size",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.DownloadCount); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
+		Type:  "int64",
+		Name:  "download_count",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.CreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[8] = &Field{
+		Type:  "time.Time",
+		Name:  "created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.UpdatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[9] = &Field{
+		Type:  "time.Time",
+		Name:  "updated_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(ga.Uploader); err != nil {
+		return nil, err
+	}
+	node.Fields[10] = &Field{
+		Type:  "*github.User",
+		Name:  "uploader",
+		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "GithubRelease",
+		Name: "release",
+	}
+	err = ga.QueryRelease().
+		Select(githubrelease.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
 }
 
 func (ge *GithubEvent) Node(ctx context.Context) (node *Node, err error) {
@@ -137,12 +248,123 @@ func (ge *GithubEvent) Node(ctx context.Context) (node *Node, err error) {
 	return node, nil
 }
 
+func (gr *GithubRelease) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     gr.ID,
+		Type:   "GithubRelease",
+		Fields: make([]*Field, 10),
+		Edges:  make([]*Edge, 2),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(gr.ReleaseID); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "int64",
+		Name:  "release_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.HTMLURL); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "html_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.TagName); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
+		Type:  "string",
+		Name:  "tag_name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.TargetCommitish); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "string",
+		Name:  "target_commitish",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Name); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "string",
+		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Draft); err != nil {
+		return nil, err
+	}
+	node.Fields[5] = &Field{
+		Type:  "bool",
+		Name:  "draft",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Prerelease); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
+		Type:  "bool",
+		Name:  "prerelease",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.CreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
+		Type:  "time.Time",
+		Name:  "created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.PublishedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[8] = &Field{
+		Type:  "time.Time",
+		Name:  "published_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gr.Author); err != nil {
+		return nil, err
+	}
+	node.Fields[9] = &Field{
+		Type:  "*github.User",
+		Name:  "author",
+		Value: string(buf),
+	}
+	node.Edges[0] = &Edge{
+		Type: "GithubRepository",
+		Name: "repository",
+	}
+	err = gr.QueryRepository().
+		Select(githubrepository.FieldID).
+		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
+		Type: "GithubAsset",
+		Name: "assets",
+	}
+	err = gr.QueryAssets().
+		Select(githubasset.FieldID).
+		Scan(ctx, &node.Edges[1].IDs)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
+
 func (gr *GithubRepository) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     gr.ID,
 		Type:   "GithubRepository",
 		Fields: make([]*Field, 19),
-		Edges:  make([]*Edge, 1),
+		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
 	if buf, err = json.Marshal(gr.RepoID); err != nil {
@@ -304,6 +526,16 @@ func (gr *GithubRepository) Node(ctx context.Context) (node *Node, err error) {
 	err = gr.QueryLabels().
 		Select(label.FieldID).
 		Scan(ctx, &node.Edges[0].IDs)
+	if err != nil {
+		return nil, err
+	}
+	node.Edges[1] = &Edge{
+		Type: "GithubRelease",
+		Name: "releases",
+	}
+	err = gr.QueryReleases().
+		Select(githubrelease.FieldID).
+		Scan(ctx, &node.Edges[1].IDs)
 	if err != nil {
 		return nil, err
 	}
@@ -636,10 +868,34 @@ func (c *Client) Noder(ctx context.Context, id int, opts ...NodeOption) (_ Noder
 
 func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error) {
 	switch table {
+	case githubasset.Table:
+		query := c.GithubAsset.Query().
+			Where(githubasset.ID(id))
+		query, err := query.CollectFields(ctx, "GithubAsset")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case githubevent.Table:
 		query := c.GithubEvent.Query().
 			Where(githubevent.ID(id))
 		query, err := query.CollectFields(ctx, "GithubEvent")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
+	case githubrelease.Table:
+		query := c.GithubRelease.Query().
+			Where(githubrelease.ID(id))
+		query, err := query.CollectFields(ctx, "GithubRelease")
 		if err != nil {
 			return nil, err
 		}
@@ -769,10 +1025,42 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		idmap[id] = append(idmap[id], &noders[i])
 	}
 	switch table {
+	case githubasset.Table:
+		query := c.GithubAsset.Query().
+			Where(githubasset.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "GithubAsset")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
 	case githubevent.Table:
 		query := c.GithubEvent.Query().
 			Where(githubevent.IDIn(ids...))
 		query, err := query.CollectFields(ctx, "GithubEvent")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case githubrelease.Table:
+		query := c.GithubRelease.Query().
+			Where(githubrelease.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "GithubRelease")
 		if err != nil {
 			return nil, err
 		}

@@ -12,6 +12,36 @@ import (
 )
 
 var (
+	// GithubAssetsColumns holds the columns for the "github_assets" table.
+	GithubAssetsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "asset_id", Type: field.TypeInt64, Unique: true},
+		{Name: "browser_download_url", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString},
+		{Name: "label", Type: field.TypeString, Nullable: true},
+		{Name: "state", Type: field.TypeString, Nullable: true},
+		{Name: "content_type", Type: field.TypeString},
+		{Name: "size", Type: field.TypeInt64},
+		{Name: "download_count", Type: field.TypeInt64},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime, Nullable: true},
+		{Name: "uploader", Type: field.TypeJSON},
+		{Name: "github_release_assets", Type: field.TypeInt},
+	}
+	// GithubAssetsTable holds the schema information for the "github_assets" table.
+	GithubAssetsTable = &schema.Table{
+		Name:       "github_assets",
+		Columns:    GithubAssetsColumns,
+		PrimaryKey: []*schema.Column{GithubAssetsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "github_assets_github_releases_assets",
+				Columns:    []*schema.Column{GithubAssetsColumns[12]},
+				RefColumns: []*schema.Column{GithubReleasesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
+	}
 	// GithubEventsColumns holds the columns for the "github_events" table.
 	GithubEventsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -30,6 +60,35 @@ var (
 		Name:       "github_events",
 		Columns:    GithubEventsColumns,
 		PrimaryKey: []*schema.Column{GithubEventsColumns[0]},
+	}
+	// GithubReleasesColumns holds the columns for the "github_releases" table.
+	GithubReleasesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "release_id", Type: field.TypeInt64, Unique: true},
+		{Name: "html_url", Type: field.TypeString},
+		{Name: "tag_name", Type: field.TypeString},
+		{Name: "target_commitish", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Nullable: true},
+		{Name: "draft", Type: field.TypeBool},
+		{Name: "prerelease", Type: field.TypeBool},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "published_at", Type: field.TypeTime},
+		{Name: "author", Type: field.TypeJSON},
+		{Name: "github_repository_releases", Type: field.TypeInt},
+	}
+	// GithubReleasesTable holds the schema information for the "github_releases" table.
+	GithubReleasesTable = &schema.Table{
+		Name:       "github_releases",
+		Columns:    GithubReleasesColumns,
+		PrimaryKey: []*schema.Column{GithubReleasesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "github_releases_github_repositories_releases",
+				Columns:    []*schema.Column{GithubReleasesColumns[11]},
+				RefColumns: []*schema.Column{GithubRepositoriesColumns[0]},
+				OnDelete:   schema.Cascade,
+			},
+		},
 	}
 	// GithubRepositoriesColumns holds the columns for the "github_repositories" table.
 	GithubRepositoriesColumns = []*schema.Column{
@@ -173,7 +232,9 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		GithubAssetsTable,
 		GithubEventsTable,
+		GithubReleasesTable,
 		GithubRepositoriesTable,
 		LabelsTable,
 		PostsTable,
@@ -184,6 +245,8 @@ var (
 )
 
 func init() {
+	GithubAssetsTable.ForeignKeys[0].RefTable = GithubReleasesTable
+	GithubReleasesTable.ForeignKeys[0].RefTable = GithubRepositoriesTable
 	PostsTable.ForeignKeys[0].RefTable = UsersTable
 	LabelPostsTable.ForeignKeys[0].RefTable = LabelsTable
 	LabelPostsTable.ForeignKeys[1].RefTable = PostsTable

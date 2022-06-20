@@ -69,11 +69,13 @@ type GithubRepository struct {
 type GithubRepositoryEdges struct {
 	// Labels holds the value of the labels edge.
 	Labels []*Label `json:"labels,omitempty"`
+	// Releases holds the value of the releases edge.
+	Releases []*GithubRelease `json:"releases,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [1]*int
+	totalCount [2]*int
 }
 
 // LabelsOrErr returns the Labels value or an error if the edge
@@ -83,6 +85,15 @@ func (e GithubRepositoryEdges) LabelsOrErr() ([]*Label, error) {
 		return e.Labels, nil
 	}
 	return nil, &NotLoadedError{edge: "labels"}
+}
+
+// ReleasesOrErr returns the Releases value or an error if the edge
+// was not loaded in eager-loading.
+func (e GithubRepositoryEdges) ReleasesOrErr() ([]*GithubRelease, error) {
+	if e.loadedTypes[1] {
+		return e.Releases, nil
+	}
+	return nil, &NotLoadedError{edge: "releases"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -247,6 +258,11 @@ func (gr *GithubRepository) assignValues(columns []string, values []interface{})
 // QueryLabels queries the "labels" edge of the GithubRepository entity.
 func (gr *GithubRepository) QueryLabels() *LabelQuery {
 	return (&GithubRepositoryClient{config: gr.config}).QueryLabels(gr)
+}
+
+// QueryReleases queries the "releases" edge of the GithubRepository entity.
+func (gr *GithubRepository) QueryReleases() *GithubReleaseQuery {
+	return (&GithubRepositoryClient{config: gr.config}).QueryReleases(gr)
 }
 
 // Update returns a builder for updating this GithubRepository.

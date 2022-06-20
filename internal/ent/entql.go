@@ -7,7 +7,9 @@
 package ent
 
 import (
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -22,8 +24,32 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 5)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 7)}
 	graph.Nodes[0] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   githubasset.Table,
+			Columns: githubasset.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeInt,
+				Column: githubasset.FieldID,
+			},
+		},
+		Type: "GithubAsset",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			githubasset.FieldAssetID:            {Type: field.TypeInt64, Column: githubasset.FieldAssetID},
+			githubasset.FieldBrowserDownloadURL: {Type: field.TypeString, Column: githubasset.FieldBrowserDownloadURL},
+			githubasset.FieldName:               {Type: field.TypeString, Column: githubasset.FieldName},
+			githubasset.FieldLabel:              {Type: field.TypeString, Column: githubasset.FieldLabel},
+			githubasset.FieldState:              {Type: field.TypeString, Column: githubasset.FieldState},
+			githubasset.FieldContentType:        {Type: field.TypeString, Column: githubasset.FieldContentType},
+			githubasset.FieldSize:               {Type: field.TypeInt64, Column: githubasset.FieldSize},
+			githubasset.FieldDownloadCount:      {Type: field.TypeInt64, Column: githubasset.FieldDownloadCount},
+			githubasset.FieldCreatedAt:          {Type: field.TypeTime, Column: githubasset.FieldCreatedAt},
+			githubasset.FieldUpdatedAt:          {Type: field.TypeTime, Column: githubasset.FieldUpdatedAt},
+			githubasset.FieldUploader:           {Type: field.TypeJSON, Column: githubasset.FieldUploader},
+		},
+	}
+	graph.Nodes[1] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubevent.Table,
 			Columns: githubevent.Columns,
@@ -45,7 +71,30 @@ var schemaGraph = func() *sqlgraph.Schema {
 			githubevent.FieldPayload:   {Type: field.TypeJSON, Column: githubevent.FieldPayload},
 		},
 	}
-	graph.Nodes[1] = &sqlgraph.Node{
+	graph.Nodes[2] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
+			Table:   githubrelease.Table,
+			Columns: githubrelease.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeInt,
+				Column: githubrelease.FieldID,
+			},
+		},
+		Type: "GithubRelease",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			githubrelease.FieldReleaseID:       {Type: field.TypeInt64, Column: githubrelease.FieldReleaseID},
+			githubrelease.FieldHTMLURL:         {Type: field.TypeString, Column: githubrelease.FieldHTMLURL},
+			githubrelease.FieldTagName:         {Type: field.TypeString, Column: githubrelease.FieldTagName},
+			githubrelease.FieldTargetCommitish: {Type: field.TypeString, Column: githubrelease.FieldTargetCommitish},
+			githubrelease.FieldName:            {Type: field.TypeString, Column: githubrelease.FieldName},
+			githubrelease.FieldDraft:           {Type: field.TypeBool, Column: githubrelease.FieldDraft},
+			githubrelease.FieldPrerelease:      {Type: field.TypeBool, Column: githubrelease.FieldPrerelease},
+			githubrelease.FieldCreatedAt:       {Type: field.TypeTime, Column: githubrelease.FieldCreatedAt},
+			githubrelease.FieldPublishedAt:     {Type: field.TypeTime, Column: githubrelease.FieldPublishedAt},
+			githubrelease.FieldAuthor:          {Type: field.TypeJSON, Column: githubrelease.FieldAuthor},
+		},
+	}
+	graph.Nodes[3] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubrepository.Table,
 			Columns: githubrepository.Columns,
@@ -77,7 +126,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			githubrepository.FieldLicense:       {Type: field.TypeJSON, Column: githubrepository.FieldLicense},
 		},
 	}
-	graph.Nodes[2] = &sqlgraph.Node{
+	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   label.Table,
 			Columns: label.Columns,
@@ -93,7 +142,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			label.FieldName:       {Type: field.TypeString, Column: label.FieldName},
 		},
 	}
-	graph.Nodes[3] = &sqlgraph.Node{
+	graph.Nodes[5] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   post.Table,
 			Columns: post.Columns,
@@ -115,7 +164,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldViewCount:   {Type: field.TypeInt, Column: post.FieldViewCount},
 		},
 	}
-	graph.Nodes[4] = &sqlgraph.Node{
+	graph.Nodes[6] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -139,6 +188,42 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 	}
 	graph.MustAddE(
+		"release",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   githubasset.ReleaseTable,
+			Columns: []string{githubasset.ReleaseColumn},
+			Bidi:    false,
+		},
+		"GithubAsset",
+		"GithubRelease",
+	)
+	graph.MustAddE(
+		"repository",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   githubrelease.RepositoryTable,
+			Columns: []string{githubrelease.RepositoryColumn},
+			Bidi:    false,
+		},
+		"GithubRelease",
+		"GithubRepository",
+	)
+	graph.MustAddE(
+		"assets",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrelease.AssetsTable,
+			Columns: []string{githubrelease.AssetsColumn},
+			Bidi:    false,
+		},
+		"GithubRelease",
+		"GithubAsset",
+	)
+	graph.MustAddE(
 		"labels",
 		&sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2M,
@@ -149,6 +234,18 @@ var schemaGraph = func() *sqlgraph.Schema {
 		},
 		"GithubRepository",
 		"Label",
+	)
+	graph.MustAddE(
+		"releases",
+		&sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+		},
+		"GithubRepository",
+		"GithubRelease",
 	)
 	graph.MustAddE(
 		"posts",
@@ -220,6 +317,115 @@ type predicateAdder interface {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (gaq *GithubAssetQuery) addPredicate(pred func(s *sql.Selector)) {
+	gaq.predicates = append(gaq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GithubAssetQuery builder.
+func (gaq *GithubAssetQuery) Filter() *GithubAssetFilter {
+	return &GithubAssetFilter{gaq.config, gaq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GithubAssetMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GithubAssetMutation builder.
+func (m *GithubAssetMutation) Filter() *GithubAssetFilter {
+	return &GithubAssetFilter{m.config, m}
+}
+
+// GithubAssetFilter provides a generic filtering capability at runtime for GithubAssetQuery.
+type GithubAssetFilter struct {
+	config
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GithubAssetFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql int predicate on the id field.
+func (f *GithubAssetFilter) WhereID(p entql.IntP) {
+	f.Where(p.Field(githubasset.FieldID))
+}
+
+// WhereAssetID applies the entql int64 predicate on the asset_id field.
+func (f *GithubAssetFilter) WhereAssetID(p entql.Int64P) {
+	f.Where(p.Field(githubasset.FieldAssetID))
+}
+
+// WhereBrowserDownloadURL applies the entql string predicate on the browser_download_url field.
+func (f *GithubAssetFilter) WhereBrowserDownloadURL(p entql.StringP) {
+	f.Where(p.Field(githubasset.FieldBrowserDownloadURL))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *GithubAssetFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(githubasset.FieldName))
+}
+
+// WhereLabel applies the entql string predicate on the label field.
+func (f *GithubAssetFilter) WhereLabel(p entql.StringP) {
+	f.Where(p.Field(githubasset.FieldLabel))
+}
+
+// WhereState applies the entql string predicate on the state field.
+func (f *GithubAssetFilter) WhereState(p entql.StringP) {
+	f.Where(p.Field(githubasset.FieldState))
+}
+
+// WhereContentType applies the entql string predicate on the content_type field.
+func (f *GithubAssetFilter) WhereContentType(p entql.StringP) {
+	f.Where(p.Field(githubasset.FieldContentType))
+}
+
+// WhereSize applies the entql int64 predicate on the size field.
+func (f *GithubAssetFilter) WhereSize(p entql.Int64P) {
+	f.Where(p.Field(githubasset.FieldSize))
+}
+
+// WhereDownloadCount applies the entql int64 predicate on the download_count field.
+func (f *GithubAssetFilter) WhereDownloadCount(p entql.Int64P) {
+	f.Where(p.Field(githubasset.FieldDownloadCount))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *GithubAssetFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubasset.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *GithubAssetFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubasset.FieldUpdatedAt))
+}
+
+// WhereUploader applies the entql json.RawMessage predicate on the uploader field.
+func (f *GithubAssetFilter) WhereUploader(p entql.BytesP) {
+	f.Where(p.Field(githubasset.FieldUploader))
+}
+
+// WhereHasRelease applies a predicate to check if query has an edge release.
+func (f *GithubAssetFilter) WhereHasRelease() {
+	f.Where(entql.HasEdge("release"))
+}
+
+// WhereHasReleaseWith applies a predicate to check if query has an edge release with a given conditions (other predicates).
+func (f *GithubAssetFilter) WhereHasReleaseWith(preds ...predicate.GithubRelease) {
+	f.Where(entql.HasEdgeWith("release", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (geq *GithubEventQuery) addPredicate(pred func(s *sql.Selector)) {
 	geq.predicates = append(geq.predicates, pred)
 }
@@ -248,7 +454,7 @@ type GithubEventFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GithubEventFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[0].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -305,6 +511,124 @@ func (f *GithubEventFilter) WherePayload(p entql.BytesP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (grq *GithubReleaseQuery) addPredicate(pred func(s *sql.Selector)) {
+	grq.predicates = append(grq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GithubReleaseQuery builder.
+func (grq *GithubReleaseQuery) Filter() *GithubReleaseFilter {
+	return &GithubReleaseFilter{grq.config, grq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GithubReleaseMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GithubReleaseMutation builder.
+func (m *GithubReleaseMutation) Filter() *GithubReleaseFilter {
+	return &GithubReleaseFilter{m.config, m}
+}
+
+// GithubReleaseFilter provides a generic filtering capability at runtime for GithubReleaseQuery.
+type GithubReleaseFilter struct {
+	config
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GithubReleaseFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql int predicate on the id field.
+func (f *GithubReleaseFilter) WhereID(p entql.IntP) {
+	f.Where(p.Field(githubrelease.FieldID))
+}
+
+// WhereReleaseID applies the entql int64 predicate on the release_id field.
+func (f *GithubReleaseFilter) WhereReleaseID(p entql.Int64P) {
+	f.Where(p.Field(githubrelease.FieldReleaseID))
+}
+
+// WhereHTMLURL applies the entql string predicate on the html_url field.
+func (f *GithubReleaseFilter) WhereHTMLURL(p entql.StringP) {
+	f.Where(p.Field(githubrelease.FieldHTMLURL))
+}
+
+// WhereTagName applies the entql string predicate on the tag_name field.
+func (f *GithubReleaseFilter) WhereTagName(p entql.StringP) {
+	f.Where(p.Field(githubrelease.FieldTagName))
+}
+
+// WhereTargetCommitish applies the entql string predicate on the target_commitish field.
+func (f *GithubReleaseFilter) WhereTargetCommitish(p entql.StringP) {
+	f.Where(p.Field(githubrelease.FieldTargetCommitish))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *GithubReleaseFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(githubrelease.FieldName))
+}
+
+// WhereDraft applies the entql bool predicate on the draft field.
+func (f *GithubReleaseFilter) WhereDraft(p entql.BoolP) {
+	f.Where(p.Field(githubrelease.FieldDraft))
+}
+
+// WherePrerelease applies the entql bool predicate on the prerelease field.
+func (f *GithubReleaseFilter) WherePrerelease(p entql.BoolP) {
+	f.Where(p.Field(githubrelease.FieldPrerelease))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *GithubReleaseFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubrelease.FieldCreatedAt))
+}
+
+// WherePublishedAt applies the entql time.Time predicate on the published_at field.
+func (f *GithubReleaseFilter) WherePublishedAt(p entql.TimeP) {
+	f.Where(p.Field(githubrelease.FieldPublishedAt))
+}
+
+// WhereAuthor applies the entql json.RawMessage predicate on the author field.
+func (f *GithubReleaseFilter) WhereAuthor(p entql.BytesP) {
+	f.Where(p.Field(githubrelease.FieldAuthor))
+}
+
+// WhereHasRepository applies a predicate to check if query has an edge repository.
+func (f *GithubReleaseFilter) WhereHasRepository() {
+	f.Where(entql.HasEdge("repository"))
+}
+
+// WhereHasRepositoryWith applies a predicate to check if query has an edge repository with a given conditions (other predicates).
+func (f *GithubReleaseFilter) WhereHasRepositoryWith(preds ...predicate.GithubRepository) {
+	f.Where(entql.HasEdgeWith("repository", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// WhereHasAssets applies a predicate to check if query has an edge assets.
+func (f *GithubReleaseFilter) WhereHasAssets() {
+	f.Where(entql.HasEdge("assets"))
+}
+
+// WhereHasAssetsWith applies a predicate to check if query has an edge assets with a given conditions (other predicates).
+func (f *GithubReleaseFilter) WhereHasAssetsWith(preds ...predicate.GithubAsset) {
+	f.Where(entql.HasEdgeWith("assets", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (grq *GithubRepositoryQuery) addPredicate(pred func(s *sql.Selector)) {
 	grq.predicates = append(grq.predicates, pred)
 }
@@ -333,7 +657,7 @@ type GithubRepositoryFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GithubRepositoryFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[1].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -453,6 +777,20 @@ func (f *GithubRepositoryFilter) WhereHasLabelsWith(preds ...predicate.Label) {
 	})))
 }
 
+// WhereHasReleases applies a predicate to check if query has an edge releases.
+func (f *GithubRepositoryFilter) WhereHasReleases() {
+	f.Where(entql.HasEdge("releases"))
+}
+
+// WhereHasReleasesWith applies a predicate to check if query has an edge releases with a given conditions (other predicates).
+func (f *GithubRepositoryFilter) WhereHasReleasesWith(preds ...predicate.GithubRelease) {
+	f.Where(entql.HasEdgeWith("releases", sqlgraph.WrapFunc(func(s *sql.Selector) {
+		for _, p := range preds {
+			p(s)
+		}
+	})))
+}
+
 // addPredicate implements the predicateAdder interface.
 func (lq *LabelQuery) addPredicate(pred func(s *sql.Selector)) {
 	lq.predicates = append(lq.predicates, pred)
@@ -482,7 +820,7 @@ type LabelFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LabelFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -565,7 +903,7 @@ type PostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -678,7 +1016,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

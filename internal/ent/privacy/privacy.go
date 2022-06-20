@@ -169,6 +169,30 @@ func DenyMutationOperationRule(op ent.Op) MutationRule {
 	return OnMutationOperation(rule, op)
 }
 
+// The GithubAssetQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GithubAssetQueryRuleFunc func(context.Context, *ent.GithubAssetQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GithubAssetQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GithubAssetQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GithubAssetQuery", q)
+}
+
+// The GithubAssetMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GithubAssetMutationRuleFunc func(context.Context, *ent.GithubAssetMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GithubAssetMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GithubAssetMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GithubAssetMutation", m)
+}
+
 // The GithubEventQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type GithubEventQueryRuleFunc func(context.Context, *ent.GithubEventQuery) error
@@ -191,6 +215,30 @@ func (f GithubEventMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 		return f(ctx, m)
 	}
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GithubEventMutation", m)
+}
+
+// The GithubReleaseQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GithubReleaseQueryRuleFunc func(context.Context, *ent.GithubReleaseQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GithubReleaseQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GithubReleaseQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GithubReleaseQuery", q)
+}
+
+// The GithubReleaseMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GithubReleaseMutationRuleFunc func(context.Context, *ent.GithubReleaseMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GithubReleaseMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GithubReleaseMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GithubReleaseMutation", m)
 }
 
 // The GithubRepositoryQueryRuleFunc type is an adapter to allow the use of ordinary
@@ -324,7 +372,11 @@ var _ QueryMutationRule = FilterFunc(nil)
 
 func queryFilter(q ent.Query) (Filter, error) {
 	switch q := q.(type) {
+	case *ent.GithubAssetQuery:
+		return q.Filter(), nil
 	case *ent.GithubEventQuery:
+		return q.Filter(), nil
+	case *ent.GithubReleaseQuery:
 		return q.Filter(), nil
 	case *ent.GithubRepositoryQuery:
 		return q.Filter(), nil
@@ -341,7 +393,11 @@ func queryFilter(q ent.Query) (Filter, error) {
 
 func mutationFilter(m ent.Mutation) (Filter, error) {
 	switch m := m.(type) {
+	case *ent.GithubAssetMutation:
+		return m.Filter(), nil
 	case *ent.GithubEventMutation:
+		return m.Filter(), nil
+	case *ent.GithubReleaseMutation:
 		return m.Filter(), nil
 	case *ent.GithubRepositoryMutation:
 		return m.Filter(), nil

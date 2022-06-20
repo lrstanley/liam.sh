@@ -13,11 +13,93 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 )
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (ga *GithubAssetQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubAssetQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return ga, nil
+	}
+	if err := ga.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return ga, nil
+}
+
+func (ga *GithubAssetQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+		switch field.Name {
+		case "release":
+			var (
+				path  = append(path, field.Name)
+				query = &GithubReleaseQuery{config: ga.config}
+			)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			ga.withRelease = query
+		}
+	}
+	return nil
+}
+
+type githubassetPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []GithubAssetPaginateOption
+}
+
+func newGithubAssetPaginateArgs(rv map[string]interface{}) *githubassetPaginateArgs {
+	args := &githubassetPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]interface{}:
+			var (
+				err1, err2 error
+				order      = &GithubAssetOrder{Field: &GithubAssetOrderField{}}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithGithubAssetOrder(order))
+			}
+		case *GithubAssetOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithGithubAssetOrder(v))
+			}
+		}
+	}
+	if v, ok := rv[whereField].(*GithubAssetWhereInput); ok {
+		args.opts = append(args.opts, WithGithubAssetFilter(v.Filter))
+	}
+	return args
+}
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (ge *GithubEventQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubEventQuery, error) {
@@ -83,6 +165,182 @@ func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateA
 	}
 	if v, ok := rv[whereField].(*GithubEventWhereInput); ok {
 		args.opts = append(args.opts, WithGithubEventFilter(v.Filter))
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (gr *GithubReleaseQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubReleaseQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return gr, nil
+	}
+	if err := gr.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return gr, nil
+}
+
+func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+		switch field.Name {
+		case "repository":
+			var (
+				path  = append(path, field.Name)
+				query = &GithubRepositoryQuery{config: gr.config}
+			)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			gr.withRepository = query
+		case "assets":
+			var (
+				path  = append(path, field.Name)
+				query = &GithubAssetQuery{config: gr.config}
+			)
+			args := newGithubAssetPaginateArgs(fieldArgs(ctx, new(GithubAssetWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newGithubAssetPager(args.opts)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
+				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+					query := query.Clone()
+					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRelease) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID int `sql:"github_release_assets"`
+							Count  int `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							s.Where(sql.InValues(githubrelease.AssetsColumn, ids...))
+						})
+						if err := query.GroupBy(githubrelease.AssetsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[int]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							nodes[i].Edges.totalCount[1] = &n
+						}
+						return nil
+					})
+				}
+				continue
+			}
+			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
+				query := query.Clone()
+				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRelease) error {
+					ids := make([]driver.Value, len(nodes))
+					for i := range nodes {
+						ids[i] = nodes[i].ID
+					}
+					var v []struct {
+						NodeID int `sql:"github_release_assets"`
+						Count  int `sql:"count"`
+					}
+					query.Where(func(s *sql.Selector) {
+						s.Where(sql.InValues(githubrelease.AssetsColumn, ids...))
+					})
+					if err := query.GroupBy(githubrelease.AssetsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
+						return err
+					}
+					m := make(map[int]int, len(v))
+					for i := range v {
+						m[v[i].NodeID] = v[i].Count
+					}
+					for i := range nodes {
+						n := m[nodes[i].ID]
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			} else {
+				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRelease) error {
+					for i := range nodes {
+						n := len(nodes[i].Edges.Assets)
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			}
+			query = pager.applyCursors(query, args.after, args.before)
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(args.last != nil))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query, args.last != nil)
+			}
+			path = append(path, edgesField, nodeField)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			gr.withAssets = query
+		}
+	}
+	return nil
+}
+
+type githubreleasePaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []GithubReleasePaginateOption
+}
+
+func newGithubReleasePaginateArgs(rv map[string]interface{}) *githubreleasePaginateArgs {
+	args := &githubreleasePaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]interface{}:
+			var (
+				err1, err2 error
+				order      = &GithubReleaseOrder{Field: &GithubReleaseOrderField{}}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithGithubReleaseOrder(order))
+			}
+		case *GithubReleaseOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithGithubReleaseOrder(v))
+			}
+		}
+	}
+	if v, ok := rv[whereField].(*GithubReleaseWhereInput); ok {
+		args.opts = append(args.opts, WithGithubReleaseFilter(v.Filter))
 	}
 	return args
 }
@@ -206,6 +464,101 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 				return err
 			}
 			gr.withLabels = query
+		case "releases":
+			var (
+				path  = append(path, field.Name)
+				query = &GithubReleaseQuery{config: gr.config}
+			)
+			args := newGithubReleasePaginateArgs(fieldArgs(ctx, new(GithubReleaseWhereInput), path...))
+			if err := validateFirstLast(args.first, args.last); err != nil {
+				return fmt.Errorf("validate first and last in path %q: %w", path, err)
+			}
+			pager, err := newGithubReleasePager(args.opts)
+			if err != nil {
+				return fmt.Errorf("create new pager in path %q: %w", path, err)
+			}
+			if query, err = pager.applyFilter(query); err != nil {
+				return err
+			}
+			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
+				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+					query := query.Clone()
+					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
+						ids := make([]driver.Value, len(nodes))
+						for i := range nodes {
+							ids[i] = nodes[i].ID
+						}
+						var v []struct {
+							NodeID int `sql:"github_repository_releases"`
+							Count  int `sql:"count"`
+						}
+						query.Where(func(s *sql.Selector) {
+							s.Where(sql.InValues(githubrepository.ReleasesColumn, ids...))
+						})
+						if err := query.GroupBy(githubrepository.ReleasesColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
+							return err
+						}
+						m := make(map[int]int, len(v))
+						for i := range v {
+							m[v[i].NodeID] = v[i].Count
+						}
+						for i := range nodes {
+							n := m[nodes[i].ID]
+							nodes[i].Edges.totalCount[1] = &n
+						}
+						return nil
+					})
+				}
+				continue
+			}
+			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
+				query := query.Clone()
+				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
+					ids := make([]driver.Value, len(nodes))
+					for i := range nodes {
+						ids[i] = nodes[i].ID
+					}
+					var v []struct {
+						NodeID int `sql:"github_repository_releases"`
+						Count  int `sql:"count"`
+					}
+					query.Where(func(s *sql.Selector) {
+						s.Where(sql.InValues(githubrepository.ReleasesColumn, ids...))
+					})
+					if err := query.GroupBy(githubrepository.ReleasesColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
+						return err
+					}
+					m := make(map[int]int, len(v))
+					for i := range v {
+						m[v[i].NodeID] = v[i].Count
+					}
+					for i := range nodes {
+						n := m[nodes[i].ID]
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			} else {
+				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
+					for i := range nodes {
+						n := len(nodes[i].Edges.Releases)
+						nodes[i].Edges.totalCount[1] = &n
+					}
+					return nil
+				})
+			}
+			query = pager.applyCursors(query, args.after, args.before)
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(args.last != nil))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query, args.last != nil)
+			}
+			path = append(path, edgesField, nodeField)
+			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+				return err
+			}
+			gr.withReleases = query
 		}
 	}
 	return nil

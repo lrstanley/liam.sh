@@ -13,7 +13,9 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/migrate"
 
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -29,8 +31,12 @@ type Client struct {
 	config
 	// Schema is the client for creating, migrating and dropping schema.
 	Schema *migrate.Schema
+	// GithubAsset is the client for interacting with the GithubAsset builders.
+	GithubAsset *GithubAssetClient
 	// GithubEvent is the client for interacting with the GithubEvent builders.
 	GithubEvent *GithubEventClient
+	// GithubRelease is the client for interacting with the GithubRelease builders.
+	GithubRelease *GithubReleaseClient
 	// GithubRepository is the client for interacting with the GithubRepository builders.
 	GithubRepository *GithubRepositoryClient
 	// Label is the client for interacting with the Label builders.
@@ -54,7 +60,9 @@ func NewClient(opts ...Option) *Client {
 
 func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
+	c.GithubAsset = NewGithubAssetClient(c.config)
 	c.GithubEvent = NewGithubEventClient(c.config)
+	c.GithubRelease = NewGithubReleaseClient(c.config)
 	c.GithubRepository = NewGithubRepositoryClient(c.config)
 	c.Label = NewLabelClient(c.config)
 	c.Post = NewPostClient(c.config)
@@ -92,7 +100,9 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	return &Tx{
 		ctx:              ctx,
 		config:           cfg,
+		GithubAsset:      NewGithubAssetClient(cfg),
 		GithubEvent:      NewGithubEventClient(cfg),
+		GithubRelease:    NewGithubReleaseClient(cfg),
 		GithubRepository: NewGithubRepositoryClient(cfg),
 		Label:            NewLabelClient(cfg),
 		Post:             NewPostClient(cfg),
@@ -116,7 +126,9 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	return &Tx{
 		ctx:              ctx,
 		config:           cfg,
+		GithubAsset:      NewGithubAssetClient(cfg),
 		GithubEvent:      NewGithubEventClient(cfg),
+		GithubRelease:    NewGithubReleaseClient(cfg),
 		GithubRepository: NewGithubRepositoryClient(cfg),
 		Label:            NewLabelClient(cfg),
 		Post:             NewPostClient(cfg),
@@ -127,7 +139,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 // Debug returns a new debug-client. It's used to get verbose logging on specific operations.
 //
 //	client.Debug().
-//		GithubEvent.
+//		GithubAsset.
 //		Query().
 //		Count(ctx)
 //
@@ -150,11 +162,120 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
+	c.GithubAsset.Use(hooks...)
 	c.GithubEvent.Use(hooks...)
+	c.GithubRelease.Use(hooks...)
 	c.GithubRepository.Use(hooks...)
 	c.Label.Use(hooks...)
 	c.Post.Use(hooks...)
 	c.User.Use(hooks...)
+}
+
+// GithubAssetClient is a client for the GithubAsset schema.
+type GithubAssetClient struct {
+	config
+}
+
+// NewGithubAssetClient returns a client for the GithubAsset from the given config.
+func NewGithubAssetClient(c config) *GithubAssetClient {
+	return &GithubAssetClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `githubasset.Hooks(f(g(h())))`.
+func (c *GithubAssetClient) Use(hooks ...Hook) {
+	c.hooks.GithubAsset = append(c.hooks.GithubAsset, hooks...)
+}
+
+// Create returns a builder for creating a GithubAsset entity.
+func (c *GithubAssetClient) Create() *GithubAssetCreate {
+	mutation := newGithubAssetMutation(c.config, OpCreate)
+	return &GithubAssetCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GithubAsset entities.
+func (c *GithubAssetClient) CreateBulk(builders ...*GithubAssetCreate) *GithubAssetCreateBulk {
+	return &GithubAssetCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GithubAsset.
+func (c *GithubAssetClient) Update() *GithubAssetUpdate {
+	mutation := newGithubAssetMutation(c.config, OpUpdate)
+	return &GithubAssetUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GithubAssetClient) UpdateOne(ga *GithubAsset) *GithubAssetUpdateOne {
+	mutation := newGithubAssetMutation(c.config, OpUpdateOne, withGithubAsset(ga))
+	return &GithubAssetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GithubAssetClient) UpdateOneID(id int) *GithubAssetUpdateOne {
+	mutation := newGithubAssetMutation(c.config, OpUpdateOne, withGithubAssetID(id))
+	return &GithubAssetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GithubAsset.
+func (c *GithubAssetClient) Delete() *GithubAssetDelete {
+	mutation := newGithubAssetMutation(c.config, OpDelete)
+	return &GithubAssetDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GithubAssetClient) DeleteOne(ga *GithubAsset) *GithubAssetDeleteOne {
+	return c.DeleteOneID(ga.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GithubAssetClient) DeleteOneID(id int) *GithubAssetDeleteOne {
+	builder := c.Delete().Where(githubasset.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GithubAssetDeleteOne{builder}
+}
+
+// Query returns a query builder for GithubAsset.
+func (c *GithubAssetClient) Query() *GithubAssetQuery {
+	return &GithubAssetQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GithubAsset entity by its id.
+func (c *GithubAssetClient) Get(ctx context.Context, id int) (*GithubAsset, error) {
+	return c.Query().Where(githubasset.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GithubAssetClient) GetX(ctx context.Context, id int) *GithubAsset {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryRelease queries the release edge of a GithubAsset.
+func (c *GithubAssetClient) QueryRelease(ga *GithubAsset) *GithubReleaseQuery {
+	query := &GithubReleaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := ga.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(githubasset.Table, githubasset.FieldID, id),
+			sqlgraph.To(githubrelease.Table, githubrelease.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, githubasset.ReleaseTable, githubasset.ReleaseColumn),
+		)
+		fromV = sqlgraph.Neighbors(ga.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *GithubAssetClient) Hooks() []Hook {
+	hooks := c.hooks.GithubAsset
+	return append(hooks[:len(hooks):len(hooks)], githubasset.Hooks[:]...)
 }
 
 // GithubEventClient is a client for the GithubEvent schema.
@@ -246,6 +367,129 @@ func (c *GithubEventClient) GetX(ctx context.Context, id int) *GithubEvent {
 func (c *GithubEventClient) Hooks() []Hook {
 	hooks := c.hooks.GithubEvent
 	return append(hooks[:len(hooks):len(hooks)], githubevent.Hooks[:]...)
+}
+
+// GithubReleaseClient is a client for the GithubRelease schema.
+type GithubReleaseClient struct {
+	config
+}
+
+// NewGithubReleaseClient returns a client for the GithubRelease from the given config.
+func NewGithubReleaseClient(c config) *GithubReleaseClient {
+	return &GithubReleaseClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `githubrelease.Hooks(f(g(h())))`.
+func (c *GithubReleaseClient) Use(hooks ...Hook) {
+	c.hooks.GithubRelease = append(c.hooks.GithubRelease, hooks...)
+}
+
+// Create returns a builder for creating a GithubRelease entity.
+func (c *GithubReleaseClient) Create() *GithubReleaseCreate {
+	mutation := newGithubReleaseMutation(c.config, OpCreate)
+	return &GithubReleaseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GithubRelease entities.
+func (c *GithubReleaseClient) CreateBulk(builders ...*GithubReleaseCreate) *GithubReleaseCreateBulk {
+	return &GithubReleaseCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GithubRelease.
+func (c *GithubReleaseClient) Update() *GithubReleaseUpdate {
+	mutation := newGithubReleaseMutation(c.config, OpUpdate)
+	return &GithubReleaseUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GithubReleaseClient) UpdateOne(gr *GithubRelease) *GithubReleaseUpdateOne {
+	mutation := newGithubReleaseMutation(c.config, OpUpdateOne, withGithubRelease(gr))
+	return &GithubReleaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GithubReleaseClient) UpdateOneID(id int) *GithubReleaseUpdateOne {
+	mutation := newGithubReleaseMutation(c.config, OpUpdateOne, withGithubReleaseID(id))
+	return &GithubReleaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GithubRelease.
+func (c *GithubReleaseClient) Delete() *GithubReleaseDelete {
+	mutation := newGithubReleaseMutation(c.config, OpDelete)
+	return &GithubReleaseDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GithubReleaseClient) DeleteOne(gr *GithubRelease) *GithubReleaseDeleteOne {
+	return c.DeleteOneID(gr.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GithubReleaseClient) DeleteOneID(id int) *GithubReleaseDeleteOne {
+	builder := c.Delete().Where(githubrelease.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GithubReleaseDeleteOne{builder}
+}
+
+// Query returns a query builder for GithubRelease.
+func (c *GithubReleaseClient) Query() *GithubReleaseQuery {
+	return &GithubReleaseQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GithubRelease entity by its id.
+func (c *GithubReleaseClient) Get(ctx context.Context, id int) (*GithubRelease, error) {
+	return c.Query().Where(githubrelease.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GithubReleaseClient) GetX(ctx context.Context, id int) *GithubRelease {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// QueryRepository queries the repository edge of a GithubRelease.
+func (c *GithubReleaseClient) QueryRepository(gr *GithubRelease) *GithubRepositoryQuery {
+	query := &GithubRepositoryQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := gr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(githubrelease.Table, githubrelease.FieldID, id),
+			sqlgraph.To(githubrepository.Table, githubrepository.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, githubrelease.RepositoryTable, githubrelease.RepositoryColumn),
+		)
+		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryAssets queries the assets edge of a GithubRelease.
+func (c *GithubReleaseClient) QueryAssets(gr *GithubRelease) *GithubAssetQuery {
+	query := &GithubAssetQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := gr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(githubrelease.Table, githubrelease.FieldID, id),
+			sqlgraph.To(githubasset.Table, githubasset.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, githubrelease.AssetsTable, githubrelease.AssetsColumn),
+		)
+		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// Hooks returns the client hooks.
+func (c *GithubReleaseClient) Hooks() []Hook {
+	hooks := c.hooks.GithubRelease
+	return append(hooks[:len(hooks):len(hooks)], githubrelease.Hooks[:]...)
 }
 
 // GithubRepositoryClient is a client for the GithubRepository schema.
@@ -342,6 +586,22 @@ func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
 			sqlgraph.From(githubrepository.Table, githubrepository.FieldID, id),
 			sqlgraph.To(label.Table, label.FieldID),
 			sqlgraph.Edge(sqlgraph.M2M, true, githubrepository.LabelsTable, githubrepository.LabelsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
+// QueryReleases queries the releases edge of a GithubRepository.
+func (c *GithubRepositoryClient) QueryReleases(gr *GithubRepository) *GithubReleaseQuery {
+	query := &GithubReleaseQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := gr.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(githubrepository.Table, githubrepository.FieldID, id),
+			sqlgraph.To(githubrelease.Table, githubrelease.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, githubrepository.ReleasesTable, githubrepository.ReleasesColumn),
 		)
 		fromV = sqlgraph.Neighbors(gr.driver.Dialect(), step)
 		return fromV, nil

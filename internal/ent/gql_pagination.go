@@ -18,7 +18,9 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
@@ -247,6 +249,326 @@ func paginateLimit(first, last *int) int {
 		limit = *last + 1
 	}
 	return limit
+}
+
+// GithubAssetEdge is the edge representation of GithubAsset.
+type GithubAssetEdge struct {
+	Node   *GithubAsset `json:"node"`
+	Cursor Cursor       `json:"cursor"`
+}
+
+// GithubAssetConnection is the connection containing edges to GithubAsset.
+type GithubAssetConnection struct {
+	Edges      []*GithubAssetEdge `json:"edges"`
+	PageInfo   PageInfo           `json:"pageInfo"`
+	TotalCount int                `json:"totalCount"`
+}
+
+func (c *GithubAssetConnection) build(nodes []*GithubAsset, pager *githubassetPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *GithubAsset
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *GithubAsset {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *GithubAsset {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*GithubAssetEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &GithubAssetEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// GithubAssetPaginateOption enables pagination customization.
+type GithubAssetPaginateOption func(*githubassetPager) error
+
+// WithGithubAssetOrder configures pagination ordering.
+func WithGithubAssetOrder(order *GithubAssetOrder) GithubAssetPaginateOption {
+	if order == nil {
+		order = DefaultGithubAssetOrder
+	}
+	o := *order
+	return func(pager *githubassetPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultGithubAssetOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithGithubAssetFilter configures pagination filter.
+func WithGithubAssetFilter(filter func(*GithubAssetQuery) (*GithubAssetQuery, error)) GithubAssetPaginateOption {
+	return func(pager *githubassetPager) error {
+		if filter == nil {
+			return errors.New("GithubAssetQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type githubassetPager struct {
+	order  *GithubAssetOrder
+	filter func(*GithubAssetQuery) (*GithubAssetQuery, error)
+}
+
+func newGithubAssetPager(opts []GithubAssetPaginateOption) (*githubassetPager, error) {
+	pager := &githubassetPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultGithubAssetOrder
+	}
+	return pager, nil
+}
+
+func (p *githubassetPager) applyFilter(query *GithubAssetQuery) (*GithubAssetQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *githubassetPager) toCursor(ga *GithubAsset) Cursor {
+	return p.order.Field.toCursor(ga)
+}
+
+func (p *githubassetPager) applyCursors(query *GithubAssetQuery, after, before *Cursor) *GithubAssetQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultGithubAssetOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *githubassetPager) applyOrder(query *GithubAssetQuery, reverse bool) *GithubAssetQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultGithubAssetOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultGithubAssetOrder.Field.field))
+	}
+	return query
+}
+
+func (p *githubassetPager) orderExpr(reverse bool) sql.Querier {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultGithubAssetOrder.Field {
+			b.Comma().Ident(DefaultGithubAssetOrder.Field.field).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to GithubAsset.
+func (ga *GithubAssetQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...GithubAssetPaginateOption,
+) (*GithubAssetConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newGithubAssetPager(opts)
+	if err != nil {
+		return nil, err
+	}
+	if ga, err = pager.applyFilter(ga); err != nil {
+		return nil, err
+	}
+	conn := &GithubAssetConnection{Edges: []*GithubAssetEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+			if conn.TotalCount, err = ga.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := ga.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	ga = pager.applyCursors(ga, after, before)
+	ga = pager.applyOrder(ga, last != nil)
+	if limit := paginateLimit(first, last); limit != 0 {
+		ga.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := ga.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+
+	nodes, err := ga.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+var (
+	// GithubAssetOrderFieldName orders GithubAsset by name.
+	GithubAssetOrderFieldName = &GithubAssetOrderField{
+		field: githubasset.FieldName,
+		toCursor: func(ga *GithubAsset) Cursor {
+			return Cursor{
+				ID:    ga.ID,
+				Value: ga.Name,
+			}
+		},
+	}
+	// GithubAssetOrderFieldDownloadCount orders GithubAsset by download_count.
+	GithubAssetOrderFieldDownloadCount = &GithubAssetOrderField{
+		field: githubasset.FieldDownloadCount,
+		toCursor: func(ga *GithubAsset) Cursor {
+			return Cursor{
+				ID:    ga.ID,
+				Value: ga.DownloadCount,
+			}
+		},
+	}
+	// GithubAssetOrderFieldCreatedAt orders GithubAsset by created_at.
+	GithubAssetOrderFieldCreatedAt = &GithubAssetOrderField{
+		field: githubasset.FieldCreatedAt,
+		toCursor: func(ga *GithubAsset) Cursor {
+			return Cursor{
+				ID:    ga.ID,
+				Value: ga.CreatedAt,
+			}
+		},
+	}
+	// GithubAssetOrderFieldUpdatedAt orders GithubAsset by updated_at.
+	GithubAssetOrderFieldUpdatedAt = &GithubAssetOrderField{
+		field: githubasset.FieldUpdatedAt,
+		toCursor: func(ga *GithubAsset) Cursor {
+			return Cursor{
+				ID:    ga.ID,
+				Value: ga.UpdatedAt,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f GithubAssetOrderField) String() string {
+	var str string
+	switch f.field {
+	case githubasset.FieldName:
+		str = "NAME"
+	case githubasset.FieldDownloadCount:
+		str = "DOWNLOAD_COUNT"
+	case githubasset.FieldCreatedAt:
+		str = "CREATED_AT"
+	case githubasset.FieldUpdatedAt:
+		str = "UPDATED_AT"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f GithubAssetOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *GithubAssetOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("GithubAssetOrderField %T must be a string", v)
+	}
+	switch str {
+	case "NAME":
+		*f = *GithubAssetOrderFieldName
+	case "DOWNLOAD_COUNT":
+		*f = *GithubAssetOrderFieldDownloadCount
+	case "CREATED_AT":
+		*f = *GithubAssetOrderFieldCreatedAt
+	case "UPDATED_AT":
+		*f = *GithubAssetOrderFieldUpdatedAt
+	default:
+		return fmt.Errorf("%s is not a valid GithubAssetOrderField", str)
+	}
+	return nil
+}
+
+// GithubAssetOrderField defines the ordering field of GithubAsset.
+type GithubAssetOrderField struct {
+	field    string
+	toCursor func(*GithubAsset) Cursor
+}
+
+// GithubAssetOrder defines the ordering of GithubAsset.
+type GithubAssetOrder struct {
+	Direction OrderDirection         `json:"direction"`
+	Field     *GithubAssetOrderField `json:"field"`
+}
+
+// DefaultGithubAssetOrder is the default ordering of GithubAsset.
+var DefaultGithubAssetOrder = &GithubAssetOrder{
+	Direction: OrderDirectionAsc,
+	Field: &GithubAssetOrderField{
+		field: githubasset.FieldID,
+		toCursor: func(ga *GithubAsset) Cursor {
+			return Cursor{ID: ga.ID}
+		},
+	},
+}
+
+// ToEdge converts GithubAsset into GithubAssetEdge.
+func (ga *GithubAsset) ToEdge(order *GithubAssetOrder) *GithubAssetEdge {
+	if order == nil {
+		order = DefaultGithubAssetOrder
+	}
+	return &GithubAssetEdge{
+		Node:   ga,
+		Cursor: order.Field.toCursor(ga),
+	}
 }
 
 // GithubEventEdge is the edge representation of GithubEvent.
@@ -580,6 +902,326 @@ func (ge *GithubEvent) ToEdge(order *GithubEventOrder) *GithubEventEdge {
 	return &GithubEventEdge{
 		Node:   ge,
 		Cursor: order.Field.toCursor(ge),
+	}
+}
+
+// GithubReleaseEdge is the edge representation of GithubRelease.
+type GithubReleaseEdge struct {
+	Node   *GithubRelease `json:"node"`
+	Cursor Cursor         `json:"cursor"`
+}
+
+// GithubReleaseConnection is the connection containing edges to GithubRelease.
+type GithubReleaseConnection struct {
+	Edges      []*GithubReleaseEdge `json:"edges"`
+	PageInfo   PageInfo             `json:"pageInfo"`
+	TotalCount int                  `json:"totalCount"`
+}
+
+func (c *GithubReleaseConnection) build(nodes []*GithubRelease, pager *githubreleasePager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *GithubRelease
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *GithubRelease {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *GithubRelease {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*GithubReleaseEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &GithubReleaseEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// GithubReleasePaginateOption enables pagination customization.
+type GithubReleasePaginateOption func(*githubreleasePager) error
+
+// WithGithubReleaseOrder configures pagination ordering.
+func WithGithubReleaseOrder(order *GithubReleaseOrder) GithubReleasePaginateOption {
+	if order == nil {
+		order = DefaultGithubReleaseOrder
+	}
+	o := *order
+	return func(pager *githubreleasePager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultGithubReleaseOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithGithubReleaseFilter configures pagination filter.
+func WithGithubReleaseFilter(filter func(*GithubReleaseQuery) (*GithubReleaseQuery, error)) GithubReleasePaginateOption {
+	return func(pager *githubreleasePager) error {
+		if filter == nil {
+			return errors.New("GithubReleaseQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type githubreleasePager struct {
+	order  *GithubReleaseOrder
+	filter func(*GithubReleaseQuery) (*GithubReleaseQuery, error)
+}
+
+func newGithubReleasePager(opts []GithubReleasePaginateOption) (*githubreleasePager, error) {
+	pager := &githubreleasePager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultGithubReleaseOrder
+	}
+	return pager, nil
+}
+
+func (p *githubreleasePager) applyFilter(query *GithubReleaseQuery) (*GithubReleaseQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *githubreleasePager) toCursor(gr *GithubRelease) Cursor {
+	return p.order.Field.toCursor(gr)
+}
+
+func (p *githubreleasePager) applyCursors(query *GithubReleaseQuery, after, before *Cursor) *GithubReleaseQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultGithubReleaseOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *githubreleasePager) applyOrder(query *GithubReleaseQuery, reverse bool) *GithubReleaseQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultGithubReleaseOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultGithubReleaseOrder.Field.field))
+	}
+	return query
+}
+
+func (p *githubreleasePager) orderExpr(reverse bool) sql.Querier {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultGithubReleaseOrder.Field {
+			b.Comma().Ident(DefaultGithubReleaseOrder.Field.field).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to GithubRelease.
+func (gr *GithubReleaseQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...GithubReleasePaginateOption,
+) (*GithubReleaseConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newGithubReleasePager(opts)
+	if err != nil {
+		return nil, err
+	}
+	if gr, err = pager.applyFilter(gr); err != nil {
+		return nil, err
+	}
+	conn := &GithubReleaseConnection{Edges: []*GithubReleaseEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+			if conn.TotalCount, err = gr.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := gr.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	gr = pager.applyCursors(gr, after, before)
+	gr = pager.applyOrder(gr, last != nil)
+	if limit := paginateLimit(first, last); limit != 0 {
+		gr.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := gr.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+
+	nodes, err := gr.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+var (
+	// GithubReleaseOrderFieldTagName orders GithubRelease by tag_name.
+	GithubReleaseOrderFieldTagName = &GithubReleaseOrderField{
+		field: githubrelease.FieldTagName,
+		toCursor: func(gr *GithubRelease) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.TagName,
+			}
+		},
+	}
+	// GithubReleaseOrderFieldName orders GithubRelease by name.
+	GithubReleaseOrderFieldName = &GithubReleaseOrderField{
+		field: githubrelease.FieldName,
+		toCursor: func(gr *GithubRelease) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.Name,
+			}
+		},
+	}
+	// GithubReleaseOrderFieldCreatedAt orders GithubRelease by created_at.
+	GithubReleaseOrderFieldCreatedAt = &GithubReleaseOrderField{
+		field: githubrelease.FieldCreatedAt,
+		toCursor: func(gr *GithubRelease) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.CreatedAt,
+			}
+		},
+	}
+	// GithubReleaseOrderFieldPublishedAt orders GithubRelease by published_at.
+	GithubReleaseOrderFieldPublishedAt = &GithubReleaseOrderField{
+		field: githubrelease.FieldPublishedAt,
+		toCursor: func(gr *GithubRelease) Cursor {
+			return Cursor{
+				ID:    gr.ID,
+				Value: gr.PublishedAt,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f GithubReleaseOrderField) String() string {
+	var str string
+	switch f.field {
+	case githubrelease.FieldTagName:
+		str = "TAG_NAME"
+	case githubrelease.FieldName:
+		str = "NAME"
+	case githubrelease.FieldCreatedAt:
+		str = "CREATED_AT"
+	case githubrelease.FieldPublishedAt:
+		str = "PUBLISHED_AT"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f GithubReleaseOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *GithubReleaseOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("GithubReleaseOrderField %T must be a string", v)
+	}
+	switch str {
+	case "TAG_NAME":
+		*f = *GithubReleaseOrderFieldTagName
+	case "NAME":
+		*f = *GithubReleaseOrderFieldName
+	case "CREATED_AT":
+		*f = *GithubReleaseOrderFieldCreatedAt
+	case "PUBLISHED_AT":
+		*f = *GithubReleaseOrderFieldPublishedAt
+	default:
+		return fmt.Errorf("%s is not a valid GithubReleaseOrderField", str)
+	}
+	return nil
+}
+
+// GithubReleaseOrderField defines the ordering field of GithubRelease.
+type GithubReleaseOrderField struct {
+	field    string
+	toCursor func(*GithubRelease) Cursor
+}
+
+// GithubReleaseOrder defines the ordering of GithubRelease.
+type GithubReleaseOrder struct {
+	Direction OrderDirection           `json:"direction"`
+	Field     *GithubReleaseOrderField `json:"field"`
+}
+
+// DefaultGithubReleaseOrder is the default ordering of GithubRelease.
+var DefaultGithubReleaseOrder = &GithubReleaseOrder{
+	Direction: OrderDirectionAsc,
+	Field: &GithubReleaseOrderField{
+		field: githubrelease.FieldID,
+		toCursor: func(gr *GithubRelease) Cursor {
+			return Cursor{ID: gr.ID}
+		},
+	},
+}
+
+// ToEdge converts GithubRelease into GithubReleaseEdge.
+func (gr *GithubRelease) ToEdge(order *GithubReleaseOrder) *GithubReleaseEdge {
+	if order == nil {
+		order = DefaultGithubReleaseOrder
+	}
+	return &GithubReleaseEdge{
+		Node:   gr,
+		Cursor: order.Field.toCursor(gr),
 	}
 }
 

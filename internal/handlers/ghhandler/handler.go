@@ -24,6 +24,16 @@ func New(db *ent.Client) *handler {
 }
 
 func (h *handler) Route(r chi.Router) {
+	// SVG banner generation.
 	r.Get("/svg", h.getProjectSVG)
 	r.Get("/svg/{owner}/{repo}", h.getProjectSVG)
+
+	// Releases/assets.
+	r.Get("/dl/{repo:^[a-zA-Z0-9_.-]{1,100}$}", h.getReleases)
+	r.Get("/dl/{repo:^[a-zA-Z0-9_.-]{1,100}$}/{version:^[a-zA-Z0-9_.-]{1,100}$}", h.getReleases)
+	r.Get("/dl/{repo:^[a-zA-Z0-9_.-]{1,100}$}/{version:^[a-zA-Z0-9_.-]{1,100}$}/{asset}", h.getReleases)
+
+	// Legacy routes.
+	r.Get("/dl-legacy", h.getReleasesLegacy)
+	r.Get("/dl-legacy/{asset}", h.getReleasesLegacy)
 }

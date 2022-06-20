@@ -13,6 +13,19 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent"
 )
 
+// The GithubAssetFunc type is an adapter to allow the use of ordinary
+// function as GithubAsset mutator.
+type GithubAssetFunc func(context.Context, *ent.GithubAssetMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GithubAssetFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GithubAssetMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubAssetMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The GithubEventFunc type is an adapter to allow the use of ordinary
 // function as GithubEvent mutator.
 type GithubEventFunc func(context.Context, *ent.GithubEventMutation) (ent.Value, error)
@@ -22,6 +35,19 @@ func (f GithubEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	mv, ok := m.(*ent.GithubEventMutation)
 	if !ok {
 		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubEventMutation", m)
+	}
+	return f(ctx, mv)
+}
+
+// The GithubReleaseFunc type is an adapter to allow the use of ordinary
+// function as GithubRelease mutator.
+type GithubReleaseFunc func(context.Context, *ent.GithubReleaseMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GithubReleaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GithubReleaseMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubReleaseMutation", m)
 	}
 	return f(ctx, mv)
 }

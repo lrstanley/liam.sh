@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/go-github/v44/github"
+	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -287,6 +288,21 @@ func (gru *GithubRepositoryUpdate) AddLabels(l ...*Label) *GithubRepositoryUpdat
 	return gru.AddLabelIDs(ids...)
 }
 
+// AddReleaseIDs adds the "releases" edge to the GithubRelease entity by IDs.
+func (gru *GithubRepositoryUpdate) AddReleaseIDs(ids ...int) *GithubRepositoryUpdate {
+	gru.mutation.AddReleaseIDs(ids...)
+	return gru
+}
+
+// AddReleases adds the "releases" edges to the GithubRelease entity.
+func (gru *GithubRepositoryUpdate) AddReleases(g ...*GithubRelease) *GithubRepositoryUpdate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return gru.AddReleaseIDs(ids...)
+}
+
 // Mutation returns the GithubRepositoryMutation object of the builder.
 func (gru *GithubRepositoryUpdate) Mutation() *GithubRepositoryMutation {
 	return gru.mutation
@@ -311,6 +327,27 @@ func (gru *GithubRepositoryUpdate) RemoveLabels(l ...*Label) *GithubRepositoryUp
 		ids[i] = l[i].ID
 	}
 	return gru.RemoveLabelIDs(ids...)
+}
+
+// ClearReleases clears all "releases" edges to the GithubRelease entity.
+func (gru *GithubRepositoryUpdate) ClearReleases() *GithubRepositoryUpdate {
+	gru.mutation.ClearReleases()
+	return gru
+}
+
+// RemoveReleaseIDs removes the "releases" edge to GithubRelease entities by IDs.
+func (gru *GithubRepositoryUpdate) RemoveReleaseIDs(ids ...int) *GithubRepositoryUpdate {
+	gru.mutation.RemoveReleaseIDs(ids...)
+	return gru
+}
+
+// RemoveReleases removes "releases" edges to GithubRelease entities.
+func (gru *GithubRepositoryUpdate) RemoveReleases(g ...*GithubRelease) *GithubRepositoryUpdate {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return gru.RemoveReleaseIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -657,6 +694,60 @@ func (gru *GithubRepositoryUpdate) sqlSave(ctx context.Context) (n int, err erro
 		}
 		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
+	if gru.mutation.ReleasesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gru.mutation.RemovedReleasesIDs(); len(nodes) > 0 && !gru.mutation.ReleasesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gru.mutation.ReleasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, gru.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{githubrepository.Label}
@@ -929,6 +1020,21 @@ func (gruo *GithubRepositoryUpdateOne) AddLabels(l ...*Label) *GithubRepositoryU
 	return gruo.AddLabelIDs(ids...)
 }
 
+// AddReleaseIDs adds the "releases" edge to the GithubRelease entity by IDs.
+func (gruo *GithubRepositoryUpdateOne) AddReleaseIDs(ids ...int) *GithubRepositoryUpdateOne {
+	gruo.mutation.AddReleaseIDs(ids...)
+	return gruo
+}
+
+// AddReleases adds the "releases" edges to the GithubRelease entity.
+func (gruo *GithubRepositoryUpdateOne) AddReleases(g ...*GithubRelease) *GithubRepositoryUpdateOne {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return gruo.AddReleaseIDs(ids...)
+}
+
 // Mutation returns the GithubRepositoryMutation object of the builder.
 func (gruo *GithubRepositoryUpdateOne) Mutation() *GithubRepositoryMutation {
 	return gruo.mutation
@@ -953,6 +1059,27 @@ func (gruo *GithubRepositoryUpdateOne) RemoveLabels(l ...*Label) *GithubReposito
 		ids[i] = l[i].ID
 	}
 	return gruo.RemoveLabelIDs(ids...)
+}
+
+// ClearReleases clears all "releases" edges to the GithubRelease entity.
+func (gruo *GithubRepositoryUpdateOne) ClearReleases() *GithubRepositoryUpdateOne {
+	gruo.mutation.ClearReleases()
+	return gruo
+}
+
+// RemoveReleaseIDs removes the "releases" edge to GithubRelease entities by IDs.
+func (gruo *GithubRepositoryUpdateOne) RemoveReleaseIDs(ids ...int) *GithubRepositoryUpdateOne {
+	gruo.mutation.RemoveReleaseIDs(ids...)
+	return gruo
+}
+
+// RemoveReleases removes "releases" edges to GithubRelease entities.
+func (gruo *GithubRepositoryUpdateOne) RemoveReleases(g ...*GithubRelease) *GithubRepositoryUpdateOne {
+	ids := make([]int, len(g))
+	for i := range g {
+		ids[i] = g[i].ID
+	}
+	return gruo.RemoveReleaseIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -1321,6 +1448,60 @@ func (gruo *GithubRepositoryUpdateOne) sqlSave(ctx context.Context) (_node *Gith
 				IDSpec: &sqlgraph.FieldSpec{
 					Type:   field.TypeInt,
 					Column: label.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if gruo.mutation.ReleasesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gruo.mutation.RemovedReleasesIDs(); len(nodes) > 0 && !gruo.mutation.ReleasesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := gruo.mutation.ReleasesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   githubrepository.ReleasesTable,
+			Columns: []string{githubrepository.ReleasesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: githubrelease.FieldID,
 				},
 			},
 		}

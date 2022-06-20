@@ -5,6 +5,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -69,11 +70,18 @@ func httpServer() *http.Server {
 	r.Use(auth.AddToContext)
 	r.Use(httpware.UseEvictCacheAdmin)
 
+	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 	r.Mount("/-/graphql", graphql.New(db, cli))
 	r.Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
-	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
+
+	// Legacy functionality.
+	r.Handle("/ghr", http.RedirectHandler("/-/gh/dl-legacy", http.StatusPermanentRedirect))
+	r.Handle("/ghr.json", http.RedirectHandler("/-/gh/dl-legacy", http.StatusPermanentRedirect))
+	r.Get("/ghr/{asset}", func(w http.ResponseWriter, r *http.Request) {
+		http.RedirectHandler(fmt.Sprintf("/-/gh/dl-legacy/%s", chi.URLParam(r, "asset")), http.StatusPermanentRedirect)
+	})
 
 	if !cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
