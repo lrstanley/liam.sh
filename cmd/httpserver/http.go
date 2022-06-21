@@ -100,12 +100,12 @@ func httpServer() *http.Server {
 
 func catchAll(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/-/") {
-		chix.Error(w, r, http.StatusNotFound, chix.ErrMatchStatus)
+		chix.Error(w, r, chix.WrapCode(404))
 		return
 	}
 
 	if r.Method != http.MethodGet {
-		chix.Error(w, r, http.StatusMethodNotAllowed, chix.ErrMatchStatus)
+		chix.Error(w, r, chix.WrapCode(405))
 		return
 	}
 	// if strings.HasSuffix(r.URL.Path, ".ico") {
