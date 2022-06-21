@@ -33,6 +33,10 @@ func (h *handler) Route(r chi.Router) {
 	r.Get("/dl/{repo:^[a-zA-Z0-9_.-]{1,100}$}/{version:^[a-zA-Z0-9_.-]{1,100}$}", h.getReleases)
 	r.Get("/dl/{repo:^[a-zA-Z0-9_.-]{1,100}$}/{version:^[a-zA-Z0-9_.-]{1,100}$}/{asset}", h.getReleases)
 
+	// Gists.
+	r.Get("/g/{asset}", h.getGists)
+	r.Get("/g/{id:^[a-zA-Z0-9]{1,100}$}/{asset}", h.getGists)
+
 	// Legacy routes.
 	r.Get("/dl-legacy", h.getReleasesLegacy)
 	r.Get("/dl-legacy/{asset}", h.getReleasesLegacy)

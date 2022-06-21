@@ -54,19 +54,18 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		return fmt.Errorf("failed to fetch gists: %w", err)
 	}
 
-	var exists bool
 	var req *http.Request
 	buf := &bytes.Buffer{}
 
 	for _, gist := range gists {
 		for _, file := range gist.GetFiles() {
-			exists, _ = db.GithubGist.Query().Where(
+			content, _ := db.GithubGist.Query().Where(
 				githubgist.GistID(gist.GetID()),
 				githubgist.UpdatedAt(gist.GetUpdatedAt()),
 				githubgist.Name(file.GetFilename()),
-			).Exist(ctx)
+			).Limit(1).Select(githubgist.FieldContent).String(ctx)
 
-			if !exists {
+			if content == "" {
 				req, err = http.NewRequest(http.MethodGet, file.GetRawURL(), http.NoBody)
 				if err != nil {
 					return fmt.Errorf("failed to create raw gist request: %w", err)
@@ -78,9 +77,10 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 					return fmt.Errorf("failed to fetch gist: %w", err)
 				}
 
-				content := buf.String()
-				file.Content = &content
+				content = buf.String()
 			}
+
+			file.Content = &content
 
 			_, err = storeGist(ctx, db, gist, file)
 			if err != nil {
