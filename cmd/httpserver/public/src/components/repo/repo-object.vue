@@ -2,7 +2,7 @@
   <a :href="props.linkable ? repo.htmlURL : ''" target="_blank">
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar :src="repo.owner.avatarURL" />
+        <n-avatar :src="repo.owner.avatarURL" class="hidden md:inline-flex" />
       </template>
       <template #header>
         <span class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
@@ -92,6 +92,17 @@ const repo = ref(props.value)
 
 <style scoped>
 .repo-name {
-  @apply text-size-1.5em;
+  @apply text-size-1.4em md:text-size-1.5em;
+}
+
+div:deep(.n-thing-header),
+div:deep(.n-thing-main__description) {
+  @apply <md:(flex flex-col flex-wrap content-center items-center gap-2);
+  /* display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
+  gap: 6px; */
 }
 </style>

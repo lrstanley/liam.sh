@@ -1,14 +1,14 @@
 <template>
   <LayoutDefault :error="error">
-    <div class="grid gap-5 md:gap-25 mt-8">
+    <div class="grid gap-5 md:gap-10 lg:gap-25 mt-8">
       <div class="order-last md:order-first">
-        <div class="mb-8 flex flex-auto gap-2">
+        <div class="mt-1 mb-8 flex flex-auto gap-2">
           <n-input
             v-model:value="search"
-            type="text"
-            placeholder="Search for a post"
             :loading="fetching"
-            class="mb-8"
+            type="text"
+            clearable
+            placeholder="Search for a post"
           >
             <template #prefix>
               <n-icon>

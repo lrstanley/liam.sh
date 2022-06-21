@@ -19,12 +19,12 @@
 
       <div v-motion-fade class="h-full flex-auto flex-col">
         <div
-          class="text-size-50px text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+          class="text-size-30px md:text-size-45px text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
         >
           {{ post.title }}
         </div>
 
-        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-20">
+        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-7 md:mb-20">
           <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
           <p>
             <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
@@ -85,12 +85,12 @@ const postRef = ref(null)
   padding: 0.6rem 1.2rem;
   opacity: 0.8;
   margin-left: 0;
+  margin-right: 0;
   color: inherit;
   border-left-width: 0.25rem;
-  /* border-color: #e5e7eb; */
   margin-top: 1.6em;
   margin-bottom: 1.6em;
-  @apply border-green-600;
+  @apply border-green-600 bg-green-600/30 rounded;
 }
 
 #post-content :deep(blockquote) > p {
@@ -122,7 +122,7 @@ const postRef = ref(null)
 #post-content :deep(pre) {
   border-radius: 7px;
   padding: 0.5rem 0.8rem;
-  @apply !bg-dark-600 overflow-auto whitespace-nowrap !lg:overflow-hidden !lg:whitespace-pre-wrap;
+  @apply !bg-dark-600 overflow-auto whitespace-pre !lg:overflow-hidden !lg:whitespace-pre-wrap;
 }
 
 #post-content :deep(ul) {

@@ -2,7 +2,7 @@
   <!-- TODO: less flex? -->
   <div class="z-1 relative flex flex-auto flex-col">
     <div
-      class="sm:container flex flex-auto flex-col mt-70px mb-45px max-w-100vw px-4 xl:px-200px sm:mx-auto"
+      class="sm:container flex flex-auto flex-col mt-30px lg:mt-70px mb-60px max-w-100vw px-4 md:px-0 xl:px-200px sm:mx-auto"
     >
       <CoreNavigation />
 

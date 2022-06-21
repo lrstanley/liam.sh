@@ -1,16 +1,13 @@
 ## TODO
 
+- mobile:
+  - make index footer bigger.
+  - fix events on index page.
+  - address when there are too many tags.
 - brotli wrapper inside of chix
 - meta html head tags
 - application/ld+json (like <https://martinheinz.dev/> to denote related sites?)
 - generate sitemap? if we link properly, shouldn't be needed?
-- add preview to editor?
-- resumeeeee
-- add multi-error alert component
+- about page?
 - run through security checks
-- git release redirects
-- git release version redirects
-- gist redirects
 - add issue and pr forwarding
-- add branch: master, go version, etc to footer, to look like an editor
-- another cool developers site, <https://pham.codes/>

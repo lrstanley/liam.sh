@@ -5,7 +5,7 @@
   >
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar>
+        <n-avatar class="hidden lg:inline-block">
           <n-icon>
             <i-mdi-post-outline />
           </n-icon>

@@ -27,6 +27,7 @@ ul :deep(a) {
   display: inline-flex;
   padding-left: 5ch;
   padding-right: 4ch;
+  @apply py-3 lg:py-0;
   @apply !text-violet-400 transition duration-100;
 }
 

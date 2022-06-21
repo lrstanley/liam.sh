@@ -1,6 +1,6 @@
 <template>
   <n-empty v-if="showEmpty && objects.length < 1" description="No items found matching filters" />
-  <TransitionGroup v-else-if="objects.length > 0" appear>
+  <TransitionGroup v-else-if="objects.length > 0" appear name="fade">
     <div
       v-for="(object, i) in objects"
       :key="object.object.id"
@@ -80,7 +80,7 @@ function typeMapper(o) {
 </script>
 
 <style scoped>
-.v-move {
+/* .v-move {
   transition: opacity 0.2s linear, transform 0.2s ease-in;
 }
 
@@ -96,5 +96,15 @@ function typeMapper(o) {
 .v-enter-from,
 .v-leave-to {
   @apply opacity-0 -translate-x-50px;
+} */
+
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.1s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
