@@ -18,7 +18,7 @@ require (
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/lrstanley/chix v0.0.0-20220621031757-1f61254b5956
+	github.com/lrstanley/chix v0.0.0-20220621032628-1e5494d3cda6
 	github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb
 	github.com/markbates/goth v1.72.0
 	github.com/microcosm-cc/bluemonday v1.0.18

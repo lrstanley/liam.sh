@@ -330,6 +330,8 @@ github.com/lrstanley/chix v0.0.0-20220531052302-ec2ac71d26ab h1:H/OKLjhpLRa92P7V
 github.com/lrstanley/chix v0.0.0-20220531052302-ec2ac71d26ab/go.mod h1:+SNXEP1KdFlZ3cDjx6K+wBouEn+mWcvGVxh7mhma1u0=
 github.com/lrstanley/chix v0.0.0-20220621031757-1f61254b5956 h1:KpqqKGUJwp/KW6TkGAEFoN+9C4CWiHrwFCm8nrrb9LE=
 github.com/lrstanley/chix v0.0.0-20220621031757-1f61254b5956/go.mod h1:+SNXEP1KdFlZ3cDjx6K+wBouEn+mWcvGVxh7mhma1u0=
+github.com/lrstanley/chix v0.0.0-20220621032628-1e5494d3cda6 h1:/aHopzVLwwMqIJNxR/bbul71haGdFyWTC0HU8TW3ua0=
+github.com/lrstanley/chix v0.0.0-20220621032628-1e5494d3cda6/go.mod h1:+SNXEP1KdFlZ3cDjx6K+wBouEn+mWcvGVxh7mhma1u0=
 github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb h1:yf4BscI8wwdbp0pngyjwqRfpn6sBcTDd93+YiLS9Pbk=
 github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb/go.mod h1:DlWiNojXQIIvE9rcWyL5EMKS3D5ygl59U+cJj8BL5u0=
 github.com/lrstanley/go-bogon v0.0.0-20220507183221-362a880cf97b h1:jFRbU7IgKGjXlo1ERztns+QOlVRExiP0syyVIsP1TqU=
