@@ -68,7 +68,8 @@ const postRef = ref(null)
 
 <style scoped>
 #post-content {
-  @apply text-size-1.2em leading-relaxed;
+  font-size: 1.2em;
+  line-height: 1.55;
 }
 
 #post-content :deep(img) {
@@ -78,6 +79,7 @@ const postRef = ref(null)
 
 #post-content :deep(p) {
   margin-top: 25px;
+  text-indent: 3ch;
 }
 
 #post-content :deep(blockquote) {
@@ -96,6 +98,11 @@ const postRef = ref(null)
 #post-content :deep(blockquote) > p {
   margin-top: 0;
   margin-bottom: 0;
+  text-indent: 0;
+}
+
+#post-content > :deep(p):not(blockquote) > strong {
+  @apply text-lime-400;
 }
 
 #post-content :deep(h2),
@@ -117,6 +124,12 @@ const postRef = ref(null)
   position: relative;
   right: 10px;
   @apply text-emerald-500;
+}
+
+#post-content :deep(:not(pre)) > code {
+  border-radius: 3px;
+  padding: 0.18em 0.35em;
+  @apply bg-dark-100;
 }
 
 #post-content :deep(pre) {

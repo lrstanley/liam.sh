@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { adminSidebarOptions } from "@/lib/navigation.js"
+import { adminSidebarOptions } from "@/lib/navigation"
 
 const state = useState()
 const props = defineProps({
