@@ -16,6 +16,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -43,6 +44,7 @@ func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
 		githubasset.Table:      githubasset.ValidColumn,
 		githubevent.Table:      githubevent.ValidColumn,
+		githubgist.Table:       githubgist.ValidColumn,
 		githubrelease.Table:    githubrelease.ValidColumn,
 		githubrepository.Table: githubrepository.ValidColumn,
 		label.Table:            label.ValidColumn,

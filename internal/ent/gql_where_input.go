@@ -12,6 +12,7 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -959,6 +960,684 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 		return predicates[0], nil
 	default:
 		return githubevent.And(predicates...), nil
+	}
+}
+
+// GithubGistWhereInput represents a where input for filtering GithubGist queries.
+type GithubGistWhereInput struct {
+	Predicates []predicate.GithubGist  `json:"-"`
+	Not        *GithubGistWhereInput   `json:"not,omitempty"`
+	Or         []*GithubGistWhereInput `json:"or,omitempty"`
+	And        []*GithubGistWhereInput `json:"and,omitempty"`
+
+	// "id" field predicates.
+	ID      *int  `json:"id,omitempty"`
+	IDNEQ   *int  `json:"idNEQ,omitempty"`
+	IDIn    []int `json:"idIn,omitempty"`
+	IDNotIn []int `json:"idNotIn,omitempty"`
+	IDGT    *int  `json:"idGT,omitempty"`
+	IDGTE   *int  `json:"idGTE,omitempty"`
+	IDLT    *int  `json:"idLT,omitempty"`
+	IDLTE   *int  `json:"idLTE,omitempty"`
+
+	// "gist_id" field predicates.
+	GistID             *string  `json:"gistID,omitempty"`
+	GistIDNEQ          *string  `json:"gistIDNEQ,omitempty"`
+	GistIDIn           []string `json:"gistIDIn,omitempty"`
+	GistIDNotIn        []string `json:"gistIDNotIn,omitempty"`
+	GistIDGT           *string  `json:"gistIDGT,omitempty"`
+	GistIDGTE          *string  `json:"gistIDGTE,omitempty"`
+	GistIDLT           *string  `json:"gistIDLT,omitempty"`
+	GistIDLTE          *string  `json:"gistIDLTE,omitempty"`
+	GistIDContains     *string  `json:"gistIDContains,omitempty"`
+	GistIDHasPrefix    *string  `json:"gistIDHasPrefix,omitempty"`
+	GistIDHasSuffix    *string  `json:"gistIDHasSuffix,omitempty"`
+	GistIDEqualFold    *string  `json:"gistIDEqualFold,omitempty"`
+	GistIDContainsFold *string  `json:"gistIDContainsFold,omitempty"`
+
+	// "html_url" field predicates.
+	HTMLURL             *string  `json:"htmlURL,omitempty"`
+	HTMLURLNEQ          *string  `json:"htmlURLNEQ,omitempty"`
+	HTMLURLIn           []string `json:"htmlURLIn,omitempty"`
+	HTMLURLNotIn        []string `json:"htmlURLNotIn,omitempty"`
+	HTMLURLGT           *string  `json:"htmlURLGT,omitempty"`
+	HTMLURLGTE          *string  `json:"htmlURLGTE,omitempty"`
+	HTMLURLLT           *string  `json:"htmlURLLT,omitempty"`
+	HTMLURLLTE          *string  `json:"htmlURLLTE,omitempty"`
+	HTMLURLContains     *string  `json:"htmlURLContains,omitempty"`
+	HTMLURLHasPrefix    *string  `json:"htmlURLHasPrefix,omitempty"`
+	HTMLURLHasSuffix    *string  `json:"htmlURLHasSuffix,omitempty"`
+	HTMLURLEqualFold    *string  `json:"htmlURLEqualFold,omitempty"`
+	HTMLURLContainsFold *string  `json:"htmlURLContainsFold,omitempty"`
+
+	// "public" field predicates.
+	Public    *bool `json:"public,omitempty"`
+	PublicNEQ *bool `json:"publicNEQ,omitempty"`
+
+	// "created_at" field predicates.
+	CreatedAt      *time.Time  `json:"createdAt,omitempty"`
+	CreatedAtNEQ   *time.Time  `json:"createdAtNEQ,omitempty"`
+	CreatedAtIn    []time.Time `json:"createdAtIn,omitempty"`
+	CreatedAtNotIn []time.Time `json:"createdAtNotIn,omitempty"`
+	CreatedAtGT    *time.Time  `json:"createdAtGT,omitempty"`
+	CreatedAtGTE   *time.Time  `json:"createdAtGTE,omitempty"`
+	CreatedAtLT    *time.Time  `json:"createdAtLT,omitempty"`
+	CreatedAtLTE   *time.Time  `json:"createdAtLTE,omitempty"`
+
+	// "updated_at" field predicates.
+	UpdatedAt      *time.Time  `json:"updatedAt,omitempty"`
+	UpdatedAtNEQ   *time.Time  `json:"updatedAtNEQ,omitempty"`
+	UpdatedAtIn    []time.Time `json:"updatedAtIn,omitempty"`
+	UpdatedAtNotIn []time.Time `json:"updatedAtNotIn,omitempty"`
+	UpdatedAtGT    *time.Time  `json:"updatedAtGT,omitempty"`
+	UpdatedAtGTE   *time.Time  `json:"updatedAtGTE,omitempty"`
+	UpdatedAtLT    *time.Time  `json:"updatedAtLT,omitempty"`
+	UpdatedAtLTE   *time.Time  `json:"updatedAtLTE,omitempty"`
+
+	// "description" field predicates.
+	Description             *string  `json:"description,omitempty"`
+	DescriptionNEQ          *string  `json:"descriptionNEQ,omitempty"`
+	DescriptionIn           []string `json:"descriptionIn,omitempty"`
+	DescriptionNotIn        []string `json:"descriptionNotIn,omitempty"`
+	DescriptionGT           *string  `json:"descriptionGT,omitempty"`
+	DescriptionGTE          *string  `json:"descriptionGTE,omitempty"`
+	DescriptionLT           *string  `json:"descriptionLT,omitempty"`
+	DescriptionLTE          *string  `json:"descriptionLTE,omitempty"`
+	DescriptionContains     *string  `json:"descriptionContains,omitempty"`
+	DescriptionHasPrefix    *string  `json:"descriptionHasPrefix,omitempty"`
+	DescriptionHasSuffix    *string  `json:"descriptionHasSuffix,omitempty"`
+	DescriptionIsNil        bool     `json:"descriptionIsNil,omitempty"`
+	DescriptionNotNil       bool     `json:"descriptionNotNil,omitempty"`
+	DescriptionEqualFold    *string  `json:"descriptionEqualFold,omitempty"`
+	DescriptionContainsFold *string  `json:"descriptionContainsFold,omitempty"`
+
+	// "name" field predicates.
+	Name             *string  `json:"name,omitempty"`
+	NameNEQ          *string  `json:"nameNEQ,omitempty"`
+	NameIn           []string `json:"nameIn,omitempty"`
+	NameNotIn        []string `json:"nameNotIn,omitempty"`
+	NameGT           *string  `json:"nameGT,omitempty"`
+	NameGTE          *string  `json:"nameGTE,omitempty"`
+	NameLT           *string  `json:"nameLT,omitempty"`
+	NameLTE          *string  `json:"nameLTE,omitempty"`
+	NameContains     *string  `json:"nameContains,omitempty"`
+	NameHasPrefix    *string  `json:"nameHasPrefix,omitempty"`
+	NameHasSuffix    *string  `json:"nameHasSuffix,omitempty"`
+	NameEqualFold    *string  `json:"nameEqualFold,omitempty"`
+	NameContainsFold *string  `json:"nameContainsFold,omitempty"`
+
+	// "type" field predicates.
+	Type             *string  `json:"type,omitempty"`
+	TypeNEQ          *string  `json:"typeNEQ,omitempty"`
+	TypeIn           []string `json:"typeIn,omitempty"`
+	TypeNotIn        []string `json:"typeNotIn,omitempty"`
+	TypeGT           *string  `json:"typeGT,omitempty"`
+	TypeGTE          *string  `json:"typeGTE,omitempty"`
+	TypeLT           *string  `json:"typeLT,omitempty"`
+	TypeLTE          *string  `json:"typeLTE,omitempty"`
+	TypeContains     *string  `json:"typeContains,omitempty"`
+	TypeHasPrefix    *string  `json:"typeHasPrefix,omitempty"`
+	TypeHasSuffix    *string  `json:"typeHasSuffix,omitempty"`
+	TypeEqualFold    *string  `json:"typeEqualFold,omitempty"`
+	TypeContainsFold *string  `json:"typeContainsFold,omitempty"`
+
+	// "language" field predicates.
+	Language             *string  `json:"language,omitempty"`
+	LanguageNEQ          *string  `json:"languageNEQ,omitempty"`
+	LanguageIn           []string `json:"languageIn,omitempty"`
+	LanguageNotIn        []string `json:"languageNotIn,omitempty"`
+	LanguageGT           *string  `json:"languageGT,omitempty"`
+	LanguageGTE          *string  `json:"languageGTE,omitempty"`
+	LanguageLT           *string  `json:"languageLT,omitempty"`
+	LanguageLTE          *string  `json:"languageLTE,omitempty"`
+	LanguageContains     *string  `json:"languageContains,omitempty"`
+	LanguageHasPrefix    *string  `json:"languageHasPrefix,omitempty"`
+	LanguageHasSuffix    *string  `json:"languageHasSuffix,omitempty"`
+	LanguageIsNil        bool     `json:"languageIsNil,omitempty"`
+	LanguageNotNil       bool     `json:"languageNotNil,omitempty"`
+	LanguageEqualFold    *string  `json:"languageEqualFold,omitempty"`
+	LanguageContainsFold *string  `json:"languageContainsFold,omitempty"`
+
+	// "size" field predicates.
+	Size      *int64  `json:"size,omitempty"`
+	SizeNEQ   *int64  `json:"sizeNEQ,omitempty"`
+	SizeIn    []int64 `json:"sizeIn,omitempty"`
+	SizeNotIn []int64 `json:"sizeNotIn,omitempty"`
+	SizeGT    *int64  `json:"sizeGT,omitempty"`
+	SizeGTE   *int64  `json:"sizeGTE,omitempty"`
+	SizeLT    *int64  `json:"sizeLT,omitempty"`
+	SizeLTE   *int64  `json:"sizeLTE,omitempty"`
+
+	// "raw_url" field predicates.
+	RawURL             *string  `json:"rawURL,omitempty"`
+	RawURLNEQ          *string  `json:"rawURLNEQ,omitempty"`
+	RawURLIn           []string `json:"rawURLIn,omitempty"`
+	RawURLNotIn        []string `json:"rawURLNotIn,omitempty"`
+	RawURLGT           *string  `json:"rawURLGT,omitempty"`
+	RawURLGTE          *string  `json:"rawURLGTE,omitempty"`
+	RawURLLT           *string  `json:"rawURLLT,omitempty"`
+	RawURLLTE          *string  `json:"rawURLLTE,omitempty"`
+	RawURLContains     *string  `json:"rawURLContains,omitempty"`
+	RawURLHasPrefix    *string  `json:"rawURLHasPrefix,omitempty"`
+	RawURLHasSuffix    *string  `json:"rawURLHasSuffix,omitempty"`
+	RawURLEqualFold    *string  `json:"rawURLEqualFold,omitempty"`
+	RawURLContainsFold *string  `json:"rawURLContainsFold,omitempty"`
+
+	// "content" field predicates.
+	Content             *string  `json:"content,omitempty"`
+	ContentNEQ          *string  `json:"contentNEQ,omitempty"`
+	ContentIn           []string `json:"contentIn,omitempty"`
+	ContentNotIn        []string `json:"contentNotIn,omitempty"`
+	ContentGT           *string  `json:"contentGT,omitempty"`
+	ContentGTE          *string  `json:"contentGTE,omitempty"`
+	ContentLT           *string  `json:"contentLT,omitempty"`
+	ContentLTE          *string  `json:"contentLTE,omitempty"`
+	ContentContains     *string  `json:"contentContains,omitempty"`
+	ContentHasPrefix    *string  `json:"contentHasPrefix,omitempty"`
+	ContentHasSuffix    *string  `json:"contentHasSuffix,omitempty"`
+	ContentEqualFold    *string  `json:"contentEqualFold,omitempty"`
+	ContentContainsFold *string  `json:"contentContainsFold,omitempty"`
+}
+
+// AddPredicates adds custom predicates to the where input to be used during the filtering phase.
+func (i *GithubGistWhereInput) AddPredicates(predicates ...predicate.GithubGist) {
+	i.Predicates = append(i.Predicates, predicates...)
+}
+
+// Filter applies the GithubGistWhereInput filter on the GithubGistQuery builder.
+func (i *GithubGistWhereInput) Filter(q *GithubGistQuery) (*GithubGistQuery, error) {
+	if i == nil {
+		return q, nil
+	}
+	p, err := i.P()
+	if err != nil {
+		return nil, err
+	}
+	return q.Where(p), nil
+}
+
+// P returns a predicate for filtering githubgists.
+// An error is returned if the input is empty or invalid.
+func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
+	var predicates []predicate.GithubGist
+	if i.Not != nil {
+		p, err := i.Not.P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, githubgist.Not(p))
+	}
+	switch n := len(i.Or); {
+	case n == 1:
+		p, err := i.Or[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		or := make([]predicate.GithubGist, 0, n)
+		for _, w := range i.Or {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			or = append(or, p)
+		}
+		predicates = append(predicates, githubgist.Or(or...))
+	}
+	switch n := len(i.And); {
+	case n == 1:
+		p, err := i.And[0].P()
+		if err != nil {
+			return nil, err
+		}
+		predicates = append(predicates, p)
+	case n > 1:
+		and := make([]predicate.GithubGist, 0, n)
+		for _, w := range i.And {
+			p, err := w.P()
+			if err != nil {
+				return nil, err
+			}
+			and = append(and, p)
+		}
+		predicates = append(predicates, githubgist.And(and...))
+	}
+	predicates = append(predicates, i.Predicates...)
+	if i.ID != nil {
+		predicates = append(predicates, githubgist.IDEQ(*i.ID))
+	}
+	if i.IDNEQ != nil {
+		predicates = append(predicates, githubgist.IDNEQ(*i.IDNEQ))
+	}
+	if len(i.IDIn) > 0 {
+		predicates = append(predicates, githubgist.IDIn(i.IDIn...))
+	}
+	if len(i.IDNotIn) > 0 {
+		predicates = append(predicates, githubgist.IDNotIn(i.IDNotIn...))
+	}
+	if i.IDGT != nil {
+		predicates = append(predicates, githubgist.IDGT(*i.IDGT))
+	}
+	if i.IDGTE != nil {
+		predicates = append(predicates, githubgist.IDGTE(*i.IDGTE))
+	}
+	if i.IDLT != nil {
+		predicates = append(predicates, githubgist.IDLT(*i.IDLT))
+	}
+	if i.IDLTE != nil {
+		predicates = append(predicates, githubgist.IDLTE(*i.IDLTE))
+	}
+	if i.GistID != nil {
+		predicates = append(predicates, githubgist.GistIDEQ(*i.GistID))
+	}
+	if i.GistIDNEQ != nil {
+		predicates = append(predicates, githubgist.GistIDNEQ(*i.GistIDNEQ))
+	}
+	if len(i.GistIDIn) > 0 {
+		predicates = append(predicates, githubgist.GistIDIn(i.GistIDIn...))
+	}
+	if len(i.GistIDNotIn) > 0 {
+		predicates = append(predicates, githubgist.GistIDNotIn(i.GistIDNotIn...))
+	}
+	if i.GistIDGT != nil {
+		predicates = append(predicates, githubgist.GistIDGT(*i.GistIDGT))
+	}
+	if i.GistIDGTE != nil {
+		predicates = append(predicates, githubgist.GistIDGTE(*i.GistIDGTE))
+	}
+	if i.GistIDLT != nil {
+		predicates = append(predicates, githubgist.GistIDLT(*i.GistIDLT))
+	}
+	if i.GistIDLTE != nil {
+		predicates = append(predicates, githubgist.GistIDLTE(*i.GistIDLTE))
+	}
+	if i.GistIDContains != nil {
+		predicates = append(predicates, githubgist.GistIDContains(*i.GistIDContains))
+	}
+	if i.GistIDHasPrefix != nil {
+		predicates = append(predicates, githubgist.GistIDHasPrefix(*i.GistIDHasPrefix))
+	}
+	if i.GistIDHasSuffix != nil {
+		predicates = append(predicates, githubgist.GistIDHasSuffix(*i.GistIDHasSuffix))
+	}
+	if i.GistIDEqualFold != nil {
+		predicates = append(predicates, githubgist.GistIDEqualFold(*i.GistIDEqualFold))
+	}
+	if i.GistIDContainsFold != nil {
+		predicates = append(predicates, githubgist.GistIDContainsFold(*i.GistIDContainsFold))
+	}
+	if i.HTMLURL != nil {
+		predicates = append(predicates, githubgist.HTMLURLEQ(*i.HTMLURL))
+	}
+	if i.HTMLURLNEQ != nil {
+		predicates = append(predicates, githubgist.HTMLURLNEQ(*i.HTMLURLNEQ))
+	}
+	if len(i.HTMLURLIn) > 0 {
+		predicates = append(predicates, githubgist.HTMLURLIn(i.HTMLURLIn...))
+	}
+	if len(i.HTMLURLNotIn) > 0 {
+		predicates = append(predicates, githubgist.HTMLURLNotIn(i.HTMLURLNotIn...))
+	}
+	if i.HTMLURLGT != nil {
+		predicates = append(predicates, githubgist.HTMLURLGT(*i.HTMLURLGT))
+	}
+	if i.HTMLURLGTE != nil {
+		predicates = append(predicates, githubgist.HTMLURLGTE(*i.HTMLURLGTE))
+	}
+	if i.HTMLURLLT != nil {
+		predicates = append(predicates, githubgist.HTMLURLLT(*i.HTMLURLLT))
+	}
+	if i.HTMLURLLTE != nil {
+		predicates = append(predicates, githubgist.HTMLURLLTE(*i.HTMLURLLTE))
+	}
+	if i.HTMLURLContains != nil {
+		predicates = append(predicates, githubgist.HTMLURLContains(*i.HTMLURLContains))
+	}
+	if i.HTMLURLHasPrefix != nil {
+		predicates = append(predicates, githubgist.HTMLURLHasPrefix(*i.HTMLURLHasPrefix))
+	}
+	if i.HTMLURLHasSuffix != nil {
+		predicates = append(predicates, githubgist.HTMLURLHasSuffix(*i.HTMLURLHasSuffix))
+	}
+	if i.HTMLURLEqualFold != nil {
+		predicates = append(predicates, githubgist.HTMLURLEqualFold(*i.HTMLURLEqualFold))
+	}
+	if i.HTMLURLContainsFold != nil {
+		predicates = append(predicates, githubgist.HTMLURLContainsFold(*i.HTMLURLContainsFold))
+	}
+	if i.Public != nil {
+		predicates = append(predicates, githubgist.PublicEQ(*i.Public))
+	}
+	if i.PublicNEQ != nil {
+		predicates = append(predicates, githubgist.PublicNEQ(*i.PublicNEQ))
+	}
+	if i.CreatedAt != nil {
+		predicates = append(predicates, githubgist.CreatedAtEQ(*i.CreatedAt))
+	}
+	if i.CreatedAtNEQ != nil {
+		predicates = append(predicates, githubgist.CreatedAtNEQ(*i.CreatedAtNEQ))
+	}
+	if len(i.CreatedAtIn) > 0 {
+		predicates = append(predicates, githubgist.CreatedAtIn(i.CreatedAtIn...))
+	}
+	if len(i.CreatedAtNotIn) > 0 {
+		predicates = append(predicates, githubgist.CreatedAtNotIn(i.CreatedAtNotIn...))
+	}
+	if i.CreatedAtGT != nil {
+		predicates = append(predicates, githubgist.CreatedAtGT(*i.CreatedAtGT))
+	}
+	if i.CreatedAtGTE != nil {
+		predicates = append(predicates, githubgist.CreatedAtGTE(*i.CreatedAtGTE))
+	}
+	if i.CreatedAtLT != nil {
+		predicates = append(predicates, githubgist.CreatedAtLT(*i.CreatedAtLT))
+	}
+	if i.CreatedAtLTE != nil {
+		predicates = append(predicates, githubgist.CreatedAtLTE(*i.CreatedAtLTE))
+	}
+	if i.UpdatedAt != nil {
+		predicates = append(predicates, githubgist.UpdatedAtEQ(*i.UpdatedAt))
+	}
+	if i.UpdatedAtNEQ != nil {
+		predicates = append(predicates, githubgist.UpdatedAtNEQ(*i.UpdatedAtNEQ))
+	}
+	if len(i.UpdatedAtIn) > 0 {
+		predicates = append(predicates, githubgist.UpdatedAtIn(i.UpdatedAtIn...))
+	}
+	if len(i.UpdatedAtNotIn) > 0 {
+		predicates = append(predicates, githubgist.UpdatedAtNotIn(i.UpdatedAtNotIn...))
+	}
+	if i.UpdatedAtGT != nil {
+		predicates = append(predicates, githubgist.UpdatedAtGT(*i.UpdatedAtGT))
+	}
+	if i.UpdatedAtGTE != nil {
+		predicates = append(predicates, githubgist.UpdatedAtGTE(*i.UpdatedAtGTE))
+	}
+	if i.UpdatedAtLT != nil {
+		predicates = append(predicates, githubgist.UpdatedAtLT(*i.UpdatedAtLT))
+	}
+	if i.UpdatedAtLTE != nil {
+		predicates = append(predicates, githubgist.UpdatedAtLTE(*i.UpdatedAtLTE))
+	}
+	if i.Description != nil {
+		predicates = append(predicates, githubgist.DescriptionEQ(*i.Description))
+	}
+	if i.DescriptionNEQ != nil {
+		predicates = append(predicates, githubgist.DescriptionNEQ(*i.DescriptionNEQ))
+	}
+	if len(i.DescriptionIn) > 0 {
+		predicates = append(predicates, githubgist.DescriptionIn(i.DescriptionIn...))
+	}
+	if len(i.DescriptionNotIn) > 0 {
+		predicates = append(predicates, githubgist.DescriptionNotIn(i.DescriptionNotIn...))
+	}
+	if i.DescriptionGT != nil {
+		predicates = append(predicates, githubgist.DescriptionGT(*i.DescriptionGT))
+	}
+	if i.DescriptionGTE != nil {
+		predicates = append(predicates, githubgist.DescriptionGTE(*i.DescriptionGTE))
+	}
+	if i.DescriptionLT != nil {
+		predicates = append(predicates, githubgist.DescriptionLT(*i.DescriptionLT))
+	}
+	if i.DescriptionLTE != nil {
+		predicates = append(predicates, githubgist.DescriptionLTE(*i.DescriptionLTE))
+	}
+	if i.DescriptionContains != nil {
+		predicates = append(predicates, githubgist.DescriptionContains(*i.DescriptionContains))
+	}
+	if i.DescriptionHasPrefix != nil {
+		predicates = append(predicates, githubgist.DescriptionHasPrefix(*i.DescriptionHasPrefix))
+	}
+	if i.DescriptionHasSuffix != nil {
+		predicates = append(predicates, githubgist.DescriptionHasSuffix(*i.DescriptionHasSuffix))
+	}
+	if i.DescriptionIsNil {
+		predicates = append(predicates, githubgist.DescriptionIsNil())
+	}
+	if i.DescriptionNotNil {
+		predicates = append(predicates, githubgist.DescriptionNotNil())
+	}
+	if i.DescriptionEqualFold != nil {
+		predicates = append(predicates, githubgist.DescriptionEqualFold(*i.DescriptionEqualFold))
+	}
+	if i.DescriptionContainsFold != nil {
+		predicates = append(predicates, githubgist.DescriptionContainsFold(*i.DescriptionContainsFold))
+	}
+	if i.Name != nil {
+		predicates = append(predicates, githubgist.NameEQ(*i.Name))
+	}
+	if i.NameNEQ != nil {
+		predicates = append(predicates, githubgist.NameNEQ(*i.NameNEQ))
+	}
+	if len(i.NameIn) > 0 {
+		predicates = append(predicates, githubgist.NameIn(i.NameIn...))
+	}
+	if len(i.NameNotIn) > 0 {
+		predicates = append(predicates, githubgist.NameNotIn(i.NameNotIn...))
+	}
+	if i.NameGT != nil {
+		predicates = append(predicates, githubgist.NameGT(*i.NameGT))
+	}
+	if i.NameGTE != nil {
+		predicates = append(predicates, githubgist.NameGTE(*i.NameGTE))
+	}
+	if i.NameLT != nil {
+		predicates = append(predicates, githubgist.NameLT(*i.NameLT))
+	}
+	if i.NameLTE != nil {
+		predicates = append(predicates, githubgist.NameLTE(*i.NameLTE))
+	}
+	if i.NameContains != nil {
+		predicates = append(predicates, githubgist.NameContains(*i.NameContains))
+	}
+	if i.NameHasPrefix != nil {
+		predicates = append(predicates, githubgist.NameHasPrefix(*i.NameHasPrefix))
+	}
+	if i.NameHasSuffix != nil {
+		predicates = append(predicates, githubgist.NameHasSuffix(*i.NameHasSuffix))
+	}
+	if i.NameEqualFold != nil {
+		predicates = append(predicates, githubgist.NameEqualFold(*i.NameEqualFold))
+	}
+	if i.NameContainsFold != nil {
+		predicates = append(predicates, githubgist.NameContainsFold(*i.NameContainsFold))
+	}
+	if i.Type != nil {
+		predicates = append(predicates, githubgist.TypeEQ(*i.Type))
+	}
+	if i.TypeNEQ != nil {
+		predicates = append(predicates, githubgist.TypeNEQ(*i.TypeNEQ))
+	}
+	if len(i.TypeIn) > 0 {
+		predicates = append(predicates, githubgist.TypeIn(i.TypeIn...))
+	}
+	if len(i.TypeNotIn) > 0 {
+		predicates = append(predicates, githubgist.TypeNotIn(i.TypeNotIn...))
+	}
+	if i.TypeGT != nil {
+		predicates = append(predicates, githubgist.TypeGT(*i.TypeGT))
+	}
+	if i.TypeGTE != nil {
+		predicates = append(predicates, githubgist.TypeGTE(*i.TypeGTE))
+	}
+	if i.TypeLT != nil {
+		predicates = append(predicates, githubgist.TypeLT(*i.TypeLT))
+	}
+	if i.TypeLTE != nil {
+		predicates = append(predicates, githubgist.TypeLTE(*i.TypeLTE))
+	}
+	if i.TypeContains != nil {
+		predicates = append(predicates, githubgist.TypeContains(*i.TypeContains))
+	}
+	if i.TypeHasPrefix != nil {
+		predicates = append(predicates, githubgist.TypeHasPrefix(*i.TypeHasPrefix))
+	}
+	if i.TypeHasSuffix != nil {
+		predicates = append(predicates, githubgist.TypeHasSuffix(*i.TypeHasSuffix))
+	}
+	if i.TypeEqualFold != nil {
+		predicates = append(predicates, githubgist.TypeEqualFold(*i.TypeEqualFold))
+	}
+	if i.TypeContainsFold != nil {
+		predicates = append(predicates, githubgist.TypeContainsFold(*i.TypeContainsFold))
+	}
+	if i.Language != nil {
+		predicates = append(predicates, githubgist.LanguageEQ(*i.Language))
+	}
+	if i.LanguageNEQ != nil {
+		predicates = append(predicates, githubgist.LanguageNEQ(*i.LanguageNEQ))
+	}
+	if len(i.LanguageIn) > 0 {
+		predicates = append(predicates, githubgist.LanguageIn(i.LanguageIn...))
+	}
+	if len(i.LanguageNotIn) > 0 {
+		predicates = append(predicates, githubgist.LanguageNotIn(i.LanguageNotIn...))
+	}
+	if i.LanguageGT != nil {
+		predicates = append(predicates, githubgist.LanguageGT(*i.LanguageGT))
+	}
+	if i.LanguageGTE != nil {
+		predicates = append(predicates, githubgist.LanguageGTE(*i.LanguageGTE))
+	}
+	if i.LanguageLT != nil {
+		predicates = append(predicates, githubgist.LanguageLT(*i.LanguageLT))
+	}
+	if i.LanguageLTE != nil {
+		predicates = append(predicates, githubgist.LanguageLTE(*i.LanguageLTE))
+	}
+	if i.LanguageContains != nil {
+		predicates = append(predicates, githubgist.LanguageContains(*i.LanguageContains))
+	}
+	if i.LanguageHasPrefix != nil {
+		predicates = append(predicates, githubgist.LanguageHasPrefix(*i.LanguageHasPrefix))
+	}
+	if i.LanguageHasSuffix != nil {
+		predicates = append(predicates, githubgist.LanguageHasSuffix(*i.LanguageHasSuffix))
+	}
+	if i.LanguageIsNil {
+		predicates = append(predicates, githubgist.LanguageIsNil())
+	}
+	if i.LanguageNotNil {
+		predicates = append(predicates, githubgist.LanguageNotNil())
+	}
+	if i.LanguageEqualFold != nil {
+		predicates = append(predicates, githubgist.LanguageEqualFold(*i.LanguageEqualFold))
+	}
+	if i.LanguageContainsFold != nil {
+		predicates = append(predicates, githubgist.LanguageContainsFold(*i.LanguageContainsFold))
+	}
+	if i.Size != nil {
+		predicates = append(predicates, githubgist.SizeEQ(*i.Size))
+	}
+	if i.SizeNEQ != nil {
+		predicates = append(predicates, githubgist.SizeNEQ(*i.SizeNEQ))
+	}
+	if len(i.SizeIn) > 0 {
+		predicates = append(predicates, githubgist.SizeIn(i.SizeIn...))
+	}
+	if len(i.SizeNotIn) > 0 {
+		predicates = append(predicates, githubgist.SizeNotIn(i.SizeNotIn...))
+	}
+	if i.SizeGT != nil {
+		predicates = append(predicates, githubgist.SizeGT(*i.SizeGT))
+	}
+	if i.SizeGTE != nil {
+		predicates = append(predicates, githubgist.SizeGTE(*i.SizeGTE))
+	}
+	if i.SizeLT != nil {
+		predicates = append(predicates, githubgist.SizeLT(*i.SizeLT))
+	}
+	if i.SizeLTE != nil {
+		predicates = append(predicates, githubgist.SizeLTE(*i.SizeLTE))
+	}
+	if i.RawURL != nil {
+		predicates = append(predicates, githubgist.RawURLEQ(*i.RawURL))
+	}
+	if i.RawURLNEQ != nil {
+		predicates = append(predicates, githubgist.RawURLNEQ(*i.RawURLNEQ))
+	}
+	if len(i.RawURLIn) > 0 {
+		predicates = append(predicates, githubgist.RawURLIn(i.RawURLIn...))
+	}
+	if len(i.RawURLNotIn) > 0 {
+		predicates = append(predicates, githubgist.RawURLNotIn(i.RawURLNotIn...))
+	}
+	if i.RawURLGT != nil {
+		predicates = append(predicates, githubgist.RawURLGT(*i.RawURLGT))
+	}
+	if i.RawURLGTE != nil {
+		predicates = append(predicates, githubgist.RawURLGTE(*i.RawURLGTE))
+	}
+	if i.RawURLLT != nil {
+		predicates = append(predicates, githubgist.RawURLLT(*i.RawURLLT))
+	}
+	if i.RawURLLTE != nil {
+		predicates = append(predicates, githubgist.RawURLLTE(*i.RawURLLTE))
+	}
+	if i.RawURLContains != nil {
+		predicates = append(predicates, githubgist.RawURLContains(*i.RawURLContains))
+	}
+	if i.RawURLHasPrefix != nil {
+		predicates = append(predicates, githubgist.RawURLHasPrefix(*i.RawURLHasPrefix))
+	}
+	if i.RawURLHasSuffix != nil {
+		predicates = append(predicates, githubgist.RawURLHasSuffix(*i.RawURLHasSuffix))
+	}
+	if i.RawURLEqualFold != nil {
+		predicates = append(predicates, githubgist.RawURLEqualFold(*i.RawURLEqualFold))
+	}
+	if i.RawURLContainsFold != nil {
+		predicates = append(predicates, githubgist.RawURLContainsFold(*i.RawURLContainsFold))
+	}
+	if i.Content != nil {
+		predicates = append(predicates, githubgist.ContentEQ(*i.Content))
+	}
+	if i.ContentNEQ != nil {
+		predicates = append(predicates, githubgist.ContentNEQ(*i.ContentNEQ))
+	}
+	if len(i.ContentIn) > 0 {
+		predicates = append(predicates, githubgist.ContentIn(i.ContentIn...))
+	}
+	if len(i.ContentNotIn) > 0 {
+		predicates = append(predicates, githubgist.ContentNotIn(i.ContentNotIn...))
+	}
+	if i.ContentGT != nil {
+		predicates = append(predicates, githubgist.ContentGT(*i.ContentGT))
+	}
+	if i.ContentGTE != nil {
+		predicates = append(predicates, githubgist.ContentGTE(*i.ContentGTE))
+	}
+	if i.ContentLT != nil {
+		predicates = append(predicates, githubgist.ContentLT(*i.ContentLT))
+	}
+	if i.ContentLTE != nil {
+		predicates = append(predicates, githubgist.ContentLTE(*i.ContentLTE))
+	}
+	if i.ContentContains != nil {
+		predicates = append(predicates, githubgist.ContentContains(*i.ContentContains))
+	}
+	if i.ContentHasPrefix != nil {
+		predicates = append(predicates, githubgist.ContentHasPrefix(*i.ContentHasPrefix))
+	}
+	if i.ContentHasSuffix != nil {
+		predicates = append(predicates, githubgist.ContentHasSuffix(*i.ContentHasSuffix))
+	}
+	if i.ContentEqualFold != nil {
+		predicates = append(predicates, githubgist.ContentEqualFold(*i.ContentEqualFold))
+	}
+	if i.ContentContainsFold != nil {
+		predicates = append(predicates, githubgist.ContentContainsFold(*i.ContentContainsFold))
+	}
+
+	switch len(predicates) {
+	case 0:
+		return nil, fmt.Errorf("empty predicate GithubGistWhereInput")
+	case 1:
+		return predicates[0], nil
+	default:
+		return githubgist.And(predicates...), nil
 	}
 }
 

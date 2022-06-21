@@ -61,6 +61,36 @@ var (
 		Columns:    GithubEventsColumns,
 		PrimaryKey: []*schema.Column{GithubEventsColumns[0]},
 	}
+	// GithubGistsColumns holds the columns for the "github_gists" table.
+	GithubGistsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "gist_id", Type: field.TypeString},
+		{Name: "html_url", Type: field.TypeString},
+		{Name: "public", Type: field.TypeBool},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+		{Name: "description", Type: field.TypeString, Nullable: true},
+		{Name: "owner", Type: field.TypeJSON},
+		{Name: "name", Type: field.TypeString},
+		{Name: "type", Type: field.TypeString},
+		{Name: "language", Type: field.TypeString, Nullable: true},
+		{Name: "size", Type: field.TypeInt64},
+		{Name: "raw_url", Type: field.TypeString},
+		{Name: "content", Type: field.TypeString},
+	}
+	// GithubGistsTable holds the schema information for the "github_gists" table.
+	GithubGistsTable = &schema.Table{
+		Name:       "github_gists",
+		Columns:    GithubGistsColumns,
+		PrimaryKey: []*schema.Column{GithubGistsColumns[0]},
+		Indexes: []*schema.Index{
+			{
+				Name:    "githubgist_gist_id_name",
+				Unique:  true,
+				Columns: []*schema.Column{GithubGistsColumns[1], GithubGistsColumns[8]},
+			},
+		},
+	}
 	// GithubReleasesColumns holds the columns for the "github_releases" table.
 	GithubReleasesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
@@ -234,6 +264,7 @@ var (
 	Tables = []*schema.Table{
 		GithubAssetsTable,
 		GithubEventsTable,
+		GithubGistsTable,
 		GithubReleasesTable,
 		GithubRepositoriesTable,
 		LabelsTable,

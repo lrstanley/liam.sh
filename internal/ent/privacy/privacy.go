@@ -217,6 +217,30 @@ func (f GithubEventMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mut
 	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GithubEventMutation", m)
 }
 
+// The GithubGistQueryRuleFunc type is an adapter to allow the use of ordinary
+// functions as a query rule.
+type GithubGistQueryRuleFunc func(context.Context, *ent.GithubGistQuery) error
+
+// EvalQuery return f(ctx, q).
+func (f GithubGistQueryRuleFunc) EvalQuery(ctx context.Context, q ent.Query) error {
+	if q, ok := q.(*ent.GithubGistQuery); ok {
+		return f(ctx, q)
+	}
+	return Denyf("ent/privacy: unexpected query type %T, expect *ent.GithubGistQuery", q)
+}
+
+// The GithubGistMutationRuleFunc type is an adapter to allow the use of ordinary
+// functions as a mutation rule.
+type GithubGistMutationRuleFunc func(context.Context, *ent.GithubGistMutation) error
+
+// EvalMutation calls f(ctx, m).
+func (f GithubGistMutationRuleFunc) EvalMutation(ctx context.Context, m ent.Mutation) error {
+	if m, ok := m.(*ent.GithubGistMutation); ok {
+		return f(ctx, m)
+	}
+	return Denyf("ent/privacy: unexpected mutation type %T, expect *ent.GithubGistMutation", m)
+}
+
 // The GithubReleaseQueryRuleFunc type is an adapter to allow the use of ordinary
 // functions as a query rule.
 type GithubReleaseQueryRuleFunc func(context.Context, *ent.GithubReleaseQuery) error
@@ -376,6 +400,8 @@ func queryFilter(q ent.Query) (Filter, error) {
 		return q.Filter(), nil
 	case *ent.GithubEventQuery:
 		return q.Filter(), nil
+	case *ent.GithubGistQuery:
+		return q.Filter(), nil
 	case *ent.GithubReleaseQuery:
 		return q.Filter(), nil
 	case *ent.GithubRepositoryQuery:
@@ -396,6 +422,8 @@ func mutationFilter(m ent.Mutation) (Filter, error) {
 	case *ent.GithubAssetMutation:
 		return m.Filter(), nil
 	case *ent.GithubEventMutation:
+		return m.Filter(), nil
+	case *ent.GithubGistMutation:
 		return m.Filter(), nil
 	case *ent.GithubReleaseMutation:
 		return m.Filter(), nil

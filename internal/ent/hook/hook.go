@@ -39,6 +39,19 @@ func (f GithubEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value,
 	return f(ctx, mv)
 }
 
+// The GithubGistFunc type is an adapter to allow the use of ordinary
+// function as GithubGist mutator.
+type GithubGistFunc func(context.Context, *ent.GithubGistMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f GithubGistFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	mv, ok := m.(*ent.GithubGistMutation)
+	if !ok {
+		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubGistMutation", m)
+	}
+	return f(ctx, mv)
+}
+
 // The GithubReleaseFunc type is an adapter to allow the use of ordinary
 // function as GithubRelease mutator.
 type GithubReleaseFunc func(context.Context, *ent.GithubReleaseMutation) (ent.Value, error)

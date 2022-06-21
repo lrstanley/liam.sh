@@ -16,6 +16,9 @@ type GithubAsset func(*sql.Selector)
 // GithubEvent is the predicate function for githubevent builders.
 type GithubEvent func(*sql.Selector)
 
+// GithubGist is the predicate function for githubgist builders.
+type GithubGist func(*sql.Selector)
+
 // GithubRelease is the predicate function for githubrelease builders.
 type GithubRelease func(*sql.Selector)
 

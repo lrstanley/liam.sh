@@ -170,6 +170,74 @@ func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateA
 }
 
 // CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
+func (gg *GithubGistQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubGistQuery, error) {
+	fc := graphql.GetFieldContext(ctx)
+	if fc == nil {
+		return gg, nil
+	}
+	if err := gg.collectField(ctx, graphql.GetOperationContext(ctx), fc.Field, nil, satisfies...); err != nil {
+		return nil, err
+	}
+	return gg, nil
+}
+
+func (gg *GithubGistQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+	path = append([]string(nil), path...)
+	return nil
+}
+
+type githubgistPaginateArgs struct {
+	first, last   *int
+	after, before *Cursor
+	opts          []GithubGistPaginateOption
+}
+
+func newGithubGistPaginateArgs(rv map[string]interface{}) *githubgistPaginateArgs {
+	args := &githubgistPaginateArgs{}
+	if rv == nil {
+		return args
+	}
+	if v := rv[firstField]; v != nil {
+		args.first = v.(*int)
+	}
+	if v := rv[lastField]; v != nil {
+		args.last = v.(*int)
+	}
+	if v := rv[afterField]; v != nil {
+		args.after = v.(*Cursor)
+	}
+	if v := rv[beforeField]; v != nil {
+		args.before = v.(*Cursor)
+	}
+	if v, ok := rv[orderByField]; ok {
+		switch v := v.(type) {
+		case map[string]interface{}:
+			var (
+				err1, err2 error
+				order      = &GithubGistOrder{Field: &GithubGistOrderField{}}
+			)
+			if d, ok := v[directionField]; ok {
+				err1 = order.Direction.UnmarshalGQL(d)
+			}
+			if f, ok := v[fieldField]; ok {
+				err2 = order.Field.UnmarshalGQL(f)
+			}
+			if err1 == nil && err2 == nil {
+				args.opts = append(args.opts, WithGithubGistOrder(order))
+			}
+		case *GithubGistOrder:
+			if v != nil {
+				args.opts = append(args.opts, WithGithubGistOrder(v))
+			}
+		}
+	}
+	if v, ok := rv[whereField].(*GithubGistWhereInput); ok {
+		args.opts = append(args.opts, WithGithubGistFilter(v.Filter))
+	}
+	return args
+}
+
+// CollectFields tells the query-builder to eagerly load connected nodes by resolver context.
 func (gr *GithubReleaseQuery) CollectFields(ctx context.Context, satisfies ...string) (*GithubReleaseQuery, error) {
 	fc := graphql.GetFieldContext(ctx)
 	if fc == nil {

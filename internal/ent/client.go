@@ -15,6 +15,7 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -35,6 +36,8 @@ type Client struct {
 	GithubAsset *GithubAssetClient
 	// GithubEvent is the client for interacting with the GithubEvent builders.
 	GithubEvent *GithubEventClient
+	// GithubGist is the client for interacting with the GithubGist builders.
+	GithubGist *GithubGistClient
 	// GithubRelease is the client for interacting with the GithubRelease builders.
 	GithubRelease *GithubReleaseClient
 	// GithubRepository is the client for interacting with the GithubRepository builders.
@@ -62,6 +65,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.GithubAsset = NewGithubAssetClient(c.config)
 	c.GithubEvent = NewGithubEventClient(c.config)
+	c.GithubGist = NewGithubGistClient(c.config)
 	c.GithubRelease = NewGithubReleaseClient(c.config)
 	c.GithubRepository = NewGithubRepositoryClient(c.config)
 	c.Label = NewLabelClient(c.config)
@@ -102,6 +106,7 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 		config:           cfg,
 		GithubAsset:      NewGithubAssetClient(cfg),
 		GithubEvent:      NewGithubEventClient(cfg),
+		GithubGist:       NewGithubGistClient(cfg),
 		GithubRelease:    NewGithubReleaseClient(cfg),
 		GithubRepository: NewGithubRepositoryClient(cfg),
 		Label:            NewLabelClient(cfg),
@@ -128,6 +133,7 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 		config:           cfg,
 		GithubAsset:      NewGithubAssetClient(cfg),
 		GithubEvent:      NewGithubEventClient(cfg),
+		GithubGist:       NewGithubGistClient(cfg),
 		GithubRelease:    NewGithubReleaseClient(cfg),
 		GithubRepository: NewGithubRepositoryClient(cfg),
 		Label:            NewLabelClient(cfg),
@@ -164,6 +170,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.GithubAsset.Use(hooks...)
 	c.GithubEvent.Use(hooks...)
+	c.GithubGist.Use(hooks...)
 	c.GithubRelease.Use(hooks...)
 	c.GithubRepository.Use(hooks...)
 	c.Label.Use(hooks...)
@@ -367,6 +374,97 @@ func (c *GithubEventClient) GetX(ctx context.Context, id int) *GithubEvent {
 func (c *GithubEventClient) Hooks() []Hook {
 	hooks := c.hooks.GithubEvent
 	return append(hooks[:len(hooks):len(hooks)], githubevent.Hooks[:]...)
+}
+
+// GithubGistClient is a client for the GithubGist schema.
+type GithubGistClient struct {
+	config
+}
+
+// NewGithubGistClient returns a client for the GithubGist from the given config.
+func NewGithubGistClient(c config) *GithubGistClient {
+	return &GithubGistClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `githubgist.Hooks(f(g(h())))`.
+func (c *GithubGistClient) Use(hooks ...Hook) {
+	c.hooks.GithubGist = append(c.hooks.GithubGist, hooks...)
+}
+
+// Create returns a builder for creating a GithubGist entity.
+func (c *GithubGistClient) Create() *GithubGistCreate {
+	mutation := newGithubGistMutation(c.config, OpCreate)
+	return &GithubGistCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of GithubGist entities.
+func (c *GithubGistClient) CreateBulk(builders ...*GithubGistCreate) *GithubGistCreateBulk {
+	return &GithubGistCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for GithubGist.
+func (c *GithubGistClient) Update() *GithubGistUpdate {
+	mutation := newGithubGistMutation(c.config, OpUpdate)
+	return &GithubGistUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *GithubGistClient) UpdateOne(gg *GithubGist) *GithubGistUpdateOne {
+	mutation := newGithubGistMutation(c.config, OpUpdateOne, withGithubGist(gg))
+	return &GithubGistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *GithubGistClient) UpdateOneID(id int) *GithubGistUpdateOne {
+	mutation := newGithubGistMutation(c.config, OpUpdateOne, withGithubGistID(id))
+	return &GithubGistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for GithubGist.
+func (c *GithubGistClient) Delete() *GithubGistDelete {
+	mutation := newGithubGistMutation(c.config, OpDelete)
+	return &GithubGistDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *GithubGistClient) DeleteOne(gg *GithubGist) *GithubGistDeleteOne {
+	return c.DeleteOneID(gg.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *GithubGistClient) DeleteOneID(id int) *GithubGistDeleteOne {
+	builder := c.Delete().Where(githubgist.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &GithubGistDeleteOne{builder}
+}
+
+// Query returns a query builder for GithubGist.
+func (c *GithubGistClient) Query() *GithubGistQuery {
+	return &GithubGistQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a GithubGist entity by its id.
+func (c *GithubGistClient) Get(ctx context.Context, id int) (*GithubGist, error) {
+	return c.Query().Where(githubgist.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *GithubGistClient) GetX(ctx context.Context, id int) *GithubGist {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *GithubGistClient) Hooks() []Hook {
+	hooks := c.hooks.GithubGist
+	return append(hooks[:len(hooks):len(hooks)], githubgist.Hooks[:]...)
 }
 
 // GithubReleaseClient is a client for the GithubRelease schema.

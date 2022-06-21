@@ -45,6 +45,7 @@ func main() {
 		gh.UserRunner,
 		gh.EventsRunner,
 		gh.RepositoryRunner,
+		gh.GistRunner,
 	); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}

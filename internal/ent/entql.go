@@ -9,6 +9,7 @@ package ent
 import (
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -24,7 +25,7 @@ import (
 
 // schemaGraph holds a representation of ent/schema at runtime.
 var schemaGraph = func() *sqlgraph.Schema {
-	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 7)}
+	graph := &sqlgraph.Schema{Nodes: make([]*sqlgraph.Node, 8)}
 	graph.Nodes[0] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubasset.Table,
@@ -73,6 +74,32 @@ var schemaGraph = func() *sqlgraph.Schema {
 	}
 	graph.Nodes[2] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
+			Table:   githubgist.Table,
+			Columns: githubgist.Columns,
+			ID: &sqlgraph.FieldSpec{
+				Type:   field.TypeInt,
+				Column: githubgist.FieldID,
+			},
+		},
+		Type: "GithubGist",
+		Fields: map[string]*sqlgraph.FieldSpec{
+			githubgist.FieldGistID:      {Type: field.TypeString, Column: githubgist.FieldGistID},
+			githubgist.FieldHTMLURL:     {Type: field.TypeString, Column: githubgist.FieldHTMLURL},
+			githubgist.FieldPublic:      {Type: field.TypeBool, Column: githubgist.FieldPublic},
+			githubgist.FieldCreatedAt:   {Type: field.TypeTime, Column: githubgist.FieldCreatedAt},
+			githubgist.FieldUpdatedAt:   {Type: field.TypeTime, Column: githubgist.FieldUpdatedAt},
+			githubgist.FieldDescription: {Type: field.TypeString, Column: githubgist.FieldDescription},
+			githubgist.FieldOwner:       {Type: field.TypeJSON, Column: githubgist.FieldOwner},
+			githubgist.FieldName:        {Type: field.TypeString, Column: githubgist.FieldName},
+			githubgist.FieldType:        {Type: field.TypeString, Column: githubgist.FieldType},
+			githubgist.FieldLanguage:    {Type: field.TypeString, Column: githubgist.FieldLanguage},
+			githubgist.FieldSize:        {Type: field.TypeInt64, Column: githubgist.FieldSize},
+			githubgist.FieldRawURL:      {Type: field.TypeString, Column: githubgist.FieldRawURL},
+			githubgist.FieldContent:     {Type: field.TypeString, Column: githubgist.FieldContent},
+		},
+	}
+	graph.Nodes[3] = &sqlgraph.Node{
+		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubrelease.Table,
 			Columns: githubrelease.Columns,
 			ID: &sqlgraph.FieldSpec{
@@ -94,7 +121,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			githubrelease.FieldAuthor:          {Type: field.TypeJSON, Column: githubrelease.FieldAuthor},
 		},
 	}
-	graph.Nodes[3] = &sqlgraph.Node{
+	graph.Nodes[4] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   githubrepository.Table,
 			Columns: githubrepository.Columns,
@@ -126,7 +153,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			githubrepository.FieldLicense:       {Type: field.TypeJSON, Column: githubrepository.FieldLicense},
 		},
 	}
-	graph.Nodes[4] = &sqlgraph.Node{
+	graph.Nodes[5] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   label.Table,
 			Columns: label.Columns,
@@ -142,7 +169,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			label.FieldName:       {Type: field.TypeString, Column: label.FieldName},
 		},
 	}
-	graph.Nodes[5] = &sqlgraph.Node{
+	graph.Nodes[6] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   post.Table,
 			Columns: post.Columns,
@@ -164,7 +191,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldViewCount:   {Type: field.TypeInt, Column: post.FieldViewCount},
 		},
 	}
-	graph.Nodes[6] = &sqlgraph.Node{
+	graph.Nodes[7] = &sqlgraph.Node{
 		NodeSpec: sqlgraph.NodeSpec{
 			Table:   user.Table,
 			Columns: user.Columns,
@@ -511,6 +538,111 @@ func (f *GithubEventFilter) WherePayload(p entql.BytesP) {
 }
 
 // addPredicate implements the predicateAdder interface.
+func (ggq *GithubGistQuery) addPredicate(pred func(s *sql.Selector)) {
+	ggq.predicates = append(ggq.predicates, pred)
+}
+
+// Filter returns a Filter implementation to apply filters on the GithubGistQuery builder.
+func (ggq *GithubGistQuery) Filter() *GithubGistFilter {
+	return &GithubGistFilter{ggq.config, ggq}
+}
+
+// addPredicate implements the predicateAdder interface.
+func (m *GithubGistMutation) addPredicate(pred func(s *sql.Selector)) {
+	m.predicates = append(m.predicates, pred)
+}
+
+// Filter returns an entql.Where implementation to apply filters on the GithubGistMutation builder.
+func (m *GithubGistMutation) Filter() *GithubGistFilter {
+	return &GithubGistFilter{m.config, m}
+}
+
+// GithubGistFilter provides a generic filtering capability at runtime for GithubGistQuery.
+type GithubGistFilter struct {
+	config
+	predicateAdder
+}
+
+// Where applies the entql predicate on the query filter.
+func (f *GithubGistFilter) Where(p entql.P) {
+	f.addPredicate(func(s *sql.Selector) {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+			s.AddError(err)
+		}
+	})
+}
+
+// WhereID applies the entql int predicate on the id field.
+func (f *GithubGistFilter) WhereID(p entql.IntP) {
+	f.Where(p.Field(githubgist.FieldID))
+}
+
+// WhereGistID applies the entql string predicate on the gist_id field.
+func (f *GithubGistFilter) WhereGistID(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldGistID))
+}
+
+// WhereHTMLURL applies the entql string predicate on the html_url field.
+func (f *GithubGistFilter) WhereHTMLURL(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldHTMLURL))
+}
+
+// WherePublic applies the entql bool predicate on the public field.
+func (f *GithubGistFilter) WherePublic(p entql.BoolP) {
+	f.Where(p.Field(githubgist.FieldPublic))
+}
+
+// WhereCreatedAt applies the entql time.Time predicate on the created_at field.
+func (f *GithubGistFilter) WhereCreatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubgist.FieldCreatedAt))
+}
+
+// WhereUpdatedAt applies the entql time.Time predicate on the updated_at field.
+func (f *GithubGistFilter) WhereUpdatedAt(p entql.TimeP) {
+	f.Where(p.Field(githubgist.FieldUpdatedAt))
+}
+
+// WhereDescription applies the entql string predicate on the description field.
+func (f *GithubGistFilter) WhereDescription(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldDescription))
+}
+
+// WhereOwner applies the entql json.RawMessage predicate on the owner field.
+func (f *GithubGistFilter) WhereOwner(p entql.BytesP) {
+	f.Where(p.Field(githubgist.FieldOwner))
+}
+
+// WhereName applies the entql string predicate on the name field.
+func (f *GithubGistFilter) WhereName(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldName))
+}
+
+// WhereType applies the entql string predicate on the type field.
+func (f *GithubGistFilter) WhereType(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldType))
+}
+
+// WhereLanguage applies the entql string predicate on the language field.
+func (f *GithubGistFilter) WhereLanguage(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldLanguage))
+}
+
+// WhereSize applies the entql int64 predicate on the size field.
+func (f *GithubGistFilter) WhereSize(p entql.Int64P) {
+	f.Where(p.Field(githubgist.FieldSize))
+}
+
+// WhereRawURL applies the entql string predicate on the raw_url field.
+func (f *GithubGistFilter) WhereRawURL(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldRawURL))
+}
+
+// WhereContent applies the entql string predicate on the content field.
+func (f *GithubGistFilter) WhereContent(p entql.StringP) {
+	f.Where(p.Field(githubgist.FieldContent))
+}
+
+// addPredicate implements the predicateAdder interface.
 func (grq *GithubReleaseQuery) addPredicate(pred func(s *sql.Selector)) {
 	grq.predicates = append(grq.predicates, pred)
 }
@@ -539,7 +671,7 @@ type GithubReleaseFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GithubReleaseFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[2].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -657,7 +789,7 @@ type GithubRepositoryFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *GithubRepositoryFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[3].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -820,7 +952,7 @@ type LabelFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *LabelFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[4].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -903,7 +1035,7 @@ type PostFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *PostFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[5].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})
@@ -1016,7 +1148,7 @@ type UserFilter struct {
 // Where applies the entql predicate on the query filter.
 func (f *UserFilter) Where(p entql.P) {
 	f.addPredicate(func(s *sql.Selector) {
-		if err := schemaGraph.EvalP(schemaGraph.Nodes[6].Type, p, s); err != nil {
+		if err := schemaGraph.EvalP(schemaGraph.Nodes[7].Type, p, s); err != nil {
 			s.AddError(err)
 		}
 	})

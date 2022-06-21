@@ -12,6 +12,7 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -73,6 +74,21 @@ func init() {
 	githubeventDescRepoID := githubeventFields[6].Descriptor()
 	// githubevent.RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
 	githubevent.RepoIDValidator = githubeventDescRepoID.Validators[0].(func(int64) error)
+	githubgist.Policy = privacy.NewPolicies(schema.GithubGist{})
+	githubgist.Hooks[0] = func(next ent.Mutator) ent.Mutator {
+		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+			if err := githubgist.Policy.EvalMutation(ctx, m); err != nil {
+				return nil, err
+			}
+			return next.Mutate(ctx, m)
+		})
+	}
+	githubgistFields := schema.GithubGist{}.Fields()
+	_ = githubgistFields
+	// githubgistDescHTMLURL is the schema descriptor for html_url field.
+	githubgistDescHTMLURL := githubgistFields[1].Descriptor()
+	// githubgist.HTMLURLValidator is a validator for the "html_url" field. It is called by the builders before save.
+	githubgist.HTMLURLValidator = githubgistDescHTMLURL.Validators[0].(func(string) error)
 	githubrelease.Policy = privacy.NewPolicies(schema.GithubRelease{})
 	githubrelease.Hooks[0] = func(next ent.Mutator) ent.Mutator {
 		return ent.MutateFunc(func(ctx context.Context, m ent.Mutation) (ent.Value, error) {

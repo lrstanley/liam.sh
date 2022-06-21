@@ -20,6 +20,8 @@ type Tx struct {
 	GithubAsset *GithubAssetClient
 	// GithubEvent is the client for interacting with the GithubEvent builders.
 	GithubEvent *GithubEventClient
+	// GithubGist is the client for interacting with the GithubGist builders.
+	GithubGist *GithubGistClient
 	// GithubRelease is the client for interacting with the GithubRelease builders.
 	GithubRelease *GithubReleaseClient
 	// GithubRepository is the client for interacting with the GithubRepository builders.
@@ -167,6 +169,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.GithubAsset = NewGithubAssetClient(tx.config)
 	tx.GithubEvent = NewGithubEventClient(tx.config)
+	tx.GithubGist = NewGithubGistClient(tx.config)
 	tx.GithubRelease = NewGithubReleaseClient(tx.config)
 	tx.GithubRepository = NewGithubRepositoryClient(tx.config)
 	tx.Label = NewLabelClient(tx.config)

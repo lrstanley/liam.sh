@@ -30,6 +30,7 @@ type config struct {
 type hooks struct {
 	GithubAsset      []ent.Hook
 	GithubEvent      []ent.Hook
+	GithubGist       []ent.Hook
 	GithubRelease    []ent.Hook
 	GithubRepository []ent.Hook
 	Label            []ent.Hook

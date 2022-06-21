@@ -29,7 +29,7 @@ func RegisterHooks(ctx context.Context) {
 		panic("database client is nil")
 	}
 
-	db.Use(
+	db.Post.Use(
 		hook.On(
 			hook.If(func(next ent.Mutator) ent.Mutator {
 				return hook.PostFunc(func(ctx context.Context, m *ent.PostMutation) (ent.Value, error) {

@@ -20,6 +20,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/errcode"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -902,6 +903,354 @@ func (ge *GithubEvent) ToEdge(order *GithubEventOrder) *GithubEventEdge {
 	return &GithubEventEdge{
 		Node:   ge,
 		Cursor: order.Field.toCursor(ge),
+	}
+}
+
+// GithubGistEdge is the edge representation of GithubGist.
+type GithubGistEdge struct {
+	Node   *GithubGist `json:"node"`
+	Cursor Cursor      `json:"cursor"`
+}
+
+// GithubGistConnection is the connection containing edges to GithubGist.
+type GithubGistConnection struct {
+	Edges      []*GithubGistEdge `json:"edges"`
+	PageInfo   PageInfo          `json:"pageInfo"`
+	TotalCount int               `json:"totalCount"`
+}
+
+func (c *GithubGistConnection) build(nodes []*GithubGist, pager *githubgistPager, after *Cursor, first *int, before *Cursor, last *int) {
+	c.PageInfo.HasNextPage = before != nil
+	c.PageInfo.HasPreviousPage = after != nil
+	if first != nil && *first+1 == len(nodes) {
+		c.PageInfo.HasNextPage = true
+		nodes = nodes[:len(nodes)-1]
+	} else if last != nil && *last+1 == len(nodes) {
+		c.PageInfo.HasPreviousPage = true
+		nodes = nodes[:len(nodes)-1]
+	}
+	var nodeAt func(int) *GithubGist
+	if last != nil {
+		n := len(nodes) - 1
+		nodeAt = func(i int) *GithubGist {
+			return nodes[n-i]
+		}
+	} else {
+		nodeAt = func(i int) *GithubGist {
+			return nodes[i]
+		}
+	}
+	c.Edges = make([]*GithubGistEdge, len(nodes))
+	for i := range nodes {
+		node := nodeAt(i)
+		c.Edges[i] = &GithubGistEdge{
+			Node:   node,
+			Cursor: pager.toCursor(node),
+		}
+	}
+	if l := len(c.Edges); l > 0 {
+		c.PageInfo.StartCursor = &c.Edges[0].Cursor
+		c.PageInfo.EndCursor = &c.Edges[l-1].Cursor
+	}
+	if c.TotalCount == 0 {
+		c.TotalCount = len(nodes)
+	}
+}
+
+// GithubGistPaginateOption enables pagination customization.
+type GithubGistPaginateOption func(*githubgistPager) error
+
+// WithGithubGistOrder configures pagination ordering.
+func WithGithubGistOrder(order *GithubGistOrder) GithubGistPaginateOption {
+	if order == nil {
+		order = DefaultGithubGistOrder
+	}
+	o := *order
+	return func(pager *githubgistPager) error {
+		if err := o.Direction.Validate(); err != nil {
+			return err
+		}
+		if o.Field == nil {
+			o.Field = DefaultGithubGistOrder.Field
+		}
+		pager.order = &o
+		return nil
+	}
+}
+
+// WithGithubGistFilter configures pagination filter.
+func WithGithubGistFilter(filter func(*GithubGistQuery) (*GithubGistQuery, error)) GithubGistPaginateOption {
+	return func(pager *githubgistPager) error {
+		if filter == nil {
+			return errors.New("GithubGistQuery filter cannot be nil")
+		}
+		pager.filter = filter
+		return nil
+	}
+}
+
+type githubgistPager struct {
+	order  *GithubGistOrder
+	filter func(*GithubGistQuery) (*GithubGistQuery, error)
+}
+
+func newGithubGistPager(opts []GithubGistPaginateOption) (*githubgistPager, error) {
+	pager := &githubgistPager{}
+	for _, opt := range opts {
+		if err := opt(pager); err != nil {
+			return nil, err
+		}
+	}
+	if pager.order == nil {
+		pager.order = DefaultGithubGistOrder
+	}
+	return pager, nil
+}
+
+func (p *githubgistPager) applyFilter(query *GithubGistQuery) (*GithubGistQuery, error) {
+	if p.filter != nil {
+		return p.filter(query)
+	}
+	return query, nil
+}
+
+func (p *githubgistPager) toCursor(gg *GithubGist) Cursor {
+	return p.order.Field.toCursor(gg)
+}
+
+func (p *githubgistPager) applyCursors(query *GithubGistQuery, after, before *Cursor) *GithubGistQuery {
+	for _, predicate := range cursorsToPredicates(
+		p.order.Direction, after, before,
+		p.order.Field.field, DefaultGithubGistOrder.Field.field,
+	) {
+		query = query.Where(predicate)
+	}
+	return query
+}
+
+func (p *githubgistPager) applyOrder(query *GithubGistQuery, reverse bool) *GithubGistQuery {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	query = query.Order(direction.orderFunc(p.order.Field.field))
+	if p.order.Field != DefaultGithubGistOrder.Field {
+		query = query.Order(direction.orderFunc(DefaultGithubGistOrder.Field.field))
+	}
+	return query
+}
+
+func (p *githubgistPager) orderExpr(reverse bool) sql.Querier {
+	direction := p.order.Direction
+	if reverse {
+		direction = direction.reverse()
+	}
+	return sql.ExprFunc(func(b *sql.Builder) {
+		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		if p.order.Field != DefaultGithubGistOrder.Field {
+			b.Comma().Ident(DefaultGithubGistOrder.Field.field).Pad().WriteString(string(direction))
+		}
+	})
+}
+
+// Paginate executes the query and returns a relay based cursor connection to GithubGist.
+func (gg *GithubGistQuery) Paginate(
+	ctx context.Context, after *Cursor, first *int,
+	before *Cursor, last *int, opts ...GithubGistPaginateOption,
+) (*GithubGistConnection, error) {
+	if err := validateFirstLast(first, last); err != nil {
+		return nil, err
+	}
+	pager, err := newGithubGistPager(opts)
+	if err != nil {
+		return nil, err
+	}
+	if gg, err = pager.applyFilter(gg); err != nil {
+		return nil, err
+	}
+	conn := &GithubGistConnection{Edges: []*GithubGistEdge{}}
+	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
+		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
+			if conn.TotalCount, err = gg.Count(ctx); err != nil {
+				return nil, err
+			}
+			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
+			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
+		}
+		return conn, nil
+	}
+
+	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
+		count, err := gg.Clone().Count(ctx)
+		if err != nil {
+			return nil, err
+		}
+		conn.TotalCount = count
+	}
+
+	gg = pager.applyCursors(gg, after, before)
+	gg = pager.applyOrder(gg, last != nil)
+	if limit := paginateLimit(first, last); limit != 0 {
+		gg.Limit(limit)
+	}
+	if field := collectedField(ctx, edgesField, nodeField); field != nil {
+		if err := gg.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
+			return nil, err
+		}
+	}
+
+	nodes, err := gg.All(ctx)
+	if err != nil || len(nodes) == 0 {
+		return conn, err
+	}
+	conn.build(nodes, pager, after, first, before, last)
+	return conn, nil
+}
+
+var (
+	// GithubGistOrderFieldCreatedAt orders GithubGist by created_at.
+	GithubGistOrderFieldCreatedAt = &GithubGistOrderField{
+		field: githubgist.FieldCreatedAt,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.CreatedAt,
+			}
+		},
+	}
+	// GithubGistOrderFieldUpdatedAt orders GithubGist by updated_at.
+	GithubGistOrderFieldUpdatedAt = &GithubGistOrderField{
+		field: githubgist.FieldUpdatedAt,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.UpdatedAt,
+			}
+		},
+	}
+	// GithubGistOrderFieldName orders GithubGist by name.
+	GithubGistOrderFieldName = &GithubGistOrderField{
+		field: githubgist.FieldName,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.Name,
+			}
+		},
+	}
+	// GithubGistOrderFieldType orders GithubGist by type.
+	GithubGistOrderFieldType = &GithubGistOrderField{
+		field: githubgist.FieldType,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.Type,
+			}
+		},
+	}
+	// GithubGistOrderFieldLanguage orders GithubGist by language.
+	GithubGistOrderFieldLanguage = &GithubGistOrderField{
+		field: githubgist.FieldLanguage,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.Language,
+			}
+		},
+	}
+	// GithubGistOrderFieldSize orders GithubGist by size.
+	GithubGistOrderFieldSize = &GithubGistOrderField{
+		field: githubgist.FieldSize,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{
+				ID:    gg.ID,
+				Value: gg.Size,
+			}
+		},
+	}
+)
+
+// String implement fmt.Stringer interface.
+func (f GithubGistOrderField) String() string {
+	var str string
+	switch f.field {
+	case githubgist.FieldCreatedAt:
+		str = "CREATED_AT"
+	case githubgist.FieldUpdatedAt:
+		str = "UPDATED_AT"
+	case githubgist.FieldName:
+		str = "NAME"
+	case githubgist.FieldType:
+		str = "TYPE"
+	case githubgist.FieldLanguage:
+		str = "LANGUAGE"
+	case githubgist.FieldSize:
+		str = "SIZE"
+	}
+	return str
+}
+
+// MarshalGQL implements graphql.Marshaler interface.
+func (f GithubGistOrderField) MarshalGQL(w io.Writer) {
+	io.WriteString(w, strconv.Quote(f.String()))
+}
+
+// UnmarshalGQL implements graphql.Unmarshaler interface.
+func (f *GithubGistOrderField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("GithubGistOrderField %T must be a string", v)
+	}
+	switch str {
+	case "CREATED_AT":
+		*f = *GithubGistOrderFieldCreatedAt
+	case "UPDATED_AT":
+		*f = *GithubGistOrderFieldUpdatedAt
+	case "NAME":
+		*f = *GithubGistOrderFieldName
+	case "TYPE":
+		*f = *GithubGistOrderFieldType
+	case "LANGUAGE":
+		*f = *GithubGistOrderFieldLanguage
+	case "SIZE":
+		*f = *GithubGistOrderFieldSize
+	default:
+		return fmt.Errorf("%s is not a valid GithubGistOrderField", str)
+	}
+	return nil
+}
+
+// GithubGistOrderField defines the ordering field of GithubGist.
+type GithubGistOrderField struct {
+	field    string
+	toCursor func(*GithubGist) Cursor
+}
+
+// GithubGistOrder defines the ordering of GithubGist.
+type GithubGistOrder struct {
+	Direction OrderDirection        `json:"direction"`
+	Field     *GithubGistOrderField `json:"field"`
+}
+
+// DefaultGithubGistOrder is the default ordering of GithubGist.
+var DefaultGithubGistOrder = &GithubGistOrder{
+	Direction: OrderDirectionAsc,
+	Field: &GithubGistOrderField{
+		field: githubgist.FieldID,
+		toCursor: func(gg *GithubGist) Cursor {
+			return Cursor{ID: gg.ID}
+		},
+	},
+}
+
+// ToEdge converts GithubGist into GithubGistEdge.
+func (gg *GithubGist) ToEdge(order *GithubGistOrder) *GithubGistEdge {
+	if order == nil {
+		order = DefaultGithubGistOrder
+	}
+	return &GithubGistEdge{
+		Node:   gg,
+		Cursor: order.Field.toCursor(gg),
 	}
 }
 

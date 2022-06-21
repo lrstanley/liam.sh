@@ -35,6 +35,14 @@ func (r *queryResolver) Githubevents(ctx context.Context, after *ent.Cursor, fir
 	)
 }
 
+func (r *queryResolver) Githubgists(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) (*ent.GithubGistConnection, error) {
+	return r.client.GithubGist.Query().Paginate(
+		ctx, after, first, before, last,
+		ent.WithGithubGistOrder(orderBy),
+		ent.WithGithubGistFilter(where.Filter),
+	)
+}
+
 func (r *queryResolver) Githubreleases(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) (*ent.GithubReleaseConnection, error) {
 	return r.client.GithubRelease.Query().Paginate(
 		ctx, after, first, before, last,

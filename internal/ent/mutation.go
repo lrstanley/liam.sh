@@ -16,6 +16,7 @@ import (
 	"github.com/google/go-github/v44/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -37,6 +38,7 @@ const (
 	// Node types.
 	TypeGithubAsset      = "GithubAsset"
 	TypeGithubEvent      = "GithubEvent"
+	TypeGithubGist       = "GithubGist"
 	TypeGithubRelease    = "GithubRelease"
 	TypeGithubRepository = "GithubRepository"
 	TypeLabel            = "Label"
@@ -1936,6 +1938,1042 @@ func (m *GithubEventMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *GithubEventMutation) ResetEdge(name string) error {
 	return fmt.Errorf("unknown GithubEvent edge %s", name)
+}
+
+// GithubGistMutation represents an operation that mutates the GithubGist nodes in the graph.
+type GithubGistMutation struct {
+	config
+	op            Op
+	typ           string
+	id            *int
+	gist_id       *string
+	html_url      *string
+	public        *bool
+	created_at    *time.Time
+	updated_at    *time.Time
+	description   *string
+	owner         **github.User
+	name          *string
+	_type         *string
+	language      *string
+	size          *int64
+	addsize       *int64
+	raw_url       *string
+	content       *string
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*GithubGist, error)
+	predicates    []predicate.GithubGist
+}
+
+var _ ent.Mutation = (*GithubGistMutation)(nil)
+
+// githubgistOption allows management of the mutation configuration using functional options.
+type githubgistOption func(*GithubGistMutation)
+
+// newGithubGistMutation creates new mutation for the GithubGist entity.
+func newGithubGistMutation(c config, op Op, opts ...githubgistOption) *GithubGistMutation {
+	m := &GithubGistMutation{
+		config:        c,
+		op:            op,
+		typ:           TypeGithubGist,
+		clearedFields: make(map[string]struct{}),
+	}
+	for _, opt := range opts {
+		opt(m)
+	}
+	return m
+}
+
+// withGithubGistID sets the ID field of the mutation.
+func withGithubGistID(id int) githubgistOption {
+	return func(m *GithubGistMutation) {
+		var (
+			err   error
+			once  sync.Once
+			value *GithubGist
+		)
+		m.oldValue = func(ctx context.Context) (*GithubGist, error) {
+			once.Do(func() {
+				if m.done {
+					err = errors.New("querying old values post mutation is not allowed")
+				} else {
+					value, err = m.Client().GithubGist.Get(ctx, id)
+				}
+			})
+			return value, err
+		}
+		m.id = &id
+	}
+}
+
+// withGithubGist sets the old GithubGist of the mutation.
+func withGithubGist(node *GithubGist) githubgistOption {
+	return func(m *GithubGistMutation) {
+		m.oldValue = func(context.Context) (*GithubGist, error) {
+			return node, nil
+		}
+		m.id = &node.ID
+	}
+}
+
+// Client returns a new `ent.Client` from the mutation. If the mutation was
+// executed in a transaction (ent.Tx), a transactional client is returned.
+func (m GithubGistMutation) Client() *Client {
+	client := &Client{config: m.config}
+	client.init()
+	return client
+}
+
+// Tx returns an `ent.Tx` for mutations that were executed in transactions;
+// it returns an error otherwise.
+func (m GithubGistMutation) Tx() (*Tx, error) {
+	if _, ok := m.driver.(*txDriver); !ok {
+		return nil, errors.New("ent: mutation is not running in a transaction")
+	}
+	tx := &Tx{config: m.config}
+	tx.init()
+	return tx, nil
+}
+
+// ID returns the ID value in the mutation. Note that the ID is only available
+// if it was provided to the builder or after it was returned from the database.
+func (m *GithubGistMutation) ID() (id int, exists bool) {
+	if m.id == nil {
+		return
+	}
+	return *m.id, true
+}
+
+// IDs queries the database and returns the entity ids that match the mutation's predicate.
+// That means, if the mutation is applied within a transaction with an isolation level such
+// as sql.LevelSerializable, the returned ids match the ids of the rows that will be updated
+// or updated by the mutation.
+func (m *GithubGistMutation) IDs(ctx context.Context) ([]int, error) {
+	switch {
+	case m.op.Is(OpUpdateOne | OpDeleteOne):
+		id, exists := m.ID()
+		if exists {
+			return []int{id}, nil
+		}
+		fallthrough
+	case m.op.Is(OpUpdate | OpDelete):
+		return m.Client().GithubGist.Query().Where(m.predicates...).IDs(ctx)
+	default:
+		return nil, fmt.Errorf("IDs is not allowed on %s operations", m.op)
+	}
+}
+
+// SetGistID sets the "gist_id" field.
+func (m *GithubGistMutation) SetGistID(s string) {
+	m.gist_id = &s
+}
+
+// GistID returns the value of the "gist_id" field in the mutation.
+func (m *GithubGistMutation) GistID() (r string, exists bool) {
+	v := m.gist_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldGistID returns the old "gist_id" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldGistID(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldGistID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldGistID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldGistID: %w", err)
+	}
+	return oldValue.GistID, nil
+}
+
+// ResetGistID resets all changes to the "gist_id" field.
+func (m *GithubGistMutation) ResetGistID() {
+	m.gist_id = nil
+}
+
+// SetHTMLURL sets the "html_url" field.
+func (m *GithubGistMutation) SetHTMLURL(s string) {
+	m.html_url = &s
+}
+
+// HTMLURL returns the value of the "html_url" field in the mutation.
+func (m *GithubGistMutation) HTMLURL() (r string, exists bool) {
+	v := m.html_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHTMLURL returns the old "html_url" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldHTMLURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHTMLURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHTMLURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHTMLURL: %w", err)
+	}
+	return oldValue.HTMLURL, nil
+}
+
+// ResetHTMLURL resets all changes to the "html_url" field.
+func (m *GithubGistMutation) ResetHTMLURL() {
+	m.html_url = nil
+}
+
+// SetPublic sets the "public" field.
+func (m *GithubGistMutation) SetPublic(b bool) {
+	m.public = &b
+}
+
+// Public returns the value of the "public" field in the mutation.
+func (m *GithubGistMutation) Public() (r bool, exists bool) {
+	v := m.public
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublic returns the old "public" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldPublic(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublic: %w", err)
+	}
+	return oldValue.Public, nil
+}
+
+// ResetPublic resets all changes to the "public" field.
+func (m *GithubGistMutation) ResetPublic() {
+	m.public = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *GithubGistMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *GithubGistMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *GithubGistMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (m *GithubGistMutation) SetUpdatedAt(t time.Time) {
+	m.updated_at = &t
+}
+
+// UpdatedAt returns the value of the "updated_at" field in the mutation.
+func (m *GithubGistMutation) UpdatedAt() (r time.Time, exists bool) {
+	v := m.updated_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldUpdatedAt returns the old "updated_at" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldUpdatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldUpdatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldUpdatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldUpdatedAt: %w", err)
+	}
+	return oldValue.UpdatedAt, nil
+}
+
+// ResetUpdatedAt resets all changes to the "updated_at" field.
+func (m *GithubGistMutation) ResetUpdatedAt() {
+	m.updated_at = nil
+}
+
+// SetDescription sets the "description" field.
+func (m *GithubGistMutation) SetDescription(s string) {
+	m.description = &s
+}
+
+// Description returns the value of the "description" field in the mutation.
+func (m *GithubGistMutation) Description() (r string, exists bool) {
+	v := m.description
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDescription returns the old "description" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldDescription(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDescription is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDescription requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDescription: %w", err)
+	}
+	return oldValue.Description, nil
+}
+
+// ClearDescription clears the value of the "description" field.
+func (m *GithubGistMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[githubgist.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *GithubGistMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[githubgist.FieldDescription]
+	return ok
+}
+
+// ResetDescription resets all changes to the "description" field.
+func (m *GithubGistMutation) ResetDescription() {
+	m.description = nil
+	delete(m.clearedFields, githubgist.FieldDescription)
+}
+
+// SetOwner sets the "owner" field.
+func (m *GithubGistMutation) SetOwner(gi *github.User) {
+	m.owner = &gi
+}
+
+// Owner returns the value of the "owner" field in the mutation.
+func (m *GithubGistMutation) Owner() (r *github.User, exists bool) {
+	v := m.owner
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOwner returns the old "owner" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldOwner(ctx context.Context) (v *github.User, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOwner is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOwner requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOwner: %w", err)
+	}
+	return oldValue.Owner, nil
+}
+
+// ResetOwner resets all changes to the "owner" field.
+func (m *GithubGistMutation) ResetOwner() {
+	m.owner = nil
+}
+
+// SetName sets the "name" field.
+func (m *GithubGistMutation) SetName(s string) {
+	m.name = &s
+}
+
+// Name returns the value of the "name" field in the mutation.
+func (m *GithubGistMutation) Name() (r string, exists bool) {
+	v := m.name
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldName returns the old "name" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldName(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldName is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldName requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldName: %w", err)
+	}
+	return oldValue.Name, nil
+}
+
+// ResetName resets all changes to the "name" field.
+func (m *GithubGistMutation) ResetName() {
+	m.name = nil
+}
+
+// SetType sets the "type" field.
+func (m *GithubGistMutation) SetType(s string) {
+	m._type = &s
+}
+
+// GetType returns the value of the "type" field in the mutation.
+func (m *GithubGistMutation) GetType() (r string, exists bool) {
+	v := m._type
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldType returns the old "type" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldType(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldType is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldType requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldType: %w", err)
+	}
+	return oldValue.Type, nil
+}
+
+// ResetType resets all changes to the "type" field.
+func (m *GithubGistMutation) ResetType() {
+	m._type = nil
+}
+
+// SetLanguage sets the "language" field.
+func (m *GithubGistMutation) SetLanguage(s string) {
+	m.language = &s
+}
+
+// Language returns the value of the "language" field in the mutation.
+func (m *GithubGistMutation) Language() (r string, exists bool) {
+	v := m.language
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldLanguage returns the old "language" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldLanguage(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldLanguage is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldLanguage requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldLanguage: %w", err)
+	}
+	return oldValue.Language, nil
+}
+
+// ClearLanguage clears the value of the "language" field.
+func (m *GithubGistMutation) ClearLanguage() {
+	m.language = nil
+	m.clearedFields[githubgist.FieldLanguage] = struct{}{}
+}
+
+// LanguageCleared returns if the "language" field was cleared in this mutation.
+func (m *GithubGistMutation) LanguageCleared() bool {
+	_, ok := m.clearedFields[githubgist.FieldLanguage]
+	return ok
+}
+
+// ResetLanguage resets all changes to the "language" field.
+func (m *GithubGistMutation) ResetLanguage() {
+	m.language = nil
+	delete(m.clearedFields, githubgist.FieldLanguage)
+}
+
+// SetSize sets the "size" field.
+func (m *GithubGistMutation) SetSize(i int64) {
+	m.size = &i
+	m.addsize = nil
+}
+
+// Size returns the value of the "size" field in the mutation.
+func (m *GithubGistMutation) Size() (r int64, exists bool) {
+	v := m.size
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldSize returns the old "size" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldSize(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldSize is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldSize requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldSize: %w", err)
+	}
+	return oldValue.Size, nil
+}
+
+// AddSize adds i to the "size" field.
+func (m *GithubGistMutation) AddSize(i int64) {
+	if m.addsize != nil {
+		*m.addsize += i
+	} else {
+		m.addsize = &i
+	}
+}
+
+// AddedSize returns the value that was added to the "size" field in this mutation.
+func (m *GithubGistMutation) AddedSize() (r int64, exists bool) {
+	v := m.addsize
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetSize resets all changes to the "size" field.
+func (m *GithubGistMutation) ResetSize() {
+	m.size = nil
+	m.addsize = nil
+}
+
+// SetRawURL sets the "raw_url" field.
+func (m *GithubGistMutation) SetRawURL(s string) {
+	m.raw_url = &s
+}
+
+// RawURL returns the value of the "raw_url" field in the mutation.
+func (m *GithubGistMutation) RawURL() (r string, exists bool) {
+	v := m.raw_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRawURL returns the old "raw_url" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldRawURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRawURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRawURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRawURL: %w", err)
+	}
+	return oldValue.RawURL, nil
+}
+
+// ResetRawURL resets all changes to the "raw_url" field.
+func (m *GithubGistMutation) ResetRawURL() {
+	m.raw_url = nil
+}
+
+// SetContent sets the "content" field.
+func (m *GithubGistMutation) SetContent(s string) {
+	m.content = &s
+}
+
+// Content returns the value of the "content" field in the mutation.
+func (m *GithubGistMutation) Content() (r string, exists bool) {
+	v := m.content
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldContent returns the old "content" field's value of the GithubGist entity.
+// If the GithubGist object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *GithubGistMutation) OldContent(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldContent is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldContent requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldContent: %w", err)
+	}
+	return oldValue.Content, nil
+}
+
+// ResetContent resets all changes to the "content" field.
+func (m *GithubGistMutation) ResetContent() {
+	m.content = nil
+}
+
+// Where appends a list predicates to the GithubGistMutation builder.
+func (m *GithubGistMutation) Where(ps ...predicate.GithubGist) {
+	m.predicates = append(m.predicates, ps...)
+}
+
+// Op returns the operation name.
+func (m *GithubGistMutation) Op() Op {
+	return m.op
+}
+
+// Type returns the node type of this mutation (GithubGist).
+func (m *GithubGistMutation) Type() string {
+	return m.typ
+}
+
+// Fields returns all fields that were changed during this mutation. Note that in
+// order to get all numeric fields that were incremented/decremented, call
+// AddedFields().
+func (m *GithubGistMutation) Fields() []string {
+	fields := make([]string, 0, 13)
+	if m.gist_id != nil {
+		fields = append(fields, githubgist.FieldGistID)
+	}
+	if m.html_url != nil {
+		fields = append(fields, githubgist.FieldHTMLURL)
+	}
+	if m.public != nil {
+		fields = append(fields, githubgist.FieldPublic)
+	}
+	if m.created_at != nil {
+		fields = append(fields, githubgist.FieldCreatedAt)
+	}
+	if m.updated_at != nil {
+		fields = append(fields, githubgist.FieldUpdatedAt)
+	}
+	if m.description != nil {
+		fields = append(fields, githubgist.FieldDescription)
+	}
+	if m.owner != nil {
+		fields = append(fields, githubgist.FieldOwner)
+	}
+	if m.name != nil {
+		fields = append(fields, githubgist.FieldName)
+	}
+	if m._type != nil {
+		fields = append(fields, githubgist.FieldType)
+	}
+	if m.language != nil {
+		fields = append(fields, githubgist.FieldLanguage)
+	}
+	if m.size != nil {
+		fields = append(fields, githubgist.FieldSize)
+	}
+	if m.raw_url != nil {
+		fields = append(fields, githubgist.FieldRawURL)
+	}
+	if m.content != nil {
+		fields = append(fields, githubgist.FieldContent)
+	}
+	return fields
+}
+
+// Field returns the value of a field with the given name. The second boolean
+// return value indicates that this field was not set, or was not defined in the
+// schema.
+func (m *GithubGistMutation) Field(name string) (ent.Value, bool) {
+	switch name {
+	case githubgist.FieldGistID:
+		return m.GistID()
+	case githubgist.FieldHTMLURL:
+		return m.HTMLURL()
+	case githubgist.FieldPublic:
+		return m.Public()
+	case githubgist.FieldCreatedAt:
+		return m.CreatedAt()
+	case githubgist.FieldUpdatedAt:
+		return m.UpdatedAt()
+	case githubgist.FieldDescription:
+		return m.Description()
+	case githubgist.FieldOwner:
+		return m.Owner()
+	case githubgist.FieldName:
+		return m.Name()
+	case githubgist.FieldType:
+		return m.GetType()
+	case githubgist.FieldLanguage:
+		return m.Language()
+	case githubgist.FieldSize:
+		return m.Size()
+	case githubgist.FieldRawURL:
+		return m.RawURL()
+	case githubgist.FieldContent:
+		return m.Content()
+	}
+	return nil, false
+}
+
+// OldField returns the old value of the field from the database. An error is
+// returned if the mutation operation is not UpdateOne, or the query to the
+// database failed.
+func (m *GithubGistMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
+	switch name {
+	case githubgist.FieldGistID:
+		return m.OldGistID(ctx)
+	case githubgist.FieldHTMLURL:
+		return m.OldHTMLURL(ctx)
+	case githubgist.FieldPublic:
+		return m.OldPublic(ctx)
+	case githubgist.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
+	case githubgist.FieldUpdatedAt:
+		return m.OldUpdatedAt(ctx)
+	case githubgist.FieldDescription:
+		return m.OldDescription(ctx)
+	case githubgist.FieldOwner:
+		return m.OldOwner(ctx)
+	case githubgist.FieldName:
+		return m.OldName(ctx)
+	case githubgist.FieldType:
+		return m.OldType(ctx)
+	case githubgist.FieldLanguage:
+		return m.OldLanguage(ctx)
+	case githubgist.FieldSize:
+		return m.OldSize(ctx)
+	case githubgist.FieldRawURL:
+		return m.OldRawURL(ctx)
+	case githubgist.FieldContent:
+		return m.OldContent(ctx)
+	}
+	return nil, fmt.Errorf("unknown GithubGist field %s", name)
+}
+
+// SetField sets the value of a field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubGistMutation) SetField(name string, value ent.Value) error {
+	switch name {
+	case githubgist.FieldGistID:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetGistID(v)
+		return nil
+	case githubgist.FieldHTMLURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHTMLURL(v)
+		return nil
+	case githubgist.FieldPublic:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublic(v)
+		return nil
+	case githubgist.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
+		return nil
+	case githubgist.FieldUpdatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetUpdatedAt(v)
+		return nil
+	case githubgist.FieldDescription:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDescription(v)
+		return nil
+	case githubgist.FieldOwner:
+		v, ok := value.(*github.User)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOwner(v)
+		return nil
+	case githubgist.FieldName:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetName(v)
+		return nil
+	case githubgist.FieldType:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetType(v)
+		return nil
+	case githubgist.FieldLanguage:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetLanguage(v)
+		return nil
+	case githubgist.FieldSize:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetSize(v)
+		return nil
+	case githubgist.FieldRawURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRawURL(v)
+		return nil
+	case githubgist.FieldContent:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetContent(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubGist field %s", name)
+}
+
+// AddedFields returns all numeric fields that were incremented/decremented during
+// this mutation.
+func (m *GithubGistMutation) AddedFields() []string {
+	var fields []string
+	if m.addsize != nil {
+		fields = append(fields, githubgist.FieldSize)
+	}
+	return fields
+}
+
+// AddedField returns the numeric value that was incremented/decremented on a field
+// with the given name. The second boolean return value indicates that this field
+// was not set, or was not defined in the schema.
+func (m *GithubGistMutation) AddedField(name string) (ent.Value, bool) {
+	switch name {
+	case githubgist.FieldSize:
+		return m.AddedSize()
+	}
+	return nil, false
+}
+
+// AddField adds the value to the field with the given name. It returns an error if
+// the field is not defined in the schema, or if the type mismatched the field
+// type.
+func (m *GithubGistMutation) AddField(name string, value ent.Value) error {
+	switch name {
+	case githubgist.FieldSize:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddSize(v)
+		return nil
+	}
+	return fmt.Errorf("unknown GithubGist numeric field %s", name)
+}
+
+// ClearedFields returns all nullable fields that were cleared during this
+// mutation.
+func (m *GithubGistMutation) ClearedFields() []string {
+	var fields []string
+	if m.FieldCleared(githubgist.FieldDescription) {
+		fields = append(fields, githubgist.FieldDescription)
+	}
+	if m.FieldCleared(githubgist.FieldLanguage) {
+		fields = append(fields, githubgist.FieldLanguage)
+	}
+	return fields
+}
+
+// FieldCleared returns a boolean indicating if a field with the given name was
+// cleared in this mutation.
+func (m *GithubGistMutation) FieldCleared(name string) bool {
+	_, ok := m.clearedFields[name]
+	return ok
+}
+
+// ClearField clears the value of the field with the given name. It returns an
+// error if the field is not defined in the schema.
+func (m *GithubGistMutation) ClearField(name string) error {
+	switch name {
+	case githubgist.FieldDescription:
+		m.ClearDescription()
+		return nil
+	case githubgist.FieldLanguage:
+		m.ClearLanguage()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubGist nullable field %s", name)
+}
+
+// ResetField resets all changes in the mutation for the field with the given name.
+// It returns an error if the field is not defined in the schema.
+func (m *GithubGistMutation) ResetField(name string) error {
+	switch name {
+	case githubgist.FieldGistID:
+		m.ResetGistID()
+		return nil
+	case githubgist.FieldHTMLURL:
+		m.ResetHTMLURL()
+		return nil
+	case githubgist.FieldPublic:
+		m.ResetPublic()
+		return nil
+	case githubgist.FieldCreatedAt:
+		m.ResetCreatedAt()
+		return nil
+	case githubgist.FieldUpdatedAt:
+		m.ResetUpdatedAt()
+		return nil
+	case githubgist.FieldDescription:
+		m.ResetDescription()
+		return nil
+	case githubgist.FieldOwner:
+		m.ResetOwner()
+		return nil
+	case githubgist.FieldName:
+		m.ResetName()
+		return nil
+	case githubgist.FieldType:
+		m.ResetType()
+		return nil
+	case githubgist.FieldLanguage:
+		m.ResetLanguage()
+		return nil
+	case githubgist.FieldSize:
+		m.ResetSize()
+		return nil
+	case githubgist.FieldRawURL:
+		m.ResetRawURL()
+		return nil
+	case githubgist.FieldContent:
+		m.ResetContent()
+		return nil
+	}
+	return fmt.Errorf("unknown GithubGist field %s", name)
+}
+
+// AddedEdges returns all edge names that were set/added in this mutation.
+func (m *GithubGistMutation) AddedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// AddedIDs returns all IDs (to other nodes) that were added for the given edge
+// name in this mutation.
+func (m *GithubGistMutation) AddedIDs(name string) []ent.Value {
+	return nil
+}
+
+// RemovedEdges returns all edge names that were removed in this mutation.
+func (m *GithubGistMutation) RemovedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
+// the given name in this mutation.
+func (m *GithubGistMutation) RemovedIDs(name string) []ent.Value {
+	return nil
+}
+
+// ClearedEdges returns all edge names that were cleared in this mutation.
+func (m *GithubGistMutation) ClearedEdges() []string {
+	edges := make([]string, 0, 0)
+	return edges
+}
+
+// EdgeCleared returns a boolean which indicates if the edge with the given name
+// was cleared in this mutation.
+func (m *GithubGistMutation) EdgeCleared(name string) bool {
+	return false
+}
+
+// ClearEdge clears the value of the edge with the given name. It returns an error
+// if that edge is not defined in the schema.
+func (m *GithubGistMutation) ClearEdge(name string) error {
+	return fmt.Errorf("unknown GithubGist unique edge %s", name)
+}
+
+// ResetEdge resets all changes to the edge with the given name in this mutation.
+// It returns an error if the edge is not defined in the schema.
+func (m *GithubGistMutation) ResetEdge(name string) error {
+	return fmt.Errorf("unknown GithubGist edge %s", name)
 }
 
 // GithubReleaseMutation represents an operation that mutates the GithubRelease nodes in the graph.

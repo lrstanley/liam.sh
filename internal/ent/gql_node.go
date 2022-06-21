@@ -21,6 +21,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -243,6 +244,121 @@ func (ge *GithubEvent) Node(ctx context.Context) (node *Node, err error) {
 	node.Fields[8] = &Field{
 		Type:  "map[string]interface {}",
 		Name:  "payload",
+		Value: string(buf),
+	}
+	return node, nil
+}
+
+func (gg *GithubGist) Node(ctx context.Context) (node *Node, err error) {
+	node = &Node{
+		ID:     gg.ID,
+		Type:   "GithubGist",
+		Fields: make([]*Field, 13),
+		Edges:  make([]*Edge, 0),
+	}
+	var buf []byte
+	if buf, err = json.Marshal(gg.GistID); err != nil {
+		return nil, err
+	}
+	node.Fields[0] = &Field{
+		Type:  "string",
+		Name:  "gist_id",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.HTMLURL); err != nil {
+		return nil, err
+	}
+	node.Fields[1] = &Field{
+		Type:  "string",
+		Name:  "html_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Public); err != nil {
+		return nil, err
+	}
+	node.Fields[2] = &Field{
+		Type:  "bool",
+		Name:  "public",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.CreatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[3] = &Field{
+		Type:  "time.Time",
+		Name:  "created_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.UpdatedAt); err != nil {
+		return nil, err
+	}
+	node.Fields[4] = &Field{
+		Type:  "time.Time",
+		Name:  "updated_at",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Description); err != nil {
+		return nil, err
+	}
+	node.Fields[5] = &Field{
+		Type:  "string",
+		Name:  "description",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Owner); err != nil {
+		return nil, err
+	}
+	node.Fields[6] = &Field{
+		Type:  "*github.User",
+		Name:  "owner",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Name); err != nil {
+		return nil, err
+	}
+	node.Fields[7] = &Field{
+		Type:  "string",
+		Name:  "name",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Type); err != nil {
+		return nil, err
+	}
+	node.Fields[8] = &Field{
+		Type:  "string",
+		Name:  "type",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Language); err != nil {
+		return nil, err
+	}
+	node.Fields[9] = &Field{
+		Type:  "string",
+		Name:  "language",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Size); err != nil {
+		return nil, err
+	}
+	node.Fields[10] = &Field{
+		Type:  "int64",
+		Name:  "size",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.RawURL); err != nil {
+		return nil, err
+	}
+	node.Fields[11] = &Field{
+		Type:  "string",
+		Name:  "raw_url",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(gg.Content); err != nil {
+		return nil, err
+	}
+	node.Fields[12] = &Field{
+		Type:  "string",
+		Name:  "content",
 		Value: string(buf),
 	}
 	return node, nil
@@ -892,6 +1008,18 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 			return nil, err
 		}
 		return n, nil
+	case githubgist.Table:
+		query := c.GithubGist.Query().
+			Where(githubgist.ID(id))
+		query, err := query.CollectFields(ctx, "GithubGist")
+		if err != nil {
+			return nil, err
+		}
+		n, err := query.Only(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return n, nil
 	case githubrelease.Table:
 		query := c.GithubRelease.Query().
 			Where(githubrelease.ID(id))
@@ -1045,6 +1173,22 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 		query := c.GithubEvent.Query().
 			Where(githubevent.IDIn(ids...))
 		query, err := query.CollectFields(ctx, "GithubEvent")
+		if err != nil {
+			return nil, err
+		}
+		nodes, err := query.All(ctx)
+		if err != nil {
+			return nil, err
+		}
+		for _, node := range nodes {
+			for _, noder := range idmap[node.ID] {
+				*noder = node
+			}
+		}
+	case githubgist.Table:
+		query := c.GithubGist.Query().
+			Where(githubgist.IDIn(ids...))
+		query, err := query.CollectFields(ctx, "GithubGist")
 		if err != nil {
 			return nil, err
 		}
