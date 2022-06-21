@@ -26,7 +26,7 @@ func (h *handler) getReleasesLegacy(w http.ResponseWriter, r *http.Request) {
 			Select(githubasset.FieldName).
 			Strings(r.Context())
 		if err != nil {
-			chix.Error(w, r, http.StatusInternalServerError, err)
+			chix.Error(w, r, err)
 			return
 		}
 
@@ -38,7 +38,7 @@ func (h *handler) getReleasesLegacy(w http.ResponseWriter, r *http.Request) {
 		Order(ent.Asc(githubasset.FieldName)).
 		Where(githubasset.Name(asset)).First(r.Context())
 	if err != nil {
-		chix.Error(w, r, http.StatusNotFound, err)
+		chix.ErrorCode(w, r, 404, err)
 		return
 	}
 
@@ -63,7 +63,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 			Order(ent.Desc(githubrelease.FieldCreatedAt)).
 			Select(githubrelease.FieldTagName).Strings(r.Context())
 
-		if chix.Error(w, r, http.StatusInternalServerError, err) {
+		if chix.Error(w, r, err) {
 			return
 		}
 
@@ -91,7 +91,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 			Limit(1).Select(githubrelease.FieldTagName).
 			String(r.Context())
 
-		if chix.Error(w, r, http.StatusInternalServerError, err) {
+		if chix.Error(w, r, err) {
 			return
 		}
 	}
@@ -106,7 +106,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		),
 	).First(r.Context())
 
-	if chix.Error(w, r, http.StatusInternalServerError, err) {
+	if chix.Error(w, r, err) {
 		return
 	}
 
@@ -117,7 +117,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		assets, err = release.QueryAssets().
 			Select(githubasset.FieldName).Strings(r.Context())
 
-		if chix.Error(w, r, http.StatusInternalServerError, err) {
+		if chix.Error(w, r, err) {
 			return
 		}
 
@@ -142,7 +142,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		githubasset.NameEqualFold(asset),
 	).Limit(1).Select(githubasset.FieldBrowserDownloadURL).String(r.Context())
 
-	if chix.Error(w, r, http.StatusInternalServerError, err) {
+	if chix.Error(w, r, err) {
 		return
 	}
 

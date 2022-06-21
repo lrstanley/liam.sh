@@ -97,7 +97,7 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 			githubrepository.FullNameEqualFold(repoFullName),
 		).First(r.Context())
 
-		if chix.Error(w, r, http.StatusInternalServerError, err) {
+		if chix.Error(w, r, err) {
 			return
 		}
 
@@ -109,6 +109,6 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/svg+xml")
 	err := h.projectSVG.Execute(w, params)
 	if err != nil {
-		chix.Error(w, r, http.StatusInternalServerError, err)
+		chix.Error(w, r, err)
 	}
 }

@@ -27,7 +27,7 @@ func (h *handler) getGists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gist, err := h.db.GithubGist.Query().Where(filter...).First(r.Context())
-	if chix.Error(w, r, http.StatusInternalServerError, err) {
+	if chix.Error(w, r, err) {
 		return
 	}
 
