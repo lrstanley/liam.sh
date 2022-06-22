@@ -34,7 +34,7 @@
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
-          <n-checkbox :checked="archived == 'true'" @update:checked="(v) => (archived = !!v)">
+          <n-checkbox :checked="archived" @update:checked="(v) => (archived = !!v)">
             include archived
           </n-checkbox>
           <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = !!v)">
@@ -66,7 +66,7 @@ import { useSorter } from "@/lib/sorter"
 
 const cursor = useRouteQuery("cur", null)
 const labels = useRouteQuery("label", [])
-const archived = useRouteQuery("archived", false)
+const archived = useRouteQuery("archived", true)
 const forks = useRouteQuery("forks", false)
 const search = useRouteQuery("q", "")
 const filterSearch = refDebounced(search, 300)
@@ -93,7 +93,7 @@ const where = ref({
   ],
   hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
   fork: computed(() => (forks.value ? null : false)),
-  archived: computed(() => (archived.value ? null : false)),
+  archived: computed(() => (archived.value == "false" ? false : null)),
 })
 
 const { data, error, fetching } = useGetReposQuery({

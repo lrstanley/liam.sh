@@ -1,7 +1,5 @@
 <template>
-  <ul
-    class="flex flex-wrap justify-center md:justify-start md:gap-x-2 md:gap-y-4 px-4 md:px-0 pb-5 md:pb-0"
-  >
+  <ul class="flex flex-wrap justify-center md:justify-start md:gap-x-2">
     <li v-for="link in menuOptions" :key="link.name">
       <router-link :to="link.to" active-class="active">
         {{ link.alias }}
@@ -27,7 +25,7 @@ ul :deep(a) {
   display: inline-flex;
   padding-left: 5ch;
   padding-right: 4ch;
-  @apply py-3 lg:py-0;
+  @apply py-3;
   @apply !text-violet-400 transition duration-100;
 }
 

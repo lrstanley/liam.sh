@@ -1,18 +1,21 @@
 <template>
   <!-- TODO: use less flex -->
-  <div class="flex flex-row flex-auto justify-center items-stretch md:items-center">
+  <div class="flex flex-auto justify-center items-stretch lg:items-center h-full w-full">
     <div
-      class="flex flex-col flex-auto max-w-3xl md:max-h-xl pt-7 md:py-7 items-stretch md:items-center"
+      class="flex flex-auto flex-col h-full w-full lg:max-w-3xl lg:max-h-md basis-0 flex-grow-0 flex-shrink items-stretch md:items-center"
     >
       <CoreNavigation />
       <CoreTerminal
-        class="md:mt-5 mb-4 text-size-38px md:text-size-45px"
+        class="mb-4 text-size-38px md:text-size-45px flex flex-auto justify-center"
         path="~"
         prefix="#"
         value="Hello!"
       />
-      <n-card content-style="padding: 0;display: flex;flex-direction: column" class="p-0 flex-auto">
-        <EventsRender class="h-full md:h-300px overflow-x-auto" />
+      <n-card
+        content-style="padding: 0;display: flex;flex-direction: column;"
+        class="p-0 flex flex-auto h-full w-full"
+      >
+        <EventsRender class="overflow-x-auto basis-0 flex-grow flex-shrink h-full w-full" />
 
         <n-layout-footer bordered class="bottom-bar">
           <span v-motion-fade class="flex flex-auto">
@@ -76,6 +79,7 @@ const state = useState()
 <style scoped>
 .bottom-bar {
   line-height: 1.5;
+  @apply <md:(text-size-1.2em leading-6);
 }
 
 .bar-item {
