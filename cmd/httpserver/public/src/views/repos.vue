@@ -28,7 +28,7 @@
           divider
         />
       </div>
-      <div>
+      <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort repos</div>
         <CoreSorter :sorter="sorter" class="pb-4" />
 

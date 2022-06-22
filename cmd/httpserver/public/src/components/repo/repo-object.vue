@@ -1,50 +1,49 @@
 <template>
   <a :href="props.linkable ? repo.htmlURL : ''" target="_blank">
+    <n-drawer
+      v-model:show="drawerActive"
+      :auto-focus="false"
+      :height="200"
+      placement="bottom"
+      class="bg-dark-400"
+    >
+      <n-drawer-content title="repo labels">
+        <div class="inline-flex flex-auto flex-wrap gap-1">
+          <LabelObject
+            v-for="label in repo.labels.edges.map(({ node }) => node)"
+            :key="label.id"
+            :value="label"
+            route="repos"
+            linkable
+            @click="drawerActive = false"
+          />
+        </div>
+      </n-drawer-content>
+    </n-drawer>
+
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar :src="repo.owner.avatarURL" class="hidden md:inline-flex" />
+        <n-avatar :src="repo.owner.avatarURL" />
       </template>
       <template #header>
-        <span class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+        <div class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
           {{ repo.owner.login == state.base.githubUser.login ? repo.name : repo.fullName }}
-        </span>
+        </div>
       </template>
       <template #header-extra>
-        <span class="inline-flex gap-1">
-          <n-tag v-if="repo.owner.login != state.base.githubUser.login" type="info" size="small">
-            maintainer
-          </n-tag>
-          <n-tag v-if="repo.fork" type="error" size="small">
+        <a v-if="repo.homepage" :href="repo.homepage" target="_blank">
+          <n-tag type="success" size="small" class="cursor-pointer">
             <template #icon>
-              <n-icon><i-mdi-source-fork /></n-icon>
+              <n-icon><i-mdi-link /></n-icon>
             </template>
-            fork
+            homepage
           </n-tag>
-          <n-tag v-if="repo.archived" type="warning" size="small">
-            <template #icon>
-              <n-icon><i-mdi-archive-outline /></n-icon>
-            </template>
-            archived
-          </n-tag>
-          <a v-if="repo.homepage" :href="repo.homepage" target="_blank">
-            <n-tag type="success" size="small" class="cursor-pointer">
-              <template #icon>
-                <n-icon><i-mdi-link /></n-icon>
-              </template>
-              homepage
-            </n-tag>
-          </a>
-          <n-tag v-if="repo.license" size="small" :title="repo.license.name">
-            <template #icon>
-              <n-icon><i-mdi-scale-balance /></n-icon>
-            </template>
-            {{ repo.license.key }}
-          </n-tag>
-        </span>
+        </a>
       </template>
       <template #description>
-        <span>
-          <i> Updated {{ useTimeAgo(repo.pushedAt).value }} </i>
+        <span class="flex gap-1">
+          <i class="mr-auto"> Updated {{ useTimeAgo(repo.pushedAt).value }} </i>
+          <RepoStatus :value="repo" class="inline-flex gap-1" />
         </span>
       </template>
 
@@ -52,7 +51,7 @@
 
       <template v-if="repo.labels" #action>
         <div class="flex flex-auto justify-between">
-          <div class="inline-flex flex-auto flex-wrap gap-1">
+          <div class="hidden md:inline-flex flex-auto flex-wrap gap-1">
             <LabelObject
               v-for="label in repo.labels.edges.map(({ node }) => node)"
               :key="label.id"
@@ -60,6 +59,9 @@
               route="repos"
               linkable
             />
+          </div>
+          <div class="inline-flex md:hidden flex-auto flex-wrap gap-1">
+            <n-button href="#" @click.prevent="drawerActive = true"> repo labels </n-button>
           </div>
 
           <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
@@ -88,21 +90,36 @@ const props = defineProps({
 
 const state = useState()
 const repo = ref(props.value)
+
+const drawerActive = ref(false)
 </script>
 
 <style scoped>
 .repo-name {
-  @apply text-size-1.4em md:text-size-1.5em;
+  @apply text-size-1.4em md:text-size-1.5em truncate;
 }
 
-div:deep(.n-thing-header),
+.n-thing,
+.n-thing :deep(.n-thing-main),
+.n-thing :deep(.n-thing-header),
+.n-thing :deep(.n-thing-header__title) {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
+  width: 100%;
+}
+
+.n-thing :deep(.n-thing-avatar) {
+  @apply hidden md:inline-flex;
+}
+
+.n-thing :deep(.n-thing-main) {
+  flex-direction: column;
+}
+
+/* div:deep(.n-thing-header),
 div:deep(.n-thing-main__description) {
   @apply <md:(flex flex-col flex-wrap content-center items-center gap-2);
-  /* display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: center;
-  align-items: center;
-  gap: 6px; */
-}
+} */
 </style>

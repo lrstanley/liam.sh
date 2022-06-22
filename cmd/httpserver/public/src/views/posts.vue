@@ -22,7 +22,7 @@
 
         <CoreObjectRender v-if="data?.posts" :value="data.posts" linkable show-empty divider />
       </div>
-      <div>
+      <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort posts</div>
         <CoreSorter :sorter="sorter" class="pb-4" />
 
