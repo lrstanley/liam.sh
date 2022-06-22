@@ -58,7 +58,7 @@ func httpServer() *http.Server {
 		github.New(
 			cli.Flags.Github.ClientID,
 			cli.Flags.Github.ClientSecret,
-			cli.Flags.HTTP.BaseURL+"/api/auth/providers/github/callback",
+			cli.Flags.HTTP.BaseURL+"/-/auth/providers/github/callback",
 		),
 	)
 
