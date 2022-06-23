@@ -18,6 +18,7 @@ import (
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/internal/httpware"
@@ -40,7 +41,10 @@ func httpServer() *http.Server {
 	r.Use(middleware.StripSlashes)
 	r.Use(middleware.Compress(9))
 	r.Use(httprate.LimitByIP(400, 5*time.Minute))
-	r.Use(chix.UseRobotsTxt(""))
+	r.Use(chix.UseRobotsTxt(fmt.Sprintf(
+		"User-agent: *\nSitemap: %s/sitemap.txt\nDisallow: /-/\nAllow: /\n",
+		strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"),
+	)))
 	r.Use(chix.UseSecurityTxt(&chix.SecurityConfig{
 		ExpiresIn: 182 * 24 * time.Hour,
 		Contacts: []string{
@@ -87,6 +91,7 @@ func httpServer() *http.Server {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
 	}
 
+	r.Get("/sitemap.txt", sitemap)
 	r.NotFound(catchAll)
 
 	return &http.Server{
@@ -113,4 +118,27 @@ func catchAll(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 	// w.Write(rice.MustFindBox("public").MustBytes("index.html"))
+}
+
+func sitemap(w http.ResponseWriter, r *http.Request) {
+	urls := []string{
+		"/",
+		"/repos",
+		"/posts",
+	}
+
+	postSlugs, err := db.Post.Query().Select(post.FieldSlug).Strings(r.Context())
+	if chix.Error(w, r, err) {
+		return
+	}
+
+	for _, slug := range postSlugs {
+		urls = append(urls, fmt.Sprintf("/p/%s", slug))
+	}
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
+	for _, url := range urls {
+		fmt.Fprintf(w, "%s%s\n", strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"), url)
+	}
 }
