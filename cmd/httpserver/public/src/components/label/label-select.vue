@@ -9,6 +9,19 @@
     multiple
     placeholder="Select labels"
   />
+  <div v-if="suggestions.length > 0" class="flex flex-col mb-2">
+    <p class="text-center">Suggestions</p>
+    <div class="inline-flex flex-row flex-wrap gap-1">
+      <n-tag
+        v-for="label in suggestions"
+        :key="label.data.id"
+        class="hover:bg-emerald-700 cursor-pointer"
+      >
+        <n-badge show-zero color="grey" class="mr-[-2ch]" :value="label.popularity" />
+        {{ label.data.name }}
+      </n-tag>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -29,6 +42,10 @@ const props = defineProps({
   where: {
     type: Object,
     default: () => null,
+  },
+  suggest: {
+    type: String,
+    default: "",
   },
 })
 const emit = defineEmits(["update:modelValue"])
@@ -58,5 +75,24 @@ const options = computed(() =>
       data: node,
     }))
     .sort((a, b) => b.popularity - a.popularity)
+)
+
+const suggestions = ref([])
+const suggest = computed(() => props.suggest)
+watchDebounced(
+  suggest,
+  (val) => {
+    if (!val) return
+    let newSuggestions = []
+
+    for (const option of options.value) {
+      if (suggest.value.match(new RegExp(`(^|\\W)${option.data.name}(\\W|$)`, "ig"))) {
+        newSuggestions.push(option)
+      }
+    }
+
+    suggestions.value = newSuggestions
+  },
+  { debounce: 500, maxWait: 1000 }
 )
 </script>

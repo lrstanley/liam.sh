@@ -47,7 +47,7 @@
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>
 
-        <LabelInput v-model="post.labelIDs" class="pb-5" />
+        <LabelInput v-model="post.labelIDs" class="pb-5" :suggest="post.content" />
 
         <n-button block strong secondary type="primary" @click="emit('update:post', post)">
           <n-icon class="mr-1"><i-mdi-content-save /></n-icon>

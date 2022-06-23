@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-center">Update tags</p>
-    <LabelSelect v-model="selected" field="id" class="mb-3" />
+    <LabelSelect v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
 
     <n-input
       v-model:value="newLabelInput"
@@ -26,6 +26,10 @@ const props = defineProps({
     type: Array,
     required: true,
     default: () => [],
+  },
+  suggest: {
+    type: String,
+    default: "",
   },
 })
 const emit = defineEmits(["update:modelValue"])
