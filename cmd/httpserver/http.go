@@ -29,35 +29,6 @@ import (
 func httpServer() *http.Server {
 	r := chi.NewRouter()
 
-	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
-		r.Use(chix.UseRealIP(cli.Flags.HTTP.TrustedProxies, chix.OptUseXForwardedFor))
-	}
-
-	r.Use(chix.UseContextIP)
-	r.Use(middleware.RequestID)
-	r.Use(middleware.Recoverer)
-	r.Use(chix.UseStructuredLogger(logger))
-	r.Use(chix.UseNextURL)
-	r.Use(middleware.StripSlashes)
-	r.Use(middleware.Compress(9))
-	r.Use(httprate.LimitByIP(400, 5*time.Minute))
-	r.Use(chix.UseRobotsTxt(fmt.Sprintf(
-		"User-agent: *\nSitemap: %s/sitemap.txt\nDisallow: /-/\nAllow: /\n",
-		strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"),
-	)))
-	r.Use(chix.UseSecurityTxt(&chix.SecurityConfig{
-		ExpiresIn: 182 * 24 * time.Hour,
-		Contacts: []string{
-			"mailto:me@liamstanley.io",
-			"https://liam.sh/chat",
-			"https://github.com/lrstanley",
-		},
-		KeyLinks:  []string{"https://github.com/lrstanley.gpg"},
-		Languages: []string{"en"},
-	}))
-
-	r.Use(cors.AllowAll().Handler)
-
 	goth.UseProviders(
 		github.New(
 			cli.Flags.Github.ClientID,
@@ -71,21 +42,66 @@ func httpServer() *http.Server {
 		cli.Flags.HTTP.ValidationKey,
 		cli.Flags.HTTP.EncryptionKey,
 	)
-	r.Use(auth.AddToContext)
-	r.Use(httpware.UseEvictCacheAdmin)
+
+	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
+		r.Use(chix.UseRealIP(cli.Flags.HTTP.TrustedProxies, chix.OptUseXForwardedFor))
+	}
+
+	// Core middeware.
+	r.Use(
+		chix.UseContextIP,
+		middleware.RequestID,
+		chix.UseStructuredLogger(logger),
+		middleware.Recoverer,
+		middleware.StripSlashes,
+		middleware.Compress(9),
+		httpware.UseEvictCacheAdmin,
+		chix.UseNextURL,
+	)
+
+	// Security related.
+	if !cli.Debug {
+		r.Use(middleware.SetHeader("Strict-Transport-Security", "max-age=31536000"))
+	}
+	r.Use(
+		cors.AllowAll().Handler,
+		middleware.SetHeader("X-Frame-Options", "DENY"),
+		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
+		middleware.SetHeader("Referrer-Policy", "no-referrer-when-downgrade"),
+		middleware.SetHeader("Permissions-Policy", "clipboard-write=(self)"),
+		auth.AddToContext,
+		httprate.LimitByIP(400, 5*time.Minute),
+	)
+
+	// Legacy redirects.
+	r.Use(
+		middleware.PathRewrite("/ghr/", "/-/gh/dl-legacy/"),
+		middleware.PathRewrite("/ghr.json", "/-/gh/dl-legacy"),
+	)
+
+	// Misc.
+	r.Use(
+		chix.UseRobotsTxt(fmt.Sprintf(
+			"User-agent: *\nSitemap: %s/sitemap.txt\nDisallow: /-/\nAllow: /\n",
+			strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"),
+		)),
+		chix.UseSecurityTxt(&chix.SecurityConfig{
+			ExpiresIn: 182 * 24 * time.Hour,
+			Contacts: []string{
+				"mailto:me@liamstanley.io",
+				"https://liam.sh/chat",
+				"https://github.com/lrstanley",
+			},
+			KeyLinks:  []string{"https://github.com/lrstanley.gpg"},
+			Languages: []string{"en"},
+		}),
+	)
 
 	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 	r.Mount("/-/graphql", graphql.New(db, cli))
 	r.Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
-
-	// Legacy functionality.
-	r.Handle("/ghr", http.RedirectHandler("/-/gh/dl-legacy", http.StatusPermanentRedirect))
-	r.Handle("/ghr.json", http.RedirectHandler("/-/gh/dl-legacy", http.StatusPermanentRedirect))
-	r.Get("/ghr/{asset}", func(w http.ResponseWriter, r *http.Request) {
-		http.RedirectHandler(fmt.Sprintf("/-/gh/dl-legacy/%s", chi.URLParam(r, "asset")), http.StatusPermanentRedirect)
-	})
 
 	if !cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
