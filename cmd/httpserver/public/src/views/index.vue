@@ -2,7 +2,7 @@
   <!-- TODO: use less flex -->
   <div class="flex flex-auto justify-center items-stretch lg:items-center h-full w-full">
     <div
-      class="flex flex-auto flex-col h-full w-full lg:max-w-3xl lg:max-h-md basis-0 flex-grow-0 flex-shrink items-stretch md:items-center"
+      class="flex flex-auto flex-col h-full w-full lg:max-w-3xl lg:max-h-md basis-0 flex-grow-0 flex-shrink items-stretch md:items-center pt-15px"
     >
       <CoreNavigation />
       <CoreTerminal

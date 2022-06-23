@@ -68,7 +68,7 @@ const postRef = ref(null)
 
 <style scoped>
 #post-content {
-  font-size: 1.2em;
+  font-size: 1.1em;
   line-height: 1.55;
 }
 
@@ -79,7 +79,9 @@ const postRef = ref(null)
 
 #post-content :deep(p) {
   margin-top: 25px;
-  text-indent: 3ch;
+  white-space: pre-wrap;
+  @apply <md:text-justify;
+  /* text-indent: 3ch; */
 }
 
 #post-content :deep(blockquote) {

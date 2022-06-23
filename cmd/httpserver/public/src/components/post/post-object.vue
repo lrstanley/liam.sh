@@ -69,4 +69,8 @@ const post = ref(props.value)
 .post-title {
   @apply text-size-1.5em;
 }
+
+.n-thing :deep(.n-thing-avatar) {
+  @apply hidden md:inline-flex;
+}
 </style>

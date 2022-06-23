@@ -1,5 +1,5 @@
 <template>
-  <div id="main" v-infinite-scroll="[fetchEvents, { distance: '40' }]">
+  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
     <TransitionGroup appear>
       <div
         v-for="(e, i) in fetched"
@@ -70,13 +70,15 @@ const cursor = ref(null)
 const events = useGetEventsQuery({
   variables: {
     cursor,
-    count: 25,
+    count: 20,
   },
   pause: true,
   requestPolicy: "cache-first",
 })
 
-function fetchEvents() {
+const scrollContainer = ref(null)
+
+function fetchEvents(wasScrollEvent) {
   if (!hasNextPage.value) return
 
   events.executeQuery().then((result) => {
@@ -89,6 +91,12 @@ function fetchEvents() {
     }
 
     fetched.value = [...fetched.value, ...data.edges.map(({ node }) => toRaw(node))]
+
+    // if this fetch was triggered by a scroll event, don't trigger it a second time.
+    if (wasScrollEvent) return
+    if (scrollContainer.value.scrollHeight <= scrollContainer.value.clientHeight) {
+      fetchEvents(true)
+    }
   })
 }
 
