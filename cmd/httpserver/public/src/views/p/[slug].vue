@@ -72,6 +72,12 @@ const postRef = ref(null)
   line-height: 1.55;
 }
 
+@screen lg {
+  #post-content {
+    font-size: 1.2em;
+  }
+}
+
 #post-content :deep(img) {
   @apply max-w-[calc(100%)] lg: max-w-[calc(80%)] px-5 lg:px-0 !m-0;
   height: auto;
@@ -111,7 +117,8 @@ const postRef = ref(null)
 #post-content :deep(h3),
 #post-content :deep(h4),
 #post-content :deep(h5) {
-  margin-top: 30px;
+  margin-top: 40px;
+  font-size: 1.3em;
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
   @apply bg-gradient-to-r from-sky-400 to-blue-500;
 }
