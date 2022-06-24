@@ -1,5 +1,5 @@
 <template>
-  <n-popover trigger="hover" style="padding: 2px 6px" :animated="false" :duration="1">
+  <n-popover trigger="hover" style="padding: 2px 6px" :to="false">
     <template #trigger>
       <span v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
         <EventLink :href="props.href">

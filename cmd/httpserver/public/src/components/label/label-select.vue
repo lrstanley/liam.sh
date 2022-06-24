@@ -93,6 +93,6 @@ watchDebounced(
 
     suggestions.value = newSuggestions
   },
-  { debounce: 500, maxWait: 1000 }
+  { debounce: 500, maxWait: 1000, immediate: true }
 )
 </script>
