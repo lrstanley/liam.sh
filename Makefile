@@ -50,6 +50,9 @@ node-build: node-fetch
 	cd cmd/httpserver/public; npm run build
 
 # backend
+go-prepare:
+	go generate -x ./...
+
 go-fetch:
 	go mod download
 	go mod tidy
@@ -62,19 +65,17 @@ go-upgrade-deps-patch:
 	go get -u=patch ./...
 	go mod tidy
 
-go-dlv:
+go-dlv: go-prepare
 	dlv debug \
 		--headless --listen=:2345 \
 		--api-version=2 --log \
 		--allow-non-terminal-interactive \
 		${PACKAGE} -- --debug
 
-go-debug:
-	go generate -x ./...
+go-debug: go-prepare
 	go run ${PACKAGE} --debug
 
-go-build: go-fetch
-	go generate -x ./...
+go-build: go-fetch go-prepare
 	CGO_ENABLED=0 \
 	go build \
 		-ldflags '-d -s -w -extldflags=-static' \
