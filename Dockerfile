@@ -22,7 +22,7 @@ COPY --from=build-node /build/cmd/httpserver/public/dist/ /build/cmd/httpserver/
 RUN \
     --mount=type=cache,target=/root/.cache \
     --mount=type=cache,target=/go \
-    make go-fetch go-build
+    make go-build
 RUN upx --best --lzma httpserver
 
 # runtime
