@@ -1,5 +1,4 @@
 .DEFAULT_GOAL := build-all
-SHELL=/bin/bash
 
 export PROJECT := "httpserver"
 export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
@@ -26,7 +25,7 @@ docker:
 		--timeout 0 ${COMPOSE_ARGS}
 
 docker-clean:
-	docker-compose \
+	docker compose \
 		--project-name ${COMPOSE_PROJECT} \
 		--file docker-compose.yaml \
 		down \
@@ -75,7 +74,7 @@ go-dlv: go-prepare
 go-debug: go-prepare
 	go run ${PACKAGE} --debug
 
-go-build: go-fetch go-prepare
+go-build: go-prepare go-fetch
 	CGO_ENABLED=0 \
 	go build \
 		-ldflags '-d -s -w -extldflags=-static' \
