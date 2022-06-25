@@ -1,0 +1,30 @@
+{
+    "extends": "@vue/tsconfig/tsconfig.web.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "baseUrl": ".",
+        "module": "commonjs",
+        "noImplicitThis": true,
+        "paths": {
+            "@/*": [
+                "src/*",
+                "./*"
+            ]
+        },
+        "removeComments": true,
+        "strict": false,
+        "types": [
+            "naive-ui/volar",
+            "vite-plugin-pages/client"
+        ],
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".git",
+        "./src/lib/http/api/**"
+    ],
+    "vueCompilerOptions": {
+        "experimentalDisableTemplateSupport": true
+    }
+}

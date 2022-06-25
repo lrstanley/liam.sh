@@ -1,23 +1,37 @@
+# syntax = docker/dockerfile:1.4
 
-# build image
-FROM golang:latest as build
+# frontend
+FROM node:17 as build-node
 WORKDIR /build
-COPY go.sum go.mod Makefile /build/
-RUN make fetch
-COPY . /build/
-RUN make
 
-# runtime image
+COPY . /build
+RUN \
+    --mount=type=cache,target=/build/cmd/httpserver/public/node_modules \
+    make node-fetch node-build
+
+# backend
+FROM golang:latest as build-go
+WORKDIR /build
+
+RUN \
+    --mount=type=cache,target=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt \
+    apt-get update && apt-get install --assume-yes upx
+COPY . /build
+COPY --from=build-node /build/cmd/httpserver/public/dist/ /build/cmd/httpserver/public/dist/
+RUN \
+    --mount=type=cache,target=/root/.cache \
+    --mount=type=cache,target=/go \
+    make go-build
+RUN upx --best --lzma httpserver
+
+# runtime
 FROM alpine:latest
+WORKDIR /app
 
-RUN apk add --no-cache ca-certificates bash
-# set up nsswitch.conf for Go's "netgo" implementation
-# - https://github.com/docker-library/golang/blob/1eb096131592bcbc90aa3b97471811c798a93573/1.14/alpine3.12/Dockerfile#L9
+RUN apk add --no-cache ca-certificates
 RUN [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf
-COPY --from=build /build/liam.sh /usr/local/bin/liam.sh
+COPY --from=build-go /build/httpserver /app/httpserver
 
-VOLUME /config
-EXPOSE 80
-WORKDIR /
-ENV PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-CMD ["liam.sh", "run", "--bind", "0.0.0.0:80", "--behind-proxy", "--post-dir", "/config/posts/"]
+VOLUME /app/.gitapicache
+CMD ["/app/httpserver"]

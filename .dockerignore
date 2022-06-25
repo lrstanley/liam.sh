@@ -8,9 +8,11 @@ dist
 *.conf
 *.toml
 *.db
-liam.sh
 vendor
 rice*.go
 .git
 bin
 **/*.md
+**/.env
+**/node_modules
+**/.gitapicache

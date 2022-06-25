@@ -11,3 +11,10 @@ release
 *.log
 .env
 .gitapicache
+.task
+node_modules
+internal/graphql/gqlhandler
+cmd/httpserver/public/src/lib/api/index.ts
+dist
+.eslintrc-auto-import.json
+*.d.ts

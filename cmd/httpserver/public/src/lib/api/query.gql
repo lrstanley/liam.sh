@@ -1,0 +1,229 @@
+query base {
+    self {
+        id
+        name
+        login
+        avatarURL
+    }
+
+    githubUser {
+        login
+        name
+        avatarURL
+        bio
+        email
+        location
+        htmlurl
+    }
+
+    version {
+        commit
+        goVersion
+        date
+    }
+}
+
+query getPost($id: ID!) {
+    node(id: $id) {
+        ... on Post {
+            id
+            title
+            slug
+            content
+            viewCount
+            publishedAt
+            labels {
+                edges {
+                    node {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    }
+}
+
+query getPostContent($slug: String!) {
+    posts(where: { slugEqualFold: $slug }) {
+        edges {
+            node {
+                id
+                title
+                slug
+                content
+                contentHTML
+                viewCount
+                publishedAt
+                author {
+                    name
+                    login
+                    avatarURL
+                    htmlURL
+                }
+                labels {
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+query getPosts(
+    $first: Int = null
+    $last: Int = null
+    $before: Cursor = null
+    $after: Cursor = null
+    $order: OrderDirection = DESC
+    $orderBy: PostOrderField = DATE
+    $where: PostWhereInput
+) {
+    posts(
+        first: $first
+        last: $last
+        before: $before
+        after: $after
+        where: $where
+        orderBy: { direction: $order, field: $orderBy }
+    ) {
+        edges {
+            node {
+                id
+                title
+                summary
+                slug
+                publishedAt
+                viewCount
+                labels {
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
+                author {
+                    name
+                    login
+                    avatarURL
+                    htmlURL
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}
+
+query getLabels($where: LabelWhereInput) {
+    labels(first: 100, orderBy: { direction: ASC, field: NAME }, where: $where) {
+        edges {
+            node {
+                id
+                name
+
+                posts {
+                    totalCount
+                }
+                githubRepositories {
+                    totalCount
+                }
+            }
+        }
+    }
+}
+
+query getEvents(
+    $count: Int = 25
+    $cursor: Cursor = null
+    $order: OrderDirection = DESC
+    $orderBy: GithubEventOrderField = CREATED_AT
+) {
+    githubevents(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
+        edges {
+            node {
+                id
+                eventType
+                createdAt
+                actor {
+                    login
+                    avatarURL
+                }
+                repo {
+                    name
+                }
+                payload
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+    }
+}
+
+query getRepos(
+    $first: Int = null
+    $last: Int = null
+    $before: Cursor = null
+    $after: Cursor = null
+    $order: OrderDirection = DESC
+    $orderBy: GithubRepositoryOrderField = STAR_COUNT
+    $where: GithubRepositoryWhereInput
+) {
+    githubrepositories(
+        first: $first
+        last: $last
+        before: $before
+        after: $after
+        where: $where
+        orderBy: { direction: $order, field: $orderBy }
+    ) {
+        edges {
+            node {
+                id
+                name
+                fullName
+                owner {
+                    login
+                    avatarURL
+                    htmlurl
+                }
+                htmlURL
+                description
+                homepage
+                starCount
+                archived
+                fork
+                pushedAt
+                license {
+                    key
+                    name
+                }
+                labels(orderBy: { direction: ASC, field: NAME }) {
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}

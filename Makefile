@@ -1,27 +1,86 @@
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := build-all
 
-BINARY=liam.sh
+export PROJECT := "httpserver"
+export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
+export COMPOSE_PROJECT := "liamsh"
+export COMPOSE_ARGS := "postgres"
+export COMPOSE_DOCKER_CLI_BUILD := 1
+export DOCKER_BUILDKIT := 1
+export USER := $(shell id -u)
+export GROUP := $(shell id -g)
 
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-12s\033[0m %s\n", $$1, $$2}'
+build-all: clean node-fetch go-fetch node-build go-build
+	@echo
 
-fetch: ## Fetches the necessary dependencies to build.
-	which rice 2>&1 > /dev/null || go install github.com/GeertJohan/go.rice/rice@latest
+clean:
+	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
+
+docker:
+	docker compose \
+		--project-name ${COMPOSE_PROJECT} \
+		--file docker-compose.yaml \
+		up \
+		--remove-orphans \
+		--build \
+		--timeout 0 ${COMPOSE_ARGS}
+
+docker-clean:
+	docker compose \
+		--project-name ${COMPOSE_PROJECT} \
+		--file docker-compose.yaml \
+		down \
+		--volumes \
+		--remove-orphans \
+		--rmi local --timeout 1
+
+docker-build:
+	docker build \
+		--tag ${PROJECT} \
+		--force-rm .
+
+# frontend
+node-fetch:
+	cd cmd/httpserver/public; npm install --no-fund --no-audit
+
+node-debug:
+	cd cmd/httpserver/public; npm run server
+
+node-build: node-fetch
+	cd cmd/httpserver/public; npm run build
+
+# backend
+go-prepare:
+	go generate -x ./...
+
+go-fetch:
 	go mod download
 	go mod tidy
 
-upgrade-deps: ## Upgrade all dependencies to the latest version.
+go-upgrade-deps:
 	go get -u ./...
+	go mod tidy
 
-upgrade-deps-patch: ## Upgrade all dependencies to the latest patch release.
+go-upgrade-deps-patch:
 	go get -u=patch ./...
+	go mod tidy
 
-clean: ## Cleans up generated files/folders from the build.
-	/bin/rm -rfv "dist/" "${BINARY}" rice-box.go
+go-dlv: go-prepare
+	dlv debug \
+		--headless --listen=:2345 \
+		--api-version=2 --log \
+		--allow-non-terminal-interactive \
+		${PACKAGE} -- --debug
 
-build: fetch clean ## Compile and generate a binary with static assets embedded.
-	rice -v embed-go
-	go build -ldflags '-d -s -w' -tags netgo -installsuffix netgo -v -o "${BINARY}"
+go-debug: go-prepare
+	go run ${PACKAGE} --debug
 
-debug: fetch clean
-	go run *.go run --debug --git.release-skip --chat-link https://some-url.com/chat
+go-build: go-prepare go-fetch
+	CGO_ENABLED=0 \
+	go build \
+		-ldflags '-d -s -w -extldflags=-static' \
+		-tags=netgo,osusergo,static_build \
+		-installsuffix netgo \
+		-buildvcs=false \
+		-trimpath \
+		-o ${PROJECT} \
+		${PACKAGE}

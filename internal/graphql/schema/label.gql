@@ -1,0 +1,13 @@
+input CreateLabelInput {
+    name: String!
+}
+
+input UpdateLabelInput {
+    name: String!
+}
+
+extend type Mutation {
+    createLabel(input: CreateLabelInput!): Label!
+    updateLabel(id: ID!, input: UpdateLabelInput!): Label!
+    deleteLabel(id: ID!): ID!
+}

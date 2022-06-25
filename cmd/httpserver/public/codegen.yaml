@@ -1,0 +1,8 @@
+schema: ../../../internal/graphql/schema/*.gql
+documents: ./src/lib/api/*.gql
+generates:
+  ./src/lib/api/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-urql
