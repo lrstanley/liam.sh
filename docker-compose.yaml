@@ -1,0 +1,46 @@
+version: "3"
+
+volumes:
+  pgdata:
+
+services:
+  # devimage:
+  #   image: devimage
+  #   tty: true
+  #   build:
+  #     context: ../
+  #     dockerfile: Dockerfile.dev
+  # frontend:
+  #   image: devimage
+  #   user: $USER:$GROUP
+  #   ports: [ 8081:8081 ]
+  #   working_dir: /build/public
+  #   volumes:
+  #     - /etc/passwd:/etc/passwd:ro
+  #     - /etc/group:/etc/group:ro
+  #     - ../:/build/ # root of repository
+  # http-server:
+  #   image: golang:latest
+  #   depends_on: [postgres]
+  #   restart: always
+  #   user: $USER:$GROUP
+  #   ports: [8080:8080]
+  #   env_file: .env
+  #   working_dir: /build
+  #   command: make go-fetch go-debug
+  #   environment:
+  #     - HOME=/src
+  #   volumes:
+  #     - /etc/passwd:/etc/passwd:ro
+  #     - /etc/group:/etc/group:ro
+  #     - $PWD:/build/ # root of repository
+  #     - /src/.cache/go-build
+  #     - /go
+  postgres:
+    image: postgres
+    ports: [5432:5432]
+    env_file: .env
+    environment:
+      - PGDATA=/database
+    volumes:
+      - pgdata:/database
