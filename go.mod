@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.0.0-20220506183931-8c90cb7644e5
 	entgo.io/contrib v0.2.1-0.20220616143352-4c3785e13414
 	entgo.io/ent v0.10.2-0.20220528091257-0917701f9114
-	github.com/99designs/gqlgen v0.17.6-0.20220506133315-ec3e597e7b45
+	github.com/99designs/gqlgen v0.17.11-0.20220613175441-a8f112e0c5b3
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.0.7
@@ -18,16 +18,16 @@ require (
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v4 v4.16.1
-	github.com/lrstanley/chix v0.0.0-20220621032628-1e5494d3cda6
+	github.com/lrstanley/chix v0.0.0-20220625022729-839594a1eb60
 	github.com/lrstanley/clix v0.0.0-20220511050933-dbf857b3dabb
-	github.com/markbates/goth v1.72.0
+	github.com/markbates/goth v1.73.0
 	github.com/microcosm-cc/bluemonday v1.0.18
-	github.com/vektah/gqlparser/v2 v2.4.3-0.20220508162109-d3d9eb001575
+	github.com/vektah/gqlparser/v2 v2.4.5
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.4.12
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/exp v0.0.0-20220518171630-0b5c67f07fdf
-	golang.org/x/oauth2 v0.0.0-20220608161450-d0670ef3b1eb
+	golang.org/x/oauth2 v0.0.0-20220622183110-fd043fe589d2
 	golang.org/x/sync v0.0.0-20220601150217-0de741cfad7f
 	mvdan.cc/xurls/v2 v2.4.0
 )
@@ -81,14 +81,14 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xo/terminfo v0.0.0-20210125001918-ca9a967f8778 // indirect
 	github.com/zclconf/go-cty v1.10.0 // indirect
-	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e // indirect
-	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3 // indirect
-	golang.org/x/net v0.0.0-20220617184016-355a448f1bc9 // indirect
-	golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c // indirect
+	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
+	golang.org/x/mod v0.6.0-dev.0.20220419223038-86c51ed26bb4 // indirect
+	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
+	golang.org/x/sys v0.0.0-20220624220833-87e55d714810 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.10 // indirect
-	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
+	golang.org/x/tools v0.1.11 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

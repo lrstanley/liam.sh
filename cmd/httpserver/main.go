@@ -41,7 +41,7 @@ func main() {
 	gh.NewClient(ctx, cli.Flags.Github.Token)
 
 	if err := chix.RunCtx(
-		ctx, httpServer(),
+		ctx, httpServer(ctx),
 		gh.UserRunner,
 		gh.EventsRunner,
 		gh.RepositoryRunner,

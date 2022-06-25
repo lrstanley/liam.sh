@@ -5,10 +5,10 @@
   "scripts": {
     "preserver": "graphql-codegen",
     "server": "npx vite",
-    "prepreview": "npx vite build --base /",
+    "prepreview": "npx vite build",
     "preview": "npx vite preview",
     "prebuild": "graphql-codegen",
-    "build": "npx vite build --base /dist",
+    "build": "npx vite build",
     "lint": "npx eslint . --ext .js,.vue"
   },
   "dependencies": {

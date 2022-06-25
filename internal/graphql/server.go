@@ -123,7 +123,7 @@ func New(db *ent.Client, cli *clix.CLI[models.Flags]) *handler.Server {
 		srv.Use(extension.Introspection{})
 	} else {
 		srv.SetQueryCache(lru.New(512))
-		srv.Use(extension.FixedComplexityLimit(5))
+		srv.Use(extension.FixedComplexityLimit(100))
 	}
 
 	srv.Use(entgql.Transactioner{

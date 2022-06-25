@@ -5,6 +5,8 @@
 package main
 
 import (
+	"context"
+	"embed"
 	"fmt"
 	"net/http"
 	"strings"
@@ -26,7 +28,12 @@ import (
 	"github.com/markbates/goth/providers/github"
 )
 
-func httpServer() *http.Server {
+//go:generate touch public/dist/index.html
+//go:embed all:public/dist
+var staticFS embed.FS
+
+func httpServer(ctx context.Context) *http.Server {
+	chix.DefaultAPIPrefix = "/-/"
 	r := chi.NewRouter()
 
 	goth.UseProviders(
@@ -65,6 +72,10 @@ func httpServer() *http.Server {
 	}
 	r.Use(
 		cors.AllowAll().Handler,
+		middleware.SetHeader(
+			"Content-Security-Policy",
+			"default-src 'self'; img-src *; media-src *; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
+		),
 		middleware.SetHeader("X-Frame-Options", "DENY"),
 		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
 		middleware.SetHeader("Referrer-Policy", "no-referrer-when-downgrade"),
@@ -108,7 +119,17 @@ func httpServer() *http.Server {
 	}
 
 	r.Get("/sitemap.txt", sitemap)
-	r.NotFound(catchAll)
+	r.NotFound(chix.UseStatic(ctx, &chix.Static{
+		FS:         staticFS,
+		CatchAll:   true,
+		AllowLocal: cli.Debug,
+		Path:       "public/dist",
+		SPA:        true,
+		Headers: map[string]string{
+			"Vary":          "Accept-Encoding",
+			"Cache-Control": "public, max-age=7776000",
+		},
+	}).ServeHTTP)
 
 	return &http.Server{
 		Addr:    cli.Flags.HTTP.BindAddr,
@@ -117,23 +138,6 @@ func httpServer() *http.Server {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-}
-
-func catchAll(w http.ResponseWriter, r *http.Request) {
-	if strings.HasPrefix(r.URL.Path, "/-/") {
-		chix.Error(w, r, chix.WrapCode(404))
-		return
-	}
-
-	if r.Method != http.MethodGet {
-		chix.Error(w, r, chix.WrapCode(405))
-		return
-	}
-	// if strings.HasSuffix(r.URL.Path, ".ico") {
-	// 	w.WriteHeader(http.StatusNotFound)
-	// 	return
-	// }
-	// w.Write(rice.MustFindBox("public").MustBytes("index.html"))
 }
 
 func sitemap(w http.ResponseWriter, r *http.Request) {

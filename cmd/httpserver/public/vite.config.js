@@ -97,6 +97,7 @@ export default defineConfig({
       ],
     },
   },
+  base: "/",
   build: {
     sourcemap: true,
     emptyOutDir: true,
