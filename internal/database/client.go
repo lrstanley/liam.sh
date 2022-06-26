@@ -49,7 +49,7 @@ func Open(logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	return ent.NewClient(ent.Driver(
 		entcache.NewDriver(
 			driver,
-			entcache.TTL(1*time.Minute),
+			entcache.TTL(30*time.Second),
 			entcache.Levels(entcache.NewLRU(256)),
 		),
 	))
