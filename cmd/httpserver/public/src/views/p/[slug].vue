@@ -13,11 +13,7 @@
     </n-page-header>
 
     <div class="container">
-      <n-alert v-if="error" title="Error fetching post" type="error">
-        {{ error }}
-      </n-alert>
-
-      <div v-motion-fade class="h-full flex-auto flex-col">
+      <div v-motion-fade class="h-full flex-auto flex-col mt-7 md:mt-0">
         <div
           class="text-size-30px md:text-size-45px text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
         >
@@ -31,7 +27,7 @@
             <br />
             <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
           </p>
-          <span class="ml-auto inline-flex items-center">
+          <span class="mr-auto ml-0 mt-4 md:mt-0 md:mr-0 md:ml-auto inline-flex items-center">
             <CoreObjectRender :value="post.labels" linkable class="mr-1" />
             <router-link
               v-if="state.base?.self"
@@ -113,12 +109,28 @@ const postRef = ref(null)
   @apply text-lime-400;
 }
 
+#post-content :deep(h1) {
+  font-size: 1.8em;
+}
+#post-content :deep(h2) {
+  font-size: 1.65em;
+}
+#post-content :deep(h3) {
+  font-size: 1.5em;
+}
+#post-content :deep(h4) {
+  font-size: 1.4em;
+}
+#post-content :deep(h5) {
+  font-size: 1.3em;
+}
+
+#post-content :deep(h1),
 #post-content :deep(h2),
 #post-content :deep(h3),
 #post-content :deep(h4),
 #post-content :deep(h5) {
   margin-top: 40px;
-  font-size: 1.3em;
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
   @apply bg-gradient-to-r from-sky-400 to-blue-500;
 }
