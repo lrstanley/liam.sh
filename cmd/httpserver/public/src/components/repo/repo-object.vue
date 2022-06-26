@@ -42,8 +42,34 @@
       </template>
       <template #description>
         <span class="flex gap-1">
-          <i class="mr-auto"> Updated {{ useTimeAgo(repo.pushedAt).value }} </i>
-          <RepoStatus :value="repo" class="inline-flex gap-1" />
+          <n-popover>
+            <template #trigger>
+              <span class="inline-flex">
+                <n-icon class="text-purple-400 mr-1">
+                  <i-mdi-update />
+                </n-icon>
+                <i class="text-gray-400">
+                  {{ useTimeAgo(repo.pushedAt).value }}
+                </i>
+              </span>
+            </template>
+            last updated
+          </n-popover>
+
+          <n-popover>
+            <template #trigger>
+              <span class="mr-auto hidden md:inline-flex">
+                <n-icon class="text-lime-400 ml-1ch mr-1">
+                  <i-mdi-rocket-launch-outline />
+                </n-icon>
+                <i class="text-gray-400">
+                  {{ useTimeAgo(repo.createdAt).value }}
+                </i>
+              </span>
+            </template>
+            created
+          </n-popover>
+          <RepoStatus :value="repo" class="inline-flex gap-1 ml-auto" />
         </span>
       </template>
 
@@ -64,7 +90,7 @@
             <n-button href="#" @click.prevent="drawerActive = true"> repo labels </n-button>
           </div>
 
-          <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+          <n-tag class="ml-3 text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
             {{ repo.starCount.toLocaleString() }}
             {{ repo.starCount === 1 ? "star" : "stars" }}
           </n-tag>
@@ -117,9 +143,4 @@ const drawerActive = ref(false)
 .n-thing :deep(.n-thing-main) {
   flex-direction: column;
 }
-
-/* div:deep(.n-thing-header),
-div:deep(.n-thing-main__description) {
-  @apply <md:(flex flex-col flex-wrap content-center items-center gap-2);
-} */
 </style>
