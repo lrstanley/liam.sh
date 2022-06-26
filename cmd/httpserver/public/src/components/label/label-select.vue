@@ -3,6 +3,7 @@
     v-bind="$attrs"
     v-model:value="selected"
     :options="options"
+    :render-label="renderLabel"
     :loading="labels.fetching?.value"
     clearable
     filterable
@@ -16,6 +17,7 @@
         v-for="label in suggestions"
         :key="label.data.id"
         class="hover:bg-emerald-700 cursor-pointer"
+        @click="selected.push(label.data[props.field])"
       >
         <n-badge show-zero color="grey" class="mr-[-2ch]" :value="label.popularity" />
         {{ label.data.name }}
@@ -59,23 +61,25 @@ const labels = useGetLabelsQuery({ variables: { where: props.where } })
 const options = computed(() =>
   labels.data?.value?.labels.edges
     .map(({ node }) => ({
-      label: (option) => {
-        return [
-          h(NBadge, {
-            "show-zero": true,
-            color: "grey",
-            style: { "margin-right": "1ch" },
-            value: option.popularity,
-          }),
-          option.data.name,
-        ]
-      },
+      label: node.name,
       value: node[props.field],
       popularity: node.githubRepositories.totalCount + node.posts.totalCount,
       data: node,
     }))
     .sort((a, b) => b.popularity - a.popularity)
 )
+
+function renderLabel(option) {
+  return [
+    h(NBadge, {
+      "show-zero": true,
+      color: "grey",
+      style: { "margin-right": "1ch" },
+      value: option.popularity,
+    }),
+    option.data?.name,
+  ]
+}
 
 const suggestions = ref([])
 const suggest = computed(() => props.suggest)
