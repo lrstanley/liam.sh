@@ -17,7 +17,7 @@
     </span>
     <span v-else>
       <EventHoverItem
-        :href="repo.name + '/commits/' + commits[0].sha"
+        :href="repo.name + '/commit/' + commits[0].sha"
         :value="commits[0].sha.slice(0, 7)"
       >
         <i-mdi-source-commit />

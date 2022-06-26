@@ -74,7 +74,7 @@ func httpServer(ctx context.Context) *http.Server {
 		cors.AllowAll().Handler,
 		middleware.SetHeader(
 			"Content-Security-Policy",
-			"default-src 'self'; img-src *; media-src *; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
+			"default-src 'self'; img-src * data:; media-src * data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
 		),
 		middleware.SetHeader("X-Frame-Options", "DENY"),
 		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
@@ -110,7 +110,10 @@ func httpServer(ctx context.Context) *http.Server {
 
 	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 	r.Mount("/-/graphql", graphql.New(db, cli))
-	r.Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
+	r.With(middleware.SetHeader(
+		"Content-Security-Policy",
+		"default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; ",
+	)).Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
 
