@@ -20,13 +20,17 @@
           {{ post.title }}
         </div>
 
-        <div class="flex flex-auto flex-row flex-wrap items-center mt-3 mb-7 md:mb-20">
-          <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
-          <p>
-            <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
-            <br />
-            <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
-          </p>
+        <div
+          class="flex flex-auto flex-col lg:flex-row flex-wrap items-start lg:items-center mt-3 mb-7 md:mb-20"
+        >
+          <span class="inline-flex">
+            <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
+            <p>
+              <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
+              <br />
+              <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
+            </p>
+          </span>
           <span class="mr-auto ml-0 mt-4 md:mt-0 md:mr-0 md:ml-auto inline-flex items-center">
             <CoreObjectRender :value="post.labels" linkable class="mr-1" />
             <router-link
@@ -81,8 +85,9 @@ const postRef = ref(null)
 
 #post-content :deep(p) {
   margin-top: 25px;
-  white-space: pre-wrap;
-  @apply <md:text-justify;
+  @apply <md:text-center;
+  /* white-space: pre-wrap; */
+  /* @apply <md:text-justify; */
   /* text-indent: 3ch; */
 }
 

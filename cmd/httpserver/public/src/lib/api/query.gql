@@ -125,7 +125,7 @@ query getPosts(
 }
 
 query getLabels($where: LabelWhereInput) {
-    labels(first: 100, orderBy: { direction: ASC, field: NAME }, where: $where) {
+    labels(first: 300, orderBy: { direction: ASC, field: NAME }, where: $where) {
         edges {
             node {
                 id
