@@ -142,7 +142,6 @@ func httpServer(ctx context.Context) *http.Server {
 
 func sitemap(w http.ResponseWriter, r *http.Request) {
 	urls := []string{
-		"/",
 		"/repos",
 		"/posts",
 	}
