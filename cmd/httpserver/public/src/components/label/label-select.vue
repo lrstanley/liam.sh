@@ -10,14 +10,14 @@
     multiple
     placeholder="Select labels"
   />
-  <div v-if="suggestions.length > 0" class="flex flex-col mb-2">
+  <div v-if="suggestions.length > 0" v-motion-fade class="flex flex-col mb-2">
     <p class="text-center">Suggestions</p>
     <div class="inline-flex flex-row flex-wrap gap-1">
       <n-tag
         v-for="label in suggestions"
         :key="label.data.id"
         class="hover:bg-emerald-700 cursor-pointer"
-        @click="selected.push(label.data[props.field])"
+        @click="addSuggestion(label)"
       >
         <n-badge show-zero color="grey" class="mr-[-2ch]" :value="label.popularity" />
         {{ label.data.name }}
@@ -58,6 +58,8 @@ const selected = computed({
 })
 
 const labels = useGetLabelsQuery({ variables: { where: props.where } })
+defineExpose({ refetch: labels.executeQuery })
+
 const options = computed(() =>
   labels.data?.value?.labels.edges
     .map(({ node }) => ({
@@ -83,20 +85,26 @@ function renderLabel(option) {
 
 const suggestions = ref([])
 const suggest = computed(() => props.suggest)
-watchDebounced(
-  suggest,
-  (val) => {
-    if (!val) return
-    let newSuggestions = []
+watchDebounced(suggest, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
+watchDebounced(selected, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
 
-    for (const option of options.value) {
-      if (suggest.value.match(new RegExp(`(^|\\W)${option.data.name}(\\W|$)`, "ig"))) {
-        newSuggestions.push(option)
-      }
+function makeSuggestions(val) {
+  if (!val || !options.value) return
+  let newSuggestions = []
+
+  for (const option of options.value) {
+    if (selected.value.includes(option.data[props.field])) continue
+
+    if (suggest.value.match(new RegExp(`(^|\\W)${option.data.name}(\\W|$)`, "ig"))) {
+      newSuggestions.push(option)
     }
+  }
 
-    suggestions.value = newSuggestions
-  },
-  { debounce: 500, maxWait: 1000, immediate: true }
-)
+  suggestions.value = newSuggestions
+}
+
+function addSuggestion(option) {
+  selected.value.push(option.data[props.field])
+  makeSuggestions(suggest.value)
+}
 </script>

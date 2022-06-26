@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-center">Update tags</p>
-    <LabelSelect v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
+    <LabelSelect ref="selectRef" v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
 
     <n-input
       v-model:value="newLabelInput"
@@ -34,6 +34,8 @@ const props = defineProps({
 })
 const emit = defineEmits(["update:modelValue"])
 
+const selectRef = ref(null)
+
 const selected = computed({
   get: () => props.modelValue,
   set: (val) => emit("update:modelValue", val),
@@ -44,7 +46,9 @@ const createLabel = useCreateLabelMutation()
 function createNewLabel(val) {
   createLabel.executeMutation({ input: { name: val } }).then((result) => {
     if (!result.error) {
-      selected.value = [...(selected.value ?? []), result.data.createLabel.id]
+      selectRef.value.refetch().then(() => {
+        selected.value = [...(selected.value ?? []), result.data.createLabel.id]
+      })
       newLabelInput.value = ""
       message.success("Created label")
     } else {
