@@ -40,7 +40,8 @@ a {
   @apply text-emerald-500 hover:text-emerald-600;
 }
 
-* {
+:root {
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
 }
 
