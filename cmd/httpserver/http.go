@@ -93,7 +93,7 @@ func httpServer(ctx context.Context) *http.Server {
 	// Misc.
 	r.Use(
 		chix.UseRobotsTxt(fmt.Sprintf(
-			"User-agent: *\nSitemap: %s/sitemap.txt\nDisallow: /-/\nAllow: /\n",
+			"User-agent: *\nSitemap: %s/sitemap.txt\nAllow: /\n",
 			strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"),
 		)),
 		chix.UseSecurityTxt(&chix.SecurityConfig{
