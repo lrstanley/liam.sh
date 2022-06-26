@@ -25,7 +25,11 @@
                   <n-icon class="align-middle">
                     <i-mdi-source-branch />
                   </n-icon>
-                  {{ state.base.version?.commit?.substring(0, 8) || "master" }}
+                  {{
+                    state.base.version?.commit == "unknown"
+                      ? "master"
+                      : state.base.version?.commit?.substring(0, 8)
+                  }}
                 </span>
               </template>
               {{

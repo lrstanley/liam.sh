@@ -107,7 +107,13 @@ onMounted(() => {
 
 <style scoped>
 #main {
-  font-size: 1.15em;
+  font-size: 1.05em;
+}
+
+@screen md {
+  #main {
+    font-size: 1.15em;
+  }
 }
 
 .timestamp {
