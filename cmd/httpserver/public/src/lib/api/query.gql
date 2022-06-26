@@ -205,6 +205,7 @@ query getRepos(
                 archived
                 fork
                 pushedAt
+                createdAt
                 license {
                     key
                     name

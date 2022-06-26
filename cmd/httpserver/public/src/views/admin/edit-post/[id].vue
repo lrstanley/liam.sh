@@ -35,7 +35,10 @@ const props = defineProps({
 })
 
 const router = useRouter()
-const { data, error, fetching } = useGetPostQuery({ variables: { id: props.id } })
+const { data, error, fetching } = useGetPostQuery({
+  variables: { id: props.id },
+  requestPolicy: "network-only",
+})
 const update = useUpdatePostMutation()
 
 function updatePost(val) {
