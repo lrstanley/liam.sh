@@ -11,6 +11,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent"
 )
 
+// Self is the resolver for the self field.
 func (r *queryResolver) Self(ctx context.Context) (*ent.User, error) {
 	user := chix.IdentFromContext[ent.User](ctx)
 	if user == nil {

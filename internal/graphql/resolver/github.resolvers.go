@@ -11,6 +11,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/gh"
 )
 
+// GithubUser is the resolver for the githubUser field.
 func (r *queryResolver) GithubUser(ctx context.Context) (*github.User, error) {
 	user := gh.User.Load()
 	if user == nil {
