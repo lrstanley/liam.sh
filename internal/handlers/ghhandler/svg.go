@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
@@ -70,6 +71,10 @@ type svgParams struct {
 }
 
 func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Cache-Control", "max-age=120, s-maxage=120")
+	w.Header().Set("Expires", time.Now().Add(2*time.Hour).Format(http.TimeFormat))
+
 	params := &svgParams{
 		Accent:    "github",
 		Layout:    "all",
