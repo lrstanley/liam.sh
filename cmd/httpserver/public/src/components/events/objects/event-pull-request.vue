@@ -20,7 +20,7 @@
     <template v-if="['opened', 'edited', 'closed'].includes(action)">
       via
 
-      <EventHoverItem :value="pr.head.ref" class="text-zinc-200 truncate">
+      <EventHoverItem :value="pr.head.ref" class="truncate text-zinc-200">
         <template #icon>
           <i-mdi-source-pull />
         </template>

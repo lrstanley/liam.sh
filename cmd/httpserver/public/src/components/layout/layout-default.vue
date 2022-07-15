@@ -27,7 +27,7 @@
 
     <span class="px-2 py-2 text-center">
       Made with
-      <n-icon class="text-emerald-600 align-middle">
+      <n-icon class="align-middle text-emerald-600">
         <i-mdi-heart />
       </n-icon>
       by <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>

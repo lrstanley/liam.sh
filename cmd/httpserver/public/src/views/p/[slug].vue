@@ -1,7 +1,7 @@
 <template>
   <LayoutDefault :loading="fetching" :error="error">
     <CoreTableOfContents :element="postRef" />
-    <n-page-header class="container hidden md:inline-flex mt-14 mb-2">
+    <n-page-header class="container hidden mb-2 md:inline-flex mt-14">
       <template #title>
         <CoreTerminal
           class="text-[20px]"
@@ -13,7 +13,7 @@
     </n-page-header>
 
     <div class="container">
-      <div v-motion-fade class="h-full flex-auto flex-col mt-7 md:mt-0">
+      <div v-motion-fade class="flex-col flex-auto h-full mt-7 md:mt-0">
         <div
           class="text-[30px] md:text-[45px] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
         >
@@ -21,7 +21,7 @@
         </div>
 
         <div
-          class="flex flex-auto flex-col lg:flex-row flex-wrap items-start lg:items-center mt-3 mb-7 md:mb-20"
+          class="flex flex-col flex-wrap items-start flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-20"
         >
           <span class="inline-flex">
             <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
@@ -31,7 +31,7 @@
               <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
             </p>
           </span>
-          <span class="mr-auto ml-0 mt-4 md:mt-0 md:mr-0 md:ml-auto inline-flex items-center">
+          <span class="inline-flex items-center mt-4 ml-0 mr-auto md:mt-0 md:mr-0 md:ml-auto">
             <CoreObjectRender :value="post.labels" linkable class="mr-1" />
             <router-link
               v-if="state.base?.self"

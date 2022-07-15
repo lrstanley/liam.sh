@@ -2,7 +2,7 @@
   <LayoutDefault :error="error">
     <div class="grid gap-5 md:gap-10 lg:gap-[6rem] mt-8">
       <div class="order-last md:order-first">
-        <div class="mt-1 mb-8 flex flex-auto gap-2">
+        <div class="flex flex-auto gap-2 mt-1 mb-8">
           <n-input
             v-model:value="search"
             :loading="fetching"

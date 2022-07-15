@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-auto flex-col justify-center">
+  <div class="flex flex-col justify-center flex-auto">
     <n-result
       :status="errorCode"
       :title="'Error code: ' + errorTitle"

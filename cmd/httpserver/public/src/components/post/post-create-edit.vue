@@ -1,7 +1,7 @@
 <template>
-  <div v-motion-fade class="grid grid-sidebar gap-4 mb-20">
+  <div v-motion-fade class="grid gap-4 mb-20 grid-sidebar">
     <n-card size="small">
-      <div class="grid gap-2 grid-cols-1 lg:grid-cols-2">
+      <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
         <n-form-item label="Post title" :required="true">
           <n-input
             v-model:value="post.title"
@@ -42,7 +42,7 @@
         <n-form-item
           label="Post published date"
           :required="true"
-          class="flex flex-col flex-auto items-center"
+          class="flex flex-col items-center flex-auto"
         >
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>

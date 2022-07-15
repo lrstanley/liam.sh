@@ -8,7 +8,7 @@
       class="bg-dark-400"
     >
       <n-drawer-content title="repo labels">
-        <div class="inline-flex flex-auto flex-wrap gap-1">
+        <div class="inline-flex flex-wrap flex-auto gap-1">
           <LabelObject
             v-for="label in repo.labels.edges.map(({ node }) => node)"
             :key="label.id"
@@ -45,7 +45,7 @@
           <n-popover>
             <template #trigger>
               <span class="inline-flex">
-                <n-icon class="text-purple-400 mr-1">
+                <n-icon class="mr-1 text-purple-400">
                   <i-mdi-update />
                 </n-icon>
                 <i class="text-zinc-400">
@@ -58,8 +58,8 @@
 
           <n-popover>
             <template #trigger>
-              <span class="mr-auto hidden md:inline-flex">
-                <n-icon class="text-lime-400 ml-1ch mr-1">
+              <span class="hidden mr-auto md:inline-flex">
+                <n-icon class="mr-1 text-lime-400 ml-1ch">
                   <i-mdi-rocket-launch-outline />
                 </n-icon>
                 <i class="text-zinc-400">
@@ -76,8 +76,8 @@
       <span v-html="repo.description || 'No description available'" />
 
       <template v-if="repo.labels" #action>
-        <div class="flex flex-auto justify-between">
-          <div class="hidden md:inline-flex flex-auto flex-wrap gap-1">
+        <div class="flex justify-between flex-auto">
+          <div class="flex-wrap flex-auto hidden gap-1 md:inline-flex">
             <LabelObject
               v-for="label in repo.labels.edges.map(({ node }) => node)"
               :key="label.id"
@@ -86,7 +86,7 @@
               linkable
             />
           </div>
-          <div class="inline-flex md:hidden flex-auto flex-wrap gap-1">
+          <div class="inline-flex flex-wrap flex-auto gap-1 md:hidden">
             <n-button href="#" @click.prevent="drawerActive = true"> repo labels </n-button>
           </div>
 

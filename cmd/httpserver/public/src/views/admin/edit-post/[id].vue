@@ -1,6 +1,6 @@
 <template>
   <LayoutAdmin>
-    <n-page-header :subtitle="data?.node.title" class="px-5 mt-4 mb-8 hidden lg:block">
+    <n-page-header :subtitle="data?.node.title" class="hidden px-5 mt-4 mb-8 lg:block">
       <template #avatar>
         <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
       </template>
@@ -11,7 +11,7 @@
       </template>
     </n-page-header>
 
-    <div class="sm:container sm:mx-auto p-4 lg:p-0">
+    <div class="p-4 sm:container sm:mx-auto lg:p-0">
       <n-spin :show="fetching">
         <n-alert v-if="error" title="Error fetching post" type="error">
           {{ error }}

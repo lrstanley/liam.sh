@@ -3,7 +3,7 @@
     :is="props.linkable ? 'router-link' : 'span'"
     :to="{ name: props.route, query: { [props.query]: label.name } }"
   >
-    <n-tag v-bind="$attrs" class="hover:bg-emerald-700 cursor-pointer">
+    <n-tag v-bind="$attrs" class="cursor-pointer hover:bg-emerald-700">
       {{ label.name }}
     </n-tag>
   </component>
