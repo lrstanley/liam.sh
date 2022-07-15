@@ -67,7 +67,7 @@ const post = ref(props.value)
 
 <style scoped>
 .post-title {
-  @apply text-size-1.5em;
+  @apply text-[1.5em];
 }
 
 .n-thing :deep(.n-thing-avatar) {

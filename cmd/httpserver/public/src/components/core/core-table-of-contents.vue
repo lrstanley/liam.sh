@@ -5,7 +5,7 @@
     style="z-index: 1"
     :bound="100"
     ignore-gap
-    class="invisible xl:visible fixed right-10px w-250px"
+    class="invisible xl:visible fixed right-[10px] w-[250px]"
   >
     <component :is="item" v-for="(item, index) in links" :key="index" />
   </n-anchor>

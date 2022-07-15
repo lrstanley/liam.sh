@@ -13,14 +13,14 @@
 
     pr
 
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number" class="!text-purple-500">
+    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
       {{ pr.title }}
     </EventHoverItem>
 
     <template v-if="['opened', 'edited', 'closed'].includes(action)">
       via
 
-      <EventHoverItem :value="pr.head.ref" class="text-light-900 truncate">
+      <EventHoverItem :value="pr.head.ref" class="text-zinc-200 truncate">
         <template #icon>
           <i-mdi-source-pull />
         </template>

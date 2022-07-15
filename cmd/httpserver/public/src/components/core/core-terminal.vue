@@ -1,10 +1,10 @@
 <template>
   <div v-bind="$attrs">
-    <span class="inline-flex mr-10px text-green-600">
+    <span class="inline-flex mr-[10px] text-emerald-600">
       {{ state.base.githubUser.name.split(" ")[0].toLowerCase() }}
-      <span class="text-gray-500">:</span>
+      <span class="text-zinc-500">:</span>
       {{ props.path }}
-      <span class="text-gray-500">$</span>
+      <span class="text-zinc-500">$</span>
       <span v-if="props.prefix" class="mr-4" />
       <span v-else class="mr-2" />
       {{ props.prefix }}
@@ -41,7 +41,7 @@ const state = useState()
   @apply w-auto inline-flex;
 }
 .cursor {
-  @apply whitespace-nowrap overflow-hidden inline-flex border-r-6 border-r-emerald-500 border-solid;
+  @apply whitespace-nowrap overflow-hidden inline-flex border-r-4 border-r-emerald-500 border-solid;
   animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 

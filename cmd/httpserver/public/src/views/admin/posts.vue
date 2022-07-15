@@ -47,8 +47,8 @@
       </n-table>
     </div>
     <router-link :to="{ name: 'admin-new-post' }" class="no-underline absolute bottom-5 right-5">
-      <n-button tertiary circle size="large" type="primary" class="h-13 w-13">
-        <n-icon class="text-2em"><i-mdi-pencil-outline /></n-icon>
+      <n-button tertiary circle size="large" type="primary" class="h-[13] w-[13]">
+        <n-icon class="text-[2em]"><i-mdi-pencil-outline /></n-icon>
       </n-button>
     </router-link>
   </LayoutAdmin>

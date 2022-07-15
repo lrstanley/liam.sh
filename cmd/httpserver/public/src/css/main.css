@@ -1,9 +1,15 @@
+@import "reset.css";
+/* @tailwind base; */
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
 html,
 body {
   height: 100%;
   width: 100%;
   @apply flex flex-auto;
-  @apply bg-dark-300 text-light-600;
+  @apply bg-zinc-800 text-zinc-100;
   font-family: Consolas, monaco, monospace;
 }
 
@@ -29,7 +35,7 @@ body {
 }
 
 .icon {
-  @apply align-middle;
+  @apply align-middle inline;
 }
 
 .n-popover {
@@ -55,7 +61,7 @@ a {
   border: 3px solid transparent;
   -webkit-background-clip: content-box;
   background-clip: content-box;
-  @apply rounded-7px bg-green-800;
+  @apply rounded-md bg-emerald-800;
 }
 *::-webkit-scrollbar-thumb:hover {
   --tw-bg-opacity: 1;

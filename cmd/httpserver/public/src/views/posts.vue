@@ -1,6 +1,6 @@
 <template>
   <LayoutDefault :error="error">
-    <div class="grid gap-5 md:gap-10 lg:gap-25 mt-8">
+    <div class="grid gap-5 md:gap-10 lg:gap-[6rem] mt-8">
       <div class="order-last md:order-first">
         <div class="mt-1 mb-8 flex flex-auto gap-2">
           <n-input

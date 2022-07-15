@@ -48,7 +48,7 @@
                 <n-icon class="text-purple-400 mr-1">
                   <i-mdi-update />
                 </n-icon>
-                <i class="text-gray-400">
+                <i class="text-zinc-400">
                   {{ useTimeAgo(repo.pushedAt).value }}
                 </i>
               </span>
@@ -62,7 +62,7 @@
                 <n-icon class="text-lime-400 ml-1ch mr-1">
                   <i-mdi-rocket-launch-outline />
                 </n-icon>
-                <i class="text-gray-400">
+                <i class="text-zinc-400">
                   {{ useTimeAgo(repo.createdAt).value }}
                 </i>
               </span>
@@ -122,7 +122,7 @@ const drawerActive = ref(false)
 
 <style scoped>
 .repo-name {
-  @apply text-size-1.4em md:text-size-1.5em truncate;
+  @apply text-[1.4em] md:text-[1.5em] truncate;
 }
 
 .n-thing,

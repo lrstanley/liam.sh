@@ -7,7 +7,6 @@ import path from "path"
 import Vue from "@vitejs/plugin-vue"
 import AutoImport from "unplugin-auto-import/vite"
 import Components from "unplugin-vue-components/vite"
-import WindiCSS from "vite-plugin-windicss"
 import { NaiveUiResolver, VueUseComponentsResolver } from "unplugin-vue-components/resolvers"
 import Pages from "vite-plugin-pages"
 import Icons from "unplugin-icons/vite"
@@ -74,29 +73,7 @@ export default defineConfig({
       autoInstall: true,
       defaultClass: "icon",
     }),
-    WindiCSS({
-      transformCSS: "pre",
-    }),
   ],
-  css: {
-    postcss: {
-      plugins: [
-        require("@fullhuman/postcss-purgecss")({
-          content: [`./**/*.html`, `./src/**/*.vue`],
-          defaultExtractor(content) {
-            const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, "")
-            return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || []
-          },
-          safelist: [
-            /-(leave|enter|appear)(|-(to|from|active))$/,
-            /^(?!(|.*?:)cursor-move).+-move$/,
-            /^router-link(|-exact)-active$/,
-            /data-v-.*/,
-          ],
-        }),
-      ],
-    },
-  },
   base: "/",
   build: {
     sourcemap: true,
@@ -110,7 +87,6 @@ export default defineConfig({
   server: {
     base: "/",
     mode: "development",
-    force: true,
     port: 8081,
     strictPort: true,
     proxy: {

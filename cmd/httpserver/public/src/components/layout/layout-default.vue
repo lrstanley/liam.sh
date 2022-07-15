@@ -1,8 +1,8 @@
 <template>
   <!-- TODO: less flex? -->
-  <div class="z-1 relative flex flex-auto flex-col">
+  <div class="z-[1] relative flex flex-auto flex-col">
     <div
-      class="sm:container flex flex-auto flex-col pt-15px lg:pt-70px pb-60px max-w-100vw px-4 md:px-0 xl:px-200px sm:mx-auto"
+      class="sm:container flex flex-auto flex-col pt-[15px] lg:pt-[70px] pb-[60px] max-w-[100vw] px-4 md:px-0 xl:px-[200px] sm:mx-auto"
     >
       <CoreNavigation />
 
@@ -27,7 +27,7 @@
 
     <span class="px-2 py-2 text-center">
       Made with
-      <n-icon class="text-green-600 align-middle">
+      <n-icon class="text-emerald-600 align-middle">
         <i-mdi-heart />
       </n-icon>
       by <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>

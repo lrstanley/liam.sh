@@ -8,7 +8,7 @@
     <EventLink :href="comment.html_url" class="text-cyan-400 hover:text-cyan-500" value="comment" />
     to {{ issue.pull_request ? "pr" : "issue" }}
 
-    <EventHoverItem :href="issue.html_url" :value="'#' + issue.number" class="!text-purple-500">
+    <EventHoverItem :href="issue.html_url" :value="'#' + issue.number">
       {{ issue.title }}
     </EventHoverItem>
 

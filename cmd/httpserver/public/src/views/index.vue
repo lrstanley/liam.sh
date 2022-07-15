@@ -2,11 +2,11 @@
   <!-- TODO: use less flex -->
   <div class="flex flex-auto justify-center items-stretch lg:items-center h-full w-full">
     <div
-      class="flex flex-auto flex-col h-full w-full lg:max-w-3xl lg:max-h-md basis-0 flex-grow-0 flex-shrink items-stretch md:items-center pt-15px"
+      class="flex flex-col h-full w-full lg:max-w-3xl lg:max-h-[28rem] basis-auto grow-0 shrink items-stretch md:items-center pt-[15px]"
     >
       <CoreNavigation />
       <CoreTerminal
-        class="mb-4 text-size-38px md:text-size-45px flex flex-auto justify-center"
+        class="mb-4 text-[38px] md:text-[45px] flex flex-auto justify-center"
         path="~"
         prefix="#"
         value="Hello!"
@@ -15,7 +15,7 @@
         content-style="padding: 0;display: flex;flex-direction: column;"
         class="p-0 flex flex-auto h-full w-full"
       >
-        <EventsRender class="overflow-x-auto basis-0 flex-grow flex-shrink h-full w-full" />
+        <EventsRender class="overflow-x-auto basis-0 grow shrink h-full w-full" />
 
         <n-layout-footer bordered class="bottom-bar">
           <span v-motion-fade class="flex flex-auto">
@@ -83,14 +83,14 @@ const state = useState()
 <style scoped>
 .bottom-bar {
   line-height: 1.5;
-  @apply <md:(text-size-1.2em leading-6);
+  @apply text-[1.2em] md:text-[1em];
 }
 
 .bar-item {
-  @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-gray-400 align-middle cursor-pointer transition hover: bg-gray-800;
+  @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800;
 }
 
 .bar-item.misc {
-  @apply <sm: hidden sm:inline-flex;
+  @apply hidden sm:inline-flex;
 }
 </style>

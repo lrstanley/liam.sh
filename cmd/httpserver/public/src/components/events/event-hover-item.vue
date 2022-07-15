@@ -1,5 +1,5 @@
 <template>
-  <n-popover trigger="hover" style="padding: 2px 6px" :to="false">
+  <n-popover trigger="hover" style="padding: 2px 6px" :to="false" :placement="props.placement">
     <template #trigger>
       <span v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
         <EventLink :href="props.href">
@@ -7,7 +7,7 @@
           <slot name="value">{{ props.value }}</slot>
         </EventLink>
       </span>
-      <span v-else class="align-middle max-w-24ch" v-bind="$attrs">
+      <span v-else class="align-middle max-w-[24ch]" v-bind="$attrs">
         <slot name="icon"></slot>
         <slot name="value">{{ props.value }}</slot>
       </span>
@@ -28,6 +28,11 @@ const props = defineProps({
     type: String,
     required: false,
     default: "",
+  },
+  placement: {
+    type: String,
+    required: false,
+    default: "right",
   },
 })
 </script>

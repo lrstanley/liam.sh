@@ -1,9 +1,10 @@
 {
     "extends": "@vue/tsconfig/tsconfig.web.json",
     "compilerOptions": {
+        "outDir": "dist/",
         "allowJs": true,
         "baseUrl": ".",
-        "module": "commonjs",
+        "module": "ES2020",
         "noImplicitThis": true,
         "paths": {
             "@/*": [
@@ -22,7 +23,8 @@
         "node_modules",
         "dist",
         ".git",
-        "./src/lib/http/api/**"
+        "./src/lib/http/api/**",
+        "./src/*.config.js",
     ],
     "vueCompilerOptions": {
         "experimentalDisableTemplateSupport": true

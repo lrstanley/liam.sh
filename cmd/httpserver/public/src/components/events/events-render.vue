@@ -1,19 +1,28 @@
 <template>
-  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
+  <div
+    id="main"
+    ref="scrollContainer"
+    v-infinite-scroll="[fetchEvents, { distance: 40 }]"
+    class="relative overflow-x-hidden"
+  >
     <TransitionGroup appear>
       <div
         v-for="(e, i) in fetched"
         :key="e.id"
         :style="{ '--i': fetched.length - i, '--total': fetched.length }"
-        class="flex flex-auto flex-row gap-x-1 px-1 hover:bg-dark-100/20 text-gray-400 transition duration-50 ease-out border-b-1px border-b-dark-300/50"
+        class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
       >
         <a :href="e.actor.login" target="_blank">
           <n-avatar square :size="15" :src="e.actor.avatarURL" class="align-middle mr-1" />
         </a>
 
-        <component :is="eventMap[e.eventType]" :event="e" class="truncate flex flex-grow gap-2" />
+        <component
+          :is="eventMap[e.eventType]"
+          :event="e"
+          class="truncate flex items-center grow gap-2"
+        />
         <div class="flex-none">
-          <EventHoverItem placement="right">
+          <EventHoverItem placement="left">
             <template #value>
               <i-mdi-clock-time-two-outline class="timestamp" />
             </template>

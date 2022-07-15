@@ -80,24 +80,6 @@ function typeMapper(o) {
 </script>
 
 <style scoped>
-/* .v-move {
-  transition: opacity 0.2s linear, transform 0.2s ease-in;
-}
-
-.v-enter-active {
-  @apply transform transition-all duration-100;
-  transition-delay: calc(min(0.1s, 0.1s * (var(--total) - var(--i))));
-}
-
-.v-leave-active {
-  @apply transform transition-all duration-100 absolute max-w-90vw md:max-w-40vw;
-}
-
-.v-enter-from,
-.v-leave-to {
-  @apply opacity-0 -translate-x-50px;
-} */
-
 .fade-move,
 .fade-enter-active,
 .fade-leave-active {

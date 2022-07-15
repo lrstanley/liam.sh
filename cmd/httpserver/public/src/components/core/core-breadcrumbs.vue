@@ -5,7 +5,7 @@
         <n-tag
           :disabled="index == state.history.length - 1"
           size="small"
-          class="cursor-pointer hover:bg-green-700"
+          class="cursor-pointer hover:bg-emerald-700"
         >
           {{ item.title }}
         </n-tag>

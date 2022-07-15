@@ -19,7 +19,7 @@
         class="hover:bg-emerald-700 cursor-pointer"
         @click="addSuggestion(label)"
       >
-        <n-badge show-zero color="grey" class="mr-[-2ch]" :value="label.popularity" />
+        <n-badge show-zero color="grey" class="mr-0" :value="label.popularity" />
         {{ label.data.name }}
       </n-tag>
     </div>

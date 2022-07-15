@@ -2,7 +2,7 @@
   <div>
     <span class="text-lime-500">created</span>
     <template v-if="props.event.payload.ref">
-      <EventHoverItem :value="props.event.payload.ref" class="text-light-900 truncate">
+      <EventHoverItem :value="props.event.payload.ref" class="text-zinc-200 truncate">
         <template #icon>
           <i-mdi-source-branch v-if="props.event.payload.ref_type == 'branch'" />
           <i-mdi-tag v-else />
