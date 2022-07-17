@@ -31,7 +31,7 @@
               <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
             </p>
           </span>
-          <span class="inline-flex items-center mt-4 ml-0 mr-auto md:mt-0 md:mr-0 md:ml-auto">
+          <span class="inline-flex flex-wrap items-center mt-4 ml-0 mr-auto md:mt-0 md:mr-0 md:ml-auto">
             <CoreObjectRender :value="post.labels" linkable class="mr-1" />
             <router-link
               v-if="state.base?.self"
@@ -78,13 +78,23 @@ const postRef = ref(null)
   }
 }
 
+#post-content :deep(center) {
+  margin: 1em;
+}
+
+#post-content :deep(center) p {
+  margin-top: 0.5em;
+  @apply text-center;
+}
+
 #post-content :deep(img) {
-  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-5 lg:px-0 !m-0;
+  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !m-0;
   height: auto;
 }
 
 #post-content :deep(p) {
-  margin-top: 25px;
+  margin-top: 1em;
+  margin-bottom: 1em;
   @apply text-center md:text-left;
 }
 
@@ -156,17 +166,18 @@ const postRef = ref(null)
 #post-content :deep(:not(pre)) > code {
   border-radius: 3px;
   padding: 0.18em 0.35em;
-  @apply !bg-zinc-900;
+  @apply !bg-zinc-700;
 }
 
 #post-content :deep(pre) {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
   border-radius: 7px;
   padding: 0.5rem 0.8rem;
   @apply !bg-[#1c1c1e] overflow-auto whitespace-pre lg:overflow-hidden lg:whitespace-pre-wrap;
 }
 
 #post-content :deep(ul) {
-  @apply ml-6 list-disc list-inside;
+  @apply ml-1 md:ml-6 list-disc list-inside;
 }
 </style>
