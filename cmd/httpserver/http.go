@@ -117,7 +117,7 @@ func httpServer(ctx context.Context) *http.Server {
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
 
-	if !cli.Debug {
+	if cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
 	}
 
