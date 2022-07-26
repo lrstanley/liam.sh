@@ -22,7 +22,7 @@ require (
 	github.com/lrstanley/clix v0.0.0-20220620170836-7ff14fc060ed
 	github.com/markbates/goth v1.73.0
 	github.com/microcosm-cc/bluemonday v1.0.19
-	github.com/vektah/gqlparser/v2 v2.4.6
+	github.com/vektah/gqlparser/v2 v2.4.7
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.4.13
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
