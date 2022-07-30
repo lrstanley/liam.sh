@@ -207,11 +207,11 @@ func (ga *GithubAsset) Update() *GithubAssetUpdateOne {
 // Unwrap unwraps the GithubAsset entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
 func (ga *GithubAsset) Unwrap() *GithubAsset {
-	tx, ok := ga.config.driver.(*txDriver)
+	_tx, ok := ga.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: GithubAsset is not a transactional entity")
 	}
-	ga.config.driver = tx.drv
+	ga.config.driver = _tx.drv
 	return ga
 }
 

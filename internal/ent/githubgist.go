@@ -181,11 +181,11 @@ func (gg *GithubGist) Update() *GithubGistUpdateOne {
 // Unwrap unwraps the GithubGist entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
 func (gg *GithubGist) Unwrap() *GithubGist {
-	tx, ok := gg.config.driver.(*txDriver)
+	_tx, ok := gg.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: GithubGist is not a transactional entity")
 	}
-	gg.config.driver = tx.drv
+	gg.config.driver = _tx.drv
 	return gg
 }
 

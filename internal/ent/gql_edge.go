@@ -30,15 +30,17 @@ func (gr *GithubRelease) Repository(ctx context.Context) (*GithubRepository, err
 
 func (gr *GithubRelease) Assets(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *GithubAssetOrder, where *GithubAssetWhereInput,
-	opts ...GithubAssetPaginateOption,
 ) (*GithubAssetConnection, error) {
+	opts := []GithubAssetPaginateOption{
+		WithGithubAssetOrder(orderBy),
+		WithGithubAssetFilter(where.Filter),
+	}
 	totalCount := gr.Edges.totalCount[1]
-	if nodes, err := gr.Edges.AssetsOrErr(); err == nil {
+	if nodes, err := gr.Edges.AssetsOrErr(); err == nil || totalCount != nil {
 		conn := &GithubAssetConnection{Edges: []*GithubAssetEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithGithubAssetOrder(orderBy))
 		pager, err := newGithubAssetPager(opts)
 		if err != nil {
 			return nil, err
@@ -100,15 +102,17 @@ func (gr *GithubRelease) Assets(
 
 func (gr *GithubRepository) Labels(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *LabelOrder, where *LabelWhereInput,
-	opts ...LabelPaginateOption,
 ) (*LabelConnection, error) {
+	opts := []LabelPaginateOption{
+		WithLabelOrder(orderBy),
+		WithLabelFilter(where.Filter),
+	}
 	totalCount := gr.Edges.totalCount[0]
-	if nodes, err := gr.Edges.LabelsOrErr(); err == nil {
+	if nodes, err := gr.Edges.LabelsOrErr(); err == nil || totalCount != nil {
 		conn := &LabelConnection{Edges: []*LabelEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithLabelOrder(orderBy))
 		pager, err := newLabelPager(opts)
 		if err != nil {
 			return nil, err
@@ -170,15 +174,17 @@ func (gr *GithubRepository) Labels(
 
 func (gr *GithubRepository) Releases(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *GithubReleaseOrder, where *GithubReleaseWhereInput,
-	opts ...GithubReleasePaginateOption,
 ) (*GithubReleaseConnection, error) {
+	opts := []GithubReleasePaginateOption{
+		WithGithubReleaseOrder(orderBy),
+		WithGithubReleaseFilter(where.Filter),
+	}
 	totalCount := gr.Edges.totalCount[1]
-	if nodes, err := gr.Edges.ReleasesOrErr(); err == nil {
+	if nodes, err := gr.Edges.ReleasesOrErr(); err == nil || totalCount != nil {
 		conn := &GithubReleaseConnection{Edges: []*GithubReleaseEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithGithubReleaseOrder(orderBy))
 		pager, err := newGithubReleasePager(opts)
 		if err != nil {
 			return nil, err
@@ -240,15 +246,17 @@ func (gr *GithubRepository) Releases(
 
 func (l *Label) Posts(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *PostOrder, where *PostWhereInput,
-	opts ...PostPaginateOption,
 ) (*PostConnection, error) {
+	opts := []PostPaginateOption{
+		WithPostOrder(orderBy),
+		WithPostFilter(where.Filter),
+	}
 	totalCount := l.Edges.totalCount[0]
-	if nodes, err := l.Edges.PostsOrErr(); err == nil {
+	if nodes, err := l.Edges.PostsOrErr(); err == nil || totalCount != nil {
 		conn := &PostConnection{Edges: []*PostEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithPostOrder(orderBy))
 		pager, err := newPostPager(opts)
 		if err != nil {
 			return nil, err
@@ -310,15 +318,17 @@ func (l *Label) Posts(
 
 func (l *Label) GithubRepositories(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *GithubRepositoryOrder, where *GithubRepositoryWhereInput,
-	opts ...GithubRepositoryPaginateOption,
 ) (*GithubRepositoryConnection, error) {
+	opts := []GithubRepositoryPaginateOption{
+		WithGithubRepositoryOrder(orderBy),
+		WithGithubRepositoryFilter(where.Filter),
+	}
 	totalCount := l.Edges.totalCount[1]
-	if nodes, err := l.Edges.GithubRepositoriesOrErr(); err == nil {
+	if nodes, err := l.Edges.GithubRepositoriesOrErr(); err == nil || totalCount != nil {
 		conn := &GithubRepositoryConnection{Edges: []*GithubRepositoryEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithGithubRepositoryOrder(orderBy))
 		pager, err := newGithubRepositoryPager(opts)
 		if err != nil {
 			return nil, err
@@ -388,15 +398,17 @@ func (po *Post) Author(ctx context.Context) (*User, error) {
 
 func (po *Post) Labels(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *LabelOrder, where *LabelWhereInput,
-	opts ...LabelPaginateOption,
 ) (*LabelConnection, error) {
+	opts := []LabelPaginateOption{
+		WithLabelOrder(orderBy),
+		WithLabelFilter(where.Filter),
+	}
 	totalCount := po.Edges.totalCount[1]
-	if nodes, err := po.Edges.LabelsOrErr(); err == nil {
+	if nodes, err := po.Edges.LabelsOrErr(); err == nil || totalCount != nil {
 		conn := &LabelConnection{Edges: []*LabelEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithLabelOrder(orderBy))
 		pager, err := newLabelPager(opts)
 		if err != nil {
 			return nil, err
@@ -458,15 +470,17 @@ func (po *Post) Labels(
 
 func (u *User) Posts(
 	ctx context.Context, after *Cursor, first *int, before *Cursor, last *int, orderBy *PostOrder, where *PostWhereInput,
-	opts ...PostPaginateOption,
 ) (*PostConnection, error) {
+	opts := []PostPaginateOption{
+		WithPostOrder(orderBy),
+		WithPostFilter(where.Filter),
+	}
 	totalCount := u.Edges.totalCount[0]
-	if nodes, err := u.Edges.PostsOrErr(); err == nil {
+	if nodes, err := u.Edges.PostsOrErr(); err == nil || totalCount != nil {
 		conn := &PostConnection{Edges: []*PostEdge{}}
 		if totalCount != nil {
 			conn.TotalCount = *totalCount
 		}
-		opts = append(opts, WithPostOrder(orderBy))
 		pager, err := newPostPager(opts)
 		if err != nil {
 			return nil, err

@@ -217,11 +217,11 @@ func (gr *GithubRelease) Update() *GithubReleaseUpdateOne {
 // Unwrap unwraps the GithubRelease entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
 func (gr *GithubRelease) Unwrap() *GithubRelease {
-	tx, ok := gr.config.driver.(*txDriver)
+	_tx, ok := gr.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: GithubRelease is not a transactional entity")
 	}
-	gr.config.driver = tx.drv
+	gr.config.driver = _tx.drv
 	return gr
 }
 

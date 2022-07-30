@@ -61,7 +61,7 @@ func httpServer(ctx context.Context) *http.Server {
 		chix.UseStructuredLogger(logger),
 		middleware.Recoverer,
 		middleware.StripSlashes,
-		middleware.Compress(9),
+		middleware.Compress(5),
 		httpware.UseEvictCacheAdmin,
 		chix.UseNextURL,
 	)
