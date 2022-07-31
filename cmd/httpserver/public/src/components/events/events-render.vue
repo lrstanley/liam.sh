@@ -75,38 +75,44 @@ const eventMap = {
 const fetched = ref([])
 const hasNextPage = ref(true)
 const cursor = ref(null)
+const nextCursor = ref(null)
 
 const events = useGetEventsQuery({
   variables: {
     cursor,
     count: 20,
   },
-  pause: true,
-  requestPolicy: "cache-first",
+  fetchPolicy: "cache-first",
+  pause: false,
 })
 
 const scrollContainer = ref(null)
 
-function fetchEvents(wasScrollEvent) {
+watch(
+  events.data,
+  (data) => {
+    if (!data) return
+
+    hasNextPage.value = data.githubevents.pageInfo.hasNextPage
+    nextCursor.value = data.githubevents.pageInfo.endCursor
+    fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node)]
+
+    setTimeout(() => {
+      if (
+        hasNextPage.value &&
+        scrollContainer.value.scrollHeight <=
+          scrollContainer.value.scrollTop + scrollContainer.value.clientHeight
+      ) {
+        fetchEvents()
+      }
+    }, 300)
+  },
+  { immediate: true }
+)
+
+function fetchEvents() {
   if (!hasNextPage.value) return
-
-  events.executeQuery().then((result) => {
-    const data = result.data.value.githubevents
-
-    if (data.pageInfo.hasNextPage) {
-      cursor.value = data.pageInfo.endCursor
-    } else {
-      hasNextPage.value = false
-    }
-
-    fetched.value = [...fetched.value, ...data.edges.map(({ node }) => toRaw(node))]
-
-    // if this fetch was triggered by a scroll event, don't trigger it a second time.
-    if (wasScrollEvent) return
-    if (scrollContainer.value.scrollHeight <= scrollContainer.value.clientHeight) {
-      fetchEvents(true)
-    }
-  })
+  cursor.value = nextCursor.value
 }
 
 onMounted(() => {
