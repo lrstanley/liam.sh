@@ -21,7 +21,7 @@ export default defineConfig({
   publicDir: `${path.resolve(__dirname, "src")}/assets`,
   plugins: [
     Pages({
-      dirs: "src/views",
+      dirs: "src/pages",
       routeBlockLang: "yaml",
       extendRoute(route) {
         // route, parent
