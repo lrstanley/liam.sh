@@ -28,8 +28,8 @@
       <span v-html="post.summary" />
 
       <template v-if="post.labels" #action>
-        <div class="flex flex-auto justify-between">
-          <div class="inline-flex flex-auto flex-wrap gap-1">
+        <div class="flex justify-between flex-auto">
+          <div class="inline-flex flex-wrap flex-auto gap-1">
             <LabelObject
               v-for="label in post.labels.edges.map(({ node }) => node)"
               :key="label.id"
@@ -67,7 +67,7 @@ const post = ref(props.value)
 
 <style scoped>
 .post-title {
-  @apply text-size-1.5em;
+  @apply text-[1.5em];
 }
 
 .n-thing :deep(.n-thing-avatar) {

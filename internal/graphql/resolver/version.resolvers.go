@@ -9,6 +9,7 @@ import (
 	"github.com/lrstanley/clix"
 )
 
+// Version is the resolver for the version field.
 func (r *queryResolver) Version(ctx context.Context) (*clix.NonSensitiveVersion, error) {
 	return r.cli.GetVersionInfo().NonSensitive(), nil
 }

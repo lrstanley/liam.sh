@@ -1,19 +1,28 @@
 <template>
-  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
+  <div
+    id="main"
+    ref="scrollContainer"
+    v-infinite-scroll="[fetchEvents, { distance: 40 }]"
+    class="relative overflow-x-hidden"
+  >
     <TransitionGroup appear>
       <div
         v-for="(e, i) in fetched"
         :key="e.id"
         :style="{ '--i': fetched.length - i, '--total': fetched.length }"
-        class="flex flex-auto flex-row gap-x-1 px-1 hover:bg-dark-100/20 text-gray-400 transition duration-50 ease-out border-b-1px border-b-dark-300/50"
+        class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
       >
         <a :href="e.actor.login" target="_blank">
-          <n-avatar square :size="15" :src="e.actor.avatarURL" class="align-middle mr-1" />
+          <n-avatar square :size="15" :src="e.actor.avatarURL" class="mr-1 align-middle" />
         </a>
 
-        <component :is="eventMap[e.eventType]" :event="e" class="truncate flex flex-grow gap-2" />
+        <component
+          :is="eventMap[e.eventType]"
+          :event="e"
+          class="flex items-center gap-2 truncate grow"
+        />
         <div class="flex-none">
-          <EventHoverItem placement="right">
+          <EventHoverItem placement="left">
             <template #value>
               <i-mdi-clock-time-two-outline class="timestamp" />
             </template>
@@ -66,38 +75,44 @@ const eventMap = {
 const fetched = ref([])
 const hasNextPage = ref(true)
 const cursor = ref(null)
+const nextCursor = ref(null)
 
 const events = useGetEventsQuery({
   variables: {
     cursor,
     count: 20,
   },
-  pause: true,
-  requestPolicy: "cache-first",
+  fetchPolicy: "cache-first",
+  pause: false,
 })
 
 const scrollContainer = ref(null)
 
-function fetchEvents(wasScrollEvent) {
+watch(
+  events.data,
+  (data) => {
+    if (!data) return
+
+    hasNextPage.value = data.githubevents.pageInfo.hasNextPage
+    nextCursor.value = data.githubevents.pageInfo.endCursor
+    fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node)]
+
+    setTimeout(() => {
+      if (
+        hasNextPage.value &&
+        scrollContainer.value.scrollHeight <=
+          scrollContainer.value.scrollTop + scrollContainer.value.clientHeight
+      ) {
+        fetchEvents()
+      }
+    }, 300)
+  },
+  { immediate: true }
+)
+
+function fetchEvents() {
   if (!hasNextPage.value) return
-
-  events.executeQuery().then((result) => {
-    const data = result.data.value.githubevents
-
-    if (data.pageInfo.hasNextPage) {
-      cursor.value = data.pageInfo.endCursor
-    } else {
-      hasNextPage.value = false
-    }
-
-    fetched.value = [...fetched.value, ...data.edges.map(({ node }) => toRaw(node))]
-
-    // if this fetch was triggered by a scroll event, don't trigger it a second time.
-    if (wasScrollEvent) return
-    if (scrollContainer.value.scrollHeight <= scrollContainer.value.clientHeight) {
-      fetchEvents(true)
-    }
-  })
+  cursor.value = nextCursor.value
 }
 
 onMounted(() => {

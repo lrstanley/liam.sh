@@ -11,7 +11,7 @@
 
     for pr
 
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number" class="!text-purple-500">
+    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
       {{ pr.title }}
     </EventHoverItem>
 

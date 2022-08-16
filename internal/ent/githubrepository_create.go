@@ -440,7 +440,7 @@ func (grc *GithubRepositoryCreate) sqlSave(ctx context.Context) (*GithubReposito
 	_node, _spec := grc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, grc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
-			err = &ConstraintError{err.Error(), err}
+			err = &ConstraintError{msg: err.Error(), wrap: err}
 		}
 		return nil, err
 	}
@@ -1400,7 +1400,7 @@ func (grcb *GithubRepositoryCreateBulk) Save(ctx context.Context) ([]*GithubRepo
 					// Invoke the actual operation on the latest mutation in the chain.
 					if err = sqlgraph.BatchCreate(ctx, grcb.driver, spec); err != nil {
 						if sqlgraph.IsConstraintError(err) {
-							err = &ConstraintError{err.Error(), err}
+							err = &ConstraintError{msg: err.Error(), wrap: err}
 						}
 					}
 				}

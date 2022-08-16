@@ -153,11 +153,11 @@ func (ge *GithubEvent) Update() *GithubEventUpdateOne {
 // Unwrap unwraps the GithubEvent entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
 func (ge *GithubEvent) Unwrap() *GithubEvent {
-	tx, ok := ge.config.driver.(*txDriver)
+	_tx, ok := ge.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: GithubEvent is not a transactional entity")
 	}
-	ge.config.driver = tx.drv
+	ge.config.driver = _tx.drv
 	return ge
 }
 

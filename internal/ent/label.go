@@ -137,11 +137,11 @@ func (l *Label) Update() *LabelUpdateOne {
 // Unwrap unwraps the Label entity that was returned from a transaction after it was closed,
 // so that all future queries will be executed through the driver which created the transaction.
 func (l *Label) Unwrap() *Label {
-	tx, ok := l.config.driver.(*txDriver)
+	_tx, ok := l.config.driver.(*txDriver)
 	if !ok {
 		panic("ent: Label is not a transactional entity")
 	}
-	l.config.driver = tx.drv
+	l.config.driver = _tx.drv
 	return l
 }
 

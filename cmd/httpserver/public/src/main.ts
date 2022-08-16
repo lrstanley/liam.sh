@@ -1,5 +1,4 @@
-import "virtual:windi.css"
-import "@/main.css"
+import "@/css/main.css"
 import { createPinia } from "pinia"
 import { createApp } from "vue"
 import { client } from "@/lib/api/client"

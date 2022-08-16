@@ -16,10 +16,10 @@
       <n-tag
         v-for="label in suggestions"
         :key="label.data.id"
-        class="hover:bg-emerald-700 cursor-pointer"
+        class="cursor-pointer hover:bg-emerald-700"
         @click="addSuggestion(label)"
       >
-        <n-badge show-zero color="grey" class="mr-[-2ch]" :value="label.popularity" />
+        <n-badge show-zero color="grey" class="mr-0" :value="label.popularity" />
         {{ label.data.name }}
       </n-tag>
     </div>

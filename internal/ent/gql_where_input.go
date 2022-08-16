@@ -7,6 +7,7 @@
 package ent
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -186,10 +187,16 @@ func (i *GithubAssetWhereInput) Filter(q *GithubAssetQuery) (*GithubAssetQuery, 
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyGithubAssetWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyGithubAssetWhereInput is returned in case the GithubAssetWhereInput is empty.
+var ErrEmptyGithubAssetWhereInput = errors.New("ent: empty predicate GithubAssetWhereInput")
 
 // P returns a predicate for filtering githubassets.
 // An error is returned if the input is empty or invalid.
@@ -198,7 +205,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, githubasset.Not(p))
 	}
@@ -206,7 +213,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -214,7 +221,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -224,7 +231,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -232,7 +239,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -609,7 +616,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 		for _, w := range i.HasReleaseWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasReleaseWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -617,7 +624,7 @@ func (i *GithubAssetWhereInput) P() (predicate.GithubAsset, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate GithubAssetWhereInput")
+		return nil, ErrEmptyGithubAssetWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -719,10 +726,16 @@ func (i *GithubEventWhereInput) Filter(q *GithubEventQuery) (*GithubEventQuery, 
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyGithubEventWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyGithubEventWhereInput is returned in case the GithubEventWhereInput is empty.
+var ErrEmptyGithubEventWhereInput = errors.New("ent: empty predicate GithubEventWhereInput")
 
 // P returns a predicate for filtering githubevents.
 // An error is returned if the input is empty or invalid.
@@ -731,7 +744,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, githubevent.Not(p))
 	}
@@ -739,7 +752,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -747,7 +760,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -757,7 +770,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -765,7 +778,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -955,7 +968,7 @@ func (i *GithubEventWhereInput) P() (predicate.GithubEvent, error) {
 
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate GithubEventWhereInput")
+		return nil, ErrEmptyGithubEventWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -1151,10 +1164,16 @@ func (i *GithubGistWhereInput) Filter(q *GithubGistQuery) (*GithubGistQuery, err
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyGithubGistWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyGithubGistWhereInput is returned in case the GithubGistWhereInput is empty.
+var ErrEmptyGithubGistWhereInput = errors.New("ent: empty predicate GithubGistWhereInput")
 
 // P returns a predicate for filtering githubgists.
 // An error is returned if the input is empty or invalid.
@@ -1163,7 +1182,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, githubgist.Not(p))
 	}
@@ -1171,7 +1190,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -1179,7 +1198,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -1189,7 +1208,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -1197,7 +1216,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -1633,7 +1652,7 @@ func (i *GithubGistWhereInput) P() (predicate.GithubGist, error) {
 
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate GithubGistWhereInput")
+		return nil, ErrEmptyGithubGistWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -1779,10 +1798,16 @@ func (i *GithubReleaseWhereInput) Filter(q *GithubReleaseQuery) (*GithubReleaseQ
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyGithubReleaseWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyGithubReleaseWhereInput is returned in case the GithubReleaseWhereInput is empty.
+var ErrEmptyGithubReleaseWhereInput = errors.New("ent: empty predicate GithubReleaseWhereInput")
 
 // P returns a predicate for filtering githubreleases.
 // An error is returned if the input is empty or invalid.
@@ -1791,7 +1816,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, githubrelease.Not(p))
 	}
@@ -1799,7 +1824,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -1807,7 +1832,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -1817,7 +1842,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -1825,7 +1850,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -2115,7 +2140,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 		for _, w := range i.HasRepositoryWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasRepositoryWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -2133,7 +2158,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 		for _, w := range i.HasAssetsWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasAssetsWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -2141,7 +2166,7 @@ func (i *GithubReleaseWhereInput) P() (predicate.GithubRelease, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate GithubReleaseWhereInput")
+		return nil, ErrEmptyGithubReleaseWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -2370,10 +2395,16 @@ func (i *GithubRepositoryWhereInput) Filter(q *GithubRepositoryQuery) (*GithubRe
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyGithubRepositoryWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyGithubRepositoryWhereInput is returned in case the GithubRepositoryWhereInput is empty.
+var ErrEmptyGithubRepositoryWhereInput = errors.New("ent: empty predicate GithubRepositoryWhereInput")
 
 // P returns a predicate for filtering githubrepositories.
 // An error is returned if the input is empty or invalid.
@@ -2382,7 +2413,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, githubrepository.Not(p))
 	}
@@ -2390,7 +2421,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -2398,7 +2429,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -2408,7 +2439,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -2416,7 +2447,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -2907,7 +2938,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 		for _, w := range i.HasLabelsWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasLabelsWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -2925,7 +2956,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 		for _, w := range i.HasReleasesWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasReleasesWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -2933,7 +2964,7 @@ func (i *GithubRepositoryWhereInput) P() (predicate.GithubRepository, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate GithubRepositoryWhereInput")
+		return nil, ErrEmptyGithubRepositoryWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -3014,10 +3045,16 @@ func (i *LabelWhereInput) Filter(q *LabelQuery) (*LabelQuery, error) {
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyLabelWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyLabelWhereInput is returned in case the LabelWhereInput is empty.
+var ErrEmptyLabelWhereInput = errors.New("ent: empty predicate LabelWhereInput")
 
 // P returns a predicate for filtering labels.
 // An error is returned if the input is empty or invalid.
@@ -3026,7 +3063,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, label.Not(p))
 	}
@@ -3034,7 +3071,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -3042,7 +3079,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -3052,7 +3089,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -3060,7 +3097,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -3191,7 +3228,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 		for _, w := range i.HasPostsWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasPostsWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -3209,7 +3246,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 		for _, w := range i.HasGithubRepositoriesWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasGithubRepositoriesWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -3217,7 +3254,7 @@ func (i *LabelWhereInput) P() (predicate.Label, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate LabelWhereInput")
+		return nil, ErrEmptyLabelWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -3378,10 +3415,16 @@ func (i *PostWhereInput) Filter(q *PostQuery) (*PostQuery, error) {
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyPostWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyPostWhereInput is returned in case the PostWhereInput is empty.
+var ErrEmptyPostWhereInput = errors.New("ent: empty predicate PostWhereInput")
 
 // P returns a predicate for filtering posts.
 // An error is returned if the input is empty or invalid.
@@ -3390,7 +3433,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, post.Not(p))
 	}
@@ -3398,7 +3441,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -3406,7 +3449,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -3416,7 +3459,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -3424,7 +3467,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -3759,7 +3802,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 		for _, w := range i.HasAuthorWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasAuthorWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -3777,7 +3820,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 		for _, w := range i.HasLabelsWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasLabelsWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -3785,7 +3828,7 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate PostWhereInput")
+		return nil, ErrEmptyPostWhereInput
 	case 1:
 		return predicates[0], nil
 	default:
@@ -3974,10 +4017,16 @@ func (i *UserWhereInput) Filter(q *UserQuery) (*UserQuery, error) {
 	}
 	p, err := i.P()
 	if err != nil {
+		if err == ErrEmptyUserWhereInput {
+			return q, nil
+		}
 		return nil, err
 	}
 	return q.Where(p), nil
 }
+
+// ErrEmptyUserWhereInput is returned in case the UserWhereInput is empty.
+var ErrEmptyUserWhereInput = errors.New("ent: empty predicate UserWhereInput")
 
 // P returns a predicate for filtering users.
 // An error is returned if the input is empty or invalid.
@@ -3986,7 +4035,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	if i.Not != nil {
 		p, err := i.Not.P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'not'", err)
 		}
 		predicates = append(predicates, user.Not(p))
 	}
@@ -3994,7 +4043,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	case n == 1:
 		p, err := i.Or[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'or'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -4002,7 +4051,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 		for _, w := range i.Or {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'or'", err)
 			}
 			or = append(or, p)
 		}
@@ -4012,7 +4061,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	case n == 1:
 		p, err := i.And[0].P()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("%w: field 'and'", err)
 		}
 		predicates = append(predicates, p)
 	case n > 1:
@@ -4020,7 +4069,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 		for _, w := range i.And {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'and'", err)
 			}
 			and = append(and, p)
 		}
@@ -4445,7 +4494,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 		for _, w := range i.HasPostsWith {
 			p, err := w.P()
 			if err != nil {
-				return nil, err
+				return nil, fmt.Errorf("%w: field 'HasPostsWith'", err)
 			}
 			with = append(with, p)
 		}
@@ -4453,7 +4502,7 @@ func (i *UserWhereInput) P() (predicate.User, error) {
 	}
 	switch len(predicates) {
 	case 0:
-		return nil, fmt.Errorf("empty predicate UserWhereInput")
+		return nil, ErrEmptyUserWhereInput
 	case 1:
 		return predicates[0], nil
 	default:

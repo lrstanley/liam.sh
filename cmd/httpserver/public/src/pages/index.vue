@@ -1,21 +1,21 @@
 <template>
   <!-- TODO: use less flex -->
-  <div class="flex flex-auto justify-center items-stretch lg:items-center h-full w-full">
+  <div class="flex items-stretch justify-center flex-auto w-full h-full lg:items-center">
     <div
-      class="flex flex-auto flex-col h-full w-full lg:max-w-3xl lg:max-h-md basis-0 flex-grow-0 flex-shrink items-stretch md:items-center pt-15px"
+      class="flex h-full w-full shrink grow-0 basis-auto flex-col items-stretch pt-[15px] md:items-center lg:max-h-[28rem] lg:max-w-3xl"
     >
       <CoreNavigation />
       <CoreTerminal
-        class="mb-4 text-size-38px md:text-size-45px flex flex-auto justify-center"
+        class="mb-4 flex flex-auto justify-center text-[38px] md:text-[45px]"
         path="~"
         prefix="#"
         value="Hello!"
       />
       <n-card
         content-style="padding: 0;display: flex;flex-direction: column;"
-        class="p-0 flex flex-auto h-full w-full"
+        class="flex flex-auto w-full h-full p-0"
       >
-        <EventsRender class="overflow-x-auto basis-0 flex-grow flex-shrink h-full w-full" />
+        <EventsRender class="w-full h-full overflow-x-auto shrink grow basis-0" />
 
         <n-layout-footer bordered class="bottom-bar">
           <span v-motion-fade class="flex flex-auto">
@@ -54,7 +54,7 @@
             <n-tooltip trigger="hover">
               <template #trigger>
                 <a
-                  class="px-2 rounded-br-sm bg-blue-600 hover:bg-blue-800 hover:text-current transition"
+                  class="px-2 transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"
                   style="color: white !important"
                   :href="state.base.githubUser.htmlurl"
                 >
@@ -83,14 +83,14 @@ const state = useState()
 <style scoped>
 .bottom-bar {
   line-height: 1.5;
-  @apply <md:(text-size-1.2em leading-6);
+  @apply text-[1.2em] md:text-[1em];
 }
 
 .bar-item {
-  @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-gray-400 align-middle cursor-pointer transition hover: bg-gray-800;
+  @apply pl-1.5 pr-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800;
 }
 
 .bar-item.misc {
-  @apply <sm: hidden sm:inline-flex;
+  @apply hidden sm:inline-flex;
 }
 </style>

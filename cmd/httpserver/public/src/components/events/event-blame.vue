@@ -1,5 +1,5 @@
 <template>
-  <span class="truncate lowercase select-none text-gray-600 flex-1">
+  <span class="flex-1 lowercase truncate select-none text-zinc-600">
     <slot></slot>
   </span>
 </template>

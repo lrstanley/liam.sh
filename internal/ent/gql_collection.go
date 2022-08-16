@@ -353,8 +353,10 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			gr.withAssets = query
 		}
@@ -528,8 +530,10 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			gr.withLabels = query
 		case "releases":
@@ -623,8 +627,10 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			gr.withReleases = query
 		}
@@ -798,8 +804,10 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			l.withPosts = query
 		case "githubRepositories", "github_repositories":
@@ -901,8 +909,10 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			l.withGithubRepositories = query
 		}
@@ -1085,8 +1095,10 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			po.withLabels = query
 		}
@@ -1252,8 +1264,10 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 				query = pager.applyOrder(query, args.last != nil)
 			}
 			path = append(path, edgesField, nodeField)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
-				return err
+			if field := collectedField(ctx, path...); field != nil {
+				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+					return err
+				}
 			}
 			u.withPosts = query
 		}

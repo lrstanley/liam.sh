@@ -42,7 +42,7 @@ ul :deep(a)::before {
 
 ul :deep(a)::after {
   content: "()";
-  @apply absolute right-2ch text-yellow-300 transition duration-100;
+  @apply absolute right-[2ch] text-yellow-300 transition duration-100;
 }
 
 ul :deep(a):hover::after {
@@ -52,6 +52,6 @@ ul :deep(a):hover::after {
 
 ul :deep(a):hover::after {
   content: "(go)";
-  @apply absolute right-0 text-gray-400;
+  @apply absolute right-0 text-zinc-400;
 }
 </style>

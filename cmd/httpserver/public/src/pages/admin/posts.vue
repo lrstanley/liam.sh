@@ -1,6 +1,6 @@
 <template>
   <LayoutAdmin :loading="fetching" :error="error">
-    <div class="sm:container sm:mx-auto p-4">
+    <div class="p-4 sm:container sm:mx-auto">
       <n-table v-if="!fetching" v-motion-slide-top bordered single-line striped size="small">
         <thead>
           <tr>
@@ -46,9 +46,9 @@
         </tbody>
       </n-table>
     </div>
-    <router-link :to="{ name: 'admin-new-post' }" class="no-underline absolute bottom-5 right-5">
-      <n-button tertiary circle size="large" type="primary" class="h-13 w-13">
-        <n-icon class="text-2em"><i-mdi-pencil-outline /></n-icon>
+    <router-link :to="{ name: 'admin-new-post' }" class="absolute no-underline bottom-5 right-5">
+      <n-button tertiary circle size="large" type="primary" class="h-[13] w-[13]">
+        <n-icon class="text-[2em]"><i-mdi-pencil-outline /></n-icon>
       </n-button>
     </router-link>
   </LayoutAdmin>

@@ -10,6 +10,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 )
 
+// Ping is the resolver for the ping field.
 func (r *mutationResolver) Ping(ctx context.Context) (*string, error) {
 	panic(fmt.Errorf("not implemented"))
 }

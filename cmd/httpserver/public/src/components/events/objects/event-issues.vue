@@ -9,7 +9,7 @@
     </span>
 
     issue
-    <EventHoverItem :href="issue.html_url" :value="'#' + issue.number" class="!text-purple-500">
+    <EventHoverItem :href="issue.html_url" :value="'#' + issue.number">
       {{ issue.title }}
     </EventHoverItem>
 

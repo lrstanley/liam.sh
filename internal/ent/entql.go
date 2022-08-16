@@ -350,7 +350,7 @@ func (gaq *GithubAssetQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the GithubAssetQuery builder.
 func (gaq *GithubAssetQuery) Filter() *GithubAssetFilter {
-	return &GithubAssetFilter{gaq.config, gaq}
+	return &GithubAssetFilter{config: gaq.config, predicateAdder: gaq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -360,13 +360,13 @@ func (m *GithubAssetMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the GithubAssetMutation builder.
 func (m *GithubAssetMutation) Filter() *GithubAssetFilter {
-	return &GithubAssetFilter{m.config, m}
+	return &GithubAssetFilter{config: m.config, predicateAdder: m}
 }
 
 // GithubAssetFilter provides a generic filtering capability at runtime for GithubAssetQuery.
 type GithubAssetFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -459,7 +459,7 @@ func (geq *GithubEventQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the GithubEventQuery builder.
 func (geq *GithubEventQuery) Filter() *GithubEventFilter {
-	return &GithubEventFilter{geq.config, geq}
+	return &GithubEventFilter{config: geq.config, predicateAdder: geq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -469,13 +469,13 @@ func (m *GithubEventMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the GithubEventMutation builder.
 func (m *GithubEventMutation) Filter() *GithubEventFilter {
-	return &GithubEventFilter{m.config, m}
+	return &GithubEventFilter{config: m.config, predicateAdder: m}
 }
 
 // GithubEventFilter provides a generic filtering capability at runtime for GithubEventQuery.
 type GithubEventFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -544,7 +544,7 @@ func (ggq *GithubGistQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the GithubGistQuery builder.
 func (ggq *GithubGistQuery) Filter() *GithubGistFilter {
-	return &GithubGistFilter{ggq.config, ggq}
+	return &GithubGistFilter{config: ggq.config, predicateAdder: ggq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -554,13 +554,13 @@ func (m *GithubGistMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the GithubGistMutation builder.
 func (m *GithubGistMutation) Filter() *GithubGistFilter {
-	return &GithubGistFilter{m.config, m}
+	return &GithubGistFilter{config: m.config, predicateAdder: m}
 }
 
 // GithubGistFilter provides a generic filtering capability at runtime for GithubGistQuery.
 type GithubGistFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -649,7 +649,7 @@ func (grq *GithubReleaseQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the GithubReleaseQuery builder.
 func (grq *GithubReleaseQuery) Filter() *GithubReleaseFilter {
-	return &GithubReleaseFilter{grq.config, grq}
+	return &GithubReleaseFilter{config: grq.config, predicateAdder: grq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -659,13 +659,13 @@ func (m *GithubReleaseMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the GithubReleaseMutation builder.
 func (m *GithubReleaseMutation) Filter() *GithubReleaseFilter {
-	return &GithubReleaseFilter{m.config, m}
+	return &GithubReleaseFilter{config: m.config, predicateAdder: m}
 }
 
 // GithubReleaseFilter provides a generic filtering capability at runtime for GithubReleaseQuery.
 type GithubReleaseFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -767,7 +767,7 @@ func (grq *GithubRepositoryQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the GithubRepositoryQuery builder.
 func (grq *GithubRepositoryQuery) Filter() *GithubRepositoryFilter {
-	return &GithubRepositoryFilter{grq.config, grq}
+	return &GithubRepositoryFilter{config: grq.config, predicateAdder: grq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -777,13 +777,13 @@ func (m *GithubRepositoryMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the GithubRepositoryMutation builder.
 func (m *GithubRepositoryMutation) Filter() *GithubRepositoryFilter {
-	return &GithubRepositoryFilter{m.config, m}
+	return &GithubRepositoryFilter{config: m.config, predicateAdder: m}
 }
 
 // GithubRepositoryFilter provides a generic filtering capability at runtime for GithubRepositoryQuery.
 type GithubRepositoryFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -930,7 +930,7 @@ func (lq *LabelQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the LabelQuery builder.
 func (lq *LabelQuery) Filter() *LabelFilter {
-	return &LabelFilter{lq.config, lq}
+	return &LabelFilter{config: lq.config, predicateAdder: lq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -940,13 +940,13 @@ func (m *LabelMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the LabelMutation builder.
 func (m *LabelMutation) Filter() *LabelFilter {
-	return &LabelFilter{m.config, m}
+	return &LabelFilter{config: m.config, predicateAdder: m}
 }
 
 // LabelFilter provides a generic filtering capability at runtime for LabelQuery.
 type LabelFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -1013,7 +1013,7 @@ func (pq *PostQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the PostQuery builder.
 func (pq *PostQuery) Filter() *PostFilter {
-	return &PostFilter{pq.config, pq}
+	return &PostFilter{config: pq.config, predicateAdder: pq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1023,13 +1023,13 @@ func (m *PostMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the PostMutation builder.
 func (m *PostMutation) Filter() *PostFilter {
-	return &PostFilter{m.config, m}
+	return &PostFilter{config: m.config, predicateAdder: m}
 }
 
 // PostFilter provides a generic filtering capability at runtime for PostQuery.
 type PostFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
@@ -1126,7 +1126,7 @@ func (uq *UserQuery) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns a Filter implementation to apply filters on the UserQuery builder.
 func (uq *UserQuery) Filter() *UserFilter {
-	return &UserFilter{uq.config, uq}
+	return &UserFilter{config: uq.config, predicateAdder: uq}
 }
 
 // addPredicate implements the predicateAdder interface.
@@ -1136,13 +1136,13 @@ func (m *UserMutation) addPredicate(pred func(s *sql.Selector)) {
 
 // Filter returns an entql.Where implementation to apply filters on the UserMutation builder.
 func (m *UserMutation) Filter() *UserFilter {
-	return &UserFilter{m.config, m}
+	return &UserFilter{config: m.config, predicateAdder: m}
 }
 
 // UserFilter provides a generic filtering capability at runtime for UserQuery.
 type UserFilter struct {
-	config
 	predicateAdder
+	config
 }
 
 // Where applies the entql predicate on the query filter.
