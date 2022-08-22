@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.0.0-20220506183931-8c90cb7644e5
 	entgo.io/contrib v0.3.1
 	entgo.io/ent v0.11.2
-	github.com/99designs/gqlgen v0.17.13
+	github.com/99designs/gqlgen v0.17.14
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.0.7
@@ -22,7 +22,7 @@ require (
 	github.com/lrstanley/clix v0.0.0-20220711131806-9a1b44c031c8
 	github.com/markbates/goth v1.73.0
 	github.com/microcosm-cc/bluemonday v1.0.19
-	github.com/vektah/gqlparser/v2 v2.4.7
+	github.com/vektah/gqlparser/v2 v2.4.8
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.4.13
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
