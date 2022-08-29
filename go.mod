@@ -17,7 +17,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jackc/pgconn v1.13.0
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
-	github.com/jackc/pgx/v4 v4.17.0
+	github.com/jackc/pgx/v4 v4.17.1
 	github.com/lrstanley/chix v0.0.0-20220727021022-5e94e996e155
 	github.com/lrstanley/clix v0.0.0-20220711131806-9a1b44c031c8
 	github.com/markbates/goth v1.73.0
