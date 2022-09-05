@@ -4,8 +4,8 @@ go 1.18
 
 require (
 	ariga.io/entcache v0.0.0-20220506183931-8c90cb7644e5
-	entgo.io/contrib v0.3.1
-	entgo.io/ent v0.11.2
+	entgo.io/contrib v0.3.2
+	entgo.io/ent v0.11.3-0.20220830071904-3b1b75b9d7a9
 	github.com/99designs/gqlgen v0.17.16
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
@@ -33,7 +33,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.5.1-0.20220724111820-d9260fa9f065 // indirect
+	ariga.io/atlas v0.6.2-0.20220819114704-2060066abac7 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -89,7 +89,7 @@ require (
 	golang.org/x/net v0.0.0-20220728211354-c7608f3a8462 // indirect
 	golang.org/x/sys v0.0.0-20220730100132-1609e554cd39 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	golang.org/x/tools v0.1.13-0.20220804200503-81c7dc4e4efa // indirect
+	golang.org/x/tools v0.1.13-0.20220819182638-587a15310bdd // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
