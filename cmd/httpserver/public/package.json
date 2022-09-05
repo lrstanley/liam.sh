@@ -8,14 +8,13 @@
   "dependencies": {
     "@codemirror/lang-markdown": "^6.0.0",
     "@codemirror/theme-one-dark": "^6.0.0",
+    "@codemirror/view": "^6.2.2",
     "@fullhuman/postcss-purgecss": "^4.1.3",
     "@graphql-codegen/cli": "^2.12.0",
     "@graphql-codegen/typescript": "^2.7.3",
     "@graphql-codegen/typescript-operations": "^2.5.3",
     "@graphql-codegen/typescript-vue-urql": "^2.3.3",
     "@iconify-json/mdi": "^1.1.31",
-    "@tiptap/starter-kit": "2.0.0-beta.192",
-    "@tiptap/vue-3": "2.0.0-beta.97",
     "@types/node": "^18.7.15",
     "@urql/exchange-retry": "^0.3.3",
     "@urql/vue": "^0.6.3",
@@ -46,36 +45,47 @@
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-typescript": "^11.0.0",
     "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tailwindcss": "^3.6.1",
     "eslint-plugin-vue": "^9.4.0",
     "prettier": "^2.7.1"
   },
   "eslintConfig": {
     "env": {
+      "browser": true,
+      "es2021": true,
       "node": true
     },
     "extends": [
       "plugin:vue/vue3-recommended",
       "eslint:recommended",
+      "@vue/typescript/recommended",
+      "@vue/eslint-config-typescript/recommended",
+      "@vue/eslint-config-prettier",
       "plugin:tailwindcss/recommended",
-      "prettier",
       "./.eslintrc-auto-import.json"
     ],
-    "globals": {
-      "defineEmits": "readonly",
-      "defineExpose": "readonly",
-      "defineProps": "readonly",
-      "withDefaults": "readonly"
-    },
     "ignorePatterns": [
       "dist",
       "node_modules",
-      ".git"
+      ".git",
+      "*.d.ts",
+      "*.config.ts",
+      "*.config.js"
     ],
+    "parserOptions": {
+      "ecmaVersion": 2021
+    },
     "root": true,
     "rules": {
+      "@typescript-eslint/no-explicit-any": "off",
       "newline-per-chained-call": "off",
       "tailwindcss/classnames-order": "off",
       "tailwindcss/enforces-negative-arbitrary-values": "error",
@@ -92,6 +102,12 @@
     }
   },
   "name": "liam.sh",
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {},
+      "tailwindcss": {}
+    }
+  },
   "prettier": {
     "arrowParens": "always",
     "bracketSameLine": false,

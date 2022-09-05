@@ -25,17 +25,17 @@
         </n-form-item>
       </div>
 
-      <component
-        :is="code"
-        v-if="code && codeExtensions.length == 3"
-        v-model="post.content"
-        placeholder="Post content"
-        :autofocus="true"
-        :style="{ 'min-height': '400px' }"
-        :indent-with-tab="true"
-        :tab-size="4"
-        :extensions="codeExtensions"
-      />
+      <div class="flex w-full shrink grow-0">
+        <codemirror
+          v-model="post.content"
+          placeholder="Post content"
+          :autofocus="true"
+          :style="{ 'min-height': '400px' }"
+          :indent-with-tab="true"
+          :tab-size="4"
+          :extensions="codeExtensions"
+        />
+      </div>
     </n-card>
     <div>
       <n-card size="small" class="md:sticky md:top-5 md:left-0">
@@ -58,22 +58,13 @@
   </div>
 </template>
 
-<script setup>
-const code = shallowRef(null)
-import("vue-codemirror").then(({ Codemirror }) => {
-  code.value = Codemirror
-})
+<script setup lang="ts">
+import { Codemirror } from "vue-codemirror"
+import { EditorView } from "@codemirror/view"
+import { markdown } from "@codemirror/lang-markdown"
+import { oneDark } from "@codemirror/theme-one-dark"
 
-const codeExtensions = ref([])
-import("@codemirror/theme-one-dark").then(({ oneDark }) => {
-  codeExtensions.value.push(oneDark)
-})
-import("@codemirror/lang-markdown").then(({ markdown }) => {
-  codeExtensions.value.push(markdown())
-})
-import("@codemirror/view").then(({ EditorView }) => {
-  codeExtensions.value.push(EditorView.lineWrapping)
-})
+const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
 
 const props = defineProps({
   post: {
