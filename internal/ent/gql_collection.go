@@ -38,7 +38,8 @@ func (ga *GithubAssetQuery) collectField(ctx context.Context, op *graphql.Operat
 		switch field.Name {
 		case "release":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &GithubReleaseQuery{config: ga.config}
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
@@ -255,7 +256,8 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 		switch field.Name {
 		case "repository":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &GithubRepositoryQuery{config: gr.config}
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
@@ -264,7 +266,8 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 			gr.withRepository = query
 		case "assets":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &GithubAssetQuery{config: gr.config}
 			)
 			args := newGithubAssetPaginateArgs(fieldArgs(ctx, new(GithubAssetWhereInput), path...))
@@ -278,8 +281,10 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRelease) error {
 						ids := make([]driver.Value, len(nodes))
@@ -302,49 +307,30 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[1] = &n
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				} else {
+					gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRelease) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Assets)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRelease) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"github_release_assets"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						s.Where(sql.InValues(githubrelease.AssetsColumn, ids...))
-					})
-					if err := query.GroupBy(githubrelease.AssetsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			} else {
-				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRelease) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Assets)
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(args.last != nil))
@@ -358,7 +344,9 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 					return err
 				}
 			}
-			gr.withAssets = query
+			gr.WithNamedAssets(alias, func(wq *GithubAssetQuery) {
+				*wq = *query
+			})
 		}
 	}
 	return nil
@@ -433,7 +421,8 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 		switch field.Name {
 		case "labels":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &LabelQuery{config: gr.config}
 			)
 			args := newLabelPaginateArgs(fieldArgs(ctx, new(LabelWhereInput), path...))
@@ -447,8 +436,10 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
 						ids := make([]driver.Value, len(nodes))
@@ -475,53 +466,30 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[0] = &n
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
+						}
+						return nil
+					})
+				} else {
+					gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Labels)
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"github_repository_id"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						joinT := sql.Table(githubrepository.LabelsTable)
-						s.Join(joinT).On(s.C(label.FieldID), joinT.C(githubrepository.LabelsPrimaryKey[0]))
-						s.Where(sql.InValues(joinT.C(githubrepository.LabelsPrimaryKey[1]), ids...))
-						s.Select(joinT.C(githubrepository.LabelsPrimaryKey[1]), sql.Count("*"))
-						s.GroupBy(joinT.C(githubrepository.LabelsPrimaryKey[1]))
-					})
-					if err := query.Select().Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			} else {
-				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Labels)
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(args.last != nil))
@@ -535,10 +503,13 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 					return err
 				}
 			}
-			gr.withLabels = query
+			gr.WithNamedLabels(alias, func(wq *LabelQuery) {
+				*wq = *query
+			})
 		case "releases":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &GithubReleaseQuery{config: gr.config}
 			)
 			args := newGithubReleasePaginateArgs(fieldArgs(ctx, new(GithubReleaseWhereInput), path...))
@@ -552,8 +523,10 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
 						ids := make([]driver.Value, len(nodes))
@@ -576,49 +549,30 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[1] = &n
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				} else {
+					gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Releases)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				gr.loadTotal = append(gr.loadTotal, func(ctx context.Context, nodes []*GithubRepository) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"github_repository_releases"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						s.Where(sql.InValues(githubrepository.ReleasesColumn, ids...))
-					})
-					if err := query.GroupBy(githubrepository.ReleasesColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			} else {
-				gr.loadTotal = append(gr.loadTotal, func(_ context.Context, nodes []*GithubRepository) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Releases)
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(args.last != nil))
@@ -632,7 +586,9 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 					return err
 				}
 			}
-			gr.withReleases = query
+			gr.WithNamedReleases(alias, func(wq *GithubReleaseQuery) {
+				*wq = *query
+			})
 		}
 	}
 	return nil
@@ -707,7 +663,8 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 		switch field.Name {
 		case "posts":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &PostQuery{config: l.config}
 			)
 			args := newPostPaginateArgs(fieldArgs(ctx, new(PostWhereInput), path...))
@@ -721,8 +678,10 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
 						ids := make([]driver.Value, len(nodes))
@@ -749,53 +708,30 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[0] = &n
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
+						}
+						return nil
+					})
+				} else {
+					l.loadTotal = append(l.loadTotal, func(_ context.Context, nodes []*Label) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Posts)
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"label_id"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						joinT := sql.Table(label.PostsTable)
-						s.Join(joinT).On(s.C(post.FieldID), joinT.C(label.PostsPrimaryKey[1]))
-						s.Where(sql.InValues(joinT.C(label.PostsPrimaryKey[0]), ids...))
-						s.Select(joinT.C(label.PostsPrimaryKey[0]), sql.Count("*"))
-						s.GroupBy(joinT.C(label.PostsPrimaryKey[0]))
-					})
-					if err := query.Select().Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			} else {
-				l.loadTotal = append(l.loadTotal, func(_ context.Context, nodes []*Label) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Posts)
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(label.PostsPrimaryKey[0], limit, pager.orderExpr(args.last != nil))
@@ -809,10 +745,13 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 					return err
 				}
 			}
-			l.withPosts = query
+			l.WithNamedPosts(alias, func(wq *PostQuery) {
+				*wq = *query
+			})
 		case "githubRepositories", "github_repositories":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &GithubRepositoryQuery{config: l.config}
 			)
 			args := newGithubRepositoryPaginateArgs(fieldArgs(ctx, new(GithubRepositoryWhereInput), path...))
@@ -826,8 +765,10 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
 						ids := make([]driver.Value, len(nodes))
@@ -854,53 +795,30 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[1] = &n
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				} else {
+					l.loadTotal = append(l.loadTotal, func(_ context.Context, nodes []*Label) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.GithubRepositories)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				l.loadTotal = append(l.loadTotal, func(ctx context.Context, nodes []*Label) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"label_id"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						joinT := sql.Table(label.GithubRepositoriesTable)
-						s.Join(joinT).On(s.C(githubrepository.FieldID), joinT.C(label.GithubRepositoriesPrimaryKey[1]))
-						s.Where(sql.InValues(joinT.C(label.GithubRepositoriesPrimaryKey[0]), ids...))
-						s.Select(joinT.C(label.GithubRepositoriesPrimaryKey[0]), sql.Count("*"))
-						s.GroupBy(joinT.C(label.GithubRepositoriesPrimaryKey[0]))
-					})
-					if err := query.Select().Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			} else {
-				l.loadTotal = append(l.loadTotal, func(_ context.Context, nodes []*Label) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.GithubRepositories)
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(args.last != nil))
@@ -914,7 +832,9 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 					return err
 				}
 			}
-			l.withGithubRepositories = query
+			l.WithNamedGithubRepositories(alias, func(wq *GithubRepositoryQuery) {
+				*wq = *query
+			})
 		}
 	}
 	return nil
@@ -989,7 +909,8 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 		switch field.Name {
 		case "author":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &UserQuery{config: po.config}
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
@@ -998,7 +919,8 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			po.withAuthor = query
 		case "labels":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &LabelQuery{config: po.config}
 			)
 			args := newLabelPaginateArgs(fieldArgs(ctx, new(LabelWhereInput), path...))
@@ -1012,8 +934,10 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					po.loadTotal = append(po.loadTotal, func(ctx context.Context, nodes []*Post) error {
 						ids := make([]driver.Value, len(nodes))
@@ -1040,53 +964,30 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[1] = &n
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
+						}
+						return nil
+					})
+				} else {
+					po.loadTotal = append(po.loadTotal, func(_ context.Context, nodes []*Post) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Labels)
+							if nodes[i].Edges.totalCount[1] == nil {
+								nodes[i].Edges.totalCount[1] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[1][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				po.loadTotal = append(po.loadTotal, func(ctx context.Context, nodes []*Post) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"post_id"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						joinT := sql.Table(post.LabelsTable)
-						s.Join(joinT).On(s.C(label.FieldID), joinT.C(post.LabelsPrimaryKey[0]))
-						s.Where(sql.InValues(joinT.C(post.LabelsPrimaryKey[1]), ids...))
-						s.Select(joinT.C(post.LabelsPrimaryKey[1]), sql.Count("*"))
-						s.GroupBy(joinT.C(post.LabelsPrimaryKey[1]))
-					})
-					if err := query.Select().Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			} else {
-				po.loadTotal = append(po.loadTotal, func(_ context.Context, nodes []*Post) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Labels)
-						nodes[i].Edges.totalCount[1] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(post.LabelsPrimaryKey[1], limit, pager.orderExpr(args.last != nil))
@@ -1100,7 +1001,9 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 					return err
 				}
 			}
-			po.withLabels = query
+			po.WithNamedLabels(alias, func(wq *LabelQuery) {
+				*wq = *query
+			})
 		}
 	}
 	return nil
@@ -1175,7 +1078,8 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 		switch field.Name {
 		case "posts":
 			var (
-				path  = append(path, field.Name)
+				alias = field.Alias
+				path  = append(path, alias)
 				query = &PostQuery{config: u.config}
 			)
 			args := newPostPaginateArgs(fieldArgs(ctx, new(PostWhereInput), path...))
@@ -1189,8 +1093,10 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 			if query, err = pager.applyFilter(query); err != nil {
 				return err
 			}
-			if !hasCollectedField(ctx, append(path, edgesField)...) || args.first != nil && *args.first == 0 || args.last != nil && *args.last == 0 {
-				if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+			ignoredEdges := !hasCollectedField(ctx, append(path, edgesField)...)
+			if hasCollectedField(ctx, append(path, totalCountField)...) || hasCollectedField(ctx, append(path, pageInfoField)...) {
+				hasPagination := args.after != nil || args.first != nil || args.before != nil || args.last != nil
+				if hasPagination || ignoredEdges {
 					query := query.Clone()
 					u.loadTotal = append(u.loadTotal, func(ctx context.Context, nodes []*User) error {
 						ids := make([]driver.Value, len(nodes))
@@ -1213,49 +1119,30 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 						}
 						for i := range nodes {
 							n := m[nodes[i].ID]
-							nodes[i].Edges.totalCount[0] = &n
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
+						}
+						return nil
+					})
+				} else {
+					u.loadTotal = append(u.loadTotal, func(_ context.Context, nodes []*User) error {
+						for i := range nodes {
+							n := len(nodes[i].Edges.Posts)
+							if nodes[i].Edges.totalCount[0] == nil {
+								nodes[i].Edges.totalCount[0] = make(map[string]int)
+							}
+							nodes[i].Edges.totalCount[0][alias] = n
 						}
 						return nil
 					})
 				}
+			}
+			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-			if (args.after != nil || args.first != nil || args.before != nil || args.last != nil) && hasCollectedField(ctx, append(path, totalCountField)...) {
-				query := query.Clone()
-				u.loadTotal = append(u.loadTotal, func(ctx context.Context, nodes []*User) error {
-					ids := make([]driver.Value, len(nodes))
-					for i := range nodes {
-						ids[i] = nodes[i].ID
-					}
-					var v []struct {
-						NodeID int `sql:"user_posts"`
-						Count  int `sql:"count"`
-					}
-					query.Where(func(s *sql.Selector) {
-						s.Where(sql.InValues(user.PostsColumn, ids...))
-					})
-					if err := query.GroupBy(user.PostsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
-						return err
-					}
-					m := make(map[int]int, len(v))
-					for i := range v {
-						m[v[i].NodeID] = v[i].Count
-					}
-					for i := range nodes {
-						n := m[nodes[i].ID]
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			} else {
-				u.loadTotal = append(u.loadTotal, func(_ context.Context, nodes []*User) error {
-					for i := range nodes {
-						n := len(nodes[i].Edges.Posts)
-						nodes[i].Edges.totalCount[0] = &n
-					}
-					return nil
-				})
-			}
+
 			query = pager.applyCursors(query, args.after, args.before)
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
 				modify := limitRows(user.PostsColumn, limit, pager.orderExpr(args.last != nil))
@@ -1269,7 +1156,9 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 					return err
 				}
 			}
-			u.withPosts = query
+			u.WithNamedPosts(alias, func(wq *PostQuery) {
+				*wq = *query
+			})
 		}
 	}
 	return nil
@@ -1346,7 +1235,7 @@ func fieldArgs(ctx context.Context, whereInput interface{}, path ...string) map[
 	for _, name := range path {
 		var field *graphql.CollectedField
 		for _, f := range graphql.CollectFields(oc, fc.Field.Selections, nil) {
-			if f.Name == name {
+			if f.Alias == name {
 				field = &f
 				break
 			}
@@ -1383,7 +1272,7 @@ func unmarshalArgs(ctx context.Context, whereInput interface{}, args map[string]
 		}
 		c := &Cursor{}
 		if c.UnmarshalGQL(v) == nil {
-			args[k] = &c
+			args[k] = c
 		}
 	}
 	if v, ok := args[whereField]; ok && whereInput != nil {

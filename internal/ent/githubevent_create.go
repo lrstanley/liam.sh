@@ -333,7 +333,6 @@ func (gec *GithubEventCreate) createSpec() (*GithubEvent, *sqlgraph.CreateSpec) 
 //			SetEventID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gec *GithubEventCreate) OnConflict(opts ...sql.ConflictOption) *GithubEventUpsertOne {
 	gec.conflict = opts
 	return &GithubEventUpsertOne{
@@ -347,7 +346,6 @@ func (gec *GithubEventCreate) OnConflict(opts ...sql.ConflictOption) *GithubEven
 //	client.GithubEvent.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gec *GithubEventCreate) OnConflictColumns(columns ...string) *GithubEventUpsertOne {
 	gec.conflict = append(gec.conflict, sql.ConflictColumns(columns...))
 	return &GithubEventUpsertOne{
@@ -496,7 +494,6 @@ func (u *GithubEventUpsert) UpdatePayload() *GithubEventUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubEventUpsertOne) UpdateNewValues() *GithubEventUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -505,10 +502,9 @@ func (u *GithubEventUpsertOne) UpdateNewValues() *GithubEventUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.GithubEvent.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.GithubEvent.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *GithubEventUpsertOne) Ignore() *GithubEventUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -804,7 +800,6 @@ func (gecb *GithubEventCreateBulk) ExecX(ctx context.Context) {
 //			SetEventID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gecb *GithubEventCreateBulk) OnConflict(opts ...sql.ConflictOption) *GithubEventUpsertBulk {
 	gecb.conflict = opts
 	return &GithubEventUpsertBulk{
@@ -818,7 +813,6 @@ func (gecb *GithubEventCreateBulk) OnConflict(opts ...sql.ConflictOption) *Githu
 //	client.GithubEvent.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gecb *GithubEventCreateBulk) OnConflictColumns(columns ...string) *GithubEventUpsertBulk {
 	gecb.conflict = append(gecb.conflict, sql.ConflictColumns(columns...))
 	return &GithubEventUpsertBulk{
@@ -840,7 +834,6 @@ type GithubEventUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubEventUpsertBulk) UpdateNewValues() *GithubEventUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -852,7 +845,6 @@ func (u *GithubEventUpsertBulk) UpdateNewValues() *GithubEventUpsertBulk {
 //	client.GithubEvent.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *GithubEventUpsertBulk) Ignore() *GithubEventUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

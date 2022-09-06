@@ -313,7 +313,6 @@ func (lc *LabelCreate) createSpec() (*Label, *sqlgraph.CreateSpec) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (lc *LabelCreate) OnConflict(opts ...sql.ConflictOption) *LabelUpsertOne {
 	lc.conflict = opts
 	return &LabelUpsertOne{
@@ -327,7 +326,6 @@ func (lc *LabelCreate) OnConflict(opts ...sql.ConflictOption) *LabelUpsertOne {
 //	client.Label.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (lc *LabelCreate) OnConflictColumns(columns ...string) *LabelUpsertOne {
 	lc.conflict = append(lc.conflict, sql.ConflictColumns(columns...))
 	return &LabelUpsertOne{
@@ -347,18 +345,6 @@ type (
 		*sql.UpdateSet
 	}
 )
-
-// SetCreateTime sets the "create_time" field.
-func (u *LabelUpsert) SetCreateTime(v time.Time) *LabelUpsert {
-	u.Set(label.FieldCreateTime, v)
-	return u
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *LabelUpsert) UpdateCreateTime() *LabelUpsert {
-	u.SetExcluded(label.FieldCreateTime)
-	return u
-}
 
 // SetUpdateTime sets the "update_time" field.
 func (u *LabelUpsert) SetUpdateTime(v time.Time) *LabelUpsert {
@@ -392,7 +378,6 @@ func (u *LabelUpsert) UpdateName() *LabelUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *LabelUpsertOne) UpdateNewValues() *LabelUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -406,10 +391,9 @@ func (u *LabelUpsertOne) UpdateNewValues() *LabelUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Label.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Label.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *LabelUpsertOne) Ignore() *LabelUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -429,20 +413,6 @@ func (u *LabelUpsertOne) Update(set func(*LabelUpsert)) *LabelUpsertOne {
 		set(&LabelUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetCreateTime sets the "create_time" field.
-func (u *LabelUpsertOne) SetCreateTime(v time.Time) *LabelUpsertOne {
-	return u.Update(func(s *LabelUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *LabelUpsertOne) UpdateCreateTime() *LabelUpsertOne {
-	return u.Update(func(s *LabelUpsert) {
-		s.UpdateCreateTime()
-	})
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -607,7 +577,6 @@ func (lcb *LabelCreateBulk) ExecX(ctx context.Context) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (lcb *LabelCreateBulk) OnConflict(opts ...sql.ConflictOption) *LabelUpsertBulk {
 	lcb.conflict = opts
 	return &LabelUpsertBulk{
@@ -621,7 +590,6 @@ func (lcb *LabelCreateBulk) OnConflict(opts ...sql.ConflictOption) *LabelUpsertB
 //	client.Label.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (lcb *LabelCreateBulk) OnConflictColumns(columns ...string) *LabelUpsertBulk {
 	lcb.conflict = append(lcb.conflict, sql.ConflictColumns(columns...))
 	return &LabelUpsertBulk{
@@ -643,7 +611,6 @@ type LabelUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *LabelUpsertBulk) UpdateNewValues() *LabelUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -662,7 +629,6 @@ func (u *LabelUpsertBulk) UpdateNewValues() *LabelUpsertBulk {
 //	client.Label.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *LabelUpsertBulk) Ignore() *LabelUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -682,20 +648,6 @@ func (u *LabelUpsertBulk) Update(set func(*LabelUpsert)) *LabelUpsertBulk {
 		set(&LabelUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetCreateTime sets the "create_time" field.
-func (u *LabelUpsertBulk) SetCreateTime(v time.Time) *LabelUpsertBulk {
-	return u.Update(func(s *LabelUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *LabelUpsertBulk) UpdateCreateTime() *LabelUpsertBulk {
-	return u.Update(func(s *LabelUpsert) {
-		s.UpdateCreateTime()
-	})
 }
 
 // SetUpdateTime sets the "update_time" field.

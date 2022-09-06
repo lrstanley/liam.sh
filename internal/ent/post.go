@@ -55,7 +55,9 @@ type PostEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]*int
+	totalCount [2]map[string]int
+
+	namedLabels map[string][]*Label
 }
 
 // AuthorOrErr returns the Author value or an error if the edge
@@ -63,8 +65,7 @@ type PostEdges struct {
 func (e PostEdges) AuthorOrErr() (*User, error) {
 	if e.loadedTypes[0] {
 		if e.Author == nil {
-			// The edge author was loaded in eager-loading,
-			// but was not found.
+			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: user.Label}
 		}
 		return e.Author, nil
@@ -82,8 +83,8 @@ func (e PostEdges) LabelsOrErr() ([]*Label, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Post) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*Post) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case post.FieldID, post.FieldViewCount:
@@ -103,7 +104,7 @@ func (*Post) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Post fields.
-func (po *Post) assignValues(columns []string, values []interface{}) error {
+func (po *Post) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -242,6 +243,30 @@ func (po *Post) String() string {
 	builder.WriteString(fmt.Sprintf("%v", po.ViewCount))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedLabels returns the Labels named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (po *Post) NamedLabels(name string) ([]*Label, error) {
+	if po.Edges.namedLabels == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := po.Edges.namedLabels[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (po *Post) appendNamedLabels(name string, edges ...*Label) {
+	if po.Edges.namedLabels == nil {
+		po.Edges.namedLabels = make(map[string][]*Label)
+	}
+	if len(edges) == 0 {
+		po.Edges.namedLabels[name] = []*Label{}
+	} else {
+		po.Edges.namedLabels[name] = append(po.Edges.namedLabels[name], edges...)
+	}
 }
 
 // Posts is a parsable slice of Post.

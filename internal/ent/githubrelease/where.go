@@ -38,7 +38,7 @@ func IDNEQ(id int) predicate.GithubRelease {
 // IDIn applies the In predicate on the ID field.
 func IDIn(ids ...int) predicate.GithubRelease {
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -49,7 +49,7 @@ func IDIn(ids ...int) predicate.GithubRelease {
 // IDNotIn applies the NotIn predicate on the ID field.
 func IDNotIn(ids ...int) predicate.GithubRelease {
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		v := make([]interface{}, len(ids))
+		v := make([]any, len(ids))
 		for i := range v {
 			v[i] = ids[i]
 		}
@@ -164,34 +164,22 @@ func ReleaseIDNEQ(v int64) predicate.GithubRelease {
 
 // ReleaseIDIn applies the In predicate on the "release_id" field.
 func ReleaseIDIn(vs ...int64) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldReleaseID), v...))
 	})
 }
 
 // ReleaseIDNotIn applies the NotIn predicate on the "release_id" field.
 func ReleaseIDNotIn(vs ...int64) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldReleaseID), v...))
 	})
 }
@@ -240,34 +228,22 @@ func HTMLURLNEQ(v string) predicate.GithubRelease {
 
 // HTMLURLIn applies the In predicate on the "html_url" field.
 func HTMLURLIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldHTMLURL), v...))
 	})
 }
 
 // HTMLURLNotIn applies the NotIn predicate on the "html_url" field.
 func HTMLURLNotIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldHTMLURL), v...))
 	})
 }
@@ -351,34 +327,22 @@ func TagNameNEQ(v string) predicate.GithubRelease {
 
 // TagNameIn applies the In predicate on the "tag_name" field.
 func TagNameIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldTagName), v...))
 	})
 }
 
 // TagNameNotIn applies the NotIn predicate on the "tag_name" field.
 func TagNameNotIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldTagName), v...))
 	})
 }
@@ -462,34 +426,22 @@ func TargetCommitishNEQ(v string) predicate.GithubRelease {
 
 // TargetCommitishIn applies the In predicate on the "target_commitish" field.
 func TargetCommitishIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldTargetCommitish), v...))
 	})
 }
 
 // TargetCommitishNotIn applies the NotIn predicate on the "target_commitish" field.
 func TargetCommitishNotIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldTargetCommitish), v...))
 	})
 }
@@ -573,34 +525,22 @@ func NameNEQ(v string) predicate.GithubRelease {
 
 // NameIn applies the In predicate on the "name" field.
 func NameIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldName), v...))
 	})
 }
 
 // NameNotIn applies the NotIn predicate on the "name" field.
 func NameNotIn(vs ...string) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldName), v...))
 	})
 }
@@ -726,34 +666,22 @@ func CreatedAtNEQ(v time.Time) predicate.GithubRelease {
 
 // CreatedAtIn applies the In predicate on the "created_at" field.
 func CreatedAtIn(vs ...time.Time) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldCreatedAt), v...))
 	})
 }
 
 // CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
 func CreatedAtNotIn(vs ...time.Time) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldCreatedAt), v...))
 	})
 }
@@ -802,34 +730,22 @@ func PublishedAtNEQ(v time.Time) predicate.GithubRelease {
 
 // PublishedAtIn applies the In predicate on the "published_at" field.
 func PublishedAtIn(vs ...time.Time) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.In(s.C(FieldPublishedAt), v...))
 	})
 }
 
 // PublishedAtNotIn applies the NotIn predicate on the "published_at" field.
 func PublishedAtNotIn(vs ...time.Time) predicate.GithubRelease {
-	v := make([]interface{}, len(vs))
+	v := make([]any, len(vs))
 	for i := range v {
 		v[i] = vs[i]
 	}
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
 		s.Where(sql.NotIn(s.C(FieldPublishedAt), v...))
 	})
 }

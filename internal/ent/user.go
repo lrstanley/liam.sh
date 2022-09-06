@@ -53,7 +53,9 @@ type UserEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 	// totalCount holds the count of the edges above.
-	totalCount [1]*int
+	totalCount [1]map[string]int
+
+	namedPosts map[string][]*Post
 }
 
 // PostsOrErr returns the Posts value or an error if the edge
@@ -66,8 +68,8 @@ func (e UserEdges) PostsOrErr() ([]*Post, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*User) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*User) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case user.FieldID, user.FieldUserID:
@@ -85,7 +87,7 @@ func (*User) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the User fields.
-func (u *User) assignValues(columns []string, values []interface{}) error {
+func (u *User) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -221,6 +223,30 @@ func (u *User) String() string {
 	builder.WriteString(u.Bio)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedPosts returns the Posts named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (u *User) NamedPosts(name string) ([]*Post, error) {
+	if u.Edges.namedPosts == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := u.Edges.namedPosts[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (u *User) appendNamedPosts(name string, edges ...*Post) {
+	if u.Edges.namedPosts == nil {
+		u.Edges.namedPosts = make(map[string][]*Post)
+	}
+	if len(edges) == 0 {
+		u.Edges.namedPosts[name] = []*Post{}
+	} else {
+		u.Edges.namedPosts[name] = append(u.Edges.namedPosts[name], edges...)
+	}
 }
 
 // Users is a parsable slice of User.

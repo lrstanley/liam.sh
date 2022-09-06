@@ -268,7 +268,6 @@ func (geq *GithubEventQuery) Clone() *GithubEventQuery {
 //		GroupBy(githubevent.FieldEventID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (geq *GithubEventQuery) GroupBy(field string, fields ...string) *GithubEventGroupBy {
 	grbuild := &GithubEventGroupBy{config: geq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -295,7 +294,6 @@ func (geq *GithubEventQuery) GroupBy(field string, fields ...string) *GithubEven
 //	client.GithubEvent.Query().
 //		Select(githubevent.FieldEventID).
 //		Scan(ctx, &v)
-//
 func (geq *GithubEventQuery) Select(fields ...string) *GithubEventSelect {
 	geq.fields = append(geq.fields, fields...)
 	selbuild := &GithubEventSelect{GithubEventQuery: geq}
@@ -331,10 +329,10 @@ func (geq *GithubEventQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 		nodes = []*GithubEvent{}
 		_spec = geq.querySpec()
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*GithubEvent).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &GithubEvent{config: geq.config}
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
@@ -477,7 +475,7 @@ func (gegb *GithubEventGroupBy) Aggregate(fns ...AggregateFunc) *GithubEventGrou
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (gegb *GithubEventGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (gegb *GithubEventGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := gegb.path(ctx)
 	if err != nil {
 		return err
@@ -486,7 +484,7 @@ func (gegb *GithubEventGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return gegb.sqlScan(ctx, v)
 }
 
-func (gegb *GithubEventGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (gegb *GithubEventGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range gegb.fields {
 		if !githubevent.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -533,7 +531,7 @@ type GithubEventSelect struct {
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ges *GithubEventSelect) Scan(ctx context.Context, v interface{}) error {
+func (ges *GithubEventSelect) Scan(ctx context.Context, v any) error {
 	if err := ges.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -541,7 +539,7 @@ func (ges *GithubEventSelect) Scan(ctx context.Context, v interface{}) error {
 	return ges.sqlScan(ctx, v)
 }
 
-func (ges *GithubEventSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ges *GithubEventSelect) sqlScan(ctx context.Context, v any) error {
 	rows := &sql.Rows{}
 	query, args := ges.sql.Query()
 	if err := ges.driver.Query(ctx, query, args, rows); err != nil {

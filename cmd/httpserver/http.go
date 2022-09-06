@@ -28,7 +28,7 @@ import (
 	"github.com/markbates/goth/providers/github"
 )
 
-//go:generate touch public/dist/index.html
+//go:generate sh -c "mkdir -vp public/dist;touch public/dist/index.html"
 //go:embed all:public/dist
 var staticFS embed.FS
 

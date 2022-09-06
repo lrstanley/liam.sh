@@ -59,7 +59,7 @@ type GithubAssetEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
 	// totalCount holds the count of the edges above.
-	totalCount [1]*int
+	totalCount [1]map[string]int
 }
 
 // ReleaseOrErr returns the Release value or an error if the edge
@@ -67,8 +67,7 @@ type GithubAssetEdges struct {
 func (e GithubAssetEdges) ReleaseOrErr() (*GithubRelease, error) {
 	if e.loadedTypes[0] {
 		if e.Release == nil {
-			// The edge release was loaded in eager-loading,
-			// but was not found.
+			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: githubrelease.Label}
 		}
 		return e.Release, nil
@@ -77,8 +76,8 @@ func (e GithubAssetEdges) ReleaseOrErr() (*GithubRelease, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*GithubAsset) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*GithubAsset) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case githubasset.FieldUploader:
@@ -100,7 +99,7 @@ func (*GithubAsset) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the GithubAsset fields.
-func (ga *GithubAsset) assignValues(columns []string, values []interface{}) error {
+func (ga *GithubAsset) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}

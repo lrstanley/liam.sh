@@ -25,18 +25,18 @@ import (
 // GithubReleaseQuery is the builder for querying GithubRelease entities.
 type GithubReleaseQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
-	order      []OrderFunc
-	fields     []string
-	predicates []predicate.GithubRelease
-	// eager-loading edges.
-	withRepository *GithubRepositoryQuery
-	withAssets     *GithubAssetQuery
-	withFKs        bool
-	modifiers      []func(*sql.Selector)
-	loadTotal      []func(context.Context, []*GithubRelease) error
+	limit           *int
+	offset          *int
+	unique          *bool
+	order           []OrderFunc
+	fields          []string
+	predicates      []predicate.GithubRelease
+	withRepository  *GithubRepositoryQuery
+	withAssets      *GithubAssetQuery
+	withFKs         bool
+	modifiers       []func(*sql.Selector)
+	loadTotal       []func(context.Context, []*GithubRelease) error
+	withNamedAssets map[string]*GithubAssetQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -343,7 +343,6 @@ func (grq *GithubReleaseQuery) WithAssets(opts ...func(*GithubAssetQuery)) *Gith
 //		GroupBy(githubrelease.FieldReleaseID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (grq *GithubReleaseQuery) GroupBy(field string, fields ...string) *GithubReleaseGroupBy {
 	grbuild := &GithubReleaseGroupBy{config: grq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -370,7 +369,6 @@ func (grq *GithubReleaseQuery) GroupBy(field string, fields ...string) *GithubRe
 //	client.GithubRelease.Query().
 //		Select(githubrelease.FieldReleaseID).
 //		Scan(ctx, &v)
-//
 func (grq *GithubReleaseQuery) Select(fields ...string) *GithubReleaseSelect {
 	grq.fields = append(grq.fields, fields...)
 	selbuild := &GithubReleaseSelect{GithubReleaseQuery: grq}
@@ -417,10 +415,10 @@ func (grq *GithubReleaseQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	if withFKs {
 		_spec.Node.Columns = append(_spec.Node.Columns, githubrelease.ForeignKeys...)
 	}
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*GithubRelease).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &GithubRelease{config: grq.config}
 		nodes = append(nodes, node)
 		node.Edges.loadedTypes = loadedTypes
@@ -438,71 +436,93 @@ func (grq *GithubReleaseQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-
 	if query := grq.withRepository; query != nil {
-		ids := make([]int, 0, len(nodes))
-		nodeids := make(map[int][]*GithubRelease)
-		for i := range nodes {
-			if nodes[i].github_repository_releases == nil {
-				continue
-			}
-			fk := *nodes[i].github_repository_releases
-			if _, ok := nodeids[fk]; !ok {
-				ids = append(ids, fk)
-			}
-			nodeids[fk] = append(nodeids[fk], nodes[i])
-		}
-		query.Where(githubrepository.IDIn(ids...))
-		neighbors, err := query.All(ctx)
-		if err != nil {
+		if err := grq.loadRepository(ctx, query, nodes, nil,
+			func(n *GithubRelease, e *GithubRepository) { n.Edges.Repository = e }); err != nil {
 			return nil, err
 		}
-		for _, n := range neighbors {
-			nodes, ok := nodeids[n.ID]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "github_repository_releases" returned %v`, n.ID)
-			}
-			for i := range nodes {
-				nodes[i].Edges.Repository = n
-			}
-		}
 	}
-
 	if query := grq.withAssets; query != nil {
-		fks := make([]driver.Value, 0, len(nodes))
-		nodeids := make(map[int]*GithubRelease)
-		for i := range nodes {
-			fks = append(fks, nodes[i].ID)
-			nodeids[nodes[i].ID] = nodes[i]
-			nodes[i].Edges.Assets = []*GithubAsset{}
-		}
-		query.withFKs = true
-		query.Where(predicate.GithubAsset(func(s *sql.Selector) {
-			s.Where(sql.InValues(githubrelease.AssetsColumn, fks...))
-		}))
-		neighbors, err := query.All(ctx)
-		if err != nil {
+		if err := grq.loadAssets(ctx, query, nodes,
+			func(n *GithubRelease) { n.Edges.Assets = []*GithubAsset{} },
+			func(n *GithubRelease, e *GithubAsset) { n.Edges.Assets = append(n.Edges.Assets, e) }); err != nil {
 			return nil, err
 		}
-		for _, n := range neighbors {
-			fk := n.github_release_assets
-			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "github_release_assets" is nil for node %v`, n.ID)
-			}
-			node, ok := nodeids[*fk]
-			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "github_release_assets" returned %v for node %v`, *fk, n.ID)
-			}
-			node.Edges.Assets = append(node.Edges.Assets, n)
+	}
+	for name, query := range grq.withNamedAssets {
+		if err := grq.loadAssets(ctx, query, nodes,
+			func(n *GithubRelease) { n.appendNamedAssets(name) },
+			func(n *GithubRelease, e *GithubAsset) { n.appendNamedAssets(name, e) }); err != nil {
+			return nil, err
 		}
 	}
-
 	for i := range grq.loadTotal {
 		if err := grq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
 	return nodes, nil
+}
+
+func (grq *GithubReleaseQuery) loadRepository(ctx context.Context, query *GithubRepositoryQuery, nodes []*GithubRelease, init func(*GithubRelease), assign func(*GithubRelease, *GithubRepository)) error {
+	ids := make([]int, 0, len(nodes))
+	nodeids := make(map[int][]*GithubRelease)
+	for i := range nodes {
+		if nodes[i].github_repository_releases == nil {
+			continue
+		}
+		fk := *nodes[i].github_repository_releases
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	query.Where(githubrepository.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "github_repository_releases" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (grq *GithubReleaseQuery) loadAssets(ctx context.Context, query *GithubAssetQuery, nodes []*GithubRelease, init func(*GithubRelease), assign func(*GithubRelease, *GithubAsset)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[int]*GithubRelease)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.GithubAsset(func(s *sql.Selector) {
+		s.Where(sql.InValues(githubrelease.AssetsColumn, fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.github_release_assets
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "github_release_assets" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "github_release_assets" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (grq *GithubReleaseQuery) sqlCount(ctx context.Context) (int, error) {
@@ -605,6 +625,20 @@ func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	return selector
 }
 
+// WithNamedAssets tells the query-builder to eager-load the nodes that are connected to the "assets"
+// edge with the given name. The optional arguments are used to configure the query builder of the edge.
+func (grq *GithubReleaseQuery) WithNamedAssets(name string, opts ...func(*GithubAssetQuery)) *GithubReleaseQuery {
+	query := &GithubAssetQuery{config: grq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	if grq.withNamedAssets == nil {
+		grq.withNamedAssets = make(map[string]*GithubAssetQuery)
+	}
+	grq.withNamedAssets[name] = query
+	return grq
+}
+
 // GithubReleaseGroupBy is the group-by builder for GithubRelease entities.
 type GithubReleaseGroupBy struct {
 	config
@@ -623,7 +657,7 @@ func (grgb *GithubReleaseGroupBy) Aggregate(fns ...AggregateFunc) *GithubRelease
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (grgb *GithubReleaseGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (grgb *GithubReleaseGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := grgb.path(ctx)
 	if err != nil {
 		return err
@@ -632,7 +666,7 @@ func (grgb *GithubReleaseGroupBy) Scan(ctx context.Context, v interface{}) error
 	return grgb.sqlScan(ctx, v)
 }
 
-func (grgb *GithubReleaseGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (grgb *GithubReleaseGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range grgb.fields {
 		if !githubrelease.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -679,7 +713,7 @@ type GithubReleaseSelect struct {
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (grs *GithubReleaseSelect) Scan(ctx context.Context, v interface{}) error {
+func (grs *GithubReleaseSelect) Scan(ctx context.Context, v any) error {
 	if err := grs.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -687,7 +721,7 @@ func (grs *GithubReleaseSelect) Scan(ctx context.Context, v interface{}) error {
 	return grs.sqlScan(ctx, v)
 }
 
-func (grs *GithubReleaseSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (grs *GithubReleaseSelect) sqlScan(ctx context.Context, v any) error {
 	rows := &sql.Rows{}
 	query, args := grs.sql.Query()
 	if err := grs.driver.Query(ctx, query, args, rows); err != nil {

@@ -41,7 +41,10 @@ type LabelEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]*int
+	totalCount [2]map[string]int
+
+	namedPosts              map[string][]*Post
+	namedGithubRepositories map[string][]*GithubRepository
 }
 
 // PostsOrErr returns the Posts value or an error if the edge
@@ -63,8 +66,8 @@ func (e LabelEdges) GithubRepositoriesOrErr() ([]*GithubRepository, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*Label) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*Label) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case label.FieldID:
@@ -82,7 +85,7 @@ func (*Label) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the Label fields.
-func (l *Label) assignValues(columns []string, values []interface{}) error {
+func (l *Label) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -160,6 +163,54 @@ func (l *Label) String() string {
 	builder.WriteString(l.Name)
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedPosts returns the Posts named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (l *Label) NamedPosts(name string) ([]*Post, error) {
+	if l.Edges.namedPosts == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := l.Edges.namedPosts[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (l *Label) appendNamedPosts(name string, edges ...*Post) {
+	if l.Edges.namedPosts == nil {
+		l.Edges.namedPosts = make(map[string][]*Post)
+	}
+	if len(edges) == 0 {
+		l.Edges.namedPosts[name] = []*Post{}
+	} else {
+		l.Edges.namedPosts[name] = append(l.Edges.namedPosts[name], edges...)
+	}
+}
+
+// NamedGithubRepositories returns the GithubRepositories named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (l *Label) NamedGithubRepositories(name string) ([]*GithubRepository, error) {
+	if l.Edges.namedGithubRepositories == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := l.Edges.namedGithubRepositories[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (l *Label) appendNamedGithubRepositories(name string, edges ...*GithubRepository) {
+	if l.Edges.namedGithubRepositories == nil {
+		l.Edges.namedGithubRepositories = make(map[string][]*GithubRepository)
+	}
+	if len(edges) == 0 {
+		l.Edges.namedGithubRepositories[name] = []*GithubRepository{}
+	} else {
+		l.Edges.namedGithubRepositories[name] = append(l.Edges.namedGithubRepositories[name], edges...)
+	}
 }
 
 // Labels is a parsable slice of Label.

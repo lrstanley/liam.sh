@@ -402,7 +402,6 @@ func (gac *GithubAssetCreate) createSpec() (*GithubAsset, *sqlgraph.CreateSpec) 
 //			SetAssetID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gac *GithubAssetCreate) OnConflict(opts ...sql.ConflictOption) *GithubAssetUpsertOne {
 	gac.conflict = opts
 	return &GithubAssetUpsertOne{
@@ -416,7 +415,6 @@ func (gac *GithubAssetCreate) OnConflict(opts ...sql.ConflictOption) *GithubAsse
 //	client.GithubAsset.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gac *GithubAssetCreate) OnConflictColumns(columns ...string) *GithubAssetUpsertOne {
 	gac.conflict = append(gac.conflict, sql.ConflictColumns(columns...))
 	return &GithubAssetUpsertOne{
@@ -613,7 +611,6 @@ func (u *GithubAssetUpsert) UpdateUploader() *GithubAssetUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubAssetUpsertOne) UpdateNewValues() *GithubAssetUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -622,10 +619,9 @@ func (u *GithubAssetUpsertOne) UpdateNewValues() *GithubAssetUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.GithubAsset.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.GithubAsset.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *GithubAssetUpsertOne) Ignore() *GithubAssetUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -976,7 +972,6 @@ func (gacb *GithubAssetCreateBulk) ExecX(ctx context.Context) {
 //			SetAssetID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (gacb *GithubAssetCreateBulk) OnConflict(opts ...sql.ConflictOption) *GithubAssetUpsertBulk {
 	gacb.conflict = opts
 	return &GithubAssetUpsertBulk{
@@ -990,7 +985,6 @@ func (gacb *GithubAssetCreateBulk) OnConflict(opts ...sql.ConflictOption) *Githu
 //	client.GithubAsset.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (gacb *GithubAssetCreateBulk) OnConflictColumns(columns ...string) *GithubAssetUpsertBulk {
 	gacb.conflict = append(gacb.conflict, sql.ConflictColumns(columns...))
 	return &GithubAssetUpsertBulk{
@@ -1012,7 +1006,6 @@ type GithubAssetUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubAssetUpsertBulk) UpdateNewValues() *GithubAssetUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -1024,7 +1017,6 @@ func (u *GithubAssetUpsertBulk) UpdateNewValues() *GithubAssetUpsertBulk {
 //	client.GithubAsset.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *GithubAssetUpsertBulk) Ignore() *GithubAssetUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

@@ -268,7 +268,6 @@ func (ggq *GithubGistQuery) Clone() *GithubGistQuery {
 //		GroupBy(githubgist.FieldGistID).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
-//
 func (ggq *GithubGistQuery) GroupBy(field string, fields ...string) *GithubGistGroupBy {
 	grbuild := &GithubGistGroupBy{config: ggq.config}
 	grbuild.fields = append([]string{field}, fields...)
@@ -295,7 +294,6 @@ func (ggq *GithubGistQuery) GroupBy(field string, fields ...string) *GithubGistG
 //	client.GithubGist.Query().
 //		Select(githubgist.FieldGistID).
 //		Scan(ctx, &v)
-//
 func (ggq *GithubGistQuery) Select(fields ...string) *GithubGistSelect {
 	ggq.fields = append(ggq.fields, fields...)
 	selbuild := &GithubGistSelect{GithubGistQuery: ggq}
@@ -331,10 +329,10 @@ func (ggq *GithubGistQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 		nodes = []*GithubGist{}
 		_spec = ggq.querySpec()
 	)
-	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
+	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*GithubGist).scanValues(nil, columns)
 	}
-	_spec.Assign = func(columns []string, values []interface{}) error {
+	_spec.Assign = func(columns []string, values []any) error {
 		node := &GithubGist{config: ggq.config}
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
@@ -477,7 +475,7 @@ func (gggb *GithubGistGroupBy) Aggregate(fns ...AggregateFunc) *GithubGistGroupB
 }
 
 // Scan applies the group-by query and scans the result into the given value.
-func (gggb *GithubGistGroupBy) Scan(ctx context.Context, v interface{}) error {
+func (gggb *GithubGistGroupBy) Scan(ctx context.Context, v any) error {
 	query, err := gggb.path(ctx)
 	if err != nil {
 		return err
@@ -486,7 +484,7 @@ func (gggb *GithubGistGroupBy) Scan(ctx context.Context, v interface{}) error {
 	return gggb.sqlScan(ctx, v)
 }
 
-func (gggb *GithubGistGroupBy) sqlScan(ctx context.Context, v interface{}) error {
+func (gggb *GithubGistGroupBy) sqlScan(ctx context.Context, v any) error {
 	for _, f := range gggb.fields {
 		if !githubgist.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
@@ -533,7 +531,7 @@ type GithubGistSelect struct {
 }
 
 // Scan applies the selector query and scans the result into the given value.
-func (ggs *GithubGistSelect) Scan(ctx context.Context, v interface{}) error {
+func (ggs *GithubGistSelect) Scan(ctx context.Context, v any) error {
 	if err := ggs.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -541,7 +539,7 @@ func (ggs *GithubGistSelect) Scan(ctx context.Context, v interface{}) error {
 	return ggs.sqlScan(ctx, v)
 }
 
-func (ggs *GithubGistSelect) sqlScan(ctx context.Context, v interface{}) error {
+func (ggs *GithubGistSelect) sqlScan(ctx context.Context, v any) error {
 	rows := &sql.Rows{}
 	query, args := ggs.sql.Query()
 	if err := ggs.driver.Query(ctx, query, args, rows); err != nil {
