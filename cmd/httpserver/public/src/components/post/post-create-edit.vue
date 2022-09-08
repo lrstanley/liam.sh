@@ -30,7 +30,7 @@
           v-model="post.content"
           placeholder="Post content"
           :autofocus="true"
-          :style="{ 'min-height': '400px' }"
+          :style="{ 'min-height': '400px', width: '100%' }"
           :indent-with-tab="true"
           :tab-size="4"
           :extensions="codeExtensions"
