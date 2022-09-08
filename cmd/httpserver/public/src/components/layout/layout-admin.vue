@@ -11,7 +11,7 @@
       >
         <n-menu
           :options="adminSidebarOptions"
-          :value="$route.name"
+          :value="$route.name.toString()"
           :root-indent="16"
           :indent="12"
           :collapsed-width="54"
@@ -46,18 +46,12 @@
   </n-layout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { adminSidebarOptions } from "@/lib/navigation"
 
 const state = useState()
-const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  error: {
-    type: Error,
-    default: null,
-  },
-})
+const props = defineProps<{
+  loading?: boolean
+  error?: Error | string
+}>()
 </script>

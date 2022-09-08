@@ -24,13 +24,12 @@
   </span>
 </template>
 
-<script setup>
-const props = defineProps({
-  value: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { GithubRepository } from "@/lib/api"
+
+const props = defineProps<{
+  value: GithubRepository
+}>()
 
 const state = useState()
 const repo = ref(props.value)

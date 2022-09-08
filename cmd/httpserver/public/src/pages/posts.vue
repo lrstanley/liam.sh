@@ -33,18 +33,18 @@
   </LayoutDefault>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 import { useGetPostsQuery } from "@/lib/api"
 import { usePagination, resetCursor } from "@/lib/pagination"
 import { useSorter } from "@/lib/sorter"
 
-const cursor = useRouteQuery("cur", null)
-const labels = useRouteQuery("label", [])
-const search = useRouteQuery("q", "")
-const filterSearch = refDebounced(search, 300)
-const direction = useRouteQuery("dir", "desc")
-const field = useRouteQuery("sort", "date")
+const cursor = useRouteQuery<string>("cur", null)
+const labels = useRouteQuery<Array<string>>("label", [])
+const search = useRouteQuery<string>("q", "")
+const filterSearch = refDebounced<string>(search, 300)
+const direction = useRouteQuery<string>("dir", "desc")
+const field = useRouteQuery<string>("sort", "date")
 const sorter = useSorter(
   {
     date: "date",

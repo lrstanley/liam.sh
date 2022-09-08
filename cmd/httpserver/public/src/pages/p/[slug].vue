@@ -38,7 +38,7 @@
               class="ml-1"
               :to="{ name: 'admin-edit-post-id', params: { id: post.id } }"
             >
-              <n-button class="mr-3" type="secondary"> Edit post </n-button>
+              <n-button class="mr-3" type="success" tertiary> Edit post </n-button>
             </router-link>
           </span>
         </div>
@@ -49,16 +49,13 @@
   </LayoutDefault>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 import { useGetPostContentQuery } from "@/lib/api"
 
-const props = defineProps({
-  slug: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  slug: string
+}>()
 
 const state = useState()
 const { data, error, fetching } = useGetPostContentQuery({ variables: { slug: props.slug } })

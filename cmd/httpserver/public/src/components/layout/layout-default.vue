@@ -25,7 +25,7 @@
       </template>
     </div>
 
-    <span class="px-2 py-2 text-center">
+    <span class="p-2 text-center">
       Made with
       <n-icon class="align-middle text-emerald-600">
         <i-mdi-heart />
@@ -35,17 +35,11 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-  error: {
-    type: Error,
-    default: null,
-  },
-})
+<script setup lang="ts">
+const props = defineProps<{
+  loading?: boolean
+  error?: Error | string
+}>()
 
 const state = useState()
 </script>

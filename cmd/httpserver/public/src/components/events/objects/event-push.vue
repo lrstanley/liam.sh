@@ -33,14 +33,13 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  event: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
 
 const repo = ref(props.event.repo)
-const commits = ref(props.event.payload.commits)
+const commits = ref<Record<string, any>[]>(props.event.payload.commits)
 </script>

@@ -11,28 +11,31 @@
   </n-anchor>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { h } from "vue"
 import { NAnchorLink } from "naive-ui"
+import type { VNode } from "vue"
 
-const props = defineProps({
-  element: {
-    type: [HTMLElement, null],
-    required: true,
-  },
-})
+interface Descendant {
+  href: string
+  title: string
+  type: Node["nodeName"]
+  descendants: Descendant[]
+}
 
-const validHeaders = ["H1", "H2", "H3", "H4", "H5", "H6"]
+const props = defineProps<{
+  element: Node
+}>()
 
-function allDescendants(node, descendants = []) {
+function allDescendants(node: Node, descendants: Descendant[] = []): Descendant[] {
   // Collect all headers, and their descendants.
   node.childNodes.forEach((child) => {
-    if (validHeaders.includes(child.nodeName)) {
+    if (child instanceof HTMLHeadingElement) {
       descendants.push({
         href: `#${child.id}`,
         title: child.textContent,
         type: child.nodeName,
-        children: allDescendants(child),
+        descendants: allDescendants(child),
       })
     }
   })
@@ -45,7 +48,7 @@ function allDescendants(node, descendants = []) {
     // If the previous header is larger, then take the current header in the loop
     // and append it as a child of the previous header.
     if (descendants[i].type > descendants[i - 1].type) {
-      descendants[i - 1].children = [...descendants[i - 1].children, descendants[i]]
+      descendants[i - 1].descendants = [...descendants[i - 1].descendants, descendants[i]]
       descendants.splice(i, 1)
       i--
     }
@@ -56,7 +59,9 @@ function allDescendants(node, descendants = []) {
 
 // wraps all elements in a custom type, and if it has children, it will recursively
 // wrap them as well.
-function elementize(elementType, elements) {
+function elementize<T>(elementType: T, elements: Descendant[]): VNode[] {
+  if (!elements) return []
+
   return elements.map((el) => {
     return h(
       elementType,
@@ -64,19 +69,17 @@ function elementize(elementType, elements) {
         href: el.href,
         title: el.title,
       },
-      () => elementize(elementType, el.children)
+      () => elementize(elementType, el.descendants)
     )
   })
 }
 
-const links = computed({
-  get() {
-    if (!props.element) {
-      return []
-    }
+const links = computed(() => {
+  if (!props.element) {
+    return []
+  }
 
-    return elementize(NAnchorLink, allDescendants(props.element))
-  },
+  return elementize(NAnchorLink, allDescendants(props.element))
 })
 </script>
 

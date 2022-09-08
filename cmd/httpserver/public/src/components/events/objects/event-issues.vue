@@ -19,15 +19,14 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  event: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
 
 const repo = ref(props.event.repo)
-const action = ref(props.event.payload.action)
-const issue = ref(props.event.payload.issue)
+const action = ref<string>(props.event.payload.action)
+const issue = ref<Record<string, any>>(props.event.payload.issue)
 </script>

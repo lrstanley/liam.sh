@@ -9,14 +9,13 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  event: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
 
 const repo = ref(props.event.repo)
-const fork = ref(props.event.payload.forkee)
+const fork = ref<Record<string, any>>(props.event.payload.forkee)
 </script>

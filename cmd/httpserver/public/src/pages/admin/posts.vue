@@ -54,7 +54,7 @@
   </LayoutAdmin>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { message, dialog } from "@/lib/core/status"
 import { useTimeAgo } from "@vueuse/core"
 import { useGetPostsQuery, useDeletePostMutation, useRegeneratePostsMutation } from "@/lib/api"
@@ -72,15 +72,13 @@ const {
   error,
   executeQuery: refetch,
 } = useGetPostsQuery({
-  variables: { count: 100, cursor: props.cursor },
+  variables: { first: 100, before: props.cursor },
 })
 const del = useDeletePostMutation()
 
-const posts = computed({
-  get: () => data?.value?.posts.edges.map((v) => v.node),
-})
+const posts = computed(() => data?.value?.posts.edges.map((v) => v.node))
 
-function deletePost(row) {
+function deletePost(row: Record<string, any>) {
   dialog.warning({
     title: `Delete post: "${row.title}"`,
     content: "Are you sure?",
@@ -103,7 +101,7 @@ function deletePost(row) {
 const { executeMutation: regeneratePosts } = useRegeneratePostsMutation()
 function regenerate() {
   message.info("Regenerating posts...")
-  regeneratePosts().then(({ error }) => {
+  regeneratePosts({}).then(({ error }) => {
     if (!error) {
       message.success("Regenerated posts")
     } else {

@@ -1,12 +1,12 @@
 <template>
-  <LayoutAdmin>
-    <n-page-header :subtitle="data?.node.title" class="hidden px-5 mt-4 mb-8 lg:block">
+  <LayoutAdmin :loading="!post">
+    <n-page-header :subtitle="post.title" class="hidden px-5 mt-4 mb-8 lg:block">
       <template #avatar>
         <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
       </template>
       <template #title>
         <a href="#" class="no-underline capitalize" style="color: inherit">
-          Editing post #{{ data?.node.id }}
+          Editing post #{{ post.id }}
         </a>
       </template>
     </n-page-header>
@@ -17,37 +17,36 @@
           {{ error }}
         </n-alert>
 
-        <PostCreateEdit v-if="data?.node" :post="data.node" @update:post="updatePost" />
+        <PostCreateEdit v-if="post" :post="post" @update:post="updatePost" />
       </n-spin>
     </div>
   </LayoutAdmin>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useGetPostQuery, useUpdatePostMutation } from "@/lib/api"
+import { useGetPostQuery, useUpdatePostMutation, type UpdatePostInput } from "@/lib/api"
+import type { Post } from "@/lib/api"
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  id: string
+}>()
 
 const router = useRouter()
 const { data, error, fetching } = useGetPostQuery({
   variables: { id: props.id },
   requestPolicy: "network-only",
 })
+const post = computed(() => data.value?.node as Post | undefined)
 const update = useUpdatePostMutation()
 
-function updatePost(val) {
-  let addedLabels = val.labelIDs.filter(
-    (id) => !data.value?.node.labels?.edges?.map(({ node }) => node.id).includes(id)
+function updatePost(val: UpdatePostInput, labelIDs: string[]) {
+  const addedLabels = labelIDs.filter(
+    (id) => !post.value.labels?.edges?.map(({ node }) => node.id).includes(id)
   )
-  let removedLabels = data.value?.node.labels?.edges
+  const removedLabels = post.value.labels?.edges
     ?.map(({ node }) => node.id)
-    .filter((id) => !val.labelIDs.includes(id))
+    .filter((id) => !labelIDs.includes(id))
 
   update
     .executeMutation({

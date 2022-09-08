@@ -47,9 +47,9 @@
           <n-date-picker v-model:value="datetime" type="datetime" />
         </n-form-item>
 
-        <LabelInput v-model="post.labelIDs" class="pb-5" :suggest="post.content" />
+        <LabelInput v-model="labelIDs" class="pb-5" :suggest="post.content" />
 
-        <n-button block type="primary" @click="emit('update:post', post)">
+        <n-button block type="primary" @click="emit('update:post', post, labelIDs)">
           <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
           Save post
         </n-button>
@@ -63,31 +63,23 @@ import { Codemirror } from "vue-codemirror"
 import { EditorView } from "@codemirror/view"
 import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
+import type { Post } from "@/lib/api"
 
 const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
 
-const props = defineProps({
-  post: {
-    type: Object,
-    default: () => ({}),
-  },
-  create: {
-    type: Boolean,
-    default: false,
-  },
-})
+const props = defineProps<{
+  post?: Post
+  create?: boolean
+}>()
 const emit = defineEmits(["update:post"])
 
-const post = reactive({
-  publishedAt: new Date().toISOString(),
-  ...props.post,
-  labelIDs: props.post.labels?.edges?.map(({ node }) => node.id) ?? [],
-})
+const post = ref<Post>(props.post ?? ({} as Post))
+const labelIDs = ref<string[]>(props.post?.labels?.edges?.map(({ node }) => node.id) ?? [])
 
 const datetime = computed({
-  get: () => Date.parse(post.publishedAt),
+  get: () => Date.parse(post.value.publishedAt ?? new Date()),
   set: (val) => {
-    post.publishedAt = new Date(val).toISOString()
+    post.value.publishedAt = new Date(val).toISOString()
   },
 })
 </script>

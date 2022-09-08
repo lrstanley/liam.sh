@@ -1,7 +1,7 @@
 import type { ComputedRef, Ref } from "vue"
 
-const desc: string = "desc"
-const asc: string = "asc"
+const desc = "desc"
+const asc = "asc"
 const directions: string[] = [desc, asc]
 
 type SortFields<T> = {

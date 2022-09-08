@@ -55,7 +55,7 @@ export default defineConfig({
           pinia: ["storeToRefs"],
         },
         {
-          "@/lib/core/state.ts": ["useState"],
+          "@/lib/core/state": ["useState"],
         },
       ],
       resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi"] })],

@@ -9,25 +9,21 @@
   </component>
 </template>
 
-<script setup>
-const props = defineProps({
-  linkable: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
-  route: {
-    type: String,
-    default: "posts",
-  },
-  query: {
-    type: String,
-    default: "label",
-  },
-})
+<script setup lang="ts">
+import type { Label } from "@/lib/api"
+
+const props = withDefaults(
+  defineProps<{
+    linkable?: boolean
+    value: Label
+    route?: string
+    query?: string
+  }>(),
+  {
+    route: "posts",
+    query: "label",
+  }
+)
 
 const label = ref(props.value)
 </script>

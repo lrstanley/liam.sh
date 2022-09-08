@@ -34,10 +34,13 @@
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
-          <n-checkbox :checked="archived" @update:checked="(v) => (archived = !!v)">
+          <n-checkbox
+            :checked="archived == 'true'"
+            @update:checked="(v) => (archived = v ? 'true' : 'false')"
+          >
             include archived
           </n-checkbox>
-          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = !!v)">
+          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = v ? 'true' : 'false')">
             include forks
           </n-checkbox>
         </n-space>
@@ -49,7 +52,6 @@
             hasGithubRepositoriesWith: {
               fork: where.fork,
               archived: where.archived,
-              public: where.public,
             },
           }"
         />
@@ -58,20 +60,20 @@
   </LayoutDefault>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
 import { usePagination, resetCursor } from "@/lib/pagination"
 import { useSorter } from "@/lib/sorter"
 
-const cursor = useRouteQuery("cur", null)
-const labels = useRouteQuery("label", [])
-const archived = useRouteQuery("archived", true)
-const forks = useRouteQuery("forks", false)
-const search = useRouteQuery("q", "")
-const filterSearch = refDebounced(search, 300)
-const direction = useRouteQuery("dir", "desc")
-const field = useRouteQuery("sort", "pushed_at")
+const cursor = useRouteQuery<string>("cur", null)
+const labels = useRouteQuery<Array<string>>("label", [])
+const archived = useRouteQuery<string>("archived", "true")
+const forks = useRouteQuery<string>("forks", "false")
+const search = useRouteQuery<string>("q", "")
+const filterSearch = refDebounced<string>(search, 300)
+const direction = useRouteQuery<string>("dir", "desc")
+const field = useRouteQuery<string>("sort", "pushed_at")
 const sorter = useSorter(
   {
     pushed_at: "updated",
@@ -92,7 +94,7 @@ const where = ref({
     { homepageContainsFold: filterSearch },
   ],
   hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-  fork: computed(() => (forks.value ? null : false)),
+  fork: computed(() => (forks.value == "true" ? null : false)),
   archived: computed(() => (archived.value == "false" ? false : null)),
 })
 
@@ -100,6 +102,7 @@ const { data, error, fetching } = useGetReposQuery({
   variables: {
     ...usePagination(cursor, 10),
     ...sorter.filter,
+    // @ts-ignore
     where: where,
   },
 })

@@ -100,19 +100,14 @@
   </a>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
+import type { GithubRepository } from "@/lib/api"
 
-const props = defineProps({
-  linkable: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  value: GithubRepository
+  linkable?: boolean
+}>()
 
 const state = useState()
 const repo = ref(props.value)

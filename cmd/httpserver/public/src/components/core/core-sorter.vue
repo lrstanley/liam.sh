@@ -3,9 +3,9 @@
     <n-tag
       v-for="(name, key) in props.sorter.fields"
       :key="key"
-      :type="props.sorter.refs.field.value == key ? 'success' : ''"
+      :type="props.sorter.refs.field.value == key ? 'success' : 'default'"
       class="cursor-pointer"
-      @click="props.sorter.toggle(key)"
+      @click="props.sorter.toggle(key.toString())"
     >
       <template #avatar>
         <n-icon v-if="props.sorter.refs.field.value == key" class="">
@@ -19,13 +19,12 @@
   </n-space>
 </template>
 
-<script setup>
-const props = defineProps({
-  sorter: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { Sorter } from "@/lib/sorter"
+
+const props = defineProps<{
+  sorter: Sorter
+}>()
 </script>
 
 <style scoped></style>

@@ -10,18 +10,11 @@
   </a>
 </template>
 
-<script setup>
-const props = defineProps({
-  href: {
-    type: String,
-    required: true,
-  },
-  value: {
-    type: String,
-    required: false,
-    default: "",
-  },
-})
+<script setup lang="ts">
+const props = defineProps<{
+  href: string
+  value?: string
+}>()
 
 const value = computed(() => (props.value ? props.value : props.href))
 </script>

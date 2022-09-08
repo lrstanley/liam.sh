@@ -15,14 +15,14 @@
   </LayoutAdmin>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useCreatePostMutation } from "@/lib/api"
+import { useCreatePostMutation, type CreatePostInput } from "@/lib/api"
 
 const router = useRouter()
 const post = useCreatePostMutation()
 
-function createPost(val) {
+function createPost(val: CreatePostInput) {
   post.executeMutation({ input: val }).then((result) => {
     if (!result.error) {
       message.success("Post created successfully")

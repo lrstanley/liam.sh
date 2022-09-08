@@ -1,11 +1,13 @@
 import { NIcon } from "naive-ui"
 import { RouterLink } from "vue-router"
 
-function renderIcon(icon: any) {
+import type { Component, VNode } from "vue"
+
+function renderIcon(icon: Component | VNode | HTMLElement) {
   return () => h(NIcon, { style: "margin-top: -3px" }, { default: () => h(icon) })
 }
 
-function renderLink(target: any, title: string, icon: any) {
+function renderLink(target: Record<string, any>, title: string, icon: any) {
   return {
     label: () =>
       h(
@@ -24,7 +26,6 @@ export const menuOptions = [
   { to: { name: "index" }, name: "Home", alias: "main" },
   { to: { name: "posts" }, name: "Posts", alias: "posts" },
   { to: { name: "repos" }, name: "Repos", alias: "repos" },
-  // { to: { name: "about" }, name: "About", alias: "about" },
 ]
 
 export const adminSidebarOptions = [

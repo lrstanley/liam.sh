@@ -7,13 +7,10 @@
     </li>
     <li><a :href="state.base.githubUser.htmlurl">github</a></li>
     <li><a href="/chat" target="_blank">discord</a></li>
-    <!-- <li>
-      <router-link :to="{ name: 'admin' }" class="filter blur-1">sudo</router-link>
-    </li> -->
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { menuOptions } from "@/lib/navigation"
 
 const state = useState()

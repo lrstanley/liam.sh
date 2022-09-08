@@ -1,11 +1,11 @@
 import { retryExchange } from "@urql/exchange-retry"
 import { cacheExchange, createClient, dedupExchange, fetchExchange } from "@urql/vue"
 
-function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<any> {
+function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<Response> {
   const controller = new AbortController()
   const id = setTimeout(() => controller.abort(), 5000)
 
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise<Response>((resolve, reject) => {
     fetch(url, {
       ...opts,
       signal: controller.signal,

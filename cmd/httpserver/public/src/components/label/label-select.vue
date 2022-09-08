@@ -26,30 +26,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { h } from "vue"
 import { NBadge } from "naive-ui"
 import { useGetLabelsQuery } from "@/lib/api"
+import type { LabelWhereInput, Label } from "@/lib/api"
 
-const props = defineProps({
-  modelValue: {
-    type: [Array, String, Number],
-    required: true,
-    default: () => [],
-  },
-  field: {
-    type: String,
-    default: "name",
-  },
-  where: {
-    type: Object,
-    default: () => null,
-  },
-  suggest: {
-    type: String,
-    default: "",
-  },
-})
+const props = withDefaults(
+  defineProps<{
+    modelValue: string | string[] | number | number[]
+    field?: string
+    where?: LabelWhereInput
+    suggest?: string
+  }>(),
+  {
+    modelValue: (): string[] => [],
+    field: "name",
+    where: () => null,
+    suggest: "",
+  }
+)
+
 const emit = defineEmits(["update:modelValue"])
 
 const selected = computed({
@@ -60,18 +57,28 @@ const selected = computed({
 const labels = useGetLabelsQuery({ variables: { where: props.where } })
 defineExpose({ refetch: labels.executeQuery })
 
+type RenderedLabel<T> = {
+  label: string
+  value: T
+  data: Label
+  popularity: number
+}
+
 const options = computed(() =>
   labels.data?.value?.labels.edges
-    .map(({ node }) => ({
-      label: node.name,
-      value: node[props.field],
-      popularity: node.githubRepositories.totalCount + node.posts.totalCount,
-      data: node,
-    }))
+    .map(
+      ({ node }) =>
+        ({
+          label: node.name,
+          value: node[props.field],
+          popularity: node.githubRepositories.totalCount + node.posts.totalCount,
+          data: node,
+        } as RenderedLabel<typeof props.field>)
+    )
     .sort((a, b) => b.popularity - a.popularity)
 )
 
-function renderLabel(option) {
+function renderLabel(option: RenderedLabel<typeof props.field>) {
   return [
     h(NBadge, {
       "show-zero": true,
@@ -90,7 +97,7 @@ watchDebounced(selected, makeSuggestions, { debounce: 300, maxWait: 700, immedia
 
 function makeSuggestions(val) {
   if (!val || !options.value) return
-  let newSuggestions = []
+  const newSuggestions = []
 
   for (const option of options.value) {
     if (selected.value.includes(option.data[props.field])) continue

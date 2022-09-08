@@ -14,6 +14,6 @@
   </n-breadcrumb>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const state = useState()
 </script>

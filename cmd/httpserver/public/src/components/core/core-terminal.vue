@@ -17,21 +17,18 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  path: {
-    type: String,
-    default: "~",
-  },
-  prefix: {
-    type: String,
-    default: "#",
-  },
-  value: {
-    type: String,
-    default: "",
-  },
-})
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    path?: string
+    prefix?: string
+    value: string
+  }>(),
+  {
+    path: "~",
+    prefix: "#",
+  }
+)
 
 const state = useState()
 </script>
