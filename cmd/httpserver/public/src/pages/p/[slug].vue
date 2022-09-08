@@ -85,7 +85,7 @@ const postRef = ref(null)
 }
 
 #post-content :deep(img) {
-  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !m-0;
+  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !m-0 rounded-lg;
   height: auto;
 }
 
