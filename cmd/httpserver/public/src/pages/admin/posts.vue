@@ -7,6 +7,7 @@
             <th>Title</th>
             <th class="hidden md:table-cell">Slug</th>
             <th class="hidden md:table-cell">Labels</th>
+            <th class="hidden md:table-cell">Views</th>
             <th class="hidden md:table-cell">Published</th>
             <th>
               Actions
@@ -29,7 +30,25 @@
               </router-link>
             </td>
             <td class="hidden md:flex">
-              <CoreObjectRender :value="post.labels" linkable class="mr-1" />
+              <n-popover
+                style="max-height: 240px"
+                trigger="hover"
+                content-style="padding: 0;"
+                scrollable
+                placement="left"
+              >
+                <template #trigger>
+                  <n-button size="small">{{ post.labels.edges.length }} tags</n-button>
+                </template>
+
+                <CoreObjectRender :value="post.labels" linkable class="grid mx-1 my-[2px]" />
+              </n-popover>
+            </td>
+            <td class="hidden md:table-cell">
+              <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
+                {{ post.viewCount.toLocaleString() }}
+                {{ post.viewCount === 1 ? "view" : "views" }}
+              </n-tag>
             </td>
             <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
             <td>
