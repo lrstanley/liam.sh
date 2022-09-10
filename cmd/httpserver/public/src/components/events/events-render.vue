@@ -13,7 +13,7 @@
         class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
       >
         <a :href="e.actor.login" target="_blank">
-          <n-avatar square :size="15" :src="e.actor.avatarURL" class="mr-1 align-middle" />
+          <n-avatar round :size="15" :src="e.actor.avatarURL" class="mr-1 align-middle" />
         </a>
 
         <component
