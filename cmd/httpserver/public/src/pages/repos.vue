@@ -62,8 +62,7 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
-import { usePagination, resetCursor } from "@/lib/pagination"
-import { useSorter } from "@/lib/sorter"
+import { usePagination, resetCursor, useSorter } from "@/lib/util"
 
 const cursor = useRouteQuery<string>("cur", null)
 const labels = useRouteQuery<Array<string>>("label", [])

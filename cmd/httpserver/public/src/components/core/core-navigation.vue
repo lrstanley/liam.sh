@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { menuOptions } from "@/lib/navigation"
+import { menuOptions } from "@/lib/util"
 
 const state = useState()
 </script>

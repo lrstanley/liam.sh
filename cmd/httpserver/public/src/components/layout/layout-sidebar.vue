@@ -5,16 +5,16 @@
         <slot />
       </div>
 
-      <div class="hidden" :class="{ 'md:inline-flex flex-col flex-wrap gap-6': affix }">
+      <div class="hidden" :class="{ 'md:inline-flex flex-col gap-6': affix }">
         <n-affix
           :top="props.affixTop ?? props.affixTrigger ?? 100"
           :trigger-top="props.affixTrigger ?? props.affixTop ?? 100"
-          class="flex flex-col flex-wrap gap-6 max-w-[240px]"
+          class="flex flex-col gap-6 w-[240px]"
         >
           <slot name="sidebar" />
         </n-affix>
       </div>
-      <div :class="{ 'inline-flex md:hidden flex-col flex-wrap gap-6': affix }">
+      <div :class="{ 'inline-flex md:hidden flex-col gap-6': affix }">
         <slot name="sidebar" />
       </div>
     </div>

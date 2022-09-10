@@ -11,7 +11,7 @@ import type { VNode } from "vue"
  * @export
  * @template T
  * @param {Node} root
- * @param {T} element
+ * @param {T} wrapper
  * @returns {VNode[]}
  */
 export function createTOC<T>(root: Node, wrapper: T): VNode[] {
@@ -19,19 +19,19 @@ export function createTOC<T>(root: Node, wrapper: T): VNode[] {
     return []
   }
 
-  return wrapDescendants(wrapper, getNodeTree(root))
+  return wrapChildren(wrapper, getNodeTree(root))
 }
 
 /**
- * wrapDescendants wraps all descendants in a custom element type, and if it has
+ * wrapChildren wraps all descendants in a custom element type, and if it has
  * children, it will recursively wrap them as well.
  *
  * @template T
  * @param {T} wrapper
- * @param {Descendant[]} elements
+ * @param {HeadingTree[]} elements
  * @returns {VNode[]}
  */
-function wrapDescendants<T>(wrapper: T, elements: Descendant[]): VNode[] {
+function wrapChildren<T>(wrapper: T, elements: HeadingTree[]): VNode[] {
   if (!elements) return []
 
   return elements.map((el) => {
@@ -41,70 +41,83 @@ function wrapDescendants<T>(wrapper: T, elements: Descendant[]): VNode[] {
         href: el.href,
         title: el.title,
       },
-      () => wrapDescendants(wrapper, el.descendants)
+      () => wrapChildren(wrapper, el.children)
     )
   })
 }
 
 /**
- * getNodeTree returns a list of all headers, and their descendants, under a given
- * root element.
+ * getNodeTree returns an araay of all headers that were obtained recrusively, under
+ * a given root element.
  *
  * @export
  * @param {Node} root
- * @returns {Descendant[]}
+ * @returns {HeadingTree[]}
  */
-export function getNodeTree(root: Node): Descendant[] {
+export function getNodeTree(root: Node): HeadingTree[] {
   return recurseNodes(root, [])
 }
 
 /**
- * Descendant represents a header, and its descendants, as a tree.
+ * HeadingTree represents a header, and its descendants, as a tree.
  *
- * @interface Descendant
- * @typedef {Descendant}
+ * @interface HeadingTree
+ * @typedef {HeadingTree}
  */
-interface Descendant {
+interface HeadingTree {
   href: string
   title: string
   type: Node["nodeName"]
-  descendants: Descendant[]
+  children: HeadingTree[]
 }
 
 /**
  * recurseNodes recursively searches children of a root node looking for HTML headers
- * that contain an ID, and builds a list of descendants.
+ * that contain an ID, and returns a flat array of nodes.
  *
  * @param {Node} root
- * @param {Descendant[]} [descendants=[]]
- * @returns {Descendant[]}
+ * @param {HeadingTree[]} [tree=[]]
+ * @returns {HeadingTree[]}
  */
-function recurseNodes(root: Node, descendants: Descendant[] = []): Descendant[] {
+function recurseNodes(root: Node, tree: HeadingTree[] = []): HeadingTree[] {
+  if (!root) return []
+
   // Collect all headers, and their descendants.
   root.childNodes.forEach((child) => {
     if (child instanceof HTMLHeadingElement) {
-      descendants.push({
+      tree.push({
         href: `#${child.id}`,
         title: child.textContent,
         type: child.nodeName,
-        descendants: recurseNodes(child),
+        children: recurseNodes(child),
       })
     }
   })
 
-  for (let i = 0; i < descendants.length; i++) {
+  return reorder(tree)
+}
+
+/**
+ * reorder takes a flat array of headings, and converts them to a proper tree of
+ * descendants, based on the heading level.
+ *
+ * @param {HeadingTree[]} tree
+ * @returns {HeadingTree[]}
+ */
+function reorder(tree: HeadingTree[]): HeadingTree[] {
+  for (let i = 0; i < tree.length; i++) {
     if (i == 0) {
       continue
     }
 
     // If the previous header is larger, then take the current header in the loop
     // and append it as a child of the previous header.
-    if (descendants[i].type > descendants[i - 1].type) {
-      descendants[i - 1].descendants = [...descendants[i - 1].descendants, descendants[i]]
-      descendants.splice(i, 1)
+    if (tree[i].type > tree[i - 1].type) {
+      tree[i - 1].children = reorder([...tree[i - 1].children, tree[i]])
+      tree.splice(i, 1)
       i--
     }
   }
 
-  return descendants
+  return tree
 }

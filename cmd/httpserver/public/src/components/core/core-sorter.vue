@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Sorter } from "@/lib/sorter"
+import type { Sorter } from "@/lib/util"
 
 const props = defineProps<{
   sorter: Sorter
