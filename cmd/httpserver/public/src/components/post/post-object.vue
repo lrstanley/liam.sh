@@ -38,10 +38,7 @@
             />
           </div>
 
-          <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-            {{ post.viewCount.toLocaleString() }}
-            {{ post.viewCount === 1 ? "view" : "views" }}
-          </n-tag>
+          <PostViewCount :value="post.viewCount" />
         </div>
       </template>
     </n-thing>
