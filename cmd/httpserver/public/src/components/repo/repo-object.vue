@@ -23,7 +23,7 @@
 
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar :src="repo.owner.avatarURL" />
+        <n-avatar :src="repo.owner.avatarURL" round />
       </template>
       <template #header>
         <div class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
