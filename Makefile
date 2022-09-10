@@ -45,7 +45,7 @@ node-fetch:
 		--no-fund \
 		--quiet \
 		--global pnpm
-	cd cmd/httpserver/public; pnpm install --frozen-lockfile --silent
+	cd cmd/httpserver/public; pnpm install --silent
 
 node-upgrade-deps:
 	cd cmd/httpserver/public; pnpm up -i

@@ -13,6 +13,7 @@
         "strict": false,
         "types": [
             "naive-ui/volar",
+            "vite/client",
             "vite-plugin-pages/client"
         ],
     },
