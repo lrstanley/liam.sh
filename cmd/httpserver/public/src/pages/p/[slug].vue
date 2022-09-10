@@ -1,7 +1,8 @@
 <template>
-  <LayoutDefault :loading="fetching" :error="error">
-    <CoreTableOfContents :element="postRef" />
-    <n-page-header class="container hidden mb-2 md:inline-flex mt-14">
+  <LayoutSidebar :loading="fetching" :error="error" affix class="order-last md:order-first">
+    <n-back-top :visibility-height="600" class="z-[9999]" />
+
+    <n-page-header class="container hidden mb-2 md:inline-flex">
       <template #title>
         <CoreTerminal
           class="text-[20px]"
@@ -20,33 +21,44 @@
           {{ post.title }}
         </div>
 
-        <div
-          class="flex flex-col flex-wrap items-start flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-20"
-        >
-          <span class="inline-flex">
+        <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
+          <div class="inline-flex">
             <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
             <p>
               <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
               <br />
               <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
             </p>
-          </span>
-          <span class="inline-flex flex-wrap items-center mt-4 ml-0 mr-auto md:mt-0 md:mr-0 md:ml-auto">
-            <CoreObjectRender :value="post.labels" linkable class="mr-1" />
-            <router-link
-              v-if="state.base?.self"
-              class="ml-1"
-              :to="{ name: 'admin-edit-post-id', params: { id: post.id } }"
-            >
-              <n-button class="mr-3" type="success" tertiary> Edit post </n-button>
-            </router-link>
-          </span>
+          </div>
         </div>
 
         <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.contentHTML" />
       </div>
     </div>
-  </LayoutDefault>
+
+    <template #sidebar>
+      <div v-if="state.base?.self" class="flex flex-col gap-1">
+        <div class="text-emerald-500">Admin Options</div>
+
+        <div>
+          <PostViewCount :value="post.viewCount" />
+        </div>
+
+        <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
+          <n-button type="success" tertiary size="small"> Edit post </n-button>
+        </router-link>
+      </div>
+
+      <CoreTableOfContents :element="postRef" />
+
+      <div>
+        <div class="text-emerald-500">Post Labels</div>
+        <div class="flex flex-wrap gap-1">
+          <CoreObjectRender :value="post.labels" linkable />
+        </div>
+      </div>
+    </template>
+  </LayoutSidebar>
 </template>
 
 <script setup lang="ts">
@@ -145,7 +157,7 @@ const postRef = ref(null)
 #post-content :deep(h4),
 #post-content :deep(h5) {
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
-  @apply bg-gradient-to-r from-sky-400 to-blue-500;
+  @apply bg-gradient-to-r from-sky-400 to-blue-500 ml-[10px];
 }
 
 #post-content :deep(h1)::before,

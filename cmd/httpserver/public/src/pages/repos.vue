@@ -1,33 +1,32 @@
 <template>
-  <LayoutDefault :error="error">
-    <div class="grid gap-5 md:gap-10 lg:gap-[6rem] mt-8">
-      <div class="order-last md:order-first">
-        <div class="flex flex-auto gap-2 mt-1 mb-8">
-          <n-input
-            v-model:value="search"
-            :loading="fetching"
-            type="text"
-            clearable
-            placeholder="Search for a repo"
-          >
-            <template #prefix>
-              <n-icon>
-                <i-mdi-search />
-              </n-icon>
-            </template>
-          </n-input>
+  <LayoutSidebar :error="error" affix class="order-last md:order-first">
+    <div class="flex flex-auto gap-2 mt-1 mb-8">
+      <n-input
+        v-model:value="search"
+        :loading="fetching"
+        type="text"
+        clearable
+        placeholder="Search for a repo"
+      >
+        <template #prefix>
+          <n-icon>
+            <i-mdi-search />
+          </n-icon>
+        </template>
+      </n-input>
 
-          <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
-        </div>
+      <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+    </div>
 
-        <CoreObjectRender
-          v-if="data?.githubrepositories"
-          :value="data.githubrepositories"
-          linkable
-          show-empty
-          divider
-        />
-      </div>
+    <CoreObjectRender
+      v-if="data?.githubrepositories"
+      :value="data.githubrepositories"
+      linkable
+      show-empty
+      divider
+    />
+
+    <template #sidebar>
       <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort repos</div>
         <CoreSorter :sorter="sorter" class="pb-4" />
@@ -56,8 +55,8 @@
           }"
         />
       </div>
-    </div>
-  </LayoutDefault>
+    </template>
+  </LayoutSidebar>
 </template>
 
 <script setup lang="ts">
@@ -102,14 +101,7 @@ const { data, error, fetching } = useGetReposQuery({
   variables: {
     ...usePagination(cursor, 10),
     ...sorter.filter,
-    // @ts-ignore
     where: where,
   },
 })
 </script>
-
-<style scoped>
-.grid {
-  @apply grid-cols-1 md:grid-cols-[1fr,240px];
-}
-</style>
