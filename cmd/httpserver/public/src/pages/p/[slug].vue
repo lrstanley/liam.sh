@@ -97,7 +97,8 @@ const postRef = ref(null)
 }
 
 #post-content :deep(img) {
-  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !m-0 rounded-lg;
+  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !my-0 rounded-lg mx-auto;
+  @apply border border-indigo-600/40 border-solid;
   height: auto;
 }
 
