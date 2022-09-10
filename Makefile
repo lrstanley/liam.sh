@@ -12,6 +12,9 @@ export GROUP := $(shell id -g)
 build-all: clean node-fetch go-fetch node-build go-build
 	@echo
 
+up: node-upgrade-deps go-upgrade-deps
+	@echo
+
 clean:
 	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
 
