@@ -7,6 +7,9 @@
     </li>
     <li><a :href="state.base.githubUser.htmlurl">github</a></li>
     <li><a href="/chat" target="_blank">discord</a></li>
+    <li v-if="state.base?.self">
+      <router-link to="/admin/posts">sudo</router-link>
+    </li>
   </ul>
 </template>
 

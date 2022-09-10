@@ -4,6 +4,11 @@
 @tailwind utilities;
 @tailwind variants;
 
+:root {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+}
+
 html,
 body {
   height: 100%;
@@ -11,6 +16,10 @@ body {
   @apply flex flex-auto;
   @apply bg-zinc-800 text-zinc-100;
   font-family: Consolas, monaco, monospace;
+}
+
+a {
+  @apply text-emerald-500 hover:text-emerald-600;
 }
 
 #app {
@@ -22,7 +31,7 @@ body {
 }
 
 .text-gradient {
-  @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
+  @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text;
 }
 
 .n-icon {
@@ -35,20 +44,11 @@ body {
 }
 
 .icon {
-  @apply align-middle inline;
+  @apply inline align-middle;
 }
 
 .n-popover {
   padding: 2px 6px !important;
-}
-
-a {
-  @apply text-emerald-500 hover:text-emerald-600;
-}
-
-:root {
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
 }
 
 *::-webkit-scrollbar {
@@ -61,14 +61,13 @@ a {
   border: 3px solid transparent;
   -webkit-background-clip: content-box;
   background-clip: content-box;
-  @apply rounded-md bg-emerald-800;
+  @apply rounded-md bg-emerald-500;
 }
 *::-webkit-scrollbar-thumb:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgba(34, 80, 60, var(--tw-bg-opacity));
+  @apply rounded-md bg-emerald-700;
 }
 *::-webkit-scrollbar-thumb:window-inactive {
-  background-color: #5e666b;
+  @apply bg-gray-600;
 }
 
 *::-webkit-scrollbar-corner {
