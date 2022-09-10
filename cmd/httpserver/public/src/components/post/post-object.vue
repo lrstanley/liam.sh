@@ -5,11 +5,7 @@
   >
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar class="hidden lg:inline-block">
-          <n-icon>
-            <i-mdi-post-outline />
-          </n-icon>
-        </n-avatar>
+        <n-avatar class="hidden lg:inline-block" round size="medium" :src="post.author.avatarURL" />
       </template>
       <template #header>
         <span class="post-title text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
