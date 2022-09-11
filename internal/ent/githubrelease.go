@@ -59,7 +59,9 @@ type GithubReleaseEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]*int
+	totalCount [2]map[string]int
+
+	namedAssets map[string][]*GithubAsset
 }
 
 // RepositoryOrErr returns the Repository value or an error if the edge
@@ -67,8 +69,7 @@ type GithubReleaseEdges struct {
 func (e GithubReleaseEdges) RepositoryOrErr() (*GithubRepository, error) {
 	if e.loadedTypes[0] {
 		if e.Repository == nil {
-			// The edge repository was loaded in eager-loading,
-			// but was not found.
+			// Edge was loaded but was not found.
 			return nil, &NotFoundError{label: githubrepository.Label}
 		}
 		return e.Repository, nil
@@ -86,8 +87,8 @@ func (e GithubReleaseEdges) AssetsOrErr() ([]*GithubAsset, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*GithubRelease) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*GithubRelease) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case githubrelease.FieldAuthor:
@@ -111,7 +112,7 @@ func (*GithubRelease) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the GithubRelease fields.
-func (gr *GithubRelease) assignValues(columns []string, values []interface{}) error {
+func (gr *GithubRelease) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -261,6 +262,30 @@ func (gr *GithubRelease) String() string {
 	builder.WriteString(fmt.Sprintf("%v", gr.Author))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedAssets returns the Assets named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (gr *GithubRelease) NamedAssets(name string) ([]*GithubAsset, error) {
+	if gr.Edges.namedAssets == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := gr.Edges.namedAssets[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (gr *GithubRelease) appendNamedAssets(name string, edges ...*GithubAsset) {
+	if gr.Edges.namedAssets == nil {
+		gr.Edges.namedAssets = make(map[string][]*GithubAsset)
+	}
+	if len(edges) == 0 {
+		gr.Edges.namedAssets[name] = []*GithubAsset{}
+	} else {
+		gr.Edges.namedAssets[name] = append(gr.Edges.namedAssets[name], edges...)
+	}
 }
 
 // GithubReleases is a parsable slice of GithubRelease.

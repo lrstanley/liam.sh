@@ -5,11 +5,10 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  event: {
-    type: Object,
-    required: true,
-  },
-})
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
 </script>

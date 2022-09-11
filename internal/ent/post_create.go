@@ -467,7 +467,6 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (pc *PostCreate) OnConflict(opts ...sql.ConflictOption) *PostUpsertOne {
 	pc.conflict = opts
 	return &PostUpsertOne{
@@ -481,7 +480,6 @@ func (pc *PostCreate) OnConflict(opts ...sql.ConflictOption) *PostUpsertOne {
 //	client.Post.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (pc *PostCreate) OnConflictColumns(columns ...string) *PostUpsertOne {
 	pc.conflict = append(pc.conflict, sql.ConflictColumns(columns...))
 	return &PostUpsertOne{
@@ -501,18 +499,6 @@ type (
 		*sql.UpdateSet
 	}
 )
-
-// SetCreateTime sets the "create_time" field.
-func (u *PostUpsert) SetCreateTime(v time.Time) *PostUpsert {
-	u.Set(post.FieldCreateTime, v)
-	return u
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *PostUpsert) UpdateCreateTime() *PostUpsert {
-	u.SetExcluded(post.FieldCreateTime)
-	return u
-}
 
 // SetUpdateTime sets the "update_time" field.
 func (u *PostUpsert) SetUpdateTime(v time.Time) *PostUpsert {
@@ -624,7 +610,6 @@ func (u *PostUpsert) AddViewCount(v int) *PostUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *PostUpsertOne) UpdateNewValues() *PostUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -638,10 +623,9 @@ func (u *PostUpsertOne) UpdateNewValues() *PostUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.Post.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.Post.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *PostUpsertOne) Ignore() *PostUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -661,20 +645,6 @@ func (u *PostUpsertOne) Update(set func(*PostUpsert)) *PostUpsertOne {
 		set(&PostUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetCreateTime sets the "create_time" field.
-func (u *PostUpsertOne) SetCreateTime(v time.Time) *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *PostUpsertOne) UpdateCreateTime() *PostUpsertOne {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateCreateTime()
-	})
 }
 
 // SetUpdateTime sets the "update_time" field.
@@ -930,7 +900,6 @@ func (pcb *PostCreateBulk) ExecX(ctx context.Context) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (pcb *PostCreateBulk) OnConflict(opts ...sql.ConflictOption) *PostUpsertBulk {
 	pcb.conflict = opts
 	return &PostUpsertBulk{
@@ -944,7 +913,6 @@ func (pcb *PostCreateBulk) OnConflict(opts ...sql.ConflictOption) *PostUpsertBul
 //	client.Post.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (pcb *PostCreateBulk) OnConflictColumns(columns ...string) *PostUpsertBulk {
 	pcb.conflict = append(pcb.conflict, sql.ConflictColumns(columns...))
 	return &PostUpsertBulk{
@@ -966,7 +934,6 @@ type PostUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *PostUpsertBulk) UpdateNewValues() *PostUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -985,7 +952,6 @@ func (u *PostUpsertBulk) UpdateNewValues() *PostUpsertBulk {
 //	client.Post.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *PostUpsertBulk) Ignore() *PostUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1005,20 +971,6 @@ func (u *PostUpsertBulk) Update(set func(*PostUpsert)) *PostUpsertBulk {
 		set(&PostUpsert{UpdateSet: update})
 	}))
 	return u
-}
-
-// SetCreateTime sets the "create_time" field.
-func (u *PostUpsertBulk) SetCreateTime(v time.Time) *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *PostUpsertBulk) UpdateCreateTime() *PostUpsertBulk {
-	return u.Update(func(s *PostUpsert) {
-		s.UpdateCreateTime()
-	})
 }
 
 // SetUpdateTime sets the "update_time" field.

@@ -85,7 +85,8 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 		FontScale: 1,
 	}
 
-	if !chix.Bind(w, r, params) {
+	if err := chix.Bind(r, params); err != nil {
+		chix.Error(w, r, err)
 		return
 	}
 

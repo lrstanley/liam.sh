@@ -1,43 +1,45 @@
 <template>
-  <LayoutDefault :error="error">
-    <div class="grid gap-5 md:gap-10 lg:gap-[6rem] mt-8">
-      <div class="order-last md:order-first">
-        <div class="flex flex-auto gap-2 mt-1 mb-8">
-          <n-input
-            v-model:value="search"
-            :loading="fetching"
-            type="text"
-            clearable
-            placeholder="Search for a repo"
-          >
-            <template #prefix>
-              <n-icon>
-                <i-mdi-search />
-              </n-icon>
-            </template>
-          </n-input>
+  <LayoutSidebar :error="error" affix class="order-last md:order-first">
+    <div class="flex flex-auto gap-2 mt-1 mb-8">
+      <n-input
+        v-model:value="search"
+        :loading="fetching"
+        type="text"
+        clearable
+        placeholder="Search for a repo"
+      >
+        <template #prefix>
+          <n-icon>
+            <i-mdi-search />
+          </n-icon>
+        </template>
+      </n-input>
 
-          <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
-        </div>
+      <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+    </div>
 
-        <CoreObjectRender
-          v-if="data?.githubrepositories"
-          :value="data.githubrepositories"
-          linkable
-          show-empty
-          divider
-        />
-      </div>
+    <CoreObjectRender
+      v-if="data?.githubrepositories"
+      :value="data.githubrepositories"
+      linkable
+      show-empty
+      divider
+    />
+
+    <template #sidebar>
       <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort repos</div>
         <CoreSorter :sorter="sorter" class="pb-4" />
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
-          <n-checkbox :checked="archived" @update:checked="(v) => (archived = !!v)">
+          <n-checkbox
+            :checked="archived == 'true'"
+            @update:checked="(v) => (archived = v ? 'true' : 'false')"
+          >
             include archived
           </n-checkbox>
-          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = !!v)">
+          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = v ? 'true' : 'false')">
             include forks
           </n-checkbox>
         </n-space>
@@ -49,29 +51,27 @@
             hasGithubRepositoriesWith: {
               fork: where.fork,
               archived: where.archived,
-              public: where.public,
             },
           }"
         />
       </div>
-    </div>
-  </LayoutDefault>
+    </template>
+  </LayoutSidebar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 import { useGetReposQuery } from "@/lib/api"
-import { usePagination, resetCursor } from "@/lib/pagination"
-import { useSorter } from "@/lib/sorter"
+import { usePagination, resetCursor, useSorter } from "@/lib/util"
 
-const cursor = useRouteQuery("cur", null)
-const labels = useRouteQuery("label", [])
-const archived = useRouteQuery("archived", true)
-const forks = useRouteQuery("forks", false)
-const search = useRouteQuery("q", "")
-const filterSearch = refDebounced(search, 300)
-const direction = useRouteQuery("dir", "desc")
-const field = useRouteQuery("sort", "pushed_at")
+const cursor = useRouteQuery<string>("cur", null)
+const labels = useRouteQuery<Array<string>>("label", [])
+const archived = useRouteQuery<string>("archived", "true")
+const forks = useRouteQuery<string>("forks", "false")
+const search = useRouteQuery<string>("q", "")
+const filterSearch = refDebounced<string>(search, 300)
+const direction = useRouteQuery<string>("dir", "desc")
+const field = useRouteQuery<string>("sort", "pushed_at")
 const sorter = useSorter(
   {
     pushed_at: "updated",
@@ -92,7 +92,7 @@ const where = ref({
     { homepageContainsFold: filterSearch },
   ],
   hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-  fork: computed(() => (forks.value ? null : false)),
+  fork: computed(() => (forks.value == "true" ? null : false)),
   archived: computed(() => (archived.value == "false" ? false : null)),
 })
 
@@ -104,9 +104,3 @@ const { data, error, fetching } = useGetReposQuery({
   },
 })
 </script>
-
-<style scoped>
-.grid {
-  @apply grid-cols-1 md:grid-cols-[1fr,240px];
-}
-</style>

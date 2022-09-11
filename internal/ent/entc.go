@@ -24,17 +24,20 @@ func checkError(err error) {
 
 func main() {
 	egq, err := entgql.NewExtension(
-		entgql.WithConfigPath("./graphql/gqlgen.yml"),
+		entgql.WithConfigPath("./database/graphql/gqlgen.yml"),
 		entgql.WithSchemaGenerator(),
-		entgql.WithSchemaPath("./graphql/schema/ent.gql"),
+		entgql.WithSchemaPath("./database/graphql/schema/ent.gql"),
 		entgql.WithWhereInputs(true),
 	)
 	checkError(err)
 
 	err = entc.Generate(
-		"./ent/schema",
+		"./database/schema",
 		&gen.Config{
-			Header: header,
+			Target:  "./ent/",
+			Schema:  "github.com/lrstanley/liam.sh/internal/database/schema",
+			Package: "github.com/lrstanley/liam.sh/internal/ent",
+			Header:  header,
 			Features: []gen.Feature{
 				gen.FeaturePrivacy,
 				gen.FeatureEntQL,
@@ -43,7 +46,7 @@ func main() {
 			},
 		},
 		entc.Extensions(egq),
-		entc.TemplateDir("./ent/template"),
+		entc.TemplateDir("./database/template"),
 	)
 	checkError(err)
 }

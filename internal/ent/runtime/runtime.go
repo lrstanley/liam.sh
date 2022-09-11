@@ -10,6 +10,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/database/schema"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
@@ -17,7 +18,6 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
-	"github.com/lrstanley/liam.sh/internal/ent/schema"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 
 	"entgo.io/ent"
@@ -314,6 +314,6 @@ func init() {
 }
 
 const (
-	Version = "v0.11.1"                                         // Version of ent codegen.
-	Sum     = "h1:im67R+2W3Nee2bNS2YnoYz8oAF0Qz4AOlIvKRIAEISY=" // Sum of ent codegen.
+	Version = "v0.11.3-0.20220830071904-3b1b75b9d7a9"           // Version of ent codegen.
+	Sum     = "h1:dxyBYasfOuLgAT0IuqSXNgDDJ9ra5C+Jc8a6VqVywWo=" // Sum of ent codegen.
 )

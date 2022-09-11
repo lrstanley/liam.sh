@@ -8,7 +8,7 @@
       placeholder="Create label"
       :loading="createLabel.fetching?.value"
       :status="createLabel.error.value ? 'error' : undefined"
-      @keyup.enter="createNewLabel($event.target.value)"
+      @keyup.enter="createNewLabel(newLabelInput)"
     >
       <template #prefix>
         <n-icon><i-mdi-tag /></n-icon>
@@ -17,21 +17,15 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { message } from "@/lib/core/status"
 import { useCreateLabelMutation } from "@/lib/api"
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    required: true,
-    default: () => [],
-  },
-  suggest: {
-    type: String,
-    default: "",
-  },
-})
+const props = defineProps<{
+  modelValue: string[]
+  suggest?: string
+}>()
+
 const emit = defineEmits(["update:modelValue"])
 
 const selectRef = ref(null)
@@ -43,7 +37,8 @@ const selected = computed({
 
 const newLabelInput = ref("")
 const createLabel = useCreateLabelMutation()
-function createNewLabel(val) {
+
+function createNewLabel(val: string) {
   createLabel.executeMutation({ input: { name: val } }).then((result) => {
     if (!result.error) {
       selectRef.value.refetch().then(() => {

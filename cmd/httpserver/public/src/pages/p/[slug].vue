@@ -1,7 +1,8 @@
 <template>
-  <LayoutDefault :loading="fetching" :error="error">
-    <CoreTableOfContents :element="postRef" />
-    <n-page-header class="container hidden mb-2 md:inline-flex mt-14">
+  <LayoutSidebar :loading="fetching" :error="error" affix class="order-last md:order-first">
+    <n-back-top :visibility-height="600" class="z-[9999]" />
+
+    <n-page-header class="container hidden mb-2 md:inline-flex">
       <template #title>
         <CoreTerminal
           class="text-[20px]"
@@ -20,45 +21,53 @@
           {{ post.title }}
         </div>
 
-        <div
-          class="flex flex-col flex-wrap items-start flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-20"
-        >
-          <span class="inline-flex">
+        <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
+          <div class="inline-flex items-center">
             <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
             <p>
               <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
               <br />
               <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
             </p>
-          </span>
-          <span class="inline-flex flex-wrap items-center mt-4 ml-0 mr-auto md:mt-0 md:mr-0 md:ml-auto">
-            <CoreObjectRender :value="post.labels" linkable class="mr-1" />
-            <router-link
-              v-if="state.base?.self"
-              class="ml-1"
-              :to="{ name: 'admin-edit-post-id', params: { id: post.id } }"
-            >
-              <n-button class="mr-3" type="secondary"> Edit post </n-button>
-            </router-link>
-          </span>
+          </div>
         </div>
 
         <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.contentHTML" />
       </div>
     </div>
-  </LayoutDefault>
+
+    <template #sidebar>
+      <div v-if="state.base?.self" class="flex flex-col gap-1">
+        <div class="text-emerald-500">Admin Options</div>
+
+        <div>
+          <PostViewCount :value="post.viewCount" />
+        </div>
+
+        <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
+          <n-button type="success" tertiary size="small"> Edit post </n-button>
+        </router-link>
+      </div>
+
+      <CoreTableOfContents :element="postRef" />
+
+      <div>
+        <div class="text-emerald-500">Post Labels</div>
+        <div class="flex flex-wrap gap-1">
+          <CoreObjectRender :value="post.labels" linkable />
+        </div>
+      </div>
+    </template>
+  </LayoutSidebar>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 import { useGetPostContentQuery } from "@/lib/api"
 
-const props = defineProps({
-  slug: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  slug: string
+}>()
 
 const state = useState()
 const { data, error, fetching } = useGetPostContentQuery({ variables: { slug: props.slug } })
@@ -88,7 +97,8 @@ const postRef = ref(null)
 }
 
 #post-content :deep(img) {
-  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !m-0;
+  @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !my-0 rounded-lg mx-auto;
+  @apply border border-indigo-600/40 border-solid;
   height: auto;
 }
 
@@ -123,23 +133,23 @@ const postRef = ref(null)
 
 #post-content :deep(h1) {
   font-size: 1.8em;
-  margin-top: 1.6em;
+  margin-top: 1.5em;
 }
 #post-content :deep(h2) {
   font-size: 1.65em;
-  margin-top: 1.5em;
+  margin-top: 1.3em;
 }
 #post-content :deep(h3) {
   font-size: 1.5em;
-  margin-top: 1.4em;
+  margin-top: 1.2em;
 }
 #post-content :deep(h4) {
   font-size: 1.4em;
-  margin-top: 1.3em;
+  margin-top: 0.75em;
 }
 #post-content :deep(h5) {
   font-size: 1.3em;
-  margin-top: 1.2em;
+  margin-top: 0.1em;
 }
 
 #post-content :deep(h1),
@@ -148,7 +158,7 @@ const postRef = ref(null)
 #post-content :deep(h4),
 #post-content :deep(h5) {
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
-  @apply bg-gradient-to-r from-sky-400 to-blue-500;
+  @apply bg-gradient-to-r from-sky-400 to-blue-500 ml-[10px];
 }
 
 #post-content :deep(h1)::before,

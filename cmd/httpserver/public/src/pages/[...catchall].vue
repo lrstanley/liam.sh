@@ -21,27 +21,23 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  catchall: {
-    type: [String, Array],
-    default: "",
-  },
-  error: {
-    type: Error,
-    default: null,
-  },
-})
+<script setup lang="ts">
+import type { ResultProps } from "naive-ui"
+
+const props = defineProps<{
+  catchall: string | Array<string>
+  error?: Error | null
+}>()
 
 const source = computed(() => (typeof props.catchall === "string" ? [props.catchall] : props.catchall))
-const errorCode = ref("0")
-const errorTitle = ref("")
+const errorCode = ref<ResultProps["status"]>()
+const errorTitle = ref<string>("")
 const supported = ["info", "success", "warning", "error", "404", "403", "500", "418"]
 
 onMounted(() => {
   for (const item of source.value) {
     if (supported.includes(item)) {
-      errorCode.value = item
+      errorCode.value = item as ResultProps["status"]
     } else if (item.match(/^[45][0-9]+$/)) {
       errorCode.value = "error"
     } else if (item == "CombinedError") {

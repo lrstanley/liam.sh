@@ -1,11 +1,18 @@
-import type { ComputedRef, Ref, WatchStopHandle } from "vue"
+/**
+ * Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
+ * of this source code is governed by the MIT license that can be found in
+ * the LICENSE file.
+ */
+
 import { shallowEqual } from "@/lib/util"
 
+import type { ComputedRef, Ref, WatchStopHandle } from "vue"
+
 type Filter = {
-  first: ComputedRef<any>
-  last: ComputedRef<any>
-  before: ComputedRef<any>
-  after: ComputedRef<any>
+  first: ComputedRef<number>
+  last: ComputedRef<number>
+  before: ComputedRef<string>
+  after: ComputedRef<string>
 }
 
 /**
@@ -14,11 +21,11 @@ type Filter = {
  * and b = before.
  *
  * @export
- * @param {Ref<any>} cursor
+ * @param {Ref<string>} cursor
  * @param {number} [size=10]
- * @return {*}  {Filter}
+ * @return {Filter}
  */
-export function usePagination(cursor: Ref<any>, size: number = 10): Filter {
+export function usePagination(cursor: Ref<string>, size = 10): Filter {
   return {
     first: computed(() => (!cursor.value ? size : cursor.value?.startsWith("a.") ? size : null)),
     last: computed(() => (cursor.value?.startsWith("b.") ? size : null)),
@@ -34,9 +41,9 @@ export function usePagination(cursor: Ref<any>, size: number = 10): Filter {
  * @export
  * @param {Ref<any>} cursor
  * @param {Ref<any>[]} refs
- * @return {*}  {WatchStopHandle}
+ * @return {WatchStopHandle}
  */
-export function resetCursor(cursor: Ref<any>, refs: Ref<any>[]): WatchStopHandle {
+export function resetCursor(cursor: Ref<string>, refs: Ref<any>[]): WatchStopHandle {
   return watch(refs, (newv, oldv) => {
     for (let i = 0; i < newv.length; i++) {
       if (!shallowEqual(newv[i], oldv[i])) {

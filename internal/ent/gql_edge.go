@@ -35,69 +35,18 @@ func (gr *GithubRelease) Assets(
 		WithGithubAssetOrder(orderBy),
 		WithGithubAssetFilter(where.Filter),
 	}
-	totalCount := gr.Edges.totalCount[1]
-	if nodes, err := gr.Edges.AssetsOrErr(); err == nil || totalCount != nil {
-		conn := &GithubAssetConnection{Edges: []*GithubAssetEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := gr.Edges.totalCount[1][alias]
+	if nodes, err := gr.NamedAssets(alias); err == nil || hasTotalCount {
 		pager, err := newGithubAssetPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &GithubAssetConnection{Edges: []*GithubAssetEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := gr.QueryAssets()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newGithubAssetPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &GithubAssetConnection{Edges: []*GithubAssetEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return gr.QueryAssets().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (gr *GithubRepository) Labels(
@@ -107,69 +56,18 @@ func (gr *GithubRepository) Labels(
 		WithLabelOrder(orderBy),
 		WithLabelFilter(where.Filter),
 	}
-	totalCount := gr.Edges.totalCount[0]
-	if nodes, err := gr.Edges.LabelsOrErr(); err == nil || totalCount != nil {
-		conn := &LabelConnection{Edges: []*LabelEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := gr.Edges.totalCount[0][alias]
+	if nodes, err := gr.NamedLabels(alias); err == nil || hasTotalCount {
 		pager, err := newLabelPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &LabelConnection{Edges: []*LabelEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := gr.QueryLabels()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newLabelPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &LabelConnection{Edges: []*LabelEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return gr.QueryLabels().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (gr *GithubRepository) Releases(
@@ -179,69 +77,18 @@ func (gr *GithubRepository) Releases(
 		WithGithubReleaseOrder(orderBy),
 		WithGithubReleaseFilter(where.Filter),
 	}
-	totalCount := gr.Edges.totalCount[1]
-	if nodes, err := gr.Edges.ReleasesOrErr(); err == nil || totalCount != nil {
-		conn := &GithubReleaseConnection{Edges: []*GithubReleaseEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := gr.Edges.totalCount[1][alias]
+	if nodes, err := gr.NamedReleases(alias); err == nil || hasTotalCount {
 		pager, err := newGithubReleasePager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &GithubReleaseConnection{Edges: []*GithubReleaseEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := gr.QueryReleases()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newGithubReleasePager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &GithubReleaseConnection{Edges: []*GithubReleaseEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return gr.QueryReleases().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (l *Label) Posts(
@@ -251,69 +98,18 @@ func (l *Label) Posts(
 		WithPostOrder(orderBy),
 		WithPostFilter(where.Filter),
 	}
-	totalCount := l.Edges.totalCount[0]
-	if nodes, err := l.Edges.PostsOrErr(); err == nil || totalCount != nil {
-		conn := &PostConnection{Edges: []*PostEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := l.Edges.totalCount[0][alias]
+	if nodes, err := l.NamedPosts(alias); err == nil || hasTotalCount {
 		pager, err := newPostPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &PostConnection{Edges: []*PostEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := l.QueryPosts()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newPostPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &PostConnection{Edges: []*PostEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return l.QueryPosts().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (l *Label) GithubRepositories(
@@ -323,69 +119,18 @@ func (l *Label) GithubRepositories(
 		WithGithubRepositoryOrder(orderBy),
 		WithGithubRepositoryFilter(where.Filter),
 	}
-	totalCount := l.Edges.totalCount[1]
-	if nodes, err := l.Edges.GithubRepositoriesOrErr(); err == nil || totalCount != nil {
-		conn := &GithubRepositoryConnection{Edges: []*GithubRepositoryEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := l.Edges.totalCount[1][alias]
+	if nodes, err := l.NamedGithubRepositories(alias); err == nil || hasTotalCount {
 		pager, err := newGithubRepositoryPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &GithubRepositoryConnection{Edges: []*GithubRepositoryEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := l.QueryGithubRepositories()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newGithubRepositoryPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &GithubRepositoryConnection{Edges: []*GithubRepositoryEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return l.QueryGithubRepositories().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (po *Post) Author(ctx context.Context) (*User, error) {
@@ -403,69 +148,18 @@ func (po *Post) Labels(
 		WithLabelOrder(orderBy),
 		WithLabelFilter(where.Filter),
 	}
-	totalCount := po.Edges.totalCount[1]
-	if nodes, err := po.Edges.LabelsOrErr(); err == nil || totalCount != nil {
-		conn := &LabelConnection{Edges: []*LabelEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := po.Edges.totalCount[1][alias]
+	if nodes, err := po.NamedLabels(alias); err == nil || hasTotalCount {
 		pager, err := newLabelPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &LabelConnection{Edges: []*LabelEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := po.QueryLabels()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newLabelPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &LabelConnection{Edges: []*LabelEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return po.QueryLabels().Paginate(ctx, after, first, before, last, opts...)
 }
 
 func (u *User) Posts(
@@ -475,67 +169,16 @@ func (u *User) Posts(
 		WithPostOrder(orderBy),
 		WithPostFilter(where.Filter),
 	}
-	totalCount := u.Edges.totalCount[0]
-	if nodes, err := u.Edges.PostsOrErr(); err == nil || totalCount != nil {
-		conn := &PostConnection{Edges: []*PostEdge{}}
-		if totalCount != nil {
-			conn.TotalCount = *totalCount
-		}
+	alias := graphql.GetFieldContext(ctx).Field.Alias
+	totalCount, hasTotalCount := u.Edges.totalCount[0][alias]
+	if nodes, err := u.NamedPosts(alias); err == nil || hasTotalCount {
 		pager, err := newPostPager(opts)
 		if err != nil {
 			return nil, err
 		}
+		conn := &PostConnection{Edges: []*PostEdge{}, TotalCount: totalCount}
 		conn.build(nodes, pager, after, first, before, last)
 		return conn, nil
 	}
-	query := u.QueryPosts()
-	if err := validateFirstLast(first, last); err != nil {
-		return nil, err
-	}
-	pager, err := newPostPager(opts)
-	if err != nil {
-		return nil, err
-	}
-	if query, err = pager.applyFilter(query); err != nil {
-		return nil, err
-	}
-	conn := &PostConnection{Edges: []*PostEdge{}}
-	if !hasCollectedField(ctx, edgesField) || first != nil && *first == 0 || last != nil && *last == 0 {
-		if hasCollectedField(ctx, totalCountField) || hasCollectedField(ctx, pageInfoField) {
-			if totalCount != nil {
-				conn.TotalCount = *totalCount
-			} else if conn.TotalCount, err = query.Count(ctx); err != nil {
-				return nil, err
-			}
-			conn.PageInfo.HasNextPage = first != nil && conn.TotalCount > 0
-			conn.PageInfo.HasPreviousPage = last != nil && conn.TotalCount > 0
-		}
-		return conn, nil
-	}
-
-	if (after != nil || first != nil || before != nil || last != nil) && hasCollectedField(ctx, totalCountField) {
-		count, err := query.Clone().Count(ctx)
-		if err != nil {
-			return nil, err
-		}
-		conn.TotalCount = count
-	}
-
-	query = pager.applyCursors(query, after, before)
-	query = pager.applyOrder(query, last != nil)
-	if limit := paginateLimit(first, last); limit != 0 {
-		query.Limit(limit)
-	}
-	if field := collectedField(ctx, edgesField, nodeField); field != nil {
-		if err := query.collectField(ctx, graphql.GetOperationContext(ctx), *field, []string{edgesField, nodeField}); err != nil {
-			return nil, err
-		}
-	}
-
-	nodes, err := query.All(ctx)
-	if err != nil || len(nodes) == 0 {
-		return conn, err
-	}
-	conn.build(nodes, pager, after, first, before, last)
-	return conn, nil
+	return u.QueryPosts().Paginate(ctx, after, first, before, last, opts...)
 }

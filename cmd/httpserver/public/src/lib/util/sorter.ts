@@ -1,7 +1,13 @@
+/**
+ * Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
+ * of this source code is governed by the MIT license that can be found in
+ * the LICENSE file.
+ */
+
 import type { ComputedRef, Ref } from "vue"
 
-const desc: string = "desc"
-const asc: string = "asc"
+const desc = "desc"
+const asc = "asc"
 const directions: string[] = [desc, asc]
 
 type SortFields<T> = {

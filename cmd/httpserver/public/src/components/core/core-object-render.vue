@@ -12,26 +12,17 @@
   </TransitionGroup>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { h } from "vue"
 import PostObject from "@/components/post/post-object.vue"
 import LabelObject from "@/components/label/label-object.vue"
 import RepoObject from "@/components/repo/repo-object.vue"
 
-const props = defineProps({
-  value: {
-    type: [Array, Object, null],
-    required: true,
-  },
-  showEmpty: {
-    type: Boolean,
-    default: false,
-  },
-  divider: {
-    type: Boolean,
-    default: false,
-  },
-})
+const props = defineProps<{
+  value: Record<string, any> | null
+  showEmpty?: boolean
+  divider?: boolean
+}>()
 
 const objects = computed(() => {
   if (!props.value) {

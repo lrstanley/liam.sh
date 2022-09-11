@@ -386,7 +386,6 @@ func (ggc *GithubGistCreate) createSpec() (*GithubGist, *sqlgraph.CreateSpec) {
 //			SetGistID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (ggc *GithubGistCreate) OnConflict(opts ...sql.ConflictOption) *GithubGistUpsertOne {
 	ggc.conflict = opts
 	return &GithubGistUpsertOne{
@@ -400,7 +399,6 @@ func (ggc *GithubGistCreate) OnConflict(opts ...sql.ConflictOption) *GithubGistU
 //	client.GithubGist.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (ggc *GithubGistCreate) OnConflictColumns(columns ...string) *GithubGistUpsertOne {
 	ggc.conflict = append(ggc.conflict, sql.ConflictColumns(columns...))
 	return &GithubGistUpsertOne{
@@ -603,7 +601,6 @@ func (u *GithubGistUpsert) UpdateContent() *GithubGistUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubGistUpsertOne) UpdateNewValues() *GithubGistUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -612,10 +609,9 @@ func (u *GithubGistUpsertOne) UpdateNewValues() *GithubGistUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.GithubGist.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.GithubGist.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *GithubGistUpsertOne) Ignore() *GithubGistUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -973,7 +969,6 @@ func (ggcb *GithubGistCreateBulk) ExecX(ctx context.Context) {
 //			SetGistID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (ggcb *GithubGistCreateBulk) OnConflict(opts ...sql.ConflictOption) *GithubGistUpsertBulk {
 	ggcb.conflict = opts
 	return &GithubGistUpsertBulk{
@@ -987,7 +982,6 @@ func (ggcb *GithubGistCreateBulk) OnConflict(opts ...sql.ConflictOption) *Github
 //	client.GithubGist.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (ggcb *GithubGistCreateBulk) OnConflictColumns(columns ...string) *GithubGistUpsertBulk {
 	ggcb.conflict = append(ggcb.conflict, sql.ConflictColumns(columns...))
 	return &GithubGistUpsertBulk{
@@ -1009,7 +1003,6 @@ type GithubGistUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubGistUpsertBulk) UpdateNewValues() *GithubGistUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -1021,7 +1014,6 @@ func (u *GithubGistUpsertBulk) UpdateNewValues() *GithubGistUpsertBulk {
 //	client.GithubGist.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *GithubGistUpsertBulk) Ignore() *GithubGistUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

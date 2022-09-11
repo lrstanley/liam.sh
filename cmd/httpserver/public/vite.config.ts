@@ -1,16 +1,12 @@
-/**
- * @type {import('vite').UserConfig}
- */
-import { defineConfig } from "vite"
-
 import path from "path"
-import Vue from "@vitejs/plugin-vue"
 import AutoImport from "unplugin-auto-import/vite"
-import Components from "unplugin-vue-components/vite"
-import { NaiveUiResolver, VueUseComponentsResolver } from "unplugin-vue-components/resolvers"
-import Pages from "vite-plugin-pages"
-import Icons from "unplugin-icons/vite"
 import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import { NaiveUiResolver, VueUseComponentsResolver } from "unplugin-vue-components/resolvers"
+import Components from "unplugin-vue-components/vite"
+import { defineConfig } from "vite"
+import Pages from "vite-plugin-pages"
+import Vue from "@vitejs/plugin-vue"
 
 export default defineConfig({
   resolve: {
@@ -37,9 +33,7 @@ export default defineConfig({
         return route
       },
     }),
-    Vue({
-      reactivityTransform: true,
-    }),
+    Vue({}),
     Components({
       dts: true,
       directives: true,
@@ -54,14 +48,10 @@ export default defineConfig({
       dts: true,
       imports: [
         "vue",
-        "vue/macros",
         "vue-router",
         "@vueuse/core",
         {
-          pinia: ["storeToRefs"],
-        },
-        {
-          "@/lib/core/state.ts": ["useState"],
+          "@/lib/core/state": ["useState"],
         },
       ],
       resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi"] })],
@@ -78,15 +68,12 @@ export default defineConfig({
   build: {
     sourcemap: true,
     emptyOutDir: true,
-    mode: "production",
   },
   preview: {
     port: 8081,
-    mode: "production",
   },
   server: {
     base: "/",
-    mode: "development",
     port: 8081,
     strictPort: true,
     proxy: {

@@ -1,0 +1,20 @@
+schema: ../../../internal/database/graphql/schema/*.gql
+documents: ./src/lib/api/*.gql
+overwrite: true
+generates:
+  ./src/lib/api/index.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-vue-urql
+    config:
+      inputMaybeValue: T | Ref<T> | ComputedRef<T>
+      preResolveTypes: true
+      nonOptionalTypename: true
+      skipTypeNameForRoot: true
+      useTypeImports: true
+      # exportFragmentSpreadSubTypes: true
+      # mergeFragmentTypes: true
+    hooks:
+      afterOneFileWrite:
+        - pnpm exec prettier --write

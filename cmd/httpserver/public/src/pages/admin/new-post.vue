@@ -10,19 +10,19 @@
     </n-page-header>
 
     <div class="p-4 sm:container sm:mx-auto lg:p-0">
-      <PostCreateEdit create :post="post?.data.value" @update:post="createPost" />
+      <PostCreateEdit create @update:post="createPost" />
     </div>
   </LayoutAdmin>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useCreatePostMutation } from "@/lib/api"
+import { useCreatePostMutation, type CreatePostInput } from "@/lib/api"
 
 const router = useRouter()
 const post = useCreatePostMutation()
 
-function createPost(val) {
+function createPost(val: CreatePostInput) {
   post.executeMutation({ input: val }).then((result) => {
     if (!result.error) {
       message.success("Post created successfully")

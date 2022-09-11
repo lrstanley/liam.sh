@@ -5,11 +5,7 @@
   >
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar class="hidden lg:inline-block">
-          <n-icon>
-            <i-mdi-post-outline />
-          </n-icon>
-        </n-avatar>
+        <n-avatar class="hidden lg:inline-block" round size="medium" :src="post.author.avatarURL" />
       </template>
       <template #header>
         <span class="post-title text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
@@ -38,29 +34,21 @@
             />
           </div>
 
-          <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-            {{ post.viewCount.toLocaleString() }}
-            {{ post.viewCount === 1 ? "view" : "views" }}
-          </n-tag>
+          <PostViewCount :value="post.viewCount" />
         </div>
       </template>
     </n-thing>
   </component>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
+import type { Post } from "@/lib/api"
 
-const props = defineProps({
-  linkable: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  value: Post
+  linkable?: boolean
+}>()
 
 const post = ref(props.value)
 </script>

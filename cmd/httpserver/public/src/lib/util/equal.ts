@@ -1,20 +1,9 @@
 /**
- * titleCase - converts a string to title case (every first letter of each word
- * capitalized).
- *
- * @export
- * @param {string} input
- * @return {*}  {string}
+ * Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
+ * of this source code is governed by the MIT license that can be found in
+ * the LICENSE file.
  */
-export function titleCase(input: string): string {
-  return input
-    .toLowerCase()
-    .split(" ")
-    .map((word) => {
-      return word.charAt(0).toUpperCase() + word.slice(1)
-    })
-    .join(" ")
-}
+
 /**
  * shallowEqual - compares two values for shallow equality.
  *
@@ -50,14 +39,14 @@ export function shallowEqual(newv: any, oldv: any): boolean {
  * @param {Object} object2
  * @return {*}  {boolean} - true if the objects are shallow equal.
  */
-function shallowEqualObject(object1: Object, object2: Object): boolean {
+function shallowEqualObject(object1: Record<string, any>, object2: Record<string, any>): boolean {
   const keys1 = Object.keys(object1)
   const keys2 = Object.keys(object2)
 
   if (keys1.length !== keys2.length) {
     return false
   }
-  for (let key of keys1) {
+  for (const key of keys1) {
     if (object1[key] !== object2[key]) {
       return false
     }

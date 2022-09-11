@@ -75,7 +75,10 @@ type GithubRepositoryEdges struct {
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
 	// totalCount holds the count of the edges above.
-	totalCount [2]*int
+	totalCount [2]map[string]int
+
+	namedLabels   map[string][]*Label
+	namedReleases map[string][]*GithubRelease
 }
 
 // LabelsOrErr returns the Labels value or an error if the edge
@@ -97,8 +100,8 @@ func (e GithubRepositoryEdges) ReleasesOrErr() ([]*GithubRelease, error) {
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
-func (*GithubRepository) scanValues(columns []string) ([]interface{}, error) {
-	values := make([]interface{}, len(columns))
+func (*GithubRepository) scanValues(columns []string) ([]any, error) {
+	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
 		case githubrepository.FieldOwner, githubrepository.FieldLicense:
@@ -120,7 +123,7 @@ func (*GithubRepository) scanValues(columns []string) ([]interface{}, error) {
 
 // assignValues assigns the values that were returned from sql.Rows (after scanning)
 // to the GithubRepository fields.
-func (gr *GithubRepository) assignValues(columns []string, values []interface{}) error {
+func (gr *GithubRepository) assignValues(columns []string, values []any) error {
 	if m, n := len(values), len(columns); m < n {
 		return fmt.Errorf("mismatch number of scan values: %d != %d", m, n)
 	}
@@ -346,6 +349,54 @@ func (gr *GithubRepository) String() string {
 	builder.WriteString(fmt.Sprintf("%v", gr.License))
 	builder.WriteByte(')')
 	return builder.String()
+}
+
+// NamedLabels returns the Labels named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (gr *GithubRepository) NamedLabels(name string) ([]*Label, error) {
+	if gr.Edges.namedLabels == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := gr.Edges.namedLabels[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (gr *GithubRepository) appendNamedLabels(name string, edges ...*Label) {
+	if gr.Edges.namedLabels == nil {
+		gr.Edges.namedLabels = make(map[string][]*Label)
+	}
+	if len(edges) == 0 {
+		gr.Edges.namedLabels[name] = []*Label{}
+	} else {
+		gr.Edges.namedLabels[name] = append(gr.Edges.namedLabels[name], edges...)
+	}
+}
+
+// NamedReleases returns the Releases named value or an error if the edge was not
+// loaded in eager-loading with this name.
+func (gr *GithubRepository) NamedReleases(name string) ([]*GithubRelease, error) {
+	if gr.Edges.namedReleases == nil {
+		return nil, &NotLoadedError{edge: name}
+	}
+	nodes, ok := gr.Edges.namedReleases[name]
+	if !ok {
+		return nil, &NotLoadedError{edge: name}
+	}
+	return nodes, nil
+}
+
+func (gr *GithubRepository) appendNamedReleases(name string, edges ...*GithubRelease) {
+	if gr.Edges.namedReleases == nil {
+		gr.Edges.namedReleases = make(map[string][]*GithubRelease)
+	}
+	if len(edges) == 0 {
+		gr.Edges.namedReleases[name] = []*GithubRelease{}
+	} else {
+		gr.Edges.namedReleases[name] = append(gr.Edges.namedReleases[name], edges...)
+	}
 }
 
 // GithubRepositories is a parsable slice of GithubRepository.

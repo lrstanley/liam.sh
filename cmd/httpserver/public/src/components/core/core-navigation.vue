@@ -7,14 +7,14 @@
     </li>
     <li><a :href="state.base.githubUser.htmlurl">github</a></li>
     <li><a href="/chat" target="_blank">discord</a></li>
-    <!-- <li>
-      <router-link :to="{ name: 'admin' }" class="filter blur-1">sudo</router-link>
-    </li> -->
+    <li v-if="state.base?.self">
+      <router-link to="/admin/posts">sudo</router-link>
+    </li>
   </ul>
 </template>
 
-<script setup>
-import { menuOptions } from "@/lib/navigation"
+<script setup lang="ts">
+import { menuOptions } from "@/lib/util"
 
 const state = useState()
 </script>

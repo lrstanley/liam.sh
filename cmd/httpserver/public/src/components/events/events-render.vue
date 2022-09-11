@@ -13,7 +13,7 @@
         class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
       >
         <a :href="e.actor.login" target="_blank">
-          <n-avatar square :size="15" :src="e.actor.avatarURL" class="mr-1 align-middle" />
+          <n-avatar round :size="15" :src="e.actor.avatarURL" class="mr-1 align-middle" />
         </a>
 
         <component
@@ -35,7 +35,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useGetEventsQuery } from "@/lib/api"
 import { useTimeAgo } from "@vueuse/core"
 import { vInfiniteScroll } from "@vueuse/components"
@@ -55,6 +55,8 @@ import EventPush from "@/components/events/objects/event-push.vue"
 import EventRelease from "@/components/events/objects/event-release.vue"
 import EventWatch from "@/components/events/objects/event-watch.vue"
 
+import type { GithubEvent } from "@/lib/api"
+
 const eventMap = {
   CreateEvent: EventCreate,
   DeleteEvent: EventDelete,
@@ -72,17 +74,17 @@ const eventMap = {
   WatchEvent: EventWatch,
 }
 
-const fetched = ref([])
+const fetched = ref<GithubEvent[]>([])
 const hasNextPage = ref(true)
-const cursor = ref(null)
-const nextCursor = ref(null)
+const cursor = ref<string>(null)
+const nextCursor = ref<string>(null)
 
 const events = useGetEventsQuery({
   variables: {
     cursor,
     count: 20,
   },
-  fetchPolicy: "cache-first",
+  requestPolicy: "cache-first",
   pause: false,
 })
 
@@ -95,7 +97,7 @@ watch(
 
     hasNextPage.value = data.githubevents.pageInfo.hasNextPage
     nextCursor.value = data.githubevents.pageInfo.endCursor
-    fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node)]
+    fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node as GithubEvent)]
 
     setTimeout(() => {
       if (

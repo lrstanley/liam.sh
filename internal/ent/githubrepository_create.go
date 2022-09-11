@@ -670,7 +670,6 @@ func (grc *GithubRepositoryCreate) createSpec() (*GithubRepository, *sqlgraph.Cr
 //			SetRepoID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (grc *GithubRepositoryCreate) OnConflict(opts ...sql.ConflictOption) *GithubRepositoryUpsertOne {
 	grc.conflict = opts
 	return &GithubRepositoryUpsertOne{
@@ -684,7 +683,6 @@ func (grc *GithubRepositoryCreate) OnConflict(opts ...sql.ConflictOption) *Githu
 //	client.GithubRepository.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (grc *GithubRepositoryCreate) OnConflictColumns(columns ...string) *GithubRepositoryUpsertOne {
 	grc.conflict = append(grc.conflict, sql.ConflictColumns(columns...))
 	return &GithubRepositoryUpsertOne{
@@ -983,7 +981,6 @@ func (u *GithubRepositoryUpsert) ClearLicense() *GithubRepositoryUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubRepositoryUpsertOne) UpdateNewValues() *GithubRepositoryUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -992,10 +989,9 @@ func (u *GithubRepositoryUpsertOne) UpdateNewValues() *GithubRepositoryUpsertOne
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.GithubRepository.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.GithubRepository.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *GithubRepositoryUpsertOne) Ignore() *GithubRepositoryUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1466,7 +1462,6 @@ func (grcb *GithubRepositoryCreateBulk) ExecX(ctx context.Context) {
 //			SetRepoID(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (grcb *GithubRepositoryCreateBulk) OnConflict(opts ...sql.ConflictOption) *GithubRepositoryUpsertBulk {
 	grcb.conflict = opts
 	return &GithubRepositoryUpsertBulk{
@@ -1480,7 +1475,6 @@ func (grcb *GithubRepositoryCreateBulk) OnConflict(opts ...sql.ConflictOption) *
 //	client.GithubRepository.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (grcb *GithubRepositoryCreateBulk) OnConflictColumns(columns ...string) *GithubRepositoryUpsertBulk {
 	grcb.conflict = append(grcb.conflict, sql.ConflictColumns(columns...))
 	return &GithubRepositoryUpsertBulk{
@@ -1502,7 +1496,6 @@ type GithubRepositoryUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *GithubRepositoryUpsertBulk) UpdateNewValues() *GithubRepositoryUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	return u
@@ -1514,7 +1507,6 @@ func (u *GithubRepositoryUpsertBulk) UpdateNewValues() *GithubRepositoryUpsertBu
 //	client.GithubRepository.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *GithubRepositoryUpsertBulk) Ignore() *GithubRepositoryUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u

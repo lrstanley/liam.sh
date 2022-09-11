@@ -1,10 +1,10 @@
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
-  - ./graphql/schema/*.gql
+  - ./database/graphql/schema/*.gql
 
 # Where should the generated server code go?
 exec:
-  filename: ./graphql/gqlhandler/gqlhandler.go
+  filename: ./database/graphql/gqlhandler/gqlhandler.go
   package: gqlhandler
 
 # Where should any generated models go?
@@ -15,7 +15,7 @@ model:
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: ./graphql/resolver
+  dir: ./database/graphql/resolver
   package: resolver
   filename_template: "{name}.resolvers.go"
 

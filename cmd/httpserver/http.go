@@ -19,16 +19,15 @@ import (
 	"github.com/go-chi/httprate"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database"
+	"github.com/lrstanley/liam.sh/internal/database/graphql"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
-	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
-	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
 
-//go:generate touch public/dist/index.html
+//go:generate sh -c "mkdir -vp public/dist;touch public/dist/index.html"
 //go:embed all:public/dist
 var staticFS embed.FS
 
@@ -62,7 +61,6 @@ func httpServer(ctx context.Context) *http.Server {
 		middleware.Recoverer,
 		middleware.StripSlashes,
 		middleware.Compress(5),
-		httpware.UseEvictCacheAdmin,
 		chix.UseNextURL,
 	)
 

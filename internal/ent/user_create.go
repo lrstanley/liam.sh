@@ -462,7 +462,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (uc *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 	uc.conflict = opts
 	return &UserUpsertOne{
@@ -476,7 +475,6 @@ func (uc *UserCreate) OnConflict(opts ...sql.ConflictOption) *UserUpsertOne {
 //	client.User.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (uc *UserCreate) OnConflictColumns(columns ...string) *UserUpsertOne {
 	uc.conflict = append(uc.conflict, sql.ConflictColumns(columns...))
 	return &UserUpsertOne{
@@ -497,18 +495,6 @@ type (
 	}
 )
 
-// SetCreateTime sets the "create_time" field.
-func (u *UserUpsert) SetCreateTime(v time.Time) *UserUpsert {
-	u.Set(user.FieldCreateTime, v)
-	return u
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *UserUpsert) UpdateCreateTime() *UserUpsert {
-	u.SetExcluded(user.FieldCreateTime)
-	return u
-}
-
 // SetUpdateTime sets the "update_time" field.
 func (u *UserUpsert) SetUpdateTime(v time.Time) *UserUpsert {
 	u.Set(user.FieldUpdateTime, v)
@@ -518,24 +504,6 @@ func (u *UserUpsert) SetUpdateTime(v time.Time) *UserUpsert {
 // UpdateUpdateTime sets the "update_time" field to the value that was provided on create.
 func (u *UserUpsert) UpdateUpdateTime() *UserUpsert {
 	u.SetExcluded(user.FieldUpdateTime)
-	return u
-}
-
-// SetUserID sets the "user_id" field.
-func (u *UserUpsert) SetUserID(v int) *UserUpsert {
-	u.Set(user.FieldUserID, v)
-	return u
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *UserUpsert) UpdateUserID() *UserUpsert {
-	u.SetExcluded(user.FieldUserID)
-	return u
-}
-
-// AddUserID adds v to the "user_id" field.
-func (u *UserUpsert) AddUserID(v int) *UserUpsert {
-	u.Add(user.FieldUserID, v)
 	return u
 }
 
@@ -667,7 +635,6 @@ func (u *UserUpsert) ClearBio() *UserUpsert {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -684,10 +651,9 @@ func (u *UserUpsertOne) UpdateNewValues() *UserUpsertOne {
 // Ignore sets each column to itself in case of conflict.
 // Using this option is equivalent to using:
 //
-//  client.User.Create().
-//      OnConflict(sql.ResolveWithIgnore()).
-//      Exec(ctx)
-//
+//	client.User.Create().
+//	    OnConflict(sql.ResolveWithIgnore()).
+//	    Exec(ctx)
 func (u *UserUpsertOne) Ignore() *UserUpsertOne {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -709,20 +675,6 @@ func (u *UserUpsertOne) Update(set func(*UserUpsert)) *UserUpsertOne {
 	return u
 }
 
-// SetCreateTime sets the "create_time" field.
-func (u *UserUpsertOne) SetCreateTime(v time.Time) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateCreateTime() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateCreateTime()
-	})
-}
-
 // SetUpdateTime sets the "update_time" field.
 func (u *UserUpsertOne) SetUpdateTime(v time.Time) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -734,27 +686,6 @@ func (u *UserUpsertOne) SetUpdateTime(v time.Time) *UserUpsertOne {
 func (u *UserUpsertOne) UpdateUpdateTime() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateUpdateTime()
-	})
-}
-
-// SetUserID sets the "user_id" field.
-func (u *UserUpsertOne) SetUserID(v int) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.SetUserID(v)
-	})
-}
-
-// AddUserID adds v to the "user_id" field.
-func (u *UserUpsertOne) AddUserID(v int) *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.AddUserID(v)
-	})
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *UserUpsertOne) UpdateUserID() *UserUpsertOne {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateUserID()
 	})
 }
 
@@ -1032,7 +963,6 @@ func (ucb *UserCreateBulk) ExecX(ctx context.Context) {
 //			SetCreateTime(v+v).
 //		}).
 //		Exec(ctx)
-//
 func (ucb *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBulk {
 	ucb.conflict = opts
 	return &UserUpsertBulk{
@@ -1046,7 +976,6 @@ func (ucb *UserCreateBulk) OnConflict(opts ...sql.ConflictOption) *UserUpsertBul
 //	client.User.Create().
 //		OnConflict(sql.ConflictColumns(columns...)).
 //		Exec(ctx)
-//
 func (ucb *UserCreateBulk) OnConflictColumns(columns ...string) *UserUpsertBulk {
 	ucb.conflict = append(ucb.conflict, sql.ConflictColumns(columns...))
 	return &UserUpsertBulk{
@@ -1068,7 +997,6 @@ type UserUpsertBulk struct {
 //			sql.ResolveWithNewValues(),
 //		).
 //		Exec(ctx)
-//
 func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithNewValues())
 	u.create.conflict = append(u.create.conflict, sql.ResolveWith(func(s *sql.UpdateSet) {
@@ -1090,7 +1018,6 @@ func (u *UserUpsertBulk) UpdateNewValues() *UserUpsertBulk {
 //	client.User.Create().
 //		OnConflict(sql.ResolveWithIgnore()).
 //		Exec(ctx)
-//
 func (u *UserUpsertBulk) Ignore() *UserUpsertBulk {
 	u.create.conflict = append(u.create.conflict, sql.ResolveWithIgnore())
 	return u
@@ -1112,20 +1039,6 @@ func (u *UserUpsertBulk) Update(set func(*UserUpsert)) *UserUpsertBulk {
 	return u
 }
 
-// SetCreateTime sets the "create_time" field.
-func (u *UserUpsertBulk) SetCreateTime(v time.Time) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.SetCreateTime(v)
-	})
-}
-
-// UpdateCreateTime sets the "create_time" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateCreateTime() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateCreateTime()
-	})
-}
-
 // SetUpdateTime sets the "update_time" field.
 func (u *UserUpsertBulk) SetUpdateTime(v time.Time) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -1137,27 +1050,6 @@ func (u *UserUpsertBulk) SetUpdateTime(v time.Time) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdateUpdateTime() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdateUpdateTime()
-	})
-}
-
-// SetUserID sets the "user_id" field.
-func (u *UserUpsertBulk) SetUserID(v int) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.SetUserID(v)
-	})
-}
-
-// AddUserID adds v to the "user_id" field.
-func (u *UserUpsertBulk) AddUserID(v int) *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.AddUserID(v)
-	})
-}
-
-// UpdateUserID sets the "user_id" field to the value that was provided on create.
-func (u *UserUpsertBulk) UpdateUserID() *UserUpsertBulk {
-	return u.Update(func(s *UserUpsert) {
-		s.UpdateUserID()
 	})
 }
 

@@ -8,8 +8,15 @@ export COMPOSE_DOCKER_CLI_BUILD := 1
 export DOCKER_BUILDKIT := 1
 export USER := $(shell id -u)
 export GROUP := $(shell id -g)
+export LICENSE_IGNORE := "graphql-tag"
+
+license:
+	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
 build-all: clean node-fetch go-fetch node-build go-build
+	@echo
+
+up: node-upgrade-deps go-upgrade-deps
 	@echo
 
 clean:
@@ -40,13 +47,41 @@ docker-build:
 
 # frontend
 node-fetch:
-	cd cmd/httpserver/public; npm install --no-fund --no-audit
+	command -v pnpm >/dev/null >&2 || npm install \
+		--no-audit \
+		--no-fund \
+		--quiet \
+		--global pnpm
+	cd cmd/httpserver/public && \
+		pnpm install --silent
 
-node-debug:
-	cd cmd/httpserver/public; npm run server
+node-upgrade-deps:
+	cd cmd/httpserver/public && \
+		pnpm up -i
 
-node-build: node-fetch
-	cd cmd/httpserver/public; npm run build
+node-prepare: node-fetch
+	cd cmd/httpserver/public && \
+		pnpm exec graphql-codegen --config graphql.yaml
+
+node-lint: node-build # needed to generate eslint auto-import ignores.
+	cd cmd/httpserver/public && \
+		pnpm exec eslint \
+			--ignore-path ../../../.gitignore \
+			--ext .js,.ts,.vue .
+	cd cmd/httpserver/public && \
+		pnpm exec vue-tsc --noEmit
+
+node-debug: node-prepare
+	cd cmd/httpserver/public && \
+		pnpm exec vite
+
+node-build: node-prepare
+	cd cmd/httpserver/public && \
+		pnpm exec vite build
+
+node-preview: node-build
+	cd cmd/httpserver/public && \
+		pnpm exec vite preview
 
 # backend
 go-prepare:

@@ -23,7 +23,7 @@
 
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar :src="repo.owner.avatarURL" />
+        <n-avatar :src="repo.owner.avatarURL" round />
       </template>
       <template #header>
         <div class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
@@ -100,19 +100,14 @@
   </a>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
+import type { GithubRepository } from "@/lib/api"
 
-const props = defineProps({
-  linkable: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  value: GithubRepository
+  linkable?: boolean
+}>()
 
 const state = useState()
 const repo = ref(props.value)
