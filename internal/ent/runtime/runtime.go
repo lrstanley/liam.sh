@@ -255,6 +255,10 @@ func init() {
 	post.DefaultViewCount = postDescViewCount.Default.(int)
 	// post.ViewCountValidator is a validator for the "view_count" field. It is called by the builders before save.
 	post.ViewCountValidator = postDescViewCount.Validators[0].(func(int) error)
+	// postDescPublic is the schema descriptor for public field.
+	postDescPublic := postFields[7].Descriptor()
+	// post.DefaultPublic holds the default value on creation for the public field.
+	post.DefaultPublic = postDescPublic.Default.(bool)
 	userMixin := schema.User{}.Mixin()
 	user.Policy = privacy.NewPolicies(schema.User{})
 	user.Hooks[0] = func(next ent.Mutator) ent.Mutator {

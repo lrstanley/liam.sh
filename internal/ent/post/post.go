@@ -35,6 +35,8 @@ const (
 	FieldPublishedAt = "published_at"
 	// FieldViewCount holds the string denoting the view_count field in the database.
 	FieldViewCount = "view_count"
+	// FieldPublic holds the string denoting the public field in the database.
+	FieldPublic = "public"
 	// EdgeAuthor holds the string denoting the author edge name in mutations.
 	EdgeAuthor = "author"
 	// EdgeLabels holds the string denoting the labels edge name in mutations.
@@ -67,6 +69,7 @@ var Columns = []string{
 	FieldSummary,
 	FieldPublishedAt,
 	FieldViewCount,
+	FieldPublic,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "posts"
@@ -126,4 +129,6 @@ var (
 	DefaultViewCount int
 	// ViewCountValidator is a validator for the "view_count" field. It is called by the builders before save.
 	ViewCountValidator func(int) error
+	// DefaultPublic holds the default value on creation for the "public" field.
+	DefaultPublic bool
 )

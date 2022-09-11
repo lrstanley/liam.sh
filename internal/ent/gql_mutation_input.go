@@ -12,14 +12,15 @@ import (
 
 // CreateLabelInput represents a mutation input for creating labels.
 type CreateLabelInput struct {
-	CreateTime *time.Time
-	UpdateTime *time.Time
-	Name       string
-	PostIDs    []int
+	CreateTime          *time.Time
+	UpdateTime          *time.Time
+	Name                string
+	PostIDs             []int
+	GithubRepositoryIDs []int
 }
 
-// Mutate applies the CreateLabelInput on the LabelCreate builder.
-func (i *CreateLabelInput) Mutate(m *LabelCreate) {
+// Mutate applies the CreateLabelInput on the LabelMutation builder.
+func (i *CreateLabelInput) Mutate(m *LabelMutation) {
 	if v := i.CreateTime; v != nil {
 		m.SetCreateTime(*v)
 	}
@@ -27,26 +28,31 @@ func (i *CreateLabelInput) Mutate(m *LabelCreate) {
 		m.SetUpdateTime(*v)
 	}
 	m.SetName(i.Name)
-	if ids := i.PostIDs; len(ids) > 0 {
-		m.AddPostIDs(ids...)
+	if v := i.PostIDs; len(v) > 0 {
+		m.AddPostIDs(v...)
+	}
+	if v := i.GithubRepositoryIDs; len(v) > 0 {
+		m.AddGithubRepositoryIDs(v...)
 	}
 }
 
-// SetInput applies the change-set in the CreateLabelInput on the create builder.
+// SetInput applies the change-set in the CreateLabelInput on the LabelCreate builder.
 func (c *LabelCreate) SetInput(i CreateLabelInput) *LabelCreate {
-	i.Mutate(c)
+	i.Mutate(c.Mutation())
 	return c
 }
 
 // UpdateLabelInput represents a mutation input for updating labels.
 type UpdateLabelInput struct {
-	UpdateTime    *time.Time
-	Name          *string
-	AddPostIDs    []int
-	RemovePostIDs []int
+	UpdateTime                *time.Time
+	Name                      *string
+	AddPostIDs                []int
+	RemovePostIDs             []int
+	AddGithubRepositoryIDs    []int
+	RemoveGithubRepositoryIDs []int
 }
 
-// Mutate applies the UpdateLabelInput on the LabelMutation.
+// Mutate applies the UpdateLabelInput on the LabelMutation builder.
 func (i *UpdateLabelInput) Mutate(m *LabelMutation) {
 	if v := i.UpdateTime; v != nil {
 		m.SetUpdateTime(*v)
@@ -54,24 +60,30 @@ func (i *UpdateLabelInput) Mutate(m *LabelMutation) {
 	if v := i.Name; v != nil {
 		m.SetName(*v)
 	}
-	if ids := i.AddPostIDs; len(ids) > 0 {
-		m.AddPostIDs(ids...)
+	if v := i.AddPostIDs; len(v) > 0 {
+		m.AddPostIDs(v...)
 	}
-	if ids := i.RemovePostIDs; len(ids) > 0 {
-		m.RemovePostIDs(ids...)
+	if v := i.RemovePostIDs; len(v) > 0 {
+		m.RemovePostIDs(v...)
+	}
+	if v := i.AddGithubRepositoryIDs; len(v) > 0 {
+		m.AddGithubRepositoryIDs(v...)
+	}
+	if v := i.RemoveGithubRepositoryIDs; len(v) > 0 {
+		m.RemoveGithubRepositoryIDs(v...)
 	}
 }
 
-// SetInput applies the change-set in the UpdateLabelInput on the update builder.
-func (u *LabelUpdate) SetInput(i UpdateLabelInput) *LabelUpdate {
-	i.Mutate(u.Mutation())
-	return u
+// SetInput applies the change-set in the UpdateLabelInput on the LabelUpdate builder.
+func (c *LabelUpdate) SetInput(i UpdateLabelInput) *LabelUpdate {
+	i.Mutate(c.Mutation())
+	return c
 }
 
-// SetInput applies the change-set in the UpdateLabelInput on the update-one builder.
-func (u *LabelUpdateOne) SetInput(i UpdateLabelInput) *LabelUpdateOne {
-	i.Mutate(u.Mutation())
-	return u
+// SetInput applies the change-set in the UpdateLabelInput on the LabelUpdateOne builder.
+func (c *LabelUpdateOne) SetInput(i UpdateLabelInput) *LabelUpdateOne {
+	i.Mutate(c.Mutation())
+	return c
 }
 
 // CreatePostInput represents a mutation input for creating posts.
@@ -82,12 +94,12 @@ type CreatePostInput struct {
 	Title       string
 	Content     string
 	PublishedAt *time.Time
-	AuthorID    int
+	Public      *bool
 	LabelIDs    []int
 }
 
-// Mutate applies the CreatePostInput on the PostCreate builder.
-func (i *CreatePostInput) Mutate(m *PostCreate) {
+// Mutate applies the CreatePostInput on the PostMutation builder.
+func (i *CreatePostInput) Mutate(m *PostMutation) {
 	if v := i.CreateTime; v != nil {
 		m.SetCreateTime(*v)
 	}
@@ -100,15 +112,17 @@ func (i *CreatePostInput) Mutate(m *PostCreate) {
 	if v := i.PublishedAt; v != nil {
 		m.SetPublishedAt(*v)
 	}
-	m.SetAuthorID(i.AuthorID)
-	if ids := i.LabelIDs; len(ids) > 0 {
-		m.AddLabelIDs(ids...)
+	if v := i.Public; v != nil {
+		m.SetPublic(*v)
+	}
+	if v := i.LabelIDs; len(v) > 0 {
+		m.AddLabelIDs(v...)
 	}
 }
 
-// SetInput applies the change-set in the CreatePostInput on the create builder.
+// SetInput applies the change-set in the CreatePostInput on the PostCreate builder.
 func (c *PostCreate) SetInput(i CreatePostInput) *PostCreate {
-	i.Mutate(c)
+	i.Mutate(c.Mutation())
 	return c
 }
 
@@ -119,13 +133,12 @@ type UpdatePostInput struct {
 	Title          *string
 	Content        *string
 	PublishedAt    *time.Time
-	AuthorID       *int
-	ClearAuthor    bool
+	Public         *bool
 	AddLabelIDs    []int
 	RemoveLabelIDs []int
 }
 
-// Mutate applies the UpdatePostInput on the PostMutation.
+// Mutate applies the UpdatePostInput on the PostMutation builder.
 func (i *UpdatePostInput) Mutate(m *PostMutation) {
 	if v := i.UpdateTime; v != nil {
 		m.SetUpdateTime(*v)
@@ -142,154 +155,25 @@ func (i *UpdatePostInput) Mutate(m *PostMutation) {
 	if v := i.PublishedAt; v != nil {
 		m.SetPublishedAt(*v)
 	}
-	if i.ClearAuthor {
-		m.ClearAuthor()
+	if v := i.Public; v != nil {
+		m.SetPublic(*v)
 	}
-	if v := i.AuthorID; v != nil {
-		m.SetAuthorID(*v)
+	if v := i.AddLabelIDs; len(v) > 0 {
+		m.AddLabelIDs(v...)
 	}
-	if ids := i.AddLabelIDs; len(ids) > 0 {
-		m.AddLabelIDs(ids...)
-	}
-	if ids := i.RemoveLabelIDs; len(ids) > 0 {
-		m.RemoveLabelIDs(ids...)
+	if v := i.RemoveLabelIDs; len(v) > 0 {
+		m.RemoveLabelIDs(v...)
 	}
 }
 
-// SetInput applies the change-set in the UpdatePostInput on the update builder.
-func (u *PostUpdate) SetInput(i UpdatePostInput) *PostUpdate {
-	i.Mutate(u.Mutation())
-	return u
-}
-
-// SetInput applies the change-set in the UpdatePostInput on the update-one builder.
-func (u *PostUpdateOne) SetInput(i UpdatePostInput) *PostUpdateOne {
-	i.Mutate(u.Mutation())
-	return u
-}
-
-// CreateUserInput represents a mutation input for creating users.
-type CreateUserInput struct {
-	CreateTime *time.Time
-	UpdateTime *time.Time
-	UserID     int
-	Login      string
-	Name       *string
-	AvatarURL  *string
-	Email      *string
-	Location   *string
-	Bio        *string
-	PostIDs    []int
-}
-
-// Mutate applies the CreateUserInput on the UserCreate builder.
-func (i *CreateUserInput) Mutate(m *UserCreate) {
-	if v := i.CreateTime; v != nil {
-		m.SetCreateTime(*v)
-	}
-	if v := i.UpdateTime; v != nil {
-		m.SetUpdateTime(*v)
-	}
-	m.SetUserID(i.UserID)
-	m.SetLogin(i.Login)
-	if v := i.Name; v != nil {
-		m.SetName(*v)
-	}
-	if v := i.AvatarURL; v != nil {
-		m.SetAvatarURL(*v)
-	}
-	if v := i.Email; v != nil {
-		m.SetEmail(*v)
-	}
-	if v := i.Location; v != nil {
-		m.SetLocation(*v)
-	}
-	if v := i.Bio; v != nil {
-		m.SetBio(*v)
-	}
-	if ids := i.PostIDs; len(ids) > 0 {
-		m.AddPostIDs(ids...)
-	}
-}
-
-// SetInput applies the change-set in the CreateUserInput on the create builder.
-func (c *UserCreate) SetInput(i CreateUserInput) *UserCreate {
-	i.Mutate(c)
+// SetInput applies the change-set in the UpdatePostInput on the PostUpdate builder.
+func (c *PostUpdate) SetInput(i UpdatePostInput) *PostUpdate {
+	i.Mutate(c.Mutation())
 	return c
 }
 
-// UpdateUserInput represents a mutation input for updating users.
-type UpdateUserInput struct {
-	UpdateTime     *time.Time
-	Login          *string
-	Name           *string
-	ClearName      bool
-	AvatarURL      *string
-	ClearAvatarURL bool
-	Email          *string
-	ClearEmail     bool
-	Location       *string
-	ClearLocation  bool
-	Bio            *string
-	ClearBio       bool
-	AddPostIDs     []int
-	RemovePostIDs  []int
-}
-
-// Mutate applies the UpdateUserInput on the UserMutation.
-func (i *UpdateUserInput) Mutate(m *UserMutation) {
-	if v := i.UpdateTime; v != nil {
-		m.SetUpdateTime(*v)
-	}
-	if v := i.Login; v != nil {
-		m.SetLogin(*v)
-	}
-	if i.ClearName {
-		m.ClearName()
-	}
-	if v := i.Name; v != nil {
-		m.SetName(*v)
-	}
-	if i.ClearAvatarURL {
-		m.ClearAvatarURL()
-	}
-	if v := i.AvatarURL; v != nil {
-		m.SetAvatarURL(*v)
-	}
-	if i.ClearEmail {
-		m.ClearEmail()
-	}
-	if v := i.Email; v != nil {
-		m.SetEmail(*v)
-	}
-	if i.ClearLocation {
-		m.ClearLocation()
-	}
-	if v := i.Location; v != nil {
-		m.SetLocation(*v)
-	}
-	if i.ClearBio {
-		m.ClearBio()
-	}
-	if v := i.Bio; v != nil {
-		m.SetBio(*v)
-	}
-	if ids := i.AddPostIDs; len(ids) > 0 {
-		m.AddPostIDs(ids...)
-	}
-	if ids := i.RemovePostIDs; len(ids) > 0 {
-		m.RemovePostIDs(ids...)
-	}
-}
-
-// SetInput applies the change-set in the UpdateUserInput on the update builder.
-func (u *UserUpdate) SetInput(i UpdateUserInput) *UserUpdate {
-	i.Mutate(u.Mutation())
-	return u
-}
-
-// SetInput applies the change-set in the UpdateUserInput on the update-one builder.
-func (u *UserUpdateOne) SetInput(i UpdateUserInput) *UserUpdateOne {
-	i.Mutate(u.Mutation())
-	return u
+// SetInput applies the change-set in the UpdatePostInput on the PostUpdateOne builder.
+func (c *PostUpdateOne) SetInput(i UpdatePostInput) *PostUpdateOne {
+	i.Mutate(c.Mutation())
+	return c
 }

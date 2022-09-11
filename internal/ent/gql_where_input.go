@@ -3394,6 +3394,10 @@ type PostWhereInput struct {
 	ViewCountLT    *int  `json:"viewCountLT,omitempty"`
 	ViewCountLTE   *int  `json:"viewCountLTE,omitempty"`
 
+	// "public" field predicates.
+	Public    *bool `json:"public,omitempty"`
+	PublicNEQ *bool `json:"publicNEQ,omitempty"`
+
 	// "author" edge predicates.
 	HasAuthor     *bool             `json:"hasAuthor,omitempty"`
 	HasAuthorWith []*UserWhereInput `json:"hasAuthorWith,omitempty"`
@@ -3788,6 +3792,12 @@ func (i *PostWhereInput) P() (predicate.Post, error) {
 	}
 	if i.ViewCountLTE != nil {
 		predicates = append(predicates, post.ViewCountLTE(*i.ViewCountLTE))
+	}
+	if i.Public != nil {
+		predicates = append(predicates, post.PublicEQ(*i.Public))
+	}
+	if i.PublicNEQ != nil {
+		predicates = append(predicates, post.PublicNEQ(*i.PublicNEQ))
 	}
 
 	if i.HasAuthor != nil {

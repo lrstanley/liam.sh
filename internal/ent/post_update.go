@@ -105,6 +105,20 @@ func (pu *PostUpdate) AddViewCount(i int) *PostUpdate {
 	return pu
 }
 
+// SetPublic sets the "public" field.
+func (pu *PostUpdate) SetPublic(b bool) *PostUpdate {
+	pu.mutation.SetPublic(b)
+	return pu
+}
+
+// SetNillablePublic sets the "public" field if the given value is not nil.
+func (pu *PostUpdate) SetNillablePublic(b *bool) *PostUpdate {
+	if b != nil {
+		pu.SetPublic(*b)
+	}
+	return pu
+}
+
 // SetAuthorID sets the "author" edge to the User entity by ID.
 func (pu *PostUpdate) SetAuthorID(id int) *PostUpdate {
 	pu.mutation.SetAuthorID(id)
@@ -357,6 +371,13 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: post.FieldViewCount,
 		})
 	}
+	if value, ok := pu.mutation.Public(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: post.FieldPublic,
+		})
+	}
 	if pu.mutation.AuthorCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -533,6 +554,20 @@ func (puo *PostUpdateOne) SetNillableViewCount(i *int) *PostUpdateOne {
 // AddViewCount adds i to the "view_count" field.
 func (puo *PostUpdateOne) AddViewCount(i int) *PostUpdateOne {
 	puo.mutation.AddViewCount(i)
+	return puo
+}
+
+// SetPublic sets the "public" field.
+func (puo *PostUpdateOne) SetPublic(b bool) *PostUpdateOne {
+	puo.mutation.SetPublic(b)
+	return puo
+}
+
+// SetNillablePublic sets the "public" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillablePublic(b *bool) *PostUpdateOne {
+	if b != nil {
+		puo.SetPublic(*b)
+	}
 	return puo
 }
 
@@ -816,6 +851,13 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 			Type:   field.TypeInt,
 			Value:  value,
 			Column: post.FieldViewCount,
+		})
+	}
+	if value, ok := puo.mutation.Public(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: post.FieldPublic,
 		})
 	}
 	if puo.mutation.AuthorCleared() {

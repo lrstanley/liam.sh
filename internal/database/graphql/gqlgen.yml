@@ -1,3 +1,6 @@
+# set to speed up generation time by not performing a final validation pass.
+skip_validation: true
+
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
   - ./database/graphql/schema/*.gql
@@ -38,9 +41,6 @@ models:
   Node:
     model:
       - github.com/lrstanley/liam.sh/internal/ent.Noder
-  Duration:
-    model:
-      - entgo.io/contrib/entgql/internal/todo/ent/schema/durationgql.Duration
   GithubEventRepo:
     model:
       - github.com/google/go-github/v44/github.Repository

@@ -174,6 +174,7 @@ var (
 		{Name: "summary", Type: field.TypeString},
 		{Name: "published_at", Type: field.TypeTime},
 		{Name: "view_count", Type: field.TypeInt, Default: 0},
+		{Name: "public", Type: field.TypeBool, Default: false},
 		{Name: "user_posts", Type: field.TypeInt},
 	}
 	// PostsTable holds the schema information for the "posts" table.
@@ -184,7 +185,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "posts_users_posts",
-				Columns:    []*schema.Column{PostsColumns[10]},
+				Columns:    []*schema.Column{PostsColumns[11]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

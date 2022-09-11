@@ -1,20 +1,3 @@
-input CreatePostInput {
-    slug: String!
-    title: String!
-    content: String!
-    publishedAt: Time
-    labelIDs: [ID!]
-}
-
-input UpdatePostInput {
-    slug: String
-    title: String
-    content: String
-    publishedAt: Time
-    addLabelIDs: [ID!]
-    removeLabelIDs: [ID!]
-}
-
 extend type Mutation {
     createPost(input: CreatePostInput!): Post!
     updatePost(id: ID!, input: UpdatePostInput!): Post!

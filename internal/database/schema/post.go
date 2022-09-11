@@ -17,9 +17,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
 )
 
-var (
-	rePostSlug = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{4,50}$`)
-)
+var rePostSlug = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{4,50}$`)
 
 type Post struct {
 	ent.Schema
@@ -34,14 +32,20 @@ func (Post) Fields() []ent.Field {
 			entgql.OrderField("TITLE"),
 		),
 		field.String("content").NotEmpty(),
-		field.String("content_html").NotEmpty(),
-		field.String("summary").NotEmpty(),
+		field.String("content_html").NotEmpty().Annotations(
+			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
+		),
+		field.String("summary").NotEmpty().Annotations(
+			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
+		),
 		field.Time("published_at").Default(time.Now).Annotations(
 			entgql.OrderField("DATE"),
 		),
 		field.Int("view_count").Default(0).NonNegative().Annotations(
 			entgql.OrderField("VIEW_COUNT"),
+			entgql.Skip(entgql.SkipMutationCreateInput|entgql.SkipMutationUpdateInput),
 		),
+		field.Bool("public").Default(false),
 	}
 }
 
@@ -57,6 +61,7 @@ func (Post) Policy() ent.Policy {
 			AllowRoles([]string{"admin"}, true),
 		},
 		Query: privacy.QueryPolicy{
+			AllowPublicUnlessRole([]string{"admin"}),
 			privacy.AlwaysAllowRule(),
 		},
 	}
@@ -64,7 +69,9 @@ func (Post) Policy() ent.Policy {
 
 func (Post) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("author", User.Type).Ref("posts").Unique().Required(),
+		edge.From("author", User.Type).Ref("posts").Unique().Required().Annotations(
+			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
+		),
 		edge.From("labels", Label.Type).Ref("posts").Annotations(
 			entgql.RelayConnection(),
 		),
@@ -75,5 +82,9 @@ func (Post) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
+		entgql.Mutations(
+			entgql.MutationCreate(),
+			entgql.MutationUpdate(),
+		),
 	}
 }

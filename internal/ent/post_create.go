@@ -114,6 +114,20 @@ func (pc *PostCreate) SetNillableViewCount(i *int) *PostCreate {
 	return pc
 }
 
+// SetPublic sets the "public" field.
+func (pc *PostCreate) SetPublic(b bool) *PostCreate {
+	pc.mutation.SetPublic(b)
+	return pc
+}
+
+// SetNillablePublic sets the "public" field if the given value is not nil.
+func (pc *PostCreate) SetNillablePublic(b *bool) *PostCreate {
+	if b != nil {
+		pc.SetPublic(*b)
+	}
+	return pc
+}
+
 // SetAuthorID sets the "author" edge to the User entity by ID.
 func (pc *PostCreate) SetAuthorID(id int) *PostCreate {
 	pc.mutation.SetAuthorID(id)
@@ -244,6 +258,10 @@ func (pc *PostCreate) defaults() error {
 		v := post.DefaultViewCount
 		pc.mutation.SetViewCount(v)
 	}
+	if _, ok := pc.mutation.Public(); !ok {
+		v := post.DefaultPublic
+		pc.mutation.SetPublic(v)
+	}
 	return nil
 }
 
@@ -305,6 +323,9 @@ func (pc *PostCreate) check() error {
 		if err := post.ViewCountValidator(v); err != nil {
 			return &ValidationError{Name: "view_count", err: fmt.Errorf(`ent: validator failed for field "Post.view_count": %w`, err)}
 		}
+	}
+	if _, ok := pc.mutation.Public(); !ok {
+		return &ValidationError{Name: "public", err: errors.New(`ent: missing required field "Post.public"`)}
 	}
 	if _, ok := pc.mutation.AuthorID(); !ok {
 		return &ValidationError{Name: "author", err: errors.New(`ent: missing required edge "Post.author"`)}
@@ -408,6 +429,14 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 			Column: post.FieldViewCount,
 		})
 		_node.ViewCount = value
+	}
+	if value, ok := pc.mutation.Public(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeBool,
+			Value:  value,
+			Column: post.FieldPublic,
+		})
+		_node.Public = value
 	}
 	if nodes := pc.mutation.AuthorIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -602,6 +631,18 @@ func (u *PostUpsert) AddViewCount(v int) *PostUpsert {
 	return u
 }
 
+// SetPublic sets the "public" field.
+func (u *PostUpsert) SetPublic(v bool) *PostUpsert {
+	u.Set(post.FieldPublic, v)
+	return u
+}
+
+// UpdatePublic sets the "public" field to the value that was provided on create.
+func (u *PostUpsert) UpdatePublic() *PostUpsert {
+	u.SetExcluded(post.FieldPublic)
+	return u
+}
+
 // UpdateNewValues updates the mutable fields using the new values that were set on create.
 // Using this option is equivalent to using:
 //
@@ -763,6 +804,20 @@ func (u *PostUpsertOne) AddViewCount(v int) *PostUpsertOne {
 func (u *PostUpsertOne) UpdateViewCount() *PostUpsertOne {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateViewCount()
+	})
+}
+
+// SetPublic sets the "public" field.
+func (u *PostUpsertOne) SetPublic(v bool) *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.SetPublic(v)
+	})
+}
+
+// UpdatePublic sets the "public" field to the value that was provided on create.
+func (u *PostUpsertOne) UpdatePublic() *PostUpsertOne {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdatePublic()
 	})
 }
 
@@ -1089,6 +1144,20 @@ func (u *PostUpsertBulk) AddViewCount(v int) *PostUpsertBulk {
 func (u *PostUpsertBulk) UpdateViewCount() *PostUpsertBulk {
 	return u.Update(func(s *PostUpsert) {
 		s.UpdateViewCount()
+	})
+}
+
+// SetPublic sets the "public" field.
+func (u *PostUpsertBulk) SetPublic(v bool) *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.SetPublic(v)
+	})
+}
+
+// UpdatePublic sets the "public" field to the value that was provided on create.
+func (u *PostUpsertBulk) UpdatePublic() *PostUpsertBulk {
+	return u.Update(func(s *PostUpsert) {
+		s.UpdatePublic()
 	})
 }
 

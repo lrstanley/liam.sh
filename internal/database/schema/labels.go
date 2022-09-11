@@ -16,9 +16,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/privacy"
 )
 
-var (
-	reLabel = regexp.MustCompile(`^[a-z\d][a-z\d-]*$`)
-)
+var reLabel = regexp.MustCompile(`^[a-z\d][a-z\d-]*$`)
 
 type Label struct {
 	ent.Schema
@@ -64,5 +62,9 @@ func (Label) Annotations() []schema.Annotation {
 	return []schema.Annotation{
 		entgql.RelayConnection(),
 		entgql.QueryField(),
+		entgql.Mutations(
+			entgql.MutationCreate(),
+			entgql.MutationUpdate(),
+		),
 	}
 }

@@ -14,8 +14,10 @@ import (
 
 // CreatePost is the resolver for the createPost field.
 func (r *mutationResolver) CreatePost(ctx context.Context, input ent.CreatePostInput) (*ent.Post, error) {
-	input.AuthorID = chix.IDFromContext[int](ctx)
-	return ent.FromContext(ctx).Post.Create().SetInput(input).Save(ctx)
+	return ent.FromContext(ctx).Post.Create().
+		SetInput(input).
+		SetAuthorID(chix.IDFromContext[int](ctx)).
+		Save(ctx)
 }
 
 // UpdatePost is the resolver for the updatePost field.

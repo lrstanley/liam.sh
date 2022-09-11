@@ -6218,6 +6218,7 @@ type PostMutation struct {
 	published_at  *time.Time
 	view_count    *int
 	addview_count *int
+	public        *bool
 	clearedFields map[string]struct{}
 	author        *int
 	clearedauthor bool
@@ -6671,6 +6672,42 @@ func (m *PostMutation) ResetViewCount() {
 	m.addview_count = nil
 }
 
+// SetPublic sets the "public" field.
+func (m *PostMutation) SetPublic(b bool) {
+	m.public = &b
+}
+
+// Public returns the value of the "public" field in the mutation.
+func (m *PostMutation) Public() (r bool, exists bool) {
+	v := m.public
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPublic returns the old "public" field's value of the Post entity.
+// If the Post object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *PostMutation) OldPublic(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPublic is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPublic requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPublic: %w", err)
+	}
+	return oldValue.Public, nil
+}
+
+// ResetPublic resets all changes to the "public" field.
+func (m *PostMutation) ResetPublic() {
+	m.public = nil
+}
+
 // SetAuthorID sets the "author" edge to the User entity by id.
 func (m *PostMutation) SetAuthorID(id int) {
 	m.author = &id
@@ -6783,7 +6820,7 @@ func (m *PostMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *PostMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 10)
 	if m.create_time != nil {
 		fields = append(fields, post.FieldCreateTime)
 	}
@@ -6811,6 +6848,9 @@ func (m *PostMutation) Fields() []string {
 	if m.view_count != nil {
 		fields = append(fields, post.FieldViewCount)
 	}
+	if m.public != nil {
+		fields = append(fields, post.FieldPublic)
+	}
 	return fields
 }
 
@@ -6837,6 +6877,8 @@ func (m *PostMutation) Field(name string) (ent.Value, bool) {
 		return m.PublishedAt()
 	case post.FieldViewCount:
 		return m.ViewCount()
+	case post.FieldPublic:
+		return m.Public()
 	}
 	return nil, false
 }
@@ -6864,6 +6906,8 @@ func (m *PostMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldPublishedAt(ctx)
 	case post.FieldViewCount:
 		return m.OldViewCount(ctx)
+	case post.FieldPublic:
+		return m.OldPublic(ctx)
 	}
 	return nil, fmt.Errorf("unknown Post field %s", name)
 }
@@ -6935,6 +6979,13 @@ func (m *PostMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetViewCount(v)
+		return nil
+	case post.FieldPublic:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPublic(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Post field %s", name)
@@ -7026,6 +7077,9 @@ func (m *PostMutation) ResetField(name string) error {
 		return nil
 	case post.FieldViewCount:
 		m.ResetViewCount()
+		return nil
+	case post.FieldPublic:
+		m.ResetPublic()
 		return nil
 	}
 	return fmt.Errorf("unknown Post field %s", name)

@@ -189,6 +189,7 @@ var schemaGraph = func() *sqlgraph.Schema {
 			post.FieldSummary:     {Type: field.TypeString, Column: post.FieldSummary},
 			post.FieldPublishedAt: {Type: field.TypeTime, Column: post.FieldPublishedAt},
 			post.FieldViewCount:   {Type: field.TypeInt, Column: post.FieldViewCount},
+			post.FieldPublic:      {Type: field.TypeBool, Column: post.FieldPublic},
 		},
 	}
 	graph.Nodes[7] = &sqlgraph.Node{
@@ -1089,6 +1090,11 @@ func (f *PostFilter) WherePublishedAt(p entql.TimeP) {
 // WhereViewCount applies the entql int predicate on the view_count field.
 func (f *PostFilter) WhereViewCount(p entql.IntP) {
 	f.Where(p.Field(post.FieldViewCount))
+}
+
+// WherePublic applies the entql bool predicate on the public field.
+func (f *PostFilter) WherePublic(p entql.BoolP) {
+	f.Where(p.Field(post.FieldPublic))
 }
 
 // WhereHasAuthor applies a predicate to check if query has an edge author.

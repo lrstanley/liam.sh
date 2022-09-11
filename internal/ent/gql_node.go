@@ -717,7 +717,7 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 	node = &Node{
 		ID:     po.ID,
 		Type:   "Post",
-		Fields: make([]*Field, 9),
+		Fields: make([]*Field, 10),
 		Edges:  make([]*Edge, 2),
 	}
 	var buf []byte
@@ -791,6 +791,14 @@ func (po *Post) Node(ctx context.Context) (node *Node, err error) {
 	node.Fields[8] = &Field{
 		Type:  "int",
 		Name:  "view_count",
+		Value: string(buf),
+	}
+	if buf, err = json.Marshal(po.Public); err != nil {
+		return nil, err
+	}
+	node.Fields[9] = &Field{
+		Type:  "bool",
+		Name:  "public",
 		Value: string(buf),
 	}
 	node.Edges[0] = &Edge{

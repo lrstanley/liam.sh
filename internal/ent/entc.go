@@ -46,7 +46,6 @@ func main() {
 			},
 		},
 		entc.Extensions(egq),
-		entc.TemplateDir("./database/template"),
 	)
 	checkError(err)
 }
