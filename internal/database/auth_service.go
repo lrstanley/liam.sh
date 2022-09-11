@@ -8,6 +8,7 @@ import (
 	"context"
 	"strconv"
 
+	"ariga.io/entcache"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
@@ -58,7 +59,7 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 		}
 	}
 
-	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(ctx)
+	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(entcache.Evict(ctx))
 }
 
 func (s *authService) Roles(ctx context.Context, id int) ([]string, error) {
