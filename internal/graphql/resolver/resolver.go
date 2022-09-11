@@ -14,16 +14,14 @@ import (
 
 // Resolver is the GQL resolver root.
 type Resolver struct {
-	client *ent.Client
-	cli    *clix.CLI[models.Flags]
+	cli *clix.CLI[models.Flags]
 }
 
 // NewSchema creates a graphql executable schema.
 func NewSchema(client *ent.Client, cli *clix.CLI[models.Flags]) graphql.ExecutableSchema {
 	return gqlhandler.NewExecutableSchema(gqlhandler.Config{
 		Resolvers: &Resolver{
-			client: client,
-			cli:    cli,
+			cli: cli,
 		},
 	})
 }

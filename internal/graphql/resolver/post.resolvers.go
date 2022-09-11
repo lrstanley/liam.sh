@@ -15,17 +15,17 @@ import (
 // CreatePost is the resolver for the createPost field.
 func (r *mutationResolver) CreatePost(ctx context.Context, input ent.CreatePostInput) (*ent.Post, error) {
 	input.AuthorID = chix.IDFromContext[int](ctx)
-	return r.client.Post.Create().SetInput(input).Save(ctx)
+	return ent.FromContext(ctx).Post.Create().SetInput(input).Save(ctx)
 }
 
 // UpdatePost is the resolver for the updatePost field.
 func (r *mutationResolver) UpdatePost(ctx context.Context, id int, input ent.UpdatePostInput) (*ent.Post, error) {
-	return r.client.Post.UpdateOneID(id).SetInput(input).Save(ctx)
+	return ent.FromContext(ctx).Post.UpdateOneID(id).SetInput(input).Save(ctx)
 }
 
 // DeletePost is the resolver for the deletePost field.
 func (r *mutationResolver) DeletePost(ctx context.Context, id int) (int, error) {
-	return id, r.client.Post.DeleteOneID(id).Exec(ctx)
+	return id, ent.FromContext(ctx).Post.DeleteOneID(id).Exec(ctx)
 }
 
 // RegeneratePosts is the resolver for the regeneratePosts field.
@@ -35,7 +35,7 @@ func (r *mutationResolver) RegeneratePosts(ctx context.Context) (bool, error) {
 		Content string `json:"content"`
 	}{}
 
-	tx, err := r.client.Tx(ctx)
+	tx, err := ent.FromContext(ctx).Tx(ctx)
 	if err != nil {
 		return false, err
 	}
