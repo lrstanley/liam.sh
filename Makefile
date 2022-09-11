@@ -48,27 +48,36 @@ node-fetch:
 		--no-fund \
 		--quiet \
 		--global pnpm
-	cd cmd/httpserver/public; pnpm install --silent
+	cd cmd/httpserver/public && \
+		pnpm install --silent
 
 node-upgrade-deps:
-	cd cmd/httpserver/public; pnpm up -i
+	cd cmd/httpserver/public && \
+		pnpm up -i
 
 node-prepare: node-fetch
-	cd cmd/httpserver/public; pnpm exec graphql-codegen
+	cd cmd/httpserver/public && \
+		pnpm exec graphql-codegen --config graphql.yaml
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd cmd/httpserver/public; pnpm exec eslint \
-		--ignore-path ../../../.gitignore \
-		--ext .js,.ts,.vue .
+	cd cmd/httpserver/public && \
+		pnpm exec eslint \
+			--ignore-path ../../../.gitignore \
+			--ext .js,.ts,.vue .
+	cd cmd/httpserver/public && \
+		pnpm exec vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd cmd/httpserver/public; pnpm exec vite
+	cd cmd/httpserver/public && \
+		pnpm exec vite
 
 node-build: node-prepare
-	cd cmd/httpserver/public; pnpm exec vite build
+	cd cmd/httpserver/public && \
+		pnpm exec vite build
 
 node-preview: node-build
-	cd cmd/httpserver/public; pnpm exec vite preview
+	cd cmd/httpserver/public && \
+		pnpm exec vite preview
 
 # backend
 go-prepare:

@@ -10,7 +10,7 @@
     </n-page-header>
 
     <div class="p-4 sm:container sm:mx-auto lg:p-0">
-      <PostCreateEdit create :post="post?.data.value" @update:post="createPost" />
+      <PostCreateEdit create @update:post="createPost" />
     </div>
   </LayoutAdmin>
 </template>

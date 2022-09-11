@@ -23,7 +23,6 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
-	"github.com/lrstanley/liam.sh/internal/httpware"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
@@ -62,7 +61,6 @@ func httpServer(ctx context.Context) *http.Server {
 		middleware.Recoverer,
 		middleware.StripSlashes,
 		middleware.Compress(5),
-		httpware.UseEvictCacheAdmin,
 		chix.UseNextURL,
 	)
 

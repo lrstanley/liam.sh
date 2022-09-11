@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme" :abstract="true">
+  <n-config-provider :theme="darkTheme" abstract preflight-style-disabled>
     <router-view />
   </n-config-provider>
 </template>

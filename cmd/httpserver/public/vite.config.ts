@@ -48,12 +48,8 @@ export default defineConfig({
       dts: true,
       imports: [
         "vue",
-        "vue/macros",
         "vue-router",
         "@vueuse/core",
-        {
-          pinia: ["storeToRefs"],
-        },
         {
           "@/lib/core/state": ["useState"],
         },
