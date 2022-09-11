@@ -24,9 +24,9 @@ func checkError(err error) {
 
 func main() {
 	egq, err := entgql.NewExtension(
-		entgql.WithConfigPath("./graphql/gqlgen.yml"),
+		entgql.WithConfigPath("./database/graphql/gqlgen.yml"),
 		entgql.WithSchemaGenerator(),
-		entgql.WithSchemaPath("./graphql/schema/ent.gql"),
+		entgql.WithSchemaPath("./database/graphql/schema/ent.gql"),
 		entgql.WithWhereInputs(true),
 	)
 	checkError(err)

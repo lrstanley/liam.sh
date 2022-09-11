@@ -7,8 +7,8 @@ package resolver
 import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/lrstanley/clix"
+	"github.com/lrstanley/liam.sh/internal/database/graphql/gqlhandler"
 	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 
