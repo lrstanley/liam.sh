@@ -21,7 +21,7 @@
           <tr v-for="post in posts" :key="post.id">
             <td>
               <router-link :to="{ name: 'p-slug', params: { slug: post.slug } }">
-                {{ post.title }}
+                {{ post.title }} <span v-if="!post.public" class="text-yellow-500">[draft]</span>
               </router-link>
             </td>
             <td class="hidden md:table-cell">
