@@ -11,7 +11,7 @@
     placeholder="Select labels"
   />
   <div v-if="suggestions.length > 0" v-motion-fade class="flex flex-col mb-2">
-    <p class="text-center">Suggestions</p>
+    <span class="text-emerald-500">Suggestions</span>
     <div class="inline-flex flex-row flex-wrap gap-1">
       <n-tag
         v-for="label in suggestions"

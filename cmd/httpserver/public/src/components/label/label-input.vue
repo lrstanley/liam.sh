@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-center">Update tags</p>
+    <span class="text-emerald-500">Update tags</span>
     <LabelSelect ref="selectRef" v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
 
     <n-input

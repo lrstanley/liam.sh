@@ -42,6 +42,7 @@
 
         <div>
           <PostViewCount :value="post.viewCount" />
+          <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
         </div>
 
         <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">

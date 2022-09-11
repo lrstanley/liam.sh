@@ -31,6 +31,7 @@ query getPost($id: ID!) {
             slug
             content
             viewCount
+            public
             publishedAt
             labels {
                 edges {
@@ -54,6 +55,7 @@ query getPostContent($slug: String!) {
                 content
                 contentHTML
                 viewCount
+                public
                 publishedAt
                 author {
                     name
@@ -97,6 +99,7 @@ query getPosts(
                 title
                 summary
                 slug
+                public
                 publishedAt
                 viewCount
                 labels {

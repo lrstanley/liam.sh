@@ -35,6 +35,7 @@
           </div>
 
           <PostViewCount :value="post.viewCount" />
+          <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
         </div>
       </template>
     </n-thing>

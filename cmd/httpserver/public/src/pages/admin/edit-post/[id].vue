@@ -58,6 +58,7 @@ function updatePost(val: UpdatePostInput, labelIDs: string[]) {
         addLabelIDs: addedLabels,
         removeLabelIDs: removedLabels,
         publishedAt: val.publishedAt,
+        public: val.public,
       },
     })
     .then((result) => {

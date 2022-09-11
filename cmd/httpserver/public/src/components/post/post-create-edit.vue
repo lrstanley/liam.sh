@@ -39,20 +39,24 @@
     </n-card>
     <div>
       <n-card size="small" class="md:sticky md:top-5 md:left-0">
-        <n-form-item
-          label="Post published date"
-          :required="true"
-          class="flex flex-col items-center flex-auto"
-        >
-          <n-date-picker v-model:value="datetime" type="datetime" />
-        </n-form-item>
+        <div class="flex flex-col gap-3">
+          <div>
+            <span class="text-emerald-400"> Post published date </span>
+            <n-date-picker v-model:value="datetime" type="datetime" />
+          </div>
 
-        <LabelInput v-model="labelIDs" class="pb-5" :suggest="post.content" />
+          <div>
+            <div class="text-emerald-400">Post attributes</div>
+            <n-checkbox v-model:checked="post.public"> Public </n-checkbox>
+          </div>
 
-        <n-button block type="primary" @click="emit('update:post', post, labelIDs)">
-          <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
-          Save post
-        </n-button>
+          <LabelInput v-model="labelIDs" :suggest="post.content" />
+
+          <n-button block type="primary" @click="emit('update:post', post, labelIDs)">
+            <n-icon class="mr-1"><i-mdi-content-save /></n-icon>
+            Save post
+          </n-button>
+        </div>
       </n-card>
     </div>
   </div>
