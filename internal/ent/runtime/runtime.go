@@ -10,6 +10,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/lrstanley/liam.sh/internal/database/schema"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
@@ -17,7 +18,6 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
-	"github.com/lrstanley/liam.sh/internal/ent/schema"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 
 	"entgo.io/ent"

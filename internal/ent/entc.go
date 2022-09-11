@@ -32,9 +32,12 @@ func main() {
 	checkError(err)
 
 	err = entc.Generate(
-		"./ent/schema",
+		"./database/schema",
 		&gen.Config{
-			Header: header,
+			Target:  "./ent/",
+			Schema:  "github.com/lrstanley/liam.sh/internal/database/schema",
+			Package: "github.com/lrstanley/liam.sh/internal/ent",
+			Header:  header,
 			Features: []gen.Feature{
 				gen.FeaturePrivacy,
 				gen.FeatureEntQL,
@@ -43,7 +46,7 @@ func main() {
 			},
 		},
 		entc.Extensions(egq),
-		entc.TemplateDir("./ent/template"),
+		entc.TemplateDir("./database/template"),
 	)
 	checkError(err)
 }
