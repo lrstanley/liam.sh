@@ -1,6 +1,6 @@
 module github.com/lrstanley/liam.sh
 
-go 1.18
+go 1.19
 
 require (
 	ariga.io/entcache v0.1.0

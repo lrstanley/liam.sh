@@ -6,18 +6,16 @@ package gh
 
 import (
 	"context"
+	"sync/atomic"
 	"time"
 
 	"github.com/apex/log"
 	"github.com/google/go-github/v44/github"
-	"github.com/lrstanley/liam.sh/internal/models"
 )
 
 const userInterval = 10 * time.Minute
 
-var (
-	User models.Atomic[*github.User]
-)
+var User atomic.Pointer[github.User]
 
 func UserRunner(ctx context.Context) error {
 	logger := log.FromContext(ctx).WithField("runner", "github_user")
