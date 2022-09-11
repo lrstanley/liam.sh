@@ -8,6 +8,10 @@ export COMPOSE_DOCKER_CLI_BUILD := 1
 export DOCKER_BUILDKIT := 1
 export USER := $(shell id -u)
 export GROUP := $(shell id -g)
+export LICENSE_IGNORE := "graphql-tag"
+
+license:
+	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
 build-all: clean node-fetch go-fetch node-build go-build
 	@echo
