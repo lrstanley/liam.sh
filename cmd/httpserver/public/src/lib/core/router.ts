@@ -78,23 +78,19 @@ router.afterEach((to) => {
   }
 
   document.title = `${title} · Liam Stanley` // TODO: switch to dynamic name.
+  state.addToHistory({ title, path: to.path, timestamp: new Date().toISOString() })
 
-  if (state.history.length > 4) {
-    state.history.shift()
-  }
-
-  // remove any previous duplicates with the exact same path.
-  for (let i = state.history.length - 1; i >= 0; i--) {
-    if (state.history[i].path === to.path) {
-      state.history.splice(i, 1)
-    }
-  }
-
-  state.history.push({ title, path: to.path, timestamp: new Date().toISOString() })
-
-  setTimeout(() => {
+  // Scroll to anchor, just in case the page happens to not render fast enough.
+  nextTick(() => {
     loadingBar.finish()
-  }, 100)
+
+    if (location.hash && !to.meta.disableAnchor) {
+      const el = document.getElementById(location.hash.slice(1))
+      if (el) {
+        el.scrollIntoView()
+      }
+    }
+  })
   return
 })
 

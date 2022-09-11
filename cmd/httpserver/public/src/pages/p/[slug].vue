@@ -133,23 +133,23 @@ const postRef = ref(null)
 
 #post-content :deep(h1) {
   font-size: 1.8em;
-  margin-top: 1.6em;
+  margin-top: 1.5em;
 }
 #post-content :deep(h2) {
   font-size: 1.65em;
-  margin-top: 1.5em;
+  margin-top: 1.3em;
 }
 #post-content :deep(h3) {
   font-size: 1.5em;
-  margin-top: 1.4em;
+  margin-top: 1.2em;
 }
 #post-content :deep(h4) {
   font-size: 1.4em;
-  margin-top: 1.3em;
+  margin-top: 0.75em;
 }
 #post-content :deep(h5) {
   font-size: 1.3em;
-  margin-top: 1.2em;
+  margin-top: 0.1em;
 }
 
 #post-content :deep(h1),
