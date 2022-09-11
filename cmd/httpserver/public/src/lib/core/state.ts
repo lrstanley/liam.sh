@@ -25,7 +25,12 @@ export const useState = defineStore("state", {
   },
   actions: {
     addToHistory(item: History) {
-      // remove any previous duplicates with the exact same path.
+      // Truncate to a max size.
+      if (this.history.length > 4) {
+        this.history.shift()
+      }
+
+      // Remove any previous duplicates with the exact same path.
       for (let i = this.history.length - 1; i >= 0; i--) {
         if (this.history[i].path === item.path) {
           this.history.splice(i, 1)
