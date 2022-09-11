@@ -1,5 +1,10 @@
 <template>
-  <LayoutSidebar :loading="fetching" :error="error" affix class="order-last md:order-first">
+  <LayoutSidebar
+    :loading="fetching"
+    :error="error || (!post && `Post with ID '${props.slug}' not found`) || undefined"
+    affix
+    class="order-last md:order-first"
+  >
     <n-back-top :visibility-height="600" class="z-[9999]" />
 
     <n-page-header class="container hidden mb-2 md:inline-flex">
@@ -72,7 +77,7 @@ const props = defineProps<{
 
 const state = useState()
 const { data, error, fetching } = useGetPostContentQuery({ variables: { slug: props.slug } })
-const post = computed(() => data?.value?.posts?.edges[0].node)
+const post = computed(() => data?.value?.posts?.edges[0]?.node)
 const postRef = ref(null)
 </script>
 

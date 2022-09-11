@@ -6,8 +6,13 @@
     >
       <CoreNavigation />
 
+      <template v-if="props.loading">
+        <n-spin class="flex-auto">
+          <template #description> Loading... </template>
+        </n-spin>
+      </template>
       <n-alert
-        v-if="props.error"
+        v-else-if="props.error"
         v-motion-fade
         title="An error occurred"
         type="error"
@@ -15,11 +20,6 @@
       >
         {{ props.error }}
       </n-alert>
-      <template v-else-if="props.loading">
-        <n-spin class="flex-auto">
-          <template #description> Loading... </template>
-        </n-spin>
-      </template>
       <template v-else>
         <slot><router-view /></slot>
       </template>
