@@ -30,9 +30,12 @@ func GistRunner(ctx context.Context) error {
 
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
-	err := database.RunWithTx(ctx, logger, db, getGists)
-	if err != nil {
-		logger.WithError(err).Error("failed to get gists")
+	var err error
+	if SyncOnStart {
+		err = database.RunWithTx(ctx, logger, db, getGists)
+		if err != nil {
+			logger.WithError(err).Error("failed to get gists")
+		}
 	}
 
 	for {

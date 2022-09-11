@@ -19,8 +19,9 @@ const (
 )
 
 var (
-	Client     *github.Client
-	clientOnce sync.Once
+	Client      *github.Client
+	clientOnce  sync.Once
+	SyncOnStart = false
 )
 
 func NewClient(ctx context.Context, token string) {

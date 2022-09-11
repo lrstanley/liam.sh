@@ -32,4 +32,5 @@ type ConfigGithub struct {
 	User         int    `env:"USER"          long:"user"          required:"true" description:"GitHub user ID to use for authentication"`
 	ClientID     string `env:"CLIENT_ID"     long:"client-id"     required:"true" description:"GitHub client ID"`
 	ClientSecret string `env:"CLIENT_SECRET" long:"client-secret" required:"true" description:"GitHub client secret"`
+	SyncOnStart  bool   `env:"SYNC_ON_START" long:"sync-on-start" description:"sync all data from GitHub on startup"`
 }

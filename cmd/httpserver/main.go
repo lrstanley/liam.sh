@@ -38,6 +38,7 @@ func main() {
 	database.RegisterHooks(ctx)
 	database.Migrate(ctx, logger)
 
+	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
 	gh.NewClient(ctx, cli.Flags.Github.Token)
 
 	if err := chix.RunCtx(

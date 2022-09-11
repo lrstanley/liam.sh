@@ -28,9 +28,12 @@ func EventsRunner(ctx context.Context) error {
 
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
-	err := database.RunWithTx(ctx, logger, db, getEvents)
-	if err != nil {
-		logger.WithError(err).Error("failed to get events")
+	var err error
+	if SyncOnStart {
+		err = database.RunWithTx(ctx, logger, db, getEvents)
+		if err != nil {
+			logger.WithError(err).Error("failed to get events")
+		}
 	}
 
 	for {
@@ -46,24 +49,22 @@ func EventsRunner(ctx context.Context) error {
 	}
 }
 
-var (
-	allowedEvents = []string{
-		"CreateEvent",
-		"DeleteEvent",
-		"ForkEvent",
-		"IssueCommentEvent",
-		"IssuesEvent",
-		"MemberEvent",
-		"PublicEvent",
-		"PullRequestEvent",
-		"PullRequestReviewEvent",
-		"PullRequestReviewCommentEvent",
-		"PullRequestReviewThreadEvent",
-		"PushEvent",
-		"ReleaseEvent",
-		"WatchEvent",
-	}
-)
+var allowedEvents = []string{
+	"CreateEvent",
+	"DeleteEvent",
+	"ForkEvent",
+	"IssueCommentEvent",
+	"IssuesEvent",
+	"MemberEvent",
+	"PublicEvent",
+	"PullRequestEvent",
+	"PullRequestReviewEvent",
+	"PullRequestReviewCommentEvent",
+	"PullRequestReviewThreadEvent",
+	"PushEvent",
+	"ReleaseEvent",
+	"WatchEvent",
+}
 
 func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 	opts := &github.ListOptions{

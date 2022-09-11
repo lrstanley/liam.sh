@@ -32,9 +32,12 @@ func RepositoryRunner(ctx context.Context) error {
 
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
-	err := database.RunWithTx(ctx, logger, db, getRepositories)
-	if err != nil {
-		logger.WithError(err).Error("failed to get repositories")
+	var err error
+	if SyncOnStart {
+		err = database.RunWithTx(ctx, logger, db, getRepositories)
+		if err != nil {
+			logger.WithError(err).Error("failed to get repositories")
+		}
 	}
 
 	for {
@@ -50,9 +53,7 @@ func RepositoryRunner(ctx context.Context) error {
 	}
 }
 
-var (
-	ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
-)
+var ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
 
 func getRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 	repos, err := fetchRepositories(ctx, logger, db)
