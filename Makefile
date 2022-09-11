@@ -59,7 +59,7 @@ node-upgrade-deps:
 	cd cmd/httpserver/public && \
 		pnpm up -i
 
-node-prepare: node-fetch
+node-prepare: license node-fetch
 	cd cmd/httpserver/public && \
 		pnpm exec graphql-codegen --config graphql.yaml
 
@@ -84,7 +84,7 @@ node-preview: node-build
 		pnpm exec vite preview
 
 # backend
-go-prepare:
+go-prepare: license go-fetch
 	go generate -x ./...
 
 go-fetch:

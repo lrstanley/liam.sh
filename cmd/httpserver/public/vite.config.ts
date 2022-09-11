@@ -41,7 +41,7 @@ export default defineConfig({
       resolvers: [
         VueUseComponentsResolver(),
         NaiveUiResolver(),
-        IconsResolver({ componentPrefix: "i", enabledCollections: ["mdi"] }),
+        IconsResolver({ componentPrefix: "i", enabledCollections: ["mdi", "logos"] }),
       ],
     }),
     AutoImport({
@@ -54,7 +54,7 @@ export default defineConfig({
           "@/lib/core/state": ["useState"],
         },
       ],
-      resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi"] })],
+      resolvers: [IconsResolver({ componentPrefix: "icon", enabledCollections: ["mdi", "logos"] })],
       eslintrc: {
         enabled: true,
       },
@@ -66,7 +66,7 @@ export default defineConfig({
   ],
   base: "/",
   build: {
-    sourcemap: true,
+    sourcemap: false,
     emptyOutDir: true,
   },
   preview: {

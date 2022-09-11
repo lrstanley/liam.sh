@@ -9,6 +9,7 @@ specifiers:
   '@graphql-codegen/typescript': ^2.7.3
   '@graphql-codegen/typescript-operations': ^2.5.3
   '@graphql-codegen/typescript-vue-urql': ^2.3.3
+  '@iconify-json/logos': ^1.1.15
   '@iconify-json/mdi': ^1.1.31
   '@rushstack/eslint-patch': ^1.1.4
   '@types/node': ^18.7.16
@@ -59,6 +60,7 @@ dependencies:
   '@graphql-codegen/typescript': 2.7.3_graphql@16.6.0
   '@graphql-codegen/typescript-operations': 2.5.3_graphql@16.6.0
   '@graphql-codegen/typescript-vue-urql': 2.3.3_sy4knu3obj4ys7pjcqbyfxmqle
+  '@iconify-json/logos': 1.1.15
   '@iconify-json/mdi': 1.1.31
   '@types/node': 18.7.16
   '@urql/exchange-retry': 0.3.3_graphql@16.6.0
@@ -1422,6 +1424,12 @@ packages:
 
   /@iarna/toml/2.2.5:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+    dev: false
+
+  /@iconify-json/logos/1.1.15:
+    resolution: {integrity: sha512-J5NtHiM78fSgeHyFhipDdpnOQsKsHYXlqI1w+jsCqFA8R7HkacsKWxQ739AvTBdmK67lW8O3/TyacATaAp/lUA==}
+    dependencies:
+      '@iconify/types': 1.1.0
     dev: false
 
   /@iconify-json/mdi/1.1.31:

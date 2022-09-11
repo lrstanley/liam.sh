@@ -15,10 +15,19 @@
         content-style="padding: 0;display: flex;flex-direction: column;"
         class="flex flex-auto w-full h-full p-0"
       >
-        <EventsRender class="w-full h-full overflow-x-auto shrink grow basis-0" />
+        <EventsRender
+          class="w-full h-full overflow-x-auto shrink grow basis-0"
+          @event-count="(e) => (eventCount = e)"
+        />
 
         <n-layout-footer bordered class="bottom-bar">
           <span v-motion-fade class="flex flex-auto">
+            <span class="bar-item misc">
+              <n-icon class="align-middle">
+                <i-logos-visual-studio-code />
+              </n-icon>
+            </span>
+
             <n-tooltip trigger="hover">
               <template #trigger>
                 <span class="bar-item">
@@ -32,24 +41,29 @@
                   }}
                 </span>
               </template>
-              {{
-                state.base.version
-                  ? `${state.base.version.goVersion} &middot; built: ${state.base.version.date}`
-                  : "master"
-              }}
+              build date: {{ state.base.version.date }}
             </n-tooltip>
+            <span class="bar-item misc">
+              <n-icon class="mr-1 align-middle">
+                <i-logos-gopher />
+              </n-icon>
+              {{ state.base.version.goVersion.replace(/^go/, "") }}
+            </span>
+            <span class="bar-item misc">
+              <n-icon class="mr-1 align-middle">
+                <i-logos-vue />
+              </n-icon>
+              {{ vueVersion }}
+            </span>
+
             <span class="ml-auto" />
+
+            <span v-if="eventCount > 0" class="bar-item misc"> ln:{{ eventCount }} </span>
             <n-tooltip trigger="hover">
               <template #trigger>
-                <span class="bar-item misc">spaces:4</span>
+                <span class="bar-item misc"> spaces:4 </span>
               </template>
               ... or just gofmt
-            </n-tooltip>
-            <n-tooltip trigger="hover">
-              <template #trigger>
-                <span class="hidden bar-item misc">go/vue</span>
-              </template>
-              built with Go and Vue.js
             </n-tooltip>
             <n-tooltip trigger="hover">
               <template #trigger>
@@ -58,10 +72,10 @@
                   style="color: white !important"
                   :href="state.base.githubUser.htmlurl"
                 >
-                  <n-icon class="align-middle">
+                  <n-icon class="align-middle mt-[-3px] mr-[-7px]">
                     <i-mdi-github />
                   </n-icon>
-                  @{{ state.base.githubUser.login }}
+                  {{ state.base.githubUser.login }}
                 </a>
               </template>
               <p>
@@ -77,6 +91,9 @@
 </template>
 
 <script setup lang="ts">
+import { version as vueVersion } from "vue"
+
+const eventCount = ref<number>()
 const state = useState()
 </script>
 

@@ -74,6 +74,10 @@ const eventMap = {
   WatchEvent: EventWatch,
 }
 
+const emit = defineEmits<{
+  (e: "eventCount", value: number): void
+}>()
+
 const fetched = ref<GithubEvent[]>([])
 const hasNextPage = ref(true)
 const cursor = ref<string>(null)
@@ -98,6 +102,7 @@ watch(
     hasNextPage.value = data.githubevents.pageInfo.hasNextPage
     nextCursor.value = data.githubevents.pageInfo.endCursor
     fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node as GithubEvent)]
+    emit("eventCount", fetched.value.length)
 
     setTimeout(() => {
       if (
