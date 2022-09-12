@@ -39,6 +39,10 @@ a {
   @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text;
 }
 
+.icon {
+  @apply inline align-middle;
+}
+
 .n-icon {
   display: inline-flex;
   align-self: center;
@@ -48,12 +52,17 @@ a {
   font-size: 1.1em;
 }
 
-.icon {
-  @apply inline align-middle;
-}
-
 .n-popover {
   padding: 2px 6px !important;
+}
+
+.n-dropdown-menu,
+.n-popover,
+.n-popover:not(.n-popover--raw),
+.n-tooltip,
+.n-popover-shared .n-popover-arrow-wrapper .n-popover-arrow,
+.n-base-select-menu {
+  @apply bg-zinc-800;
 }
 
 *::-webkit-scrollbar {
