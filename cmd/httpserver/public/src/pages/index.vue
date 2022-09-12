@@ -71,20 +71,19 @@
               <div
                 v-for="stat in codingStats"
                 :key="stat.language"
-                class="flex items-center flex-auto gap-1"
+                class="flex flex-row items-center flex-auto"
               >
                 <div class="text-right shrink-0 mr-[1ch]" :style="{ width: stat.titleLength + 'ch' }">
                   {{ stat.language }}
                 </div>
 
-                <n-progress
-                  type="line"
-                  :percentage="stat.percentage"
-                  status="success"
-                  indicator-placement="outside"
-                >
-                  <div class="w-[3ch]">{{ stat.percentage }}%</div>
-                </n-progress>
+                <div class="w-full rounded bg-zinc-900">
+                  <div
+                    class="h-2 rounded bg-gradient-to-r from-fuchsia-600 to-pink-600"
+                    :style="{ width: stat.percentage + '%' }"
+                  />
+                </div>
+                <div class="shrink-0 ml-[1ch] w-[3ch]">{{ stat.percentage }}%</div>
               </div>
             </n-popover>
 
