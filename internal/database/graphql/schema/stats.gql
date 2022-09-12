@@ -1,0 +1,16 @@
+type CodingStats {
+    languages: [LanguageStat!]
+    totalSeconds: Int!
+    totalDuration: String!
+    calculatedDays: Int!
+}
+
+type LanguageStat {
+    language: String!
+    totalSeconds: Int!
+    totalDuration: String!
+}
+
+extend type Query {
+    codingStats: CodingStats!
+}

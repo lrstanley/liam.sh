@@ -5,10 +5,12 @@
 package models
 
 type Flags struct {
-	HTTP     ConfigHTTP     `group:"HTTP Server options" namespace:"http" env-namespace:"HTTP"`
-	Database ConfigDatabase `group:"Database options" namespace:"database" env-namespace:"DATABASE"`
-	Github   ConfigGithub   `group:"Github options" namespace:"github" env-namespace:"GITHUB"`
-	ChatLink string         `env:"CHAT_LINK" long:"chat-link" required:"true" description:"Link to a chat platform"`
+	HTTP     ConfigHTTP     `group:"HTTP Server options" namespace:"http"     env-namespace:"HTTP"`
+	Database ConfigDatabase `group:"Database options"    namespace:"database" env-namespace:"DATABASE"`
+	Github   ConfigGithub   `group:"Github options"      namespace:"github"   env-namespace:"GITHUB"`
+	WakAPI   ConfigWakAPI   `group:"WakAPI options"      namespace:"wakapi"   env-namespace:"WAKAPI"`
+
+	ChatLink string `env:"CHAT_LINK" long:"chat-link" required:"true" description:"Link to a chat platform"`
 }
 
 // ConfigDatabase holds the database configuration.
@@ -33,4 +35,12 @@ type ConfigGithub struct {
 	ClientID     string `env:"CLIENT_ID"     long:"client-id"     required:"true" description:"GitHub client ID"`
 	ClientSecret string `env:"CLIENT_SECRET" long:"client-secret" required:"true" description:"GitHub client secret"`
 	SyncOnStart  bool   `env:"SYNC_ON_START" long:"sync-on-start" description:"sync all data from GitHub on startup"`
+}
+
+// ConfigWakAPI are configurations specifically utilized for interacting with a
+// WakAPI instance (https://github.com/muety/wakapi). This configuration is not
+// compatible with Wakatime.
+type ConfigWakAPI struct {
+	URL    string `env:"URL"     long:"url"     required:"true" description:"wakapi connection url"`
+	APIKey string `env:"API_KEY" long:"api-key" required:"true" description:"WakAPI API key"`
 }

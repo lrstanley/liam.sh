@@ -56,6 +56,38 @@
               {{ vueVersion }}
             </span>
 
+            <n-popover placement="top" :width="250">
+              <template #trigger>
+                <span class="bar-item misc">
+                  <n-icon class="mr-1 align-middle text-violet-400">
+                    <i-mdi-history />
+                  </n-icon>
+                  {{ state.base.codingStats.totalDuration }}
+                </span>
+              </template>
+
+              <p class="text-violet-400">{{ state.base.codingStats.calculatedDays }} day coding stats</p>
+
+              <div
+                v-for="stat in codingStats"
+                :key="stat.language"
+                class="flex items-center flex-auto gap-1"
+              >
+                <div class="text-right shrink-0 mr-[1ch]" :style="{ width: stat.titleLength + 'ch' }">
+                  {{ stat.language }}
+                </div>
+
+                <n-progress
+                  type="line"
+                  :percentage="stat.percentage"
+                  status="success"
+                  indicator-placement="outside"
+                >
+                  <div class="w-[3ch]">{{ stat.percentage }}%</div>
+                </n-progress>
+              </div>
+            </n-popover>
+
             <span class="ml-auto" />
 
             <span v-if="eventCount > 0" class="bar-item misc"> ln:{{ eventCount }} </span>
@@ -95,6 +127,38 @@ import { version as vueVersion } from "vue"
 
 const eventCount = ref<number>()
 const state = useState()
+
+interface LanguageBucket {
+  language: string
+  totalSeconds: number
+  percentage?: number
+  titleLength?: number
+}
+
+const codingStats = computed(() => {
+  const out: LanguageBucket[] = []
+  let maxTitleLength = 5
+
+  // Bucket by language with a cap.
+  for (const stat of state.base.codingStats.languages) {
+    if (out.length === 6) {
+      out[5].language = "Other"
+      out[5].totalSeconds += stat.totalSeconds
+      continue
+    }
+
+    maxTitleLength = Math.max(maxTitleLength, stat.language.length)
+    out.push(stat)
+  }
+
+  // Calculate percentages.
+  for (const stat of out) {
+    stat.titleLength = maxTitleLength
+    stat.percentage = Math.round((stat.totalSeconds / state.base.codingStats.totalSeconds) * 100)
+  }
+
+  return out
+})
 </script>
 
 <style scoped>

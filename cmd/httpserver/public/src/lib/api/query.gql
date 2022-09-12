@@ -21,6 +21,17 @@ query base {
         goVersion
         date
     }
+
+    codingStats {
+        totalDuration
+        totalSeconds
+        calculatedDays
+
+        languages {
+            language
+            totalSeconds
+        }
+    }
 }
 
 query getPost($id: ID!) {

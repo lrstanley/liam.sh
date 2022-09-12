@@ -17,6 +17,7 @@ import (
 	"github.com/google/go-github/v44/github"
 	"github.com/lrstanley/clix"
 	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/models"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -47,6 +48,13 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	CodingStats struct {
+		CalculatedDays func(childComplexity int) int
+		Languages      func(childComplexity int) int
+		TotalDuration  func(childComplexity int) int
+		TotalSeconds   func(childComplexity int) int
+	}
+
 	GithubAsset struct {
 		AssetID            func(childComplexity int) int
 		BrowserDownloadURL func(childComplexity int) int
@@ -238,6 +246,12 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	LanguageStat struct {
+		Language      func(childComplexity int) int
+		TotalDuration func(childComplexity int) int
+		TotalSeconds  func(childComplexity int) int
+	}
+
 	Link struct {
 		Name func(childComplexity int) int
 		URL  func(childComplexity int) int
@@ -289,6 +303,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		CodingStats        func(childComplexity int) int
 		GithubUser         func(childComplexity int) int
 		Githubassets       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) int
 		Githubevents       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) int
@@ -369,6 +384,7 @@ type QueryResolver interface {
 	Posts(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.PostOrder, where *ent.PostWhereInput) (*ent.PostConnection, error)
 	Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error)
 	GithubUser(ctx context.Context) (*github.User, error)
+	CodingStats(ctx context.Context) (*models.CodingStats, error)
 	Self(ctx context.Context) (*ent.User, error)
 	Version(ctx context.Context) (*clix.NonSensitiveVersion, error)
 }
@@ -387,6 +403,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "CodingStats.calculatedDays":
+		if e.complexity.CodingStats.CalculatedDays == nil {
+			break
+		}
+
+		return e.complexity.CodingStats.CalculatedDays(childComplexity), true
+
+	case "CodingStats.languages":
+		if e.complexity.CodingStats.Languages == nil {
+			break
+		}
+
+		return e.complexity.CodingStats.Languages(childComplexity), true
+
+	case "CodingStats.totalDuration":
+		if e.complexity.CodingStats.TotalDuration == nil {
+			break
+		}
+
+		return e.complexity.CodingStats.TotalDuration(childComplexity), true
+
+	case "CodingStats.totalSeconds":
+		if e.complexity.CodingStats.TotalSeconds == nil {
+			break
+		}
+
+		return e.complexity.CodingStats.TotalSeconds(childComplexity), true
 
 	case "GithubAsset.assetID":
 		if e.complexity.GithubAsset.AssetID == nil {
@@ -1309,6 +1353,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.LabelEdge.Node(childComplexity), true
 
+	case "LanguageStat.language":
+		if e.complexity.LanguageStat.Language == nil {
+			break
+		}
+
+		return e.complexity.LanguageStat.Language(childComplexity), true
+
+	case "LanguageStat.totalDuration":
+		if e.complexity.LanguageStat.TotalDuration == nil {
+			break
+		}
+
+		return e.complexity.LanguageStat.TotalDuration(childComplexity), true
+
+	case "LanguageStat.totalSeconds":
+		if e.complexity.LanguageStat.TotalSeconds == nil {
+			break
+		}
+
+		return e.complexity.LanguageStat.TotalSeconds(childComplexity), true
+
 	case "Link.name":
 		if e.complexity.Link.Name == nil {
 			break
@@ -1567,6 +1632,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.PostEdge.Node(childComplexity), true
+
+	case "Query.codingStats":
+		if e.complexity.Query.CodingStats == nil {
+			break
+		}
+
+		return e.complexity.Query.CodingStats(childComplexity), true
 
 	case "Query.githubUser":
 		if e.complexity.Query.GithubUser == nil {
@@ -3825,6 +3897,23 @@ type GithubLicense {
     regeneratePosts: Boolean!
 }
 `, BuiltIn: false},
+	{Name: "../schema/stats.gql", Input: `type CodingStats {
+    languages: [LanguageStat!]
+    totalSeconds: Int!
+    totalDuration: String!
+    calculatedDays: Int!
+}
+
+type LanguageStat {
+    language: String!
+    totalSeconds: Int!
+    totalDuration: String!
+}
+
+extend type Query {
+    codingStats: CodingStats!
+}
+`, BuiltIn: false},
 	{Name: "../schema/user.gql", Input: `extend type Query {
     self: User
 }
@@ -4947,6 +5036,187 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _CodingStats_languages(ctx context.Context, field graphql.CollectedField, obj *models.CodingStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CodingStats_languages(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Languages, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]models.LanguageStat)
+	fc.Result = res
+	return ec.marshalOLanguageStat2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐLanguageStatᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CodingStats_languages(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CodingStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "language":
+				return ec.fieldContext_LanguageStat_language(ctx, field)
+			case "totalSeconds":
+				return ec.fieldContext_LanguageStat_totalSeconds(ctx, field)
+			case "totalDuration":
+				return ec.fieldContext_LanguageStat_totalDuration(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type LanguageStat", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CodingStats_totalSeconds(ctx context.Context, field graphql.CollectedField, obj *models.CodingStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CodingStats_totalSeconds(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalSeconds, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CodingStats_totalSeconds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CodingStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CodingStats_totalDuration(ctx context.Context, field graphql.CollectedField, obj *models.CodingStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CodingStats_totalDuration(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalDuration, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CodingStats_totalDuration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CodingStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CodingStats_calculatedDays(ctx context.Context, field graphql.CollectedField, obj *models.CodingStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CodingStats_calculatedDays(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CalculatedDays, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CodingStats_calculatedDays(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CodingStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _GithubAsset_id(ctx context.Context, field graphql.CollectedField, obj *ent.GithubAsset) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GithubAsset_id(ctx, field)
@@ -11077,6 +11347,138 @@ func (ec *executionContext) fieldContext_LabelEdge_cursor(ctx context.Context, f
 	return fc, nil
 }
 
+func (ec *executionContext) _LanguageStat_language(ctx context.Context, field graphql.CollectedField, obj *models.LanguageStat) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LanguageStat_language(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Language, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LanguageStat_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LanguageStat",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _LanguageStat_totalSeconds(ctx context.Context, field graphql.CollectedField, obj *models.LanguageStat) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LanguageStat_totalSeconds(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalSeconds, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LanguageStat_totalSeconds(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LanguageStat",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _LanguageStat_totalDuration(ctx context.Context, field graphql.CollectedField, obj *models.LanguageStat) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LanguageStat_totalDuration(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalDuration, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LanguageStat_totalDuration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LanguageStat",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Link_name(ctx context.Context, field graphql.CollectedField, obj *clix.Link) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Link_name(ctx, field)
 	if err != nil {
@@ -13387,6 +13789,60 @@ func (ec *executionContext) fieldContext_Query_githubUser(ctx context.Context, f
 				return ec.fieldContext_GithubUser_updatedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GithubUser", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_codingStats(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_codingStats(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().CodingStats(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.CodingStats)
+	fc.Result = res
+	return ec.marshalNCodingStats2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐCodingStats(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_codingStats(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "languages":
+				return ec.fieldContext_CodingStats_languages(ctx, field)
+			case "totalSeconds":
+				return ec.fieldContext_CodingStats_totalSeconds(ctx, field)
+			case "totalDuration":
+				return ec.fieldContext_CodingStats_totalDuration(ctx, field)
+			case "calculatedDays":
+				return ec.fieldContext_CodingStats_calculatedDays(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CodingStats", field.Name)
 		},
 	}
 	return fc, nil
@@ -24614,6 +25070,52 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 
 // region    **************************** object.gotpl ****************************
 
+var codingStatsImplementors = []string{"CodingStats"}
+
+func (ec *executionContext) _CodingStats(ctx context.Context, sel ast.SelectionSet, obj *models.CodingStats) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, codingStatsImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CodingStats")
+		case "languages":
+
+			out.Values[i] = ec._CodingStats_languages(ctx, field, obj)
+
+		case "totalSeconds":
+
+			out.Values[i] = ec._CodingStats_totalSeconds(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalDuration":
+
+			out.Values[i] = ec._CodingStats_totalDuration(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "calculatedDays":
+
+			out.Values[i] = ec._CodingStats_calculatedDays(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var githubAssetImplementors = []string{"GithubAsset", "Node"}
 
 func (ec *executionContext) _GithubAsset(ctx context.Context, sel ast.SelectionSet, obj *ent.GithubAsset) graphql.Marshaler {
@@ -25940,6 +26442,48 @@ func (ec *executionContext) _LabelEdge(ctx context.Context, sel ast.SelectionSet
 	return out
 }
 
+var languageStatImplementors = []string{"LanguageStat"}
+
+func (ec *executionContext) _LanguageStat(ctx context.Context, sel ast.SelectionSet, obj *models.LanguageStat) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, languageStatImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("LanguageStat")
+		case "language":
+
+			out.Values[i] = ec._LanguageStat_language(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalSeconds":
+
+			out.Values[i] = ec._LanguageStat_totalSeconds(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalDuration":
+
+			out.Values[i] = ec._LanguageStat_totalDuration(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var linkImplementors = []string{"Link"}
 
 func (ec *executionContext) _Link(ctx context.Context, sel ast.SelectionSet, obj *clix.Link) graphql.Marshaler {
@@ -26582,6 +27126,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubUser(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "codingStats":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_codingStats(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -27274,6 +27841,20 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNCodingStats2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐCodingStats(ctx context.Context, sel ast.SelectionSet, v models.CodingStats) graphql.Marshaler {
+	return ec._CodingStats(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCodingStats2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐCodingStats(ctx context.Context, sel ast.SelectionSet, v *models.CodingStats) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CodingStats(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNCreateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐCreateLabelInput(ctx context.Context, v interface{}) (ent.CreateLabelInput, error) {
 	res, err := ec.unmarshalInputCreateLabelInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -27658,6 +28239,10 @@ func (ec *executionContext) marshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanley�
 func (ec *executionContext) unmarshalNLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx context.Context, v interface{}) (*ent.LabelWhereInput, error) {
 	res, err := ec.unmarshalInputLabelWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNLanguageStat2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐLanguageStat(ctx context.Context, sel ast.SelectionSet, v models.LanguageStat) graphql.Marshaler {
+	return ec._LanguageStat(ctx, sel, &v)
 }
 
 func (ec *executionContext) marshalNLink2githubᚗcomᚋlrstanleyᚋclixᚐLink(ctx context.Context, sel ast.SelectionSet, v clix.Link) graphql.Marshaler {
@@ -28914,6 +29499,53 @@ func (ec *executionContext) unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanle
 	}
 	res, err := ec.unmarshalInputLabelWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOLanguageStat2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐLanguageStatᚄ(ctx context.Context, sel ast.SelectionSet, v []models.LanguageStat) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNLanguageStat2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐLanguageStat(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalOLink2ᚕgithubᚗcomᚋlrstanleyᚋclixᚐLinkᚄ(ctx context.Context, sel ast.SelectionSet, v []clix.Link) graphql.Marshaler {

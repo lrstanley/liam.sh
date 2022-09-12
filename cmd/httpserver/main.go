@@ -15,6 +15,7 @@ import (
 	_ "github.com/lrstanley/liam.sh/internal/ent/runtime"
 	"github.com/lrstanley/liam.sh/internal/gh"
 	"github.com/lrstanley/liam.sh/internal/models"
+	"github.com/lrstanley/liam.sh/internal/wakapi"
 )
 
 var (
@@ -47,6 +48,7 @@ func main() {
 		gh.EventsRunner,
 		gh.RepositoryRunner,
 		gh.GistRunner,
+		wakapi.NewRunner(logger, cli.Flags.WakAPI).Run,
 	); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}
