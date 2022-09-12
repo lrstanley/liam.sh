@@ -22,7 +22,7 @@
         embedded
         content-style="max-height: 100%;display: flex;flex: 1 1 auto;flex-direction: column"
       >
-        <CoreBreadcrumbs class="pt-2 pl-3" />
+        <CoreBreadcrumbs class="hidden pt-2 pl-3 md:block" />
 
         <n-alert
           v-if="props.error"

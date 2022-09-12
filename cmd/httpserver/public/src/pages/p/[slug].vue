@@ -114,6 +114,10 @@ const postRef = ref(null)
   @apply text-center md:text-left;
 }
 
+#post-content :deep(a) {
+  @apply !whitespace-pre-wrap break-words;
+}
+
 #post-content :deep(blockquote) {
   line-height: 1.5rem;
   padding: 0.6rem 1.2rem;
