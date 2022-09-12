@@ -5,17 +5,13 @@
         <slot />
       </div>
 
-      <div class="hidden" :class="{ 'md:inline-flex flex-col gap-6': affix }">
-        <n-affix
-          :top="props.affixTop ?? props.affixTrigger ?? 100"
-          :trigger-top="props.affixTrigger ?? props.affixTop ?? 100"
-          class="flex flex-col gap-6 w-[240px]"
+      <div>
+        <div
+          class="flex flex-col flex-auto gap-4"
+          :class="{ 'md:sticky md:left-0 md:top-10': props.affix }"
         >
           <slot name="sidebar" />
-        </n-affix>
-      </div>
-      <div :class="{ 'inline-flex md:hidden flex-col gap-6': affix }">
-        <slot name="sidebar" />
+        </div>
       </div>
     </div>
   </LayoutDefault>
@@ -26,8 +22,6 @@ const props = defineProps<{
   loading?: boolean
   error?: Error | string
   affix?: boolean
-  affixTop?: number
-  affixTrigger?: number
 }>()
 </script>
 
