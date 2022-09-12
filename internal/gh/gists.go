@@ -9,6 +9,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"regexp"
 	"time"
 
 	"github.com/apex/log"
@@ -140,6 +141,8 @@ func fetchGists(ctx context.Context, logger log.Interface, db *ent.Tx) (allGists
 	return allGists, nil
 }
 
+var reLatestRawURL = regexp.MustCompile(`/raw/[^/]+/`)
+
 // storeGist fetches the gist from github and stores it in the database.
 func storeGist(ctx context.Context, db *ent.Tx, gist *github.Gist, file github.GistFile) (id int, err error) {
 	q := db.GithubGist.Create().
@@ -154,7 +157,7 @@ func storeGist(ctx context.Context, db *ent.Tx, gist *github.Gist, file github.G
 		SetType(file.GetType()).
 		SetLanguage(file.GetLanguage()).
 		SetSize(int64(file.GetSize())).
-		SetRawURL(file.GetRawURL())
+		SetRawURL(reLatestRawURL.ReplaceAllString(file.GetRawURL(), "/raw/"))
 
 	if file.GetContent() != "" {
 		q = q.SetContent(file.GetContent())

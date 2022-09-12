@@ -31,6 +31,11 @@ func (h *handler) getGists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.FormValue("latest") != "" {
+		http.Redirect(w, r, gist.RawURL, http.StatusTemporaryRedirect)
+		return
+	}
+
 	w.Header().Set("Content-Type", gist.Type)
 	w.Header().Set("Cache-Control", "public, max-age=31536000")
 	w.Header().Set("X-Frame-Options", "SAMEORIGIN")
