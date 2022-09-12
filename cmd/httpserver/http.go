@@ -70,14 +70,13 @@ func httpServer(ctx context.Context) *http.Server {
 	}
 	r.Use(
 		cors.AllowAll().Handler,
-		middleware.SetHeader(
-			"Content-Security-Policy",
-			"default-src 'self'; img-src * data:; media-src * data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
-		),
-		middleware.SetHeader("X-Frame-Options", "DENY"),
-		middleware.SetHeader("X-Content-Type-Options", "nosniff"),
-		middleware.SetHeader("Referrer-Policy", "no-referrer-when-downgrade"),
-		middleware.SetHeader("Permissions-Policy", "clipboard-write=(self)"),
+		chix.UseHeaders(map[string]string{
+			"Content-Security-Policy": "default-src 'self'; img-src * data:; media-src * data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
+			"X-Frame-Options":         "DENY",
+			"X-Content-Type-Options":  "nosniff",
+			"Referrer-Policy":         "no-referrer-when-downgrade",
+			"Permissions-Policy":      "clipboard-write=(self)",
+		}),
 		auth.AddToContext,
 		httprate.LimitByIP(400, 5*time.Minute),
 	)
