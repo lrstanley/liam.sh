@@ -1,10 +1,5 @@
 <template>
-  <div
-    id="main"
-    ref="scrollContainer"
-    v-infinite-scroll="[fetchEvents, { distance: 40 }]"
-    class="relative overflow-x-hidden"
-  >
+  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
     <TransitionGroup appear>
       <div
         v-for="(e, i) in fetched"

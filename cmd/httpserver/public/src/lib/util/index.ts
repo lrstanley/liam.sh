@@ -5,7 +5,6 @@
  */
 
 export * from "@/lib/util/equal"
-export * from "@/lib/util/navigation"
 export * from "@/lib/util/pagination"
 export * from "@/lib/util/sorter"
 export * from "@/lib/util/textcase"

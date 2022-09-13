@@ -52,10 +52,6 @@ a {
   font-size: 1.1em;
 }
 
-.n-popover {
-  padding: 2px 6px !important;
-}
-
 .n-dropdown-menu,
 .n-popover,
 .n-popover:not(.n-popover--raw),

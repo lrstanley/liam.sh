@@ -34,6 +34,11 @@ export const menuOptions = [
   { to: { name: "repos" }, name: "Repos", alias: "repos" },
 ]
 
+export const branchMenuOptions = [
+  { to: { name: "index" }, name: "master" },
+  { to: { name: "util-gists" }, name: "feature/list-gists" },
+]
+
 export const adminSidebarOptions = [
   renderLink({ name: "admin" }, "Admin Home", IconMdiHome),
   renderLink({ name: "admin-posts" }, "Blog Posts", IconMdiBookOpenPageVariantOutline),
