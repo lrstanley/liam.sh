@@ -1,6 +1,6 @@
 <template>
   <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
-    <TransitionGroup appear>
+    <TransitionGroup name="stepped" appear>
       <div
         v-for="(e, i) in fetched"
         :key="e.id"
@@ -140,17 +140,6 @@ onMounted(() => {
 
 .timestamp:hover {
   opacity: 1;
-}
-
-.v-enter-active,
-.v-leave-active {
-  @apply transform transition-opacity duration-300;
-  transition-delay: min(0.05s, calc(0.005s * (var(--total) - var(--i))));
-}
-
-.v-enter-from,
-.v-leave-to {
-  @apply opacity-0;
 }
 
 div :deep(.icon) {

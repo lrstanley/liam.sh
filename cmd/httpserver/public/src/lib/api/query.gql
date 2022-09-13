@@ -242,3 +242,27 @@ query getRepos(
         }
     }
 }
+
+query getGists {
+    githubgists(
+        first: 200
+        orderBy: { field: UPDATED_AT, direction: DESC }
+        where: { public: true }
+    ) {
+        edges {
+            node {
+                id
+                htmlURL
+                rawURL
+                updatedAt
+                description
+                owner {
+                    avatarURL
+                    htmlurl
+                }
+                name
+                language
+            }
+        }
+    }
+}
