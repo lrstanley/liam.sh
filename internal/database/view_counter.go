@@ -38,7 +38,7 @@ func PostViewCounter(ctx context.Context, post *ent.Post) {
 	}
 
 	if t, ok := postView[post.ID][ip.String()]; ok {
-		if time.Since(t) < 30*time.Minute {
+		if time.Since(t) < 5*time.Minute {
 			postViewMu.Unlock()
 			return
 		}
