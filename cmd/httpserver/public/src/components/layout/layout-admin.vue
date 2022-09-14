@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { adminSidebarOptions } from "@/lib/util"
+import { adminSidebarOptions } from "@/lib/core/navigation"
 
 const state = useState()
 const props = defineProps<{

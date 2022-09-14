@@ -42,10 +42,9 @@ export const branchMenuOptions = [
 export const adminSidebarOptions = [
   renderLink({ name: "admin" }, "Admin Home", IconMdiHome),
   renderLink({ name: "admin-posts" }, "Blog Posts", IconMdiBookOpenPageVariantOutline),
+  renderLink({ name: "admin-banner-builder" }, "Banner Builder", IconMdiImageEditOutline),
   { key: "divider-1", type: "divider" },
-  ...menuOptions
-    .filter((option) => option.name != "Sudo")
-    .map((option) => renderLink(option.to, option.name, IconMdiLink)),
+  ...menuOptions.map((option) => renderLink(option.to, option.name, IconMdiLink)),
   { key: "divider-2", type: "divider" },
   {
     label: () => h("a", { href: "/-/auth/logout" }, { default: () => "Logout" }),

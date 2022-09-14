@@ -243,6 +243,16 @@ query getRepos(
     }
 }
 
+query getReposSelect {
+    githubrepositories(first: 1000) {
+        edges {
+            node {
+                fullName
+            }
+        }
+    }
+}
+
 query getGists {
     githubgists(
         first: 200

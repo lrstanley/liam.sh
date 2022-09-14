@@ -1,17 +1,17 @@
 <template>
   <LayoutAdmin :loading="!post">
-    <n-page-header :subtitle="post.title" class="hidden px-5 mt-4 mb-8 lg:block">
-      <template #avatar>
-        <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
-      </template>
-      <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit">
-          Editing post #{{ post.id }}
-        </a>
-      </template>
-    </n-page-header>
-
     <div class="p-4 sm:container sm:mx-auto lg:p-0">
+      <n-page-header :subtitle="post.title" class="hidden mt-4 mb-8 lg:block">
+        <template #avatar>
+          <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
+        </template>
+        <template #title>
+          <a href="#" class="no-underline capitalize" style="color: inherit">
+            Editing post #{{ post.id }}
+          </a>
+        </template>
+      </n-page-header>
+
       <n-spin :show="fetching">
         <n-alert v-if="error" title="Error fetching post" type="error">
           {{ error }}

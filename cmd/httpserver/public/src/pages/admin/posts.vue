@@ -11,7 +11,7 @@
             <th class="hidden md:table-cell">Published</th>
             <th>
               Actions
-              <n-button class="ml-10" type="error" @click="regenerate">
+              <n-button class="ml-10" type="error" size="small" @click="regenerate">
                 <n-icon><i-mdi-reload /></n-icon>
               </n-button>
             </th>
