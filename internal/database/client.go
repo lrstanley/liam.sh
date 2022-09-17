@@ -64,7 +64,6 @@ func Migrate(ctx context.Context, logger log.Interface) {
 
 	if err := db.Schema.Create(
 		entcache.Skip(ctx),
-		schema.WithAtlas(true),
 		schema.WithDropColumn(true),
 		schema.WithDropIndex(true),
 		migrate.WithGlobalUniqueID(true),
