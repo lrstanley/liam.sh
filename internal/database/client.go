@@ -66,6 +66,7 @@ func Migrate(ctx context.Context, logger log.Interface) {
 		entcache.Skip(ctx),
 		schema.WithAtlas(true),
 		schema.WithDropColumn(true),
+		schema.WithDropIndex(true),
 		migrate.WithGlobalUniqueID(true),
 	); err != nil {
 		logger.WithError(err).Fatal("failed to create schema")
