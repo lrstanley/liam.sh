@@ -31,7 +31,7 @@ func main() {
 	cli.Parse()
 	logger = cli.Logger
 
-	db = database.Open(logger, cli.Flags.Database)
+	db = database.Open(context.Background(), logger, cli.Flags.Database)
 	defer db.Close()
 
 	ctx := ent.NewContext(log.NewContext(context.Background(), logger), db)

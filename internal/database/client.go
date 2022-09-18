@@ -22,7 +22,7 @@ import (
 )
 
 // Open new postgres connection.
-func Open(logger log.Interface, config models.ConfigDatabase) *ent.Client {
+func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	var db *sql.DB
 	var err error
 
@@ -30,19 +30,27 @@ func Open(logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	for {
 		attempt++
 		db, err = sql.Open("pgx", config.URL)
+
+		if err == nil {
+			tctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+
+			err = db.PingContext(tctx)
+			cancel()
+		}
+
 		if err != nil {
 			logger.WithError(err).WithField("attempt", attempt).Error("failed to open database connection")
 
-			if attempt > 3 {
+			if attempt > 2 {
 				logger.Fatal("failed to open database connection after 3 attempts")
 			}
 			time.Sleep(time.Second * 5)
+			continue
 		}
 		break
 	}
 
 	logger.Info("connected to database")
-	time.Sleep(3 * time.Second)
 
 	// Create an ent.Driver from db.
 	driver := entsql.OpenDB(dialect.Postgres, db)
