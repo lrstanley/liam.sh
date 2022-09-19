@@ -25,7 +25,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.20
 	github.com/vektah/gqlparser/v2 v2.5.1
 	github.com/vmihailenco/msgpack/v5 v5.3.5
-	github.com/yuin/goldmark v1.4.14
+	github.com/yuin/goldmark v1.4.15
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/exp v0.0.0-20220916125017-b168a2c6b86b
 	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1
