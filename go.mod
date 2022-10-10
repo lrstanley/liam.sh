@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	ariga.io/entcache v0.1.0
-	entgo.io/contrib v0.3.2
-	entgo.io/ent v0.11.3-0.20220830071904-3b1b75b9d7a9
+	entgo.io/contrib v0.3.3
+	entgo.io/ent v0.11.4-0.20221001062602-1029a2d3ba2a
 	github.com/99designs/gqlgen v0.17.20
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
@@ -34,7 +34,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.7.0 // indirect
+	ariga.io/atlas v0.7.2-0.20220927111110-867ee0cca56a // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
