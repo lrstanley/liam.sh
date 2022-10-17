@@ -21,7 +21,7 @@ require (
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/lrstanley/chix v0.0.0-20220905152744-9e3b5cbca59c
 	github.com/lrstanley/clix v0.0.0-20220829163403-8f716406f9d5
-	github.com/markbates/goth v1.73.1
+	github.com/markbates/goth v1.74.1
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/vektah/gqlparser/v2 v2.5.1
 	github.com/vmihailenco/msgpack/v5 v5.3.5
