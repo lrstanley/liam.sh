@@ -50,16 +50,20 @@ func httpServer(ctx context.Context) *http.Server {
 	)
 
 	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
-		r.Use(chix.UseRealIP(cli.Flags.HTTP.TrustedProxies, chix.OptUseXForwardedFor))
+		r.Use(chix.UseRealIPCLIOpts(cli.Flags.HTTP.TrustedProxies))
 	}
 
 	// Core middeware.
 	r.Use(
+		chix.UseDebug(cli.Debug),
 		chix.UseContextIP,
 		middleware.RequestID,
 		chix.UseStructuredLogger(logger),
-		middleware.Recoverer,
-		middleware.StripSlashes,
+		chix.UsePrometheus,
+		chix.Recoverer,
+		middleware.Maybe(middleware.StripSlashes, func(r *http.Request) bool {
+			return !strings.HasPrefix(r.URL.Path, "/debug/")
+		}),
 		middleware.Compress(5),
 		chix.UseNextURL,
 	)
@@ -78,7 +82,7 @@ func httpServer(ctx context.Context) *http.Server {
 			"Permissions-Policy":      "clipboard-write=(self)",
 		}),
 		auth.AddToContext,
-		httprate.LimitByIP(400, 5*time.Minute),
+		httprate.LimitByIP(200, 1*time.Minute),
 	)
 
 	// Legacy redirects.
