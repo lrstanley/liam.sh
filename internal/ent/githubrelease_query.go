@@ -538,11 +538,14 @@ func (grq *GithubReleaseQuery) sqlCount(ctx context.Context) (int, error) {
 }
 
 func (grq *GithubReleaseQuery) sqlExist(ctx context.Context) (bool, error) {
-	n, err := grq.sqlCount(ctx)
-	if err != nil {
+	switch _, err := grq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
 		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return n > 0, nil
 }
 
 func (grq *GithubReleaseQuery) querySpec() *sqlgraph.QuerySpec {

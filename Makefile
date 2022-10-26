@@ -109,6 +109,9 @@ go-dlv: go-prepare
 go-debug: go-prepare
 	go run ${PACKAGE} --debug
 
+go-debug-fast:
+	go run ${PACKAGE} --debug
+
 go-build: go-prepare go-fetch
 	CGO_ENABLED=0 \
 	go build \

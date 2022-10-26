@@ -748,7 +748,7 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			l.WithNamedPosts(alias, func(wq *PostQuery) {
 				*wq = *query
 			})
-		case "githubRepositories", "github_repositories":
+		case "githubRepositories":
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
