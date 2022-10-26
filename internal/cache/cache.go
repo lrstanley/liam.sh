@@ -7,35 +7,48 @@ package cache
 import (
 	"time"
 
-	"github.com/bluele/gcache"
+	"github.com/dgraph-io/ristretto"
 )
 
-// New returns a new ARC cache with the given size and expiration, with a custom key
-// and value type.
-func New[K comparable, V any](size int, expiration time.Duration) *Cache[K, V] {
-	c := &Cache[K, V]{
-		gc: gcache.New(size).ARC().Expiration(expiration).Build(),
+type Cache[K comparable, V any] struct {
+	rc         *ristretto.Cache
+	defaultTTL time.Duration
+	fillFn     func(K) (V, bool)
+}
+
+func New[K comparable, V any](size int64, defaultTTL time.Duration, fillFn func(K) (V, bool)) *Cache[K, V] {
+	rc, err := ristretto.NewCache(&ristretto.Config{
+		NumCounters: size,
+		MaxCost:     size,
+		BufferItems: 64,
+	})
+	if err != nil {
+		panic(err)
 	}
 
-	return c
+	return &Cache[K, V]{
+		rc:         rc,
+		defaultTTL: defaultTTL,
+		fillFn:     fillFn,
+	}
 }
 
-type Cache[K comparable, V any] struct {
-	gc gcache.Cache
+func (c *Cache[K, V]) Set(key K, value V) {
+	_ = c.rc.SetWithTTL(key, value, 1, c.defaultTTL)
 }
 
-// Get returns the value for the given key, if it exists. Otherwise, it returns the
-// default value of the value type.
 func (c *Cache[K, V]) Get(key K) (val V) {
-	tmp, err := c.gc.GetIFPresent(key)
-	if err != nil {
-		return
+	tmp, ok := c.rc.Get(key)
+	if !ok {
+		if c.fillFn != nil {
+			val, ok = c.fillFn(key)
+			if ok {
+				c.Set(key, val)
+			}
+		}
+
+		return val
 	}
 
 	return tmp.(V)
-}
-
-// Set sets the value for the given key.
-func (c *Cache[K, V]) Set(key K, val V) {
-	_ = c.gc.Set(key, val)
 }
