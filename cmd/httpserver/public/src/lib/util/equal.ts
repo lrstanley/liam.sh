@@ -6,11 +6,6 @@
 
 /**
  * shallowEqual - compares two values for shallow equality.
- *
- * @export
- * @param {*} newv
- * @param {*} oldv
- * @return {*}  {boolean} - true if the values are shallow equal.
  */
 export function shallowEqual(newv: any, oldv: any): boolean {
   if (newv == oldv) {
@@ -34,10 +29,6 @@ export function shallowEqual(newv: any, oldv: any): boolean {
 
 /**
  * shallowEqualObject - compares two objects for shallow equality.
- *
- * @param {Object} object1
- * @param {Object} object2
- * @return {*}  {boolean} - true if the objects are shallow equal.
  */
 function shallowEqualObject(object1: Record<string, any>, object2: Record<string, any>): boolean {
   const keys1 = Object.keys(object1)

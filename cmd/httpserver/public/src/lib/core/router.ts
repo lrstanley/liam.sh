@@ -4,19 +4,48 @@
  * the LICENSE file.
  */
 
-import { createRouter, createWebHistory } from "vue-router"
-import routes from "~pages"
-import { BaseDocument } from "@/lib/api"
-import { client } from "@/lib/api/client"
+import { setupLayouts } from "virtual:generated-layouts"
+import { createRouter, createWebHistory } from "vue-router/auto"
+import { BaseDocument, client } from "@/lib/api"
 import { useState } from "@/lib/core/state"
 import { loadingBar } from "@/lib/core/status"
 import { titleCase } from "@/lib/util"
 
+import type { RouteRecordRaw } from "vue-router/auto"
 import type { CombinedError } from "@urql/vue"
+
+type RouteCallback = (route: RouteRecordRaw) => RouteRecordRaw
+
+function recurseRoute(route: RouteRecordRaw, cb: RouteCallback): RouteRecordRaw {
+  if (route.children) {
+    for (let i = 0; i < route.children.length; i++) {
+      route.children[i] = recurseRoute(route.children[i], cb)
+    }
+  }
+
+  return cb(route)
+}
 
 const router = createRouter({
   history: createWebHistory("/"),
-  routes,
+  extendRoutes(routes) {
+    return routes.map((r) =>
+      recurseRoute(r, (route) => {
+        if (route.path.startsWith("/admin")) {
+          route = {
+            ...route,
+            meta: {
+              auth: true,
+              admin: true,
+              ...route.meta,
+            },
+          }
+        }
+
+        return route.component ? setupLayouts([route])[0] : route
+      })
+    )
+  },
 })
 
 router.beforeEach(async (to, from, next) => {
@@ -59,7 +88,7 @@ router.beforeEach(async (to, from, next) => {
   next()
 })
 
-router.afterEach((to) => {
+router.afterEach((to, from) => {
   const state = useState()
 
   let args = to.path
@@ -93,8 +122,10 @@ router.afterEach((to) => {
     if (location.hash && !to.meta.disableAnchor) {
       const el = document.getElementById(location.hash.slice(1))
       if (el) {
-        el.scrollIntoView()
+        el.scrollIntoView({ behavior: "smooth" })
       }
+    } else if (from.name !== undefined && !to.meta.disableAnchor) {
+      window.scrollTo(0, 0)
     }
   })
   return

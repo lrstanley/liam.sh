@@ -1,7 +1,7 @@
 <template>
   <component
     :is="props.linkable ? 'router-link' : 'div'"
-    :to="{ name: 'p-slug', params: { slug: post.slug } }"
+    :to="{ name: '/p/[slug]', params: { slug: post.slug } }"
   >
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>

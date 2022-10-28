@@ -1,32 +1,40 @@
-<template>
-  <LayoutSidebar :error="error" affix class="order-last md:order-first">
-    <div class="flex flex-auto gap-2 mt-1 mb-8">
-      <n-input
-        v-model:value="search"
-        :loading="fetching"
-        type="text"
-        clearable
-        placeholder="Search for a repo"
-      >
-        <template #prefix>
-          <n-icon>
-            <i-mdi-search />
-          </n-icon>
-        </template>
-      </n-input>
+<route lang="yaml">
+meta:
+  title: Repos
+  layout: default
+</route>
 
-      <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+<template>
+  <div class="mt-8 grid-sidebar">
+    <div>
+      <div class="flex flex-auto gap-2 mt-1 mb-8">
+        <n-input
+          v-model:value="search"
+          :loading="fetching"
+          type="text"
+          clearable
+          placeholder="Search for a repo"
+        >
+          <template #prefix>
+            <n-icon>
+              <i-mdi-search />
+            </n-icon>
+          </template>
+        </n-input>
+
+        <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+      </div>
+
+      <CoreObjectRender
+        v-if="data?.githubrepositories"
+        :value="data.githubrepositories"
+        linkable
+        show-empty
+        divider
+      />
     </div>
 
-    <CoreObjectRender
-      v-if="data?.githubrepositories"
-      :value="data.githubrepositories"
-      linkable
-      show-empty
-      divider
-    />
-
-    <template #sidebar>
+    <div>
       <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort repos</div>
         <CoreSorter :sorter="sorter" class="pb-4" />
@@ -55,8 +63,8 @@
           }"
         />
       </div>
-    </template>
-  </LayoutSidebar>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -96,11 +104,15 @@ const where = ref({
   archived: computed(() => (archived.value == "false" ? false : null)),
 })
 
-const { data, error, fetching } = useGetReposQuery({
+const { data, error, fetching } = await useGetReposQuery({
   variables: {
     ...usePagination(cursor, 10),
     ...sorter.filter,
     where: where,
   },
+})
+
+watch(error, () => {
+  if (error.value) throw error.value
 })
 </script>

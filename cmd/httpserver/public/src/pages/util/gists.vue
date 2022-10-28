@@ -1,7 +1,12 @@
+<route lang="yaml">
+meta:
+  title: Gists
+  layout: terminal
+</route>
+
 <template>
-  <LayoutTerminal>
-    <n-alert v-if="error" type="error">{{ error.message }}</n-alert>
-    <div v-else class="relative w-full h-full overflow-x-hidden grow basis-0">
+  <ContainerIde>
+    <div class="relative w-full h-full overflow-x-hidden grow basis-0">
       <TransitionGroup name="stepped" appear>
         <div
           v-for="(gist, i) in gists"
@@ -37,16 +42,20 @@
         </div>
       </TransitionGroup>
     </div>
-  </LayoutTerminal>
+  </ContainerIde>
 </template>
 
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 import { useGetGistsQuery } from "@/lib/api"
 
-const { data, error } = useGetGistsQuery()
+const { data, error } = await useGetGistsQuery()
 
 const gists = computed(() => data.value?.githubgists.edges.map((e) => e.node) ?? [])
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
 </script>
 
 <style scoped>

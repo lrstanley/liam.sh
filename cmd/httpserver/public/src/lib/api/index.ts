@@ -4,10 +4,15 @@
  * the LICENSE file.
  */
 
+import { loadingBar } from "@/lib/core/status"
 import { retryExchange } from "@urql/exchange-retry"
 import { cacheExchange, createClient, dedupExchange, fetchExchange } from "@urql/vue"
 
+export * from "@/lib/api/graphql"
+
 function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<Response> {
+  loadingBar.start()
+
   const controller = new AbortController()
   const id = setTimeout(() => controller.abort(), 5000)
 
@@ -22,6 +27,9 @@ function fetchWithTimeout(url: RequestInfo, opts: RequestInit): Promise<Response
       })
       .catch((err) => {
         resolve(err)
+      })
+      .finally(() => {
+        loadingBar.finish()
       })
   })
   return promise

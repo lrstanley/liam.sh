@@ -1,82 +1,89 @@
+<route lang="yaml">
+title: ...
+meta:
+  layout: default
+</route>
+
 <template>
-  <LayoutSidebar
-    :loading="fetching"
-    :error="error || (!post && `Post with ID '${props.slug}' not found`) || undefined"
-    affix
-    class="order-last md:order-first"
-  >
-    <n-back-top :visibility-height="600" class="z-[9999]" />
+  <div class="mt-8 grid-sidebar">
+    <div>
+      <n-page-header class="container hidden mb-2 md:inline-flex">
+        <template #title>
+          <CoreTerminal
+            class="text-[20px]"
+            path="posts"
+            prefix=""
+            :value="'cat &quot;' + post.slug + '.md&quot;'"
+          />
+        </template>
+      </n-page-header>
 
-    <n-page-header class="container hidden mb-2 md:inline-flex">
-      <template #title>
-        <CoreTerminal
-          class="text-[20px]"
-          path="posts"
-          prefix=""
-          :value="'cat &quot;' + post.slug + '.md&quot;'"
-        />
-      </template>
-    </n-page-header>
-
-    <div class="container">
-      <div v-motion-fade class="flex-col flex-auto h-full mt-7 md:mt-0">
-        <div
-          class="text-[30px] md:text-[45px] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
-        >
-          {{ post.title }}
-        </div>
-
-        <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
-          <div class="inline-flex items-center">
-            <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
-            <p>
-              <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
-              <br />
-              <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
-            </p>
+      <div class="container">
+        <div v-motion-fade class="flex-col flex-auto h-full mt-7 md:mt-0">
+          <div
+            class="text-[30px] md:text-[45px] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+          >
+            {{ post.title }}
           </div>
-        </div>
 
-        <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.contentHTML" />
+          <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
+            <div class="inline-flex items-center">
+              <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
+              <p>
+                <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
+                <br />
+                <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
+              </p>
+            </div>
+          </div>
+
+          <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.contentHTML" />
+        </div>
       </div>
     </div>
 
-    <template #sidebar>
-      <div v-if="state.base?.self" class="flex flex-col gap-1">
-        <div class="text-emerald-500">Admin Options</div>
+    <div>
+      <div class="flex flex-col gap-4">
+        <div v-if="state.base?.self" class="flex flex-col gap-1">
+          <div class="text-emerald-500">Admin Options</div>
+
+          <div>
+            <PostViewCount :value="post.viewCount" />
+            <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
+          </div>
+
+          <router-link :to="{ name: '/admin/edit-post/[id]', params: { id: post.id } }">
+            <n-button type="success" tertiary size="small"> Edit post </n-button>
+          </router-link>
+        </div>
+
+        <CoreTableOfContents :element="postRef" />
 
         <div>
-          <PostViewCount :value="post.viewCount" />
-          <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
-        </div>
-
-        <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
-          <n-button type="success" tertiary size="small"> Edit post </n-button>
-        </router-link>
-      </div>
-
-      <CoreTableOfContents :element="postRef" />
-
-      <div>
-        <div class="text-emerald-500">Post Labels</div>
-        <div class="flex flex-wrap gap-1">
-          <CoreObjectRender :value="post.labels" linkable />
+          <div class="text-emerald-500">Post Labels</div>
+          <div class="flex flex-wrap gap-1">
+            <CoreObjectRender :value="post.labels" linkable />
+          </div>
         </div>
       </div>
-    </template>
-  </LayoutSidebar>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 import { useGetPostContentQuery } from "@/lib/api"
 
-const props = defineProps<{
-  slug: string
-}>()
-
+const route = useRoute("/p/[slug]")
 const state = useState()
-const { data, error, fetching } = useGetPostContentQuery({ variables: { slug: props.slug } })
+
+const { data, error } = await useGetPostContentQuery({ variables: { slug: route.params.slug } })
+
+if (data.value?.posts?.edges?.length < 1) {
+  throw new Error("Post not found")
+}
+if (error.value) throw error.value
+
 const post = computed(() => data?.value?.posts?.edges[0]?.node)
 const postRef = ref(null)
 </script>

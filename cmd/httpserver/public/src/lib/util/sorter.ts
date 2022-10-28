@@ -29,14 +29,6 @@ export type Sorter = {
 /**
  * useSorter - generates the necessary sorting and ordering data for a graphql
  * query.
- *
- * @export
- * @param {SortFields<string>} fields
- * @param {Ref<string>} direction
- * @param {Ref<string>} field
- * @param {string} [defaultField=null] - the default field will be the first key in 'fields'.
- * @param {string} [defaultDirection=desc]
- * @return {*}  {Sorter}
  */
 export function useSorter(
   fields: SortFields<string>,

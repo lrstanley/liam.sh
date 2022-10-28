@@ -1,7 +1,8 @@
 {
-    "extends": "@vue/tsconfig/tsconfig.web.json",
+    "extends": "@vue/tsconfig/tsconfig.json",
     "compilerOptions": {
         "allowJs": true,
+        "outDir": "./dist",
         "paths": {
             "@/*": [
                 "./src/*",
@@ -9,19 +10,19 @@
             ]
         },
         "removeComments": true,
-        "resolveJsonModule": true,
         "strict": false,
         "types": [
             "naive-ui/volar",
             "vite/client",
-            "vite-plugin-pages/client"
+            "vite-plugin-vue-layouts/client",
         ],
     },
     "exclude": [
         "node_modules",
         "dist",
         ".git",
-        "./src/lib/http/api/**",
+        "./src/lib/api/graphql.ts",
         "./src/*.config.js",
+        "./src/*.config.ts",
     ],
 }

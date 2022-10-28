@@ -13,7 +13,7 @@
             v-for="label in repo.labels.edges.map(({ node }) => node)"
             :key="label.id"
             :value="label"
-            route="repos"
+            route="/repos"
             linkable
             @click="drawerActive = false"
           />
@@ -82,7 +82,7 @@
               v-for="label in repo.labels.edges.map(({ node }) => node)"
               :key="label.id"
               :value="label"
-              route="repos"
+              route="/repos"
               linkable
             />
           </div>

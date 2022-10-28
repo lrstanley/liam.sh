@@ -7,13 +7,23 @@
 import { NIcon } from "naive-ui"
 import { RouterLink } from "vue-router"
 
+import type { RouteNamedMap } from "vue-router/auto/routes"
+import type { RouteLocationNormalized } from "vue-router/auto"
 import type { Component, VNode } from "vue"
+
+type Route = keyof RouteNamedMap | RouteLocationNormalized
+
+interface Link {
+  to: Route
+  name: string
+  alias?: string
+}
 
 function renderIcon(icon: Component | VNode | HTMLElement) {
   return () => h(NIcon, { style: "margin-top: -3px" }, { default: () => h(icon) })
 }
 
-function renderLink(target: Record<string, any>, title: string, icon: any) {
+function renderLink(target: Route, title: string, icon: any) {
   return {
     label: () =>
       h(
@@ -23,45 +33,32 @@ function renderLink(target: Record<string, any>, title: string, icon: any) {
           default: () => title,
         }
       ),
-    key: target.name,
+    key: title,
     icon: renderIcon(icon),
   }
 }
 
-export const menuOptions = [
-  { to: { name: "index" }, name: "Home", alias: "main" },
-  { to: { name: "posts" }, name: "Posts", alias: "posts" },
-  { to: { name: "repos" }, name: "Repos", alias: "repos" },
+export const menuOptions: Link[] = [
+  { to: "/", name: "Home", alias: "main" },
+  { to: "/posts", name: "Posts", alias: "posts" },
+  { to: "/repos", name: "Repos", alias: "repos" },
 ]
 
-export const branchMenuOptions = [
-  { to: { name: "index" }, name: "master" },
-  { to: { name: "util-gists" }, name: "feature/list-gists" },
+export const branchMenuOptions: Link[] = [
+  { to: "/", name: "master" },
+  { to: "/util/gists", name: "feature/list-gists" },
 ]
 
 export const adminSidebarOptions = [
-  renderLink({ name: "admin" }, "Admin Home", IconMdiHome),
-  renderLink({ name: "admin-posts" }, "Blog Posts", IconMdiBookOpenPageVariantOutline),
-  renderLink({ name: "admin-banner-builder" }, "Banner Builder", IconMdiImageEditOutline),
+  renderLink("/admin/", "Admin Home", IMdiHome),
+  renderLink("/admin/posts", "Blog Posts", IMdiBookOpenPageVariantOutline),
+  renderLink("/admin/banner-builder", "Banner Builder", IMdiImageEditOutline),
   { key: "divider-1", type: "divider" },
-  ...menuOptions.map((option) => renderLink(option.to, option.name, IconMdiLink)),
+  ...menuOptions.map((option) => renderLink(option.to, option.name, IMdiLink)),
   { key: "divider-2", type: "divider" },
   {
     label: () => h("a", { href: "/-/auth/logout" }, { default: () => "Logout" }),
     key: "logout",
-    icon: renderIcon(IconMdiLogout),
+    icon: renderIcon(IMdiLogout),
   },
-  // { key: "divider-2", type: "divider" },
-  // },
-  // {
-  //   label: "Pinball 1973",
-  //   key: "pinball-1973",
-  //   icon: renderIcon(IconMdiBookOpenPageVariantOutline),
-  //   children: [
-  //     {
-  //       label: "Rat",
-  //       key: "rat",
-  //     },
-  //   ],
-  // },
 ]

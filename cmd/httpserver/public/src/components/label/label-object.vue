@@ -20,7 +20,7 @@ const props = withDefaults(
     query?: string
   }>(),
   {
-    route: "posts",
+    route: "/posts",
     query: "label",
   }
 )

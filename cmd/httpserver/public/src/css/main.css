@@ -9,6 +9,22 @@
 @tailwind utilities;
 @tailwind variants;
 
+.grid-sidebar {
+  @apply grid grid-cols-1 md:grid-cols-[1fr,240px] gap-5 md:gap-10 lg:gap-[6rem];
+}
+
+.grid-sidebar > *:first-child {
+  @apply order-last md:order-first;
+}
+
+.grid-sidebar > *:last-child {
+  @apply flex flex-col flex-auto gap-4;
+}
+
+.grid-sidebar > *:last-child > *:first-child {
+  @apply md:sticky md:left-0 md:top-10;
+}
+
 :root {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
@@ -59,6 +75,16 @@ a {
 .n-popover-shared .n-popover-arrow-wrapper .n-popover-arrow,
 .n-base-select-menu {
   @apply bg-zinc-800;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  @apply transition-opacity duration-200 transform;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .stepped-enter-active,

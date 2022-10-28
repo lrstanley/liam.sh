@@ -1,5 +1,10 @@
+<route lang="yaml">
+meta:
+  layout: admin
+</route>
+
 <template>
-  <LayoutAdmin>
+  <div>
     <n-page-header class="hidden px-5 mt-4 mb-8 md:block">
       <template #avatar>
         <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
@@ -12,7 +17,7 @@
     <div class="p-4 sm:container sm:mx-auto lg:p-0">
       <PostCreateEdit create @update:post="createPost" />
     </div>
-  </LayoutAdmin>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -26,7 +31,7 @@ function createPost(val: CreatePostInput) {
   post.executeMutation({ input: val }).then((result) => {
     if (!result.error) {
       message.success("Post created successfully")
-      router.push({ name: "admin-posts" })
+      router.push({ name: "/admin/posts" })
     } else {
       message.error(result.error.toString())
     }

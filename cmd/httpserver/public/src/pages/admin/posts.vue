@@ -1,73 +1,77 @@
-<template>
-  <LayoutAdmin :loading="fetching" :error="error">
-    <div class="p-4 sm:container sm:mx-auto">
-      <n-table v-if="!fetching" v-motion-slide-top bordered single-line striped size="small">
-        <thead>
-          <tr>
-            <th>Title</th>
-            <th class="hidden md:table-cell">Slug</th>
-            <th class="hidden md:table-cell">Labels</th>
-            <th class="hidden md:table-cell">Views</th>
-            <th class="hidden md:table-cell">Published</th>
-            <th>
-              Actions
-              <n-button class="ml-10" type="error" size="small" @click="regenerate">
-                <n-icon><i-mdi-reload /></n-icon>
-              </n-button>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="post in posts" :key="post.id">
-            <td>
-              <router-link :to="{ name: 'p-slug', params: { slug: post.slug } }">
-                {{ post.title }} <span v-if="!post.public" class="text-yellow-500">[draft]</span>
-              </router-link>
-            </td>
-            <td class="hidden md:table-cell">
-              <router-link :to="{ name: 'p-slug', params: { slug: post.slug } }">
-                {{ post.slug }}
-              </router-link>
-            </td>
-            <td class="hidden md:flex">
-              <n-popover
-                style="max-height: 240px"
-                trigger="hover"
-                content-style="padding: 0;"
-                scrollable
-                placement="left"
-              >
-                <template #trigger>
-                  <n-button size="small">{{ post.labels.edges.length }} tags</n-button>
-                </template>
+<route lang="yaml">
+meta:
+  layout: admin
+</route>
 
-                <CoreObjectRender :value="post.labels" linkable class="grid mx-1 my-[2px]" />
-              </n-popover>
-            </td>
-            <td class="hidden md:table-cell">
-              <PostViewCount :value="post.viewCount" />
-            </td>
-            <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
-            <td>
-              <router-link :to="{ name: 'admin-edit-post-id', params: { id: post.id } }">
-                <n-button size="small" type="primary" tertiary>
-                  <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
-                </n-button>
-              </router-link>
-              <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(post)">
-                <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
+<template>
+  <div class="p-4 sm:container sm:mx-auto">
+    <n-table v-motion-slide-top bordered single-line striped size="small">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th class="hidden md:table-cell">Slug</th>
+          <th class="hidden md:table-cell">Labels</th>
+          <th class="hidden md:table-cell">Views</th>
+          <th class="hidden md:table-cell">Published</th>
+          <th>
+            Actions
+            <n-button class="ml-10" type="error" size="small" @click="regenerate">
+              <n-icon><i-mdi-reload /></n-icon>
+            </n-button>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="post in posts" :key="post.id">
+          <td>
+            <router-link :to="{ name: '/p/[slug]', params: { slug: post.slug } }">
+              {{ post.title }} <span v-if="!post.public" class="text-yellow-500">[draft]</span>
+            </router-link>
+          </td>
+          <td class="hidden md:table-cell">
+            <router-link :to="{ name: '/p/[slug]', params: { slug: post.slug } }">
+              {{ post.slug }}
+            </router-link>
+          </td>
+          <td class="hidden md:flex">
+            <n-popover
+              style="max-height: 240px"
+              trigger="hover"
+              content-style="padding: 0;"
+              scrollable
+              placement="left"
+            >
+              <template #trigger>
+                <n-button size="small">{{ post.labels.edges.length }} tags</n-button>
+              </template>
+
+              <CoreObjectRender :value="post.labels" linkable class="grid mx-1 my-[2px]" />
+            </n-popover>
+          </td>
+          <td class="hidden md:table-cell">
+            <PostViewCount :value="post.viewCount" />
+          </td>
+          <td class="hidden md:table-cell">{{ useTimeAgo(Date.parse(post.publishedAt)).value }}</td>
+          <td>
+            <router-link :to="{ name: '/admin/edit-post/[id]', params: { id: post.id } }">
+              <n-button size="small" type="primary" tertiary>
+                <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
               </n-button>
-            </td>
-          </tr>
-        </tbody>
-      </n-table>
-    </div>
-    <router-link :to="{ name: 'admin-new-post' }" class="absolute no-underline bottom-5 right-5">
+            </router-link>
+            <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(post)">
+              <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
+            </n-button>
+          </td>
+        </tr>
+      </tbody>
+    </n-table>
+
+    <router-link :to="{ name: '/admin/new-post' }" class="absolute no-underline bottom-5 right-5">
       <n-button tertiary circle size="large" type="primary" class="h-[13] w-[13]">
         <n-icon class="text-[2em]"><i-mdi-pencil-outline /></n-icon>
       </n-button>
     </router-link>
-  </LayoutAdmin>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -84,12 +88,16 @@ const props = defineProps({
 
 const {
   data,
-  fetching,
   error,
   executeQuery: refetch,
-} = useGetPostsQuery({
+} = await useGetPostsQuery({
   variables: { first: 100, before: props.cursor },
 })
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
+
 const del = useDeletePostMutation()
 
 const posts = computed(() => data?.value?.posts.edges.map((v) => v.node))

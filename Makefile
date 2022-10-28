@@ -60,8 +60,7 @@ node-upgrade-deps:
 		pnpm up -i
 
 node-prepare: license node-fetch
-	cd cmd/httpserver/public && \
-		pnpm exec graphql-codegen --config graphql.yaml
+	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
 	cd cmd/httpserver/public && \

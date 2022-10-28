@@ -24,23 +24,19 @@
       >
         <CoreBreadcrumbs class="hidden pt-2 pl-3 md:block" />
 
-        <n-alert
-          v-if="props.error"
-          v-motion-fade-visible
-          title="An error occurred"
-          type="error"
-          class="m-2 md:m-6"
-        >
-          {{ props.error }}
-        </n-alert>
-        <template v-else-if="props.loading">
-          <n-spin class="flex-auto">
-            <template #description> Loading... </template>
-          </n-spin>
-        </template>
-        <template v-else>
-          <slot><router-view /></slot>
-        </template>
+        <router-view v-slot="{ Component, route }">
+          <transition name="fade" mode="out-in" appear>
+            <Suspense>
+              <component :is="Component" :key="route.path" />
+
+              <template #fallback>
+                <n-spin class="flex-auto">
+                  <template #description> Loading... </template>
+                </n-spin>
+              </template>
+            </Suspense>
+          </transition>
+        </router-view>
       </n-layout>
     </n-layout>
   </n-layout>
@@ -50,8 +46,4 @@
 import { adminSidebarOptions } from "@/lib/core/navigation"
 
 const state = useState()
-const props = defineProps<{
-  loading?: boolean
-  error?: Error | string
-}>()
 </script>
