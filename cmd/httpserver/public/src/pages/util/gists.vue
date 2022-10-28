@@ -15,7 +15,7 @@ meta:
           class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
         >
           <a :href="gist.owner.htmlurl" target="_blank">
-            <n-avatar round :size="15" :src="gist.owner.avatarURL" class="mr-1 align-middle" />
+            <n-avatar round :size="15" :src="gist.owner.avatarURL + '&s=40'" class="mr-1 align-middle" />
           </a>
 
           <div class="flex items-center gap-2 truncate grow">

@@ -28,7 +28,7 @@ meta:
 
           <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
             <div class="inline-flex items-center">
-              <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL" />
+              <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL + '&s=40'" />
               <p>
                 <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
                 <br />
