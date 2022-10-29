@@ -276,3 +276,27 @@ query getGists {
         }
     }
 }
+
+query latestRepoReleases {
+    githubrepositories(first: 500, where: { hasReleases: true, archived: false }) {
+        edges {
+            node {
+                fullName
+                htmlURL
+
+                owner {
+                    avatarURL
+                }
+
+                releases(first: 1, orderBy: { direction: DESC, field: CREATED_AT }) {
+                    edges {
+                        node {
+                            id
+                            createdAt
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

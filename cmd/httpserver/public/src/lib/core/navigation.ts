@@ -53,6 +53,7 @@ export const adminSidebarOptions = [
   renderLink("/admin/", "Admin Home", IMdiHome),
   renderLink("/admin/posts", "Blog Posts", IMdiBookOpenPageVariantOutline),
   renderLink("/admin/banner-builder", "Banner Builder", IMdiImageEditOutline),
+  renderLink("/admin/repo-needs-release", "Repo Releases", IMdiHistory),
   { key: "divider-1", type: "divider" },
   ...menuOptions.map((option) => renderLink(option.to, option.name, IMdiLink)),
   { key: "divider-2", type: "divider" },

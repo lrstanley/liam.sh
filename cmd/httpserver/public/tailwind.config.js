@@ -8,4 +8,5 @@ module.exports = {
     preflight: false,
   },
   plugins: [],
+  safelist: ["flex flex-row w-6 h-6 rounded-full ml-2 text-red-500"], // /admin/repo-needs-release
 }
