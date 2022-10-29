@@ -88,6 +88,13 @@ export default defineConfig({
   build: {
     sourcemap: "hidden",
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        chunkFileNames: "chunk-[hash].js",
+        entryFileNames: "entry-[hash].js",
+        assetFileNames: "assets/[hash][extname]",
+      },
+    },
   },
   preview: {
     port: 8081,
