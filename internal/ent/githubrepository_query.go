@@ -377,6 +377,11 @@ func (grq *GithubRepositoryQuery) Select(fields ...string) *GithubRepositorySele
 	return selbuild
 }
 
+// Aggregate returns a GithubRepositorySelect configured with the given aggregations.
+func (grq *GithubRepositoryQuery) Aggregate(fns ...AggregateFunc) *GithubRepositorySelect {
+	return grq.Select().Aggregate(fns...)
+}
+
 func (grq *GithubRepositoryQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range grq.fields {
 		if !githubrepository.ValidColumn(f) {
@@ -502,7 +507,7 @@ func (grq *GithubRepositoryQuery) loadLabels(ctx context.Context, query *LabelQu
 			outValue := int(values[0].(*sql.NullInt64).Int64)
 			inValue := int(values[1].(*sql.NullInt64).Int64)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*GithubRepository]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*GithubRepository]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -738,8 +743,6 @@ func (grgb *GithubRepositoryGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range grgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(grgb.fields)+len(grgb.fns))
 		for _, f := range grgb.fields {
@@ -759,6 +762,12 @@ type GithubRepositorySelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (grs *GithubRepositorySelect) Aggregate(fns ...AggregateFunc) *GithubRepositorySelect {
+	grs.fns = append(grs.fns, fns...)
+	return grs
+}
+
 // Scan applies the selector query and scans the result into the given value.
 func (grs *GithubRepositorySelect) Scan(ctx context.Context, v any) error {
 	if err := grs.prepareQuery(ctx); err != nil {
@@ -769,6 +778,16 @@ func (grs *GithubRepositorySelect) Scan(ctx context.Context, v any) error {
 }
 
 func (grs *GithubRepositorySelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(grs.fns))
+	for _, fn := range grs.fns {
+		aggregation = append(aggregation, fn(grs.sql))
+	}
+	switch n := len(*grs.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		grs.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		grs.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := grs.sql.Query()
 	if err := grs.driver.Query(ctx, query, args, rows); err != nil {

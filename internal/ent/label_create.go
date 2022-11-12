@@ -233,27 +233,15 @@ func (lc *LabelCreate) createSpec() (*Label, *sqlgraph.CreateSpec) {
 	)
 	_spec.OnConflict = lc.conflict
 	if value, ok := lc.mutation.CreateTime(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: label.FieldCreateTime,
-		})
+		_spec.SetField(label.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
 	if value, ok := lc.mutation.UpdateTime(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: label.FieldUpdateTime,
-		})
+		_spec.SetField(label.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
 	if value, ok := lc.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: label.FieldName,
-		})
+		_spec.SetField(label.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if nodes := lc.mutation.PostsIDs(); len(nodes) > 0 {

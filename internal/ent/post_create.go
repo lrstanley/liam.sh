@@ -359,83 +359,43 @@ func (pc *PostCreate) createSpec() (*Post, *sqlgraph.CreateSpec) {
 	)
 	_spec.OnConflict = pc.conflict
 	if value, ok := pc.mutation.CreateTime(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldCreateTime,
-		})
+		_spec.SetField(post.FieldCreateTime, field.TypeTime, value)
 		_node.CreateTime = value
 	}
 	if value, ok := pc.mutation.UpdateTime(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldUpdateTime,
-		})
+		_spec.SetField(post.FieldUpdateTime, field.TypeTime, value)
 		_node.UpdateTime = value
 	}
 	if value, ok := pc.mutation.Slug(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSlug,
-		})
+		_spec.SetField(post.FieldSlug, field.TypeString, value)
 		_node.Slug = value
 	}
 	if value, ok := pc.mutation.Title(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldTitle,
-		})
+		_spec.SetField(post.FieldTitle, field.TypeString, value)
 		_node.Title = value
 	}
 	if value, ok := pc.mutation.Content(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContent,
-		})
+		_spec.SetField(post.FieldContent, field.TypeString, value)
 		_node.Content = value
 	}
 	if value, ok := pc.mutation.ContentHTML(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContentHTML,
-		})
+		_spec.SetField(post.FieldContentHTML, field.TypeString, value)
 		_node.ContentHTML = value
 	}
 	if value, ok := pc.mutation.Summary(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSummary,
-		})
+		_spec.SetField(post.FieldSummary, field.TypeString, value)
 		_node.Summary = value
 	}
 	if value, ok := pc.mutation.PublishedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldPublishedAt,
-		})
+		_spec.SetField(post.FieldPublishedAt, field.TypeTime, value)
 		_node.PublishedAt = value
 	}
 	if value, ok := pc.mutation.ViewCount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: post.FieldViewCount,
-		})
+		_spec.SetField(post.FieldViewCount, field.TypeInt, value)
 		_node.ViewCount = value
 	}
 	if value, ok := pc.mutation.Public(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: post.FieldPublic,
-		})
+		_spec.SetField(post.FieldPublic, field.TypeBool, value)
 		_node.Public = value
 	}
 	if nodes := pc.mutation.AuthorIDs(); len(nodes) > 0 {

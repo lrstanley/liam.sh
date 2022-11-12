@@ -339,6 +339,11 @@ func (gaq *GithubAssetQuery) Select(fields ...string) *GithubAssetSelect {
 	return selbuild
 }
 
+// Aggregate returns a GithubAssetSelect configured with the given aggregations.
+func (gaq *GithubAssetQuery) Aggregate(fns ...AggregateFunc) *GithubAssetSelect {
+	return gaq.Select().Aggregate(fns...)
+}
+
 func (gaq *GithubAssetQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range gaq.fields {
 		if !githubasset.ValidColumn(f) {
@@ -596,8 +601,6 @@ func (gagb *GithubAssetGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range gagb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(gagb.fields)+len(gagb.fns))
 		for _, f := range gagb.fields {
@@ -617,6 +620,12 @@ type GithubAssetSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (gas *GithubAssetSelect) Aggregate(fns ...AggregateFunc) *GithubAssetSelect {
+	gas.fns = append(gas.fns, fns...)
+	return gas
+}
+
 // Scan applies the selector query and scans the result into the given value.
 func (gas *GithubAssetSelect) Scan(ctx context.Context, v any) error {
 	if err := gas.prepareQuery(ctx); err != nil {
@@ -627,6 +636,16 @@ func (gas *GithubAssetSelect) Scan(ctx context.Context, v any) error {
 }
 
 func (gas *GithubAssetSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(gas.fns))
+	for _, fn := range gas.fns {
+		aggregation = append(aggregation, fn(gas.sql))
+	}
+	switch n := len(*gas.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		gas.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		gas.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := gas.sql.Query()
 	if err := gas.driver.Query(ctx, query, args, rows); err != nil {

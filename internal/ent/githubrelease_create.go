@@ -278,83 +278,43 @@ func (grc *GithubReleaseCreate) createSpec() (*GithubRelease, *sqlgraph.CreateSp
 	)
 	_spec.OnConflict = grc.conflict
 	if value, ok := grc.mutation.ReleaseID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrelease.FieldReleaseID,
-		})
+		_spec.SetField(githubrelease.FieldReleaseID, field.TypeInt64, value)
 		_node.ReleaseID = value
 	}
 	if value, ok := grc.mutation.HTMLURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldHTMLURL,
-		})
+		_spec.SetField(githubrelease.FieldHTMLURL, field.TypeString, value)
 		_node.HTMLURL = value
 	}
 	if value, ok := grc.mutation.TagName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTagName,
-		})
+		_spec.SetField(githubrelease.FieldTagName, field.TypeString, value)
 		_node.TagName = value
 	}
 	if value, ok := grc.mutation.TargetCommitish(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTargetCommitish,
-		})
+		_spec.SetField(githubrelease.FieldTargetCommitish, field.TypeString, value)
 		_node.TargetCommitish = value
 	}
 	if value, ok := grc.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldName,
-		})
+		_spec.SetField(githubrelease.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if value, ok := grc.mutation.Draft(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldDraft,
-		})
+		_spec.SetField(githubrelease.FieldDraft, field.TypeBool, value)
 		_node.Draft = value
 	}
 	if value, ok := grc.mutation.Prerelease(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldPrerelease,
-		})
+		_spec.SetField(githubrelease.FieldPrerelease, field.TypeBool, value)
 		_node.Prerelease = value
 	}
 	if value, ok := grc.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldCreatedAt,
-		})
+		_spec.SetField(githubrelease.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := grc.mutation.PublishedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldPublishedAt,
-		})
+		_spec.SetField(githubrelease.FieldPublishedAt, field.TypeTime, value)
 		_node.PublishedAt = value
 	}
 	if value, ok := grc.mutation.Author(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubrelease.FieldAuthor,
-		})
+		_spec.SetField(githubrelease.FieldAuthor, field.TypeJSON, value)
 		_node.Author = value
 	}
 	if nodes := grc.mutation.RepositoryIDs(); len(nodes) > 0 {

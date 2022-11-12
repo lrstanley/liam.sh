@@ -281,87 +281,40 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 	}
 	if value, ok := gru.mutation.ReleaseID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrelease.FieldReleaseID,
-		})
+		_spec.SetField(githubrelease.FieldReleaseID, field.TypeInt64, value)
 	}
 	if value, ok := gru.mutation.AddedReleaseID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrelease.FieldReleaseID,
-		})
+		_spec.AddField(githubrelease.FieldReleaseID, field.TypeInt64, value)
 	}
 	if value, ok := gru.mutation.HTMLURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldHTMLURL,
-		})
+		_spec.SetField(githubrelease.FieldHTMLURL, field.TypeString, value)
 	}
 	if value, ok := gru.mutation.TagName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTagName,
-		})
+		_spec.SetField(githubrelease.FieldTagName, field.TypeString, value)
 	}
 	if value, ok := gru.mutation.TargetCommitish(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTargetCommitish,
-		})
+		_spec.SetField(githubrelease.FieldTargetCommitish, field.TypeString, value)
 	}
 	if value, ok := gru.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldName,
-		})
+		_spec.SetField(githubrelease.FieldName, field.TypeString, value)
 	}
 	if gru.mutation.NameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubrelease.FieldName,
-		})
+		_spec.ClearField(githubrelease.FieldName, field.TypeString)
 	}
 	if value, ok := gru.mutation.Draft(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldDraft,
-		})
+		_spec.SetField(githubrelease.FieldDraft, field.TypeBool, value)
 	}
 	if value, ok := gru.mutation.Prerelease(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldPrerelease,
-		})
+		_spec.SetField(githubrelease.FieldPrerelease, field.TypeBool, value)
 	}
 	if value, ok := gru.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldCreatedAt,
-		})
+		_spec.SetField(githubrelease.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := gru.mutation.PublishedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldPublishedAt,
-		})
+		_spec.SetField(githubrelease.FieldPublishedAt, field.TypeTime, value)
 	}
 	if value, ok := gru.mutation.Author(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubrelease.FieldAuthor,
-		})
+		_spec.SetField(githubrelease.FieldAuthor, field.TypeJSON, value)
 	}
 	if gru.mutation.RepositoryCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -747,87 +700,40 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 		}
 	}
 	if value, ok := gruo.mutation.ReleaseID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrelease.FieldReleaseID,
-		})
+		_spec.SetField(githubrelease.FieldReleaseID, field.TypeInt64, value)
 	}
 	if value, ok := gruo.mutation.AddedReleaseID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrelease.FieldReleaseID,
-		})
+		_spec.AddField(githubrelease.FieldReleaseID, field.TypeInt64, value)
 	}
 	if value, ok := gruo.mutation.HTMLURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldHTMLURL,
-		})
+		_spec.SetField(githubrelease.FieldHTMLURL, field.TypeString, value)
 	}
 	if value, ok := gruo.mutation.TagName(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTagName,
-		})
+		_spec.SetField(githubrelease.FieldTagName, field.TypeString, value)
 	}
 	if value, ok := gruo.mutation.TargetCommitish(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldTargetCommitish,
-		})
+		_spec.SetField(githubrelease.FieldTargetCommitish, field.TypeString, value)
 	}
 	if value, ok := gruo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrelease.FieldName,
-		})
+		_spec.SetField(githubrelease.FieldName, field.TypeString, value)
 	}
 	if gruo.mutation.NameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubrelease.FieldName,
-		})
+		_spec.ClearField(githubrelease.FieldName, field.TypeString)
 	}
 	if value, ok := gruo.mutation.Draft(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldDraft,
-		})
+		_spec.SetField(githubrelease.FieldDraft, field.TypeBool, value)
 	}
 	if value, ok := gruo.mutation.Prerelease(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrelease.FieldPrerelease,
-		})
+		_spec.SetField(githubrelease.FieldPrerelease, field.TypeBool, value)
 	}
 	if value, ok := gruo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldCreatedAt,
-		})
+		_spec.SetField(githubrelease.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := gruo.mutation.PublishedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrelease.FieldPublishedAt,
-		})
+		_spec.SetField(githubrelease.FieldPublishedAt, field.TypeTime, value)
 	}
 	if value, ok := gruo.mutation.Author(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubrelease.FieldAuthor,
-		})
+		_spec.SetField(githubrelease.FieldAuthor, field.TypeJSON, value)
 	}
 	if gruo.mutation.RepositoryCleared() {
 		edge := &sqlgraph.EdgeSpec{

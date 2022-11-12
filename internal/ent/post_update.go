@@ -309,74 +309,34 @@ func (pu *PostUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := pu.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldUpdateTime,
-		})
+		_spec.SetField(post.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := pu.mutation.Slug(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSlug,
-		})
+		_spec.SetField(post.FieldSlug, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.Title(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldTitle,
-		})
+		_spec.SetField(post.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.Content(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContent,
-		})
+		_spec.SetField(post.FieldContent, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.ContentHTML(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContentHTML,
-		})
+		_spec.SetField(post.FieldContentHTML, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.Summary(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSummary,
-		})
+		_spec.SetField(post.FieldSummary, field.TypeString, value)
 	}
 	if value, ok := pu.mutation.PublishedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldPublishedAt,
-		})
+		_spec.SetField(post.FieldPublishedAt, field.TypeTime, value)
 	}
 	if value, ok := pu.mutation.ViewCount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: post.FieldViewCount,
-		})
+		_spec.SetField(post.FieldViewCount, field.TypeInt, value)
 	}
 	if value, ok := pu.mutation.AddedViewCount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: post.FieldViewCount,
-		})
+		_spec.AddField(post.FieldViewCount, field.TypeInt, value)
 	}
 	if value, ok := pu.mutation.Public(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: post.FieldPublic,
-		})
+		_spec.SetField(post.FieldPublic, field.TypeBool, value)
 	}
 	if pu.mutation.AuthorCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -791,74 +751,34 @@ func (puo *PostUpdateOne) sqlSave(ctx context.Context) (_node *Post, err error) 
 		}
 	}
 	if value, ok := puo.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldUpdateTime,
-		})
+		_spec.SetField(post.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := puo.mutation.Slug(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSlug,
-		})
+		_spec.SetField(post.FieldSlug, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.Title(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldTitle,
-		})
+		_spec.SetField(post.FieldTitle, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.Content(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContent,
-		})
+		_spec.SetField(post.FieldContent, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.ContentHTML(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldContentHTML,
-		})
+		_spec.SetField(post.FieldContentHTML, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.Summary(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: post.FieldSummary,
-		})
+		_spec.SetField(post.FieldSummary, field.TypeString, value)
 	}
 	if value, ok := puo.mutation.PublishedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: post.FieldPublishedAt,
-		})
+		_spec.SetField(post.FieldPublishedAt, field.TypeTime, value)
 	}
 	if value, ok := puo.mutation.ViewCount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: post.FieldViewCount,
-		})
+		_spec.SetField(post.FieldViewCount, field.TypeInt, value)
 	}
 	if value, ok := puo.mutation.AddedViewCount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: post.FieldViewCount,
-		})
+		_spec.AddField(post.FieldViewCount, field.TypeInt, value)
 	}
 	if value, ok := puo.mutation.Public(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: post.FieldPublic,
-		})
+		_spec.SetField(post.FieldPublic, field.TypeBool, value)
 	}
 	if puo.mutation.AuthorCleared() {
 		edge := &sqlgraph.EdgeSpec{

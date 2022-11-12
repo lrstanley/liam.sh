@@ -234,7 +234,7 @@ func (c *GithubAssetClient) DeleteOne(ga *GithubAsset) *GithubAssetDeleteOne {
 	return c.DeleteOneID(ga.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *GithubAssetClient) DeleteOneID(id int) *GithubAssetDeleteOne {
 	builder := c.Delete().Where(githubasset.ID(id))
 	builder.mutation.id = &id
@@ -266,7 +266,7 @@ func (c *GithubAssetClient) GetX(ctx context.Context, id int) *GithubAsset {
 // QueryRelease queries the release edge of a GithubAsset.
 func (c *GithubAssetClient) QueryRelease(ga *GithubAsset) *GithubReleaseQuery {
 	query := &GithubReleaseQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := ga.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(githubasset.Table, githubasset.FieldID, id),
@@ -341,7 +341,7 @@ func (c *GithubEventClient) DeleteOne(ge *GithubEvent) *GithubEventDeleteOne {
 	return c.DeleteOneID(ge.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *GithubEventClient) DeleteOneID(id int) *GithubEventDeleteOne {
 	builder := c.Delete().Where(githubevent.ID(id))
 	builder.mutation.id = &id
@@ -432,7 +432,7 @@ func (c *GithubGistClient) DeleteOne(gg *GithubGist) *GithubGistDeleteOne {
 	return c.DeleteOneID(gg.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *GithubGistClient) DeleteOneID(id int) *GithubGistDeleteOne {
 	builder := c.Delete().Where(githubgist.ID(id))
 	builder.mutation.id = &id
@@ -523,7 +523,7 @@ func (c *GithubReleaseClient) DeleteOne(gr *GithubRelease) *GithubReleaseDeleteO
 	return c.DeleteOneID(gr.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *GithubReleaseClient) DeleteOneID(id int) *GithubReleaseDeleteOne {
 	builder := c.Delete().Where(githubrelease.ID(id))
 	builder.mutation.id = &id
@@ -555,7 +555,7 @@ func (c *GithubReleaseClient) GetX(ctx context.Context, id int) *GithubRelease {
 // QueryRepository queries the repository edge of a GithubRelease.
 func (c *GithubReleaseClient) QueryRepository(gr *GithubRelease) *GithubRepositoryQuery {
 	query := &GithubRepositoryQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(githubrelease.Table, githubrelease.FieldID, id),
@@ -571,7 +571,7 @@ func (c *GithubReleaseClient) QueryRepository(gr *GithubRelease) *GithubReposito
 // QueryAssets queries the assets edge of a GithubRelease.
 func (c *GithubReleaseClient) QueryAssets(gr *GithubRelease) *GithubAssetQuery {
 	query := &GithubAssetQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(githubrelease.Table, githubrelease.FieldID, id),
@@ -646,7 +646,7 @@ func (c *GithubRepositoryClient) DeleteOne(gr *GithubRepository) *GithubReposito
 	return c.DeleteOneID(gr.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *GithubRepositoryClient) DeleteOneID(id int) *GithubRepositoryDeleteOne {
 	builder := c.Delete().Where(githubrepository.ID(id))
 	builder.mutation.id = &id
@@ -678,7 +678,7 @@ func (c *GithubRepositoryClient) GetX(ctx context.Context, id int) *GithubReposi
 // QueryLabels queries the labels edge of a GithubRepository.
 func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
 	query := &LabelQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(githubrepository.Table, githubrepository.FieldID, id),
@@ -694,7 +694,7 @@ func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
 // QueryReleases queries the releases edge of a GithubRepository.
 func (c *GithubRepositoryClient) QueryReleases(gr *GithubRepository) *GithubReleaseQuery {
 	query := &GithubReleaseQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(githubrepository.Table, githubrepository.FieldID, id),
@@ -769,7 +769,7 @@ func (c *LabelClient) DeleteOne(l *Label) *LabelDeleteOne {
 	return c.DeleteOneID(l.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *LabelClient) DeleteOneID(id int) *LabelDeleteOne {
 	builder := c.Delete().Where(label.ID(id))
 	builder.mutation.id = &id
@@ -801,7 +801,7 @@ func (c *LabelClient) GetX(ctx context.Context, id int) *Label {
 // QueryPosts queries the posts edge of a Label.
 func (c *LabelClient) QueryPosts(l *Label) *PostQuery {
 	query := &PostQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := l.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(label.Table, label.FieldID, id),
@@ -817,7 +817,7 @@ func (c *LabelClient) QueryPosts(l *Label) *PostQuery {
 // QueryGithubRepositories queries the github_repositories edge of a Label.
 func (c *LabelClient) QueryGithubRepositories(l *Label) *GithubRepositoryQuery {
 	query := &GithubRepositoryQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := l.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(label.Table, label.FieldID, id),
@@ -892,7 +892,7 @@ func (c *PostClient) DeleteOne(po *Post) *PostDeleteOne {
 	return c.DeleteOneID(po.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *PostClient) DeleteOneID(id int) *PostDeleteOne {
 	builder := c.Delete().Where(post.ID(id))
 	builder.mutation.id = &id
@@ -924,7 +924,7 @@ func (c *PostClient) GetX(ctx context.Context, id int) *Post {
 // QueryAuthor queries the author edge of a Post.
 func (c *PostClient) QueryAuthor(po *Post) *UserQuery {
 	query := &UserQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := po.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(post.Table, post.FieldID, id),
@@ -940,7 +940,7 @@ func (c *PostClient) QueryAuthor(po *Post) *UserQuery {
 // QueryLabels queries the labels edge of a Post.
 func (c *PostClient) QueryLabels(po *Post) *LabelQuery {
 	query := &LabelQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := po.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(post.Table, post.FieldID, id),
@@ -1015,7 +1015,7 @@ func (c *UserClient) DeleteOne(u *User) *UserDeleteOne {
 	return c.DeleteOneID(u.ID)
 }
 
-// DeleteOne returns a builder for deleting the given entity by its id.
+// DeleteOneID returns a builder for deleting the given entity by its id.
 func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
 	builder := c.Delete().Where(user.ID(id))
 	builder.mutation.id = &id
@@ -1047,7 +1047,7 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 // QueryPosts queries the posts edge of a User.
 func (c *UserClient) QueryPosts(u *User) *PostQuery {
 	query := &PostQuery{config: c.config}
-	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(user.Table, user.FieldID, id),

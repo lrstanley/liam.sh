@@ -264,107 +264,55 @@ func (ggc *GithubGistCreate) createSpec() (*GithubGist, *sqlgraph.CreateSpec) {
 	)
 	_spec.OnConflict = ggc.conflict
 	if value, ok := ggc.mutation.GistID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldGistID,
-		})
+		_spec.SetField(githubgist.FieldGistID, field.TypeString, value)
 		_node.GistID = value
 	}
 	if value, ok := ggc.mutation.HTMLURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldHTMLURL,
-		})
+		_spec.SetField(githubgist.FieldHTMLURL, field.TypeString, value)
 		_node.HTMLURL = value
 	}
 	if value, ok := ggc.mutation.Public(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubgist.FieldPublic,
-		})
+		_spec.SetField(githubgist.FieldPublic, field.TypeBool, value)
 		_node.Public = value
 	}
 	if value, ok := ggc.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubgist.FieldCreatedAt,
-		})
+		_spec.SetField(githubgist.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := ggc.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubgist.FieldUpdatedAt,
-		})
+		_spec.SetField(githubgist.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := ggc.mutation.Description(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldDescription,
-		})
+		_spec.SetField(githubgist.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
 	if value, ok := ggc.mutation.Owner(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubgist.FieldOwner,
-		})
+		_spec.SetField(githubgist.FieldOwner, field.TypeJSON, value)
 		_node.Owner = value
 	}
 	if value, ok := ggc.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldName,
-		})
+		_spec.SetField(githubgist.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if value, ok := ggc.mutation.GetType(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldType,
-		})
+		_spec.SetField(githubgist.FieldType, field.TypeString, value)
 		_node.Type = value
 	}
 	if value, ok := ggc.mutation.Language(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldLanguage,
-		})
+		_spec.SetField(githubgist.FieldLanguage, field.TypeString, value)
 		_node.Language = value
 	}
 	if value, ok := ggc.mutation.Size(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubgist.FieldSize,
-		})
+		_spec.SetField(githubgist.FieldSize, field.TypeInt64, value)
 		_node.Size = value
 	}
 	if value, ok := ggc.mutation.RawURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldRawURL,
-		})
+		_spec.SetField(githubgist.FieldRawURL, field.TypeString, value)
 		_node.RawURL = value
 	}
 	if value, ok := ggc.mutation.Content(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubgist.FieldContent,
-		})
+		_spec.SetField(githubgist.FieldContent, field.TypeString, value)
 		_node.Content = value
 	}
 	return _node, _spec

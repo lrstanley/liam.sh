@@ -340,96 +340,46 @@ func (uu *UserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := uu.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldUpdateTime,
-		})
+		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := uu.mutation.Login(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldLogin,
-		})
+		_spec.SetField(user.FieldLogin, field.TypeString, value)
 	}
 	if value, ok := uu.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldName,
-		})
+		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
 	if uu.mutation.NameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldName,
-		})
+		_spec.ClearField(user.FieldName, field.TypeString)
 	}
 	if value, ok := uu.mutation.AvatarURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldAvatarURL,
-		})
+		_spec.SetField(user.FieldAvatarURL, field.TypeString, value)
 	}
 	if uu.mutation.AvatarURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldAvatarURL,
-		})
+		_spec.ClearField(user.FieldAvatarURL, field.TypeString)
 	}
 	if value, ok := uu.mutation.HTMLURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldHTMLURL,
-		})
+		_spec.SetField(user.FieldHTMLURL, field.TypeString, value)
 	}
 	if uu.mutation.HTMLURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldHTMLURL,
-		})
+		_spec.ClearField(user.FieldHTMLURL, field.TypeString)
 	}
 	if value, ok := uu.mutation.Email(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldEmail,
-		})
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
 	if uu.mutation.EmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldEmail,
-		})
+		_spec.ClearField(user.FieldEmail, field.TypeString)
 	}
 	if value, ok := uu.mutation.Location(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldLocation,
-		})
+		_spec.SetField(user.FieldLocation, field.TypeString, value)
 	}
 	if uu.mutation.LocationCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldLocation,
-		})
+		_spec.ClearField(user.FieldLocation, field.TypeString)
 	}
 	if value, ok := uu.mutation.Bio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldBio,
-		})
+		_spec.SetField(user.FieldBio, field.TypeString, value)
 	}
 	if uu.mutation.BioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldBio,
-		})
+		_spec.ClearField(user.FieldBio, field.TypeString)
 	}
 	if uu.mutation.PostsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -841,96 +791,46 @@ func (uuo *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) 
 		}
 	}
 	if value, ok := uuo.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldUpdateTime,
-		})
+		_spec.SetField(user.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := uuo.mutation.Login(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldLogin,
-		})
+		_spec.SetField(user.FieldLogin, field.TypeString, value)
 	}
 	if value, ok := uuo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldName,
-		})
+		_spec.SetField(user.FieldName, field.TypeString, value)
 	}
 	if uuo.mutation.NameCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldName,
-		})
+		_spec.ClearField(user.FieldName, field.TypeString)
 	}
 	if value, ok := uuo.mutation.AvatarURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldAvatarURL,
-		})
+		_spec.SetField(user.FieldAvatarURL, field.TypeString, value)
 	}
 	if uuo.mutation.AvatarURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldAvatarURL,
-		})
+		_spec.ClearField(user.FieldAvatarURL, field.TypeString)
 	}
 	if value, ok := uuo.mutation.HTMLURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldHTMLURL,
-		})
+		_spec.SetField(user.FieldHTMLURL, field.TypeString, value)
 	}
 	if uuo.mutation.HTMLURLCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldHTMLURL,
-		})
+		_spec.ClearField(user.FieldHTMLURL, field.TypeString)
 	}
 	if value, ok := uuo.mutation.Email(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldEmail,
-		})
+		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
 	if uuo.mutation.EmailCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldEmail,
-		})
+		_spec.ClearField(user.FieldEmail, field.TypeString)
 	}
 	if value, ok := uuo.mutation.Location(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldLocation,
-		})
+		_spec.SetField(user.FieldLocation, field.TypeString, value)
 	}
 	if uuo.mutation.LocationCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldLocation,
-		})
+		_spec.ClearField(user.FieldLocation, field.TypeString)
 	}
 	if value, ok := uuo.mutation.Bio(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: user.FieldBio,
-		})
+		_spec.SetField(user.FieldBio, field.TypeString, value)
 	}
 	if uuo.mutation.BioCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: user.FieldBio,
-		})
+		_spec.ClearField(user.FieldBio, field.TypeString)
 	}
 	if uuo.mutation.PostsCleared() {
 		edge := &sqlgraph.EdgeSpec{

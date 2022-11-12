@@ -227,18 +227,10 @@ func (lu *LabelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := lu.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: label.FieldUpdateTime,
-		})
+		_spec.SetField(label.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := lu.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: label.FieldName,
-		})
+		_spec.SetField(label.FieldName, field.TypeString, value)
 	}
 	if lu.mutation.PostsCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -590,18 +582,10 @@ func (luo *LabelUpdateOne) sqlSave(ctx context.Context) (_node *Label, err error
 		}
 	}
 	if value, ok := luo.mutation.UpdateTime(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: label.FieldUpdateTime,
-		})
+		_spec.SetField(label.FieldUpdateTime, field.TypeTime, value)
 	}
 	if value, ok := luo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: label.FieldName,
-		})
+		_spec.SetField(label.FieldName, field.TypeString, value)
 	}
 	if luo.mutation.PostsCleared() {
 		edge := &sqlgraph.EdgeSpec{

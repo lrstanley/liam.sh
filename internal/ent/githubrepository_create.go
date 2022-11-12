@@ -462,155 +462,79 @@ func (grc *GithubRepositoryCreate) createSpec() (*GithubRepository, *sqlgraph.Cr
 	)
 	_spec.OnConflict = grc.conflict
 	if value, ok := grc.mutation.RepoID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubrepository.FieldRepoID,
-		})
+		_spec.SetField(githubrepository.FieldRepoID, field.TypeInt64, value)
 		_node.RepoID = value
 	}
 	if value, ok := grc.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldName,
-		})
+		_spec.SetField(githubrepository.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if value, ok := grc.mutation.FullName(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldFullName,
-		})
+		_spec.SetField(githubrepository.FieldFullName, field.TypeString, value)
 		_node.FullName = value
 	}
 	if value, ok := grc.mutation.OwnerLogin(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldOwnerLogin,
-		})
+		_spec.SetField(githubrepository.FieldOwnerLogin, field.TypeString, value)
 		_node.OwnerLogin = value
 	}
 	if value, ok := grc.mutation.Owner(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubrepository.FieldOwner,
-		})
+		_spec.SetField(githubrepository.FieldOwner, field.TypeJSON, value)
 		_node.Owner = value
 	}
 	if value, ok := grc.mutation.Public(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrepository.FieldPublic,
-		})
+		_spec.SetField(githubrepository.FieldPublic, field.TypeBool, value)
 		_node.Public = value
 	}
 	if value, ok := grc.mutation.HTMLURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldHTMLURL,
-		})
+		_spec.SetField(githubrepository.FieldHTMLURL, field.TypeString, value)
 		_node.HTMLURL = value
 	}
 	if value, ok := grc.mutation.Description(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldDescription,
-		})
+		_spec.SetField(githubrepository.FieldDescription, field.TypeString, value)
 		_node.Description = value
 	}
 	if value, ok := grc.mutation.Fork(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrepository.FieldFork,
-		})
+		_spec.SetField(githubrepository.FieldFork, field.TypeBool, value)
 		_node.Fork = value
 	}
 	if value, ok := grc.mutation.Homepage(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldHomepage,
-		})
+		_spec.SetField(githubrepository.FieldHomepage, field.TypeString, value)
 		_node.Homepage = value
 	}
 	if value, ok := grc.mutation.StarCount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: githubrepository.FieldStarCount,
-		})
+		_spec.SetField(githubrepository.FieldStarCount, field.TypeInt, value)
 		_node.StarCount = value
 	}
 	if value, ok := grc.mutation.DefaultBranch(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubrepository.FieldDefaultBranch,
-		})
+		_spec.SetField(githubrepository.FieldDefaultBranch, field.TypeString, value)
 		_node.DefaultBranch = value
 	}
 	if value, ok := grc.mutation.IsTemplate(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrepository.FieldIsTemplate,
-		})
+		_spec.SetField(githubrepository.FieldIsTemplate, field.TypeBool, value)
 		_node.IsTemplate = value
 	}
 	if value, ok := grc.mutation.HasIssues(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrepository.FieldHasIssues,
-		})
+		_spec.SetField(githubrepository.FieldHasIssues, field.TypeBool, value)
 		_node.HasIssues = value
 	}
 	if value, ok := grc.mutation.Archived(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubrepository.FieldArchived,
-		})
+		_spec.SetField(githubrepository.FieldArchived, field.TypeBool, value)
 		_node.Archived = value
 	}
 	if value, ok := grc.mutation.PushedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrepository.FieldPushedAt,
-		})
+		_spec.SetField(githubrepository.FieldPushedAt, field.TypeTime, value)
 		_node.PushedAt = value
 	}
 	if value, ok := grc.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrepository.FieldCreatedAt,
-		})
+		_spec.SetField(githubrepository.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := grc.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubrepository.FieldUpdatedAt,
-		})
+		_spec.SetField(githubrepository.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := grc.mutation.License(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubrepository.FieldLicense,
-		})
+		_spec.SetField(githubrepository.FieldLicense, field.TypeJSON, value)
 		_node.License = value
 	}
 	if nodes := grc.mutation.LabelsIDs(); len(nodes) > 0 {

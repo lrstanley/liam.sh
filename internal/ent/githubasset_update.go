@@ -287,120 +287,55 @@ func (gau *GithubAssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := gau.mutation.AssetID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldAssetID,
-		})
+		_spec.SetField(githubasset.FieldAssetID, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.AddedAssetID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldAssetID,
-		})
+		_spec.AddField(githubasset.FieldAssetID, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.BrowserDownloadURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldBrowserDownloadURL,
-		})
+		_spec.SetField(githubasset.FieldBrowserDownloadURL, field.TypeString, value)
 	}
 	if value, ok := gau.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldName,
-		})
+		_spec.SetField(githubasset.FieldName, field.TypeString, value)
 	}
 	if value, ok := gau.mutation.Label(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldLabel,
-		})
+		_spec.SetField(githubasset.FieldLabel, field.TypeString, value)
 	}
 	if gau.mutation.LabelCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubasset.FieldLabel,
-		})
+		_spec.ClearField(githubasset.FieldLabel, field.TypeString)
 	}
 	if value, ok := gau.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldState,
-		})
+		_spec.SetField(githubasset.FieldState, field.TypeString, value)
 	}
 	if gau.mutation.StateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubasset.FieldState,
-		})
+		_spec.ClearField(githubasset.FieldState, field.TypeString)
 	}
 	if value, ok := gau.mutation.ContentType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldContentType,
-		})
+		_spec.SetField(githubasset.FieldContentType, field.TypeString, value)
 	}
 	if value, ok := gau.mutation.Size(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldSize,
-		})
+		_spec.SetField(githubasset.FieldSize, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.AddedSize(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldSize,
-		})
+		_spec.AddField(githubasset.FieldSize, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.DownloadCount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldDownloadCount,
-		})
+		_spec.SetField(githubasset.FieldDownloadCount, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.AddedDownloadCount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldDownloadCount,
-		})
+		_spec.AddField(githubasset.FieldDownloadCount, field.TypeInt64, value)
 	}
 	if value, ok := gau.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldCreatedAt,
-		})
+		_spec.SetField(githubasset.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := gau.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldUpdatedAt,
-		})
+		_spec.SetField(githubasset.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if gau.mutation.UpdatedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: githubasset.FieldUpdatedAt,
-		})
+		_spec.ClearField(githubasset.FieldUpdatedAt, field.TypeTime)
 	}
 	if value, ok := gau.mutation.Uploader(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubasset.FieldUploader,
-		})
+		_spec.SetField(githubasset.FieldUploader, field.TypeJSON, value)
 	}
 	if gau.mutation.ReleaseCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -739,120 +674,55 @@ func (gauo *GithubAssetUpdateOne) sqlSave(ctx context.Context) (_node *GithubAss
 		}
 	}
 	if value, ok := gauo.mutation.AssetID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldAssetID,
-		})
+		_spec.SetField(githubasset.FieldAssetID, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.AddedAssetID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldAssetID,
-		})
+		_spec.AddField(githubasset.FieldAssetID, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.BrowserDownloadURL(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldBrowserDownloadURL,
-		})
+		_spec.SetField(githubasset.FieldBrowserDownloadURL, field.TypeString, value)
 	}
 	if value, ok := gauo.mutation.Name(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldName,
-		})
+		_spec.SetField(githubasset.FieldName, field.TypeString, value)
 	}
 	if value, ok := gauo.mutation.Label(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldLabel,
-		})
+		_spec.SetField(githubasset.FieldLabel, field.TypeString, value)
 	}
 	if gauo.mutation.LabelCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubasset.FieldLabel,
-		})
+		_spec.ClearField(githubasset.FieldLabel, field.TypeString)
 	}
 	if value, ok := gauo.mutation.State(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldState,
-		})
+		_spec.SetField(githubasset.FieldState, field.TypeString, value)
 	}
 	if gauo.mutation.StateCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Column: githubasset.FieldState,
-		})
+		_spec.ClearField(githubasset.FieldState, field.TypeString)
 	}
 	if value, ok := gauo.mutation.ContentType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldContentType,
-		})
+		_spec.SetField(githubasset.FieldContentType, field.TypeString, value)
 	}
 	if value, ok := gauo.mutation.Size(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldSize,
-		})
+		_spec.SetField(githubasset.FieldSize, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.AddedSize(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldSize,
-		})
+		_spec.AddField(githubasset.FieldSize, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.DownloadCount(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldDownloadCount,
-		})
+		_spec.SetField(githubasset.FieldDownloadCount, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.AddedDownloadCount(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldDownloadCount,
-		})
+		_spec.AddField(githubasset.FieldDownloadCount, field.TypeInt64, value)
 	}
 	if value, ok := gauo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldCreatedAt,
-		})
+		_spec.SetField(githubasset.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := gauo.mutation.UpdatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldUpdatedAt,
-		})
+		_spec.SetField(githubasset.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if gauo.mutation.UpdatedAtCleared() {
-		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Column: githubasset.FieldUpdatedAt,
-		})
+		_spec.ClearField(githubasset.FieldUpdatedAt, field.TypeTime)
 	}
 	if value, ok := gauo.mutation.Uploader(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubasset.FieldUploader,
-		})
+		_spec.SetField(githubasset.FieldUploader, field.TypeJSON, value)
 	}
 	if gauo.mutation.ReleaseCleared() {
 		edge := &sqlgraph.EdgeSpec{

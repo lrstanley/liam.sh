@@ -302,6 +302,11 @@ func (ggq *GithubGistQuery) Select(fields ...string) *GithubGistSelect {
 	return selbuild
 }
 
+// Aggregate returns a GithubGistSelect configured with the given aggregations.
+func (ggq *GithubGistQuery) Aggregate(fns ...AggregateFunc) *GithubGistSelect {
+	return ggq.Select().Aggregate(fns...)
+}
+
 func (ggq *GithubGistQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range ggq.fields {
 		if !githubgist.ValidColumn(f) {
@@ -512,8 +517,6 @@ func (gggb *GithubGistGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range gggb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(gggb.fields)+len(gggb.fns))
 		for _, f := range gggb.fields {
@@ -533,6 +536,12 @@ type GithubGistSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (ggs *GithubGistSelect) Aggregate(fns ...AggregateFunc) *GithubGistSelect {
+	ggs.fns = append(ggs.fns, fns...)
+	return ggs
+}
+
 // Scan applies the selector query and scans the result into the given value.
 func (ggs *GithubGistSelect) Scan(ctx context.Context, v any) error {
 	if err := ggs.prepareQuery(ctx); err != nil {
@@ -543,6 +552,16 @@ func (ggs *GithubGistSelect) Scan(ctx context.Context, v any) error {
 }
 
 func (ggs *GithubGistSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(ggs.fns))
+	for _, fn := range ggs.fns {
+		aggregation = append(aggregation, fn(ggs.sql))
+	}
+	switch n := len(*ggs.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		ggs.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		ggs.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := ggs.sql.Query()
 	if err := ggs.driver.Query(ctx, query, args, rows); err != nil {

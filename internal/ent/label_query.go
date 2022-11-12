@@ -377,6 +377,11 @@ func (lq *LabelQuery) Select(fields ...string) *LabelSelect {
 	return selbuild
 }
 
+// Aggregate returns a LabelSelect configured with the given aggregations.
+func (lq *LabelQuery) Aggregate(fns ...AggregateFunc) *LabelSelect {
+	return lq.Select().Aggregate(fns...)
+}
+
 func (lq *LabelQuery) prepareQuery(ctx context.Context) error {
 	for _, f := range lq.fields {
 		if !label.ValidColumn(f) {
@@ -504,7 +509,7 @@ func (lq *LabelQuery) loadPosts(ctx context.Context, query *PostQuery, nodes []*
 			outValue := int(values[0].(*sql.NullInt64).Int64)
 			inValue := int(values[1].(*sql.NullInt64).Int64)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*Label]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*Label]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -562,7 +567,7 @@ func (lq *LabelQuery) loadGithubRepositories(ctx context.Context, query *GithubR
 			outValue := int(values[0].(*sql.NullInt64).Int64)
 			inValue := int(values[1].(*sql.NullInt64).Int64)
 			if nids[inValue] == nil {
-				nids[inValue] = map[*Label]struct{}{byID[outValue]: struct{}{}}
+				nids[inValue] = map[*Label]struct{}{byID[outValue]: {}}
 				return assign(columns[1:], values[1:])
 			}
 			nids[inValue][byID[outValue]] = struct{}{}
@@ -767,8 +772,6 @@ func (lgb *LabelGroupBy) sqlQuery() *sql.Selector {
 	for _, fn := range lgb.fns {
 		aggregation = append(aggregation, fn(selector))
 	}
-	// If no columns were selected in a custom aggregation function, the default
-	// selection is the fields used for "group-by", and the aggregation functions.
 	if len(selector.SelectedColumns()) == 0 {
 		columns := make([]string, 0, len(lgb.fields)+len(lgb.fns))
 		for _, f := range lgb.fields {
@@ -788,6 +791,12 @@ type LabelSelect struct {
 	sql *sql.Selector
 }
 
+// Aggregate adds the given aggregation functions to the selector query.
+func (ls *LabelSelect) Aggregate(fns ...AggregateFunc) *LabelSelect {
+	ls.fns = append(ls.fns, fns...)
+	return ls
+}
+
 // Scan applies the selector query and scans the result into the given value.
 func (ls *LabelSelect) Scan(ctx context.Context, v any) error {
 	if err := ls.prepareQuery(ctx); err != nil {
@@ -798,6 +807,16 @@ func (ls *LabelSelect) Scan(ctx context.Context, v any) error {
 }
 
 func (ls *LabelSelect) sqlScan(ctx context.Context, v any) error {
+	aggregation := make([]string, 0, len(ls.fns))
+	for _, fn := range ls.fns {
+		aggregation = append(aggregation, fn(ls.sql))
+	}
+	switch n := len(*ls.selector.flds); {
+	case n == 0 && len(aggregation) > 0:
+		ls.sql.Select(aggregation...)
+	case n != 0 && len(aggregation) > 0:
+		ls.sql.AppendSelect(aggregation...)
+	}
 	rows := &sql.Rows{}
 	query, args := ls.sql.Query()
 	if err := ls.driver.Query(ctx, query, args, rows); err != nil {

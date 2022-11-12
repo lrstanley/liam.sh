@@ -208,81 +208,37 @@ func (geu *GithubEventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := geu.mutation.EventID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubevent.FieldEventID,
-		})
+		_spec.SetField(githubevent.FieldEventID, field.TypeString, value)
 	}
 	if value, ok := geu.mutation.EventType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubevent.FieldEventType,
-		})
+		_spec.SetField(githubevent.FieldEventType, field.TypeString, value)
 	}
 	if value, ok := geu.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubevent.FieldCreatedAt,
-		})
+		_spec.SetField(githubevent.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := geu.mutation.Public(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubevent.FieldPublic,
-		})
+		_spec.SetField(githubevent.FieldPublic, field.TypeBool, value)
 	}
 	if value, ok := geu.mutation.ActorID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldActorID,
-		})
+		_spec.SetField(githubevent.FieldActorID, field.TypeInt64, value)
 	}
 	if value, ok := geu.mutation.AddedActorID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldActorID,
-		})
+		_spec.AddField(githubevent.FieldActorID, field.TypeInt64, value)
 	}
 	if value, ok := geu.mutation.Actor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldActor,
-		})
+		_spec.SetField(githubevent.FieldActor, field.TypeJSON, value)
 	}
 	if value, ok := geu.mutation.RepoID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldRepoID,
-		})
+		_spec.SetField(githubevent.FieldRepoID, field.TypeInt64, value)
 	}
 	if value, ok := geu.mutation.AddedRepoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldRepoID,
-		})
+		_spec.AddField(githubevent.FieldRepoID, field.TypeInt64, value)
 	}
 	if value, ok := geu.mutation.Repo(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldRepo,
-		})
+		_spec.SetField(githubevent.FieldRepo, field.TypeJSON, value)
 	}
 	if value, ok := geu.mutation.Payload(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldPayload,
-		})
+		_spec.SetField(githubevent.FieldPayload, field.TypeJSON, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, geu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -508,81 +464,37 @@ func (geuo *GithubEventUpdateOne) sqlSave(ctx context.Context) (_node *GithubEve
 		}
 	}
 	if value, ok := geuo.mutation.EventID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubevent.FieldEventID,
-		})
+		_spec.SetField(githubevent.FieldEventID, field.TypeString, value)
 	}
 	if value, ok := geuo.mutation.EventType(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubevent.FieldEventType,
-		})
+		_spec.SetField(githubevent.FieldEventType, field.TypeString, value)
 	}
 	if value, ok := geuo.mutation.CreatedAt(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubevent.FieldCreatedAt,
-		})
+		_spec.SetField(githubevent.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := geuo.mutation.Public(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeBool,
-			Value:  value,
-			Column: githubevent.FieldPublic,
-		})
+		_spec.SetField(githubevent.FieldPublic, field.TypeBool, value)
 	}
 	if value, ok := geuo.mutation.ActorID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldActorID,
-		})
+		_spec.SetField(githubevent.FieldActorID, field.TypeInt64, value)
 	}
 	if value, ok := geuo.mutation.AddedActorID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldActorID,
-		})
+		_spec.AddField(githubevent.FieldActorID, field.TypeInt64, value)
 	}
 	if value, ok := geuo.mutation.Actor(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldActor,
-		})
+		_spec.SetField(githubevent.FieldActor, field.TypeJSON, value)
 	}
 	if value, ok := geuo.mutation.RepoID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldRepoID,
-		})
+		_spec.SetField(githubevent.FieldRepoID, field.TypeInt64, value)
 	}
 	if value, ok := geuo.mutation.AddedRepoID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubevent.FieldRepoID,
-		})
+		_spec.AddField(githubevent.FieldRepoID, field.TypeInt64, value)
 	}
 	if value, ok := geuo.mutation.Repo(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldRepo,
-		})
+		_spec.SetField(githubevent.FieldRepo, field.TypeJSON, value)
 	}
 	if value, ok := geuo.mutation.Payload(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubevent.FieldPayload,
-		})
+		_spec.SetField(githubevent.FieldPayload, field.TypeJSON, value)
 	}
 	_node = &GithubEvent{config: geuo.config}
 	_spec.Assign = _node.assignValues

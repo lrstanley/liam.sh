@@ -276,91 +276,47 @@ func (gac *GithubAssetCreate) createSpec() (*GithubAsset, *sqlgraph.CreateSpec) 
 	)
 	_spec.OnConflict = gac.conflict
 	if value, ok := gac.mutation.AssetID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldAssetID,
-		})
+		_spec.SetField(githubasset.FieldAssetID, field.TypeInt64, value)
 		_node.AssetID = value
 	}
 	if value, ok := gac.mutation.BrowserDownloadURL(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldBrowserDownloadURL,
-		})
+		_spec.SetField(githubasset.FieldBrowserDownloadURL, field.TypeString, value)
 		_node.BrowserDownloadURL = value
 	}
 	if value, ok := gac.mutation.Name(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldName,
-		})
+		_spec.SetField(githubasset.FieldName, field.TypeString, value)
 		_node.Name = value
 	}
 	if value, ok := gac.mutation.Label(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldLabel,
-		})
+		_spec.SetField(githubasset.FieldLabel, field.TypeString, value)
 		_node.Label = value
 	}
 	if value, ok := gac.mutation.State(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldState,
-		})
+		_spec.SetField(githubasset.FieldState, field.TypeString, value)
 		_node.State = value
 	}
 	if value, ok := gac.mutation.ContentType(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: githubasset.FieldContentType,
-		})
+		_spec.SetField(githubasset.FieldContentType, field.TypeString, value)
 		_node.ContentType = value
 	}
 	if value, ok := gac.mutation.Size(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldSize,
-		})
+		_spec.SetField(githubasset.FieldSize, field.TypeInt64, value)
 		_node.Size = value
 	}
 	if value, ok := gac.mutation.DownloadCount(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt64,
-			Value:  value,
-			Column: githubasset.FieldDownloadCount,
-		})
+		_spec.SetField(githubasset.FieldDownloadCount, field.TypeInt64, value)
 		_node.DownloadCount = value
 	}
 	if value, ok := gac.mutation.CreatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldCreatedAt,
-		})
+		_spec.SetField(githubasset.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
 	}
 	if value, ok := gac.mutation.UpdatedAt(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: githubasset.FieldUpdatedAt,
-		})
+		_spec.SetField(githubasset.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
 	}
 	if value, ok := gac.mutation.Uploader(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeJSON,
-			Value:  value,
-			Column: githubasset.FieldUploader,
-		})
+		_spec.SetField(githubasset.FieldUploader, field.TypeJSON, value)
 		_node.Uploader = value
 	}
 	if nodes := gac.mutation.ReleaseIDs(); len(nodes) > 0 {
