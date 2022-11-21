@@ -36,10 +36,10 @@ cloud.google.com/go/storage v1.6.0/go.mod h1:N7U0C8pVQ/+NIKOBQyamJIeKQKkZ+mxpohl
 cloud.google.com/go/storage v1.8.0/go.mod h1:Wv1Oy7z6Yz3DshWRJFhqM/UCfaWIRTdp0RXyy7KQOVs=
 cloud.google.com/go/storage v1.10.0/go.mod h1:FLPqc6j+Ki4BU591ie1oL6qBQGu2Bl/tZ9ullr3+Kg0=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
-entgo.io/contrib v0.3.3 h1:Td6HWnalREVynLnuw99n/NehxMk2EOPCFtn0WnF3mhw=
-entgo.io/contrib v0.3.3/go.mod h1:nUabB0Zn8QyH0XxClu9m8IBcMARUO2i2cFo16X9RTkU=
-entgo.io/ent v0.11.4 h1:grwVY0fp31BZ6oEo3YrXenAuv8VJmEw7F/Bi6WqeH3Q=
-entgo.io/ent v0.11.4/go.mod h1:fnQIXL36RYnCk/9nvG4aE7YHBFZhCycfh7wMjY5p7SE=
+entgo.io/contrib v0.3.4 h1:s6dSxMALALQRktvTVeKCSTEVIk9kg/HPOAWtomBU2uE=
+entgo.io/contrib v0.3.4/go.mod h1:fUwIOdC0+G7OTDpsXZjrjJK8iTPyvYP22pG08hFhhZ0=
+entgo.io/ent v0.11.5-0.20221031135557-521f9b57bc3d h1:slfuvOSWSiV0ldHU+V+O2cfOEgWRpbRloUeE9k7wXnw=
+entgo.io/ent v0.11.5-0.20221031135557-521f9b57bc3d/go.mod h1:fnQIXL36RYnCk/9nvG4aE7YHBFZhCycfh7wMjY5p7SE=
 github.com/99designs/gqlgen v0.17.20 h1:O7WzccIhKB1dm+7g6dhQcULINftfiLSBg2l/mwbpJMw=
 github.com/99designs/gqlgen v0.17.20/go.mod h1:Mja2HI23kWT1VRH09hvWshFgOzKswpO20o4ScpJIES4=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
