@@ -21,6 +21,8 @@ import (
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 
+var Ping func(context.Context) error
+
 // Open new postgres connection.
 func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	var db *sql.DB
@@ -51,6 +53,7 @@ func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabas
 	}
 
 	logger.Info("connected to database")
+	Ping = db.PingContext
 
 	// Create an ent.Driver from db.
 	driver := entsql.OpenDB(dialect.Postgres, db)
