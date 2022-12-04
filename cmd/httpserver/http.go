@@ -122,7 +122,7 @@ func httpServer(ctx context.Context) *http.Server {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
 	}
 
-	r.With(chix.UsePrivateIP).Get("/-/healthy", func(w http.ResponseWriter, r *http.Request) {
+	r.With(middleware.Throttle(1)).Get("/-/healthy", func(w http.ResponseWriter, r *http.Request) {
 		err := database.Ping(ctx)
 		if err != nil {
 			chix.Error(w, r, err)
