@@ -15,7 +15,10 @@ type Flags struct {
 
 // ConfigDatabase holds the database configuration.
 type ConfigDatabase struct {
-	URL string `env:"URL" long:"url" required:"true" description:"database connection url"`
+	URL      string `env:"URL"      long:"url" required:"true" description:"database connection url"`
+	Username string `env:"USERNAME" long:"username" description:"database username if not specified via the URL"`
+	Password string `env:"PASSWORD" long:"password" description:"database password if not specified via the URL"`
+	Database string `env:"DATABASE" long:"database" description:"database name if not specified via the URL"`
 }
 
 // ConfigHTTP are configurations specifically utilized by the HTTP service.

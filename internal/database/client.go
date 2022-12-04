@@ -7,6 +7,8 @@ package database
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"net/url"
 	"time"
 
 	"ariga.io/entcache"
@@ -23,15 +25,50 @@ import (
 
 var Ping func(context.Context) error
 
+func ParseURL(config models.ConfigDatabase) (string, error) {
+	uri, err := url.Parse(config.URL)
+	if err != nil {
+		return "", fmt.Errorf("failed to parse database url: %w", err)
+	}
+
+	var username, password string
+	if uri.User != nil {
+		username = uri.User.Username()
+		password, _ = uri.User.Password()
+	}
+
+	if config.Database != "" {
+		uri.Path = config.Database
+	}
+
+	if config.Username != "" {
+		username = config.Username
+	}
+
+	if config.Password != "" {
+		password = config.Password
+	}
+
+	if username != "" {
+		uri.User = url.UserPassword(username, password)
+	}
+
+	return uri.String(), nil
+}
+
 // Open new postgres connection.
 func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabase) *ent.Client {
 	var db *sql.DB
-	var err error
+
+	uri, err := ParseURL(config)
+	if err != nil {
+		logger.WithError(err).Fatal("failed to parse database url")
+	}
 
 	var attempt int
 	for {
 		attempt++
-		db, err = sql.Open("pgx", config.URL)
+		db, err = sql.Open("pgx", uri)
 
 		if err == nil {
 			tctx, cancel := context.WithTimeout(ctx, 5*time.Second)
