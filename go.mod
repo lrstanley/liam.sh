@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.1.0
 	entgo.io/contrib v0.3.3
 	entgo.io/ent v0.11.4
-	github.com/99designs/gqlgen v0.17.20
+	github.com/99designs/gqlgen v0.17.21
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
 	github.com/dgraph-io/ristretto v0.1.1
