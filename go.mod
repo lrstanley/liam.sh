@@ -10,7 +10,7 @@ require (
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
 	github.com/dgraph-io/ristretto v0.1.1
-	github.com/go-chi/chi/v5 v5.0.7
+	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-chi/cors v1.2.1
 	github.com/go-chi/httprate v0.7.0
 	github.com/google/go-github/v44 v44.1.0
