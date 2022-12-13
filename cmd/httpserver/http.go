@@ -23,6 +23,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
+	"github.com/lrstanley/liam.sh/internal/handlers/webhookhandler"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
@@ -117,6 +118,7 @@ func httpServer(ctx context.Context) *http.Server {
 	)).Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
+	r.Route("/-/webhook/discord", webhookhandler.New().Route)
 
 	if cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
