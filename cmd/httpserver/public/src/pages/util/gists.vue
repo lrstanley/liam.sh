@@ -51,7 +51,7 @@ import { useGetGistsQuery } from "@/lib/api"
 
 const { data, error } = await useGetGistsQuery()
 
-const gists = computed(() => data.value?.githubgists.edges.map((e) => e.node) ?? [])
+const gists = computed(() => data.value?.githubGists.edges.map((e) => e.node) ?? [])
 
 watch(error, () => {
   if (error.value) throw error.value

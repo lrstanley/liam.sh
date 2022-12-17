@@ -94,9 +94,9 @@ watch(
   (data) => {
     if (!data) return
 
-    hasNextPage.value = data.githubevents.pageInfo.hasNextPage
-    nextCursor.value = data.githubevents.pageInfo.endCursor
-    fetched.value = [...fetched.value, ...data.githubevents.edges.map(({ node }) => node as GithubEvent)]
+    hasNextPage.value = data.githubEvents.pageInfo.hasNextPage
+    nextCursor.value = data.githubEvents.pageInfo.endCursor
+    fetched.value = [...fetched.value, ...data.githubEvents.edges.map(({ node }) => node as GithubEvent)]
     emit("eventCount", fetched.value.length)
 
     setTimeout(() => {

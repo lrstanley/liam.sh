@@ -22,12 +22,12 @@ meta:
           </template>
         </n-input>
 
-        <CorePagination v-model="cursor" :page-info="data?.githubrepositories?.pageInfo" />
+        <CorePagination v-model="cursor" :page-info="data?.githubRepositories?.pageInfo" />
       </div>
 
       <CoreObjectRender
-        v-if="data?.githubrepositories"
-        :value="data.githubrepositories"
+        v-if="data?.githubRepositories"
+        :value="data.githubRepositories"
         linkable
         show-empty
         divider

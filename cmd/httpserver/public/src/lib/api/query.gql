@@ -162,7 +162,7 @@ query getEvents(
     $order: OrderDirection = DESC
     $orderBy: GithubEventOrderField = CREATED_AT
 ) {
-    githubevents(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
+    githubEvents(first: $count, after: $cursor, orderBy: { direction: $order, field: $orderBy }) {
         edges {
             node {
                 id
@@ -194,7 +194,7 @@ query getRepos(
     $orderBy: GithubRepositoryOrderField = STAR_COUNT
     $where: GithubRepositoryWhereInput
 ) {
-    githubrepositories(
+    githubRepositories(
         first: $first
         last: $last
         before: $before
@@ -244,7 +244,7 @@ query getRepos(
 }
 
 query getReposSelect {
-    githubrepositories(first: 1000) {
+    githubRepositories(first: 1000) {
         edges {
             node {
                 fullName
@@ -254,7 +254,7 @@ query getReposSelect {
 }
 
 query getGists {
-    githubgists(
+    githubGists(
         first: 200
         orderBy: { field: UPDATED_AT, direction: DESC }
         where: { public: true }
@@ -278,7 +278,7 @@ query getGists {
 }
 
 query latestRepoReleases {
-    githubrepositories(first: 500, where: { hasReleases: true, archived: false }) {
+    githubRepositories(first: 500, where: { hasReleases: true, archived: false }) {
         edges {
             node {
                 fullName

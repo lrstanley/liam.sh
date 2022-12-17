@@ -155,7 +155,7 @@ const repo = ref<string>("")
 const { data: repoData, error } = await useGetReposSelectQuery()
 const repos = computed(
   () =>
-    repoData.value?.githubrepositories.edges?.map(({ node }) => ({
+    repoData.value?.githubRepositories.edges?.map(({ node }) => ({
       label: node.fullName,
       value: node.fullName,
     })) ?? []

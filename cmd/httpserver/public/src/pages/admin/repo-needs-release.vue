@@ -74,7 +74,7 @@ const columns: DataTableColumns<RowData> = [
 
 const results = computed<RowData[]>(() => {
   return (
-    data.value?.githubrepositories.edges
+    data.value?.githubRepositories.edges
       ?.map(({ node }) => {
         const release = node.releases.edges?.[0]?.node
         return {
