@@ -1374,7 +1374,7 @@ type Query {
     """The list of node IDs."""
     ids: [ID!]!
   ): [Node]!
-  githubassets(
+  githubAssets(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -1393,7 +1393,7 @@ type Query {
     """Filtering options for GithubAssets returned from the connection."""
     where: GithubAssetWhereInput
   ): GithubAssetConnection!
-  githubevents(
+  githubEvents(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -1412,7 +1412,7 @@ type Query {
     """Filtering options for GithubEvents returned from the connection."""
     where: GithubEventWhereInput
   ): GithubEventConnection!
-  githubgists(
+  githubGists(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -1431,7 +1431,7 @@ type Query {
     """Filtering options for GithubGists returned from the connection."""
     where: GithubGistWhereInput
   ): GithubGistConnection!
-  githubreleases(
+  githubReleases(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -1450,7 +1450,7 @@ type Query {
     """Filtering options for GithubReleases returned from the connection."""
     where: GithubReleaseWhereInput
   ): GithubReleaseConnection!
-  githubrepositories(
+  githubRepositories(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 

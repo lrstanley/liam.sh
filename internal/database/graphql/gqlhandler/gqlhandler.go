@@ -304,12 +304,12 @@ type ComplexityRoot struct {
 
 	Query struct {
 		CodingStats        func(childComplexity int) int
+		GithubAssets       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) int
+		GithubEvents       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) int
+		GithubGists        func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) int
+		GithubReleases     func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) int
+		GithubRepositories func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) int
 		GithubUser         func(childComplexity int) int
-		Githubassets       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) int
-		Githubevents       func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) int
-		Githubgists        func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) int
-		Githubreleases     func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) int
-		Githubrepositories func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) int
 		Labels             func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) int
 		Node               func(childComplexity int, id int) int
 		Nodes              func(childComplexity int, ids []int) int
@@ -375,11 +375,11 @@ type MutationResolver interface {
 type QueryResolver interface {
 	Node(ctx context.Context, id int) (ent.Noder, error)
 	Nodes(ctx context.Context, ids []int) ([]ent.Noder, error)
-	Githubassets(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) (*ent.GithubAssetConnection, error)
-	Githubevents(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) (*ent.GithubEventConnection, error)
-	Githubgists(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) (*ent.GithubGistConnection, error)
-	Githubreleases(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) (*ent.GithubReleaseConnection, error)
-	Githubrepositories(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) (*ent.GithubRepositoryConnection, error)
+	GithubAssets(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubAssetOrder, where *ent.GithubAssetWhereInput) (*ent.GithubAssetConnection, error)
+	GithubEvents(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubEventOrder, where *ent.GithubEventWhereInput) (*ent.GithubEventConnection, error)
+	GithubGists(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) (*ent.GithubGistConnection, error)
+	GithubReleases(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) (*ent.GithubReleaseConnection, error)
+	GithubRepositories(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) (*ent.GithubRepositoryConnection, error)
 	Labels(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) (*ent.LabelConnection, error)
 	Posts(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.PostOrder, where *ent.PostWhereInput) (*ent.PostConnection, error)
 	Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error)
@@ -1640,72 +1640,72 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.CodingStats(childComplexity), true
 
+	case "Query.githubAssets":
+		if e.complexity.Query.GithubAssets == nil {
+			break
+		}
+
+		args, err := ec.field_Query_githubAssets_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GithubAssets(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubAssetOrder), args["where"].(*ent.GithubAssetWhereInput)), true
+
+	case "Query.githubEvents":
+		if e.complexity.Query.GithubEvents == nil {
+			break
+		}
+
+		args, err := ec.field_Query_githubEvents_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GithubEvents(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubEventOrder), args["where"].(*ent.GithubEventWhereInput)), true
+
+	case "Query.githubGists":
+		if e.complexity.Query.GithubGists == nil {
+			break
+		}
+
+		args, err := ec.field_Query_githubGists_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GithubGists(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubGistOrder), args["where"].(*ent.GithubGistWhereInput)), true
+
+	case "Query.githubReleases":
+		if e.complexity.Query.GithubReleases == nil {
+			break
+		}
+
+		args, err := ec.field_Query_githubReleases_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GithubReleases(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubReleaseOrder), args["where"].(*ent.GithubReleaseWhereInput)), true
+
+	case "Query.githubRepositories":
+		if e.complexity.Query.GithubRepositories == nil {
+			break
+		}
+
+		args, err := ec.field_Query_githubRepositories_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GithubRepositories(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubRepositoryOrder), args["where"].(*ent.GithubRepositoryWhereInput)), true
+
 	case "Query.githubUser":
 		if e.complexity.Query.GithubUser == nil {
 			break
 		}
 
 		return e.complexity.Query.GithubUser(childComplexity), true
-
-	case "Query.githubassets":
-		if e.complexity.Query.Githubassets == nil {
-			break
-		}
-
-		args, err := ec.field_Query_githubassets_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Githubassets(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubAssetOrder), args["where"].(*ent.GithubAssetWhereInput)), true
-
-	case "Query.githubevents":
-		if e.complexity.Query.Githubevents == nil {
-			break
-		}
-
-		args, err := ec.field_Query_githubevents_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Githubevents(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubEventOrder), args["where"].(*ent.GithubEventWhereInput)), true
-
-	case "Query.githubgists":
-		if e.complexity.Query.Githubgists == nil {
-			break
-		}
-
-		args, err := ec.field_Query_githubgists_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Githubgists(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubGistOrder), args["where"].(*ent.GithubGistWhereInput)), true
-
-	case "Query.githubreleases":
-		if e.complexity.Query.Githubreleases == nil {
-			break
-		}
-
-		args, err := ec.field_Query_githubreleases_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Githubreleases(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubReleaseOrder), args["where"].(*ent.GithubReleaseWhereInput)), true
-
-	case "Query.githubrepositories":
-		if e.complexity.Query.Githubrepositories == nil {
-			break
-		}
-
-		args, err := ec.field_Query_githubrepositories_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.Githubrepositories(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubRepositoryOrder), args["where"].(*ent.GithubRepositoryWhereInput)), true
 
 	case "Query.labels":
 		if e.complexity.Query.Labels == nil {
@@ -3447,7 +3447,7 @@ type Query {
     """The list of node IDs."""
     ids: [ID!]!
   ): [Node]!
-  githubassets(
+  githubAssets(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -3466,7 +3466,7 @@ type Query {
     """Filtering options for GithubAssets returned from the connection."""
     where: GithubAssetWhereInput
   ): GithubAssetConnection!
-  githubevents(
+  githubEvents(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -3485,7 +3485,7 @@ type Query {
     """Filtering options for GithubEvents returned from the connection."""
     where: GithubEventWhereInput
   ): GithubEventConnection!
-  githubgists(
+  githubGists(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -3504,7 +3504,7 @@ type Query {
     """Filtering options for GithubGists returned from the connection."""
     where: GithubGistWhereInput
   ): GithubGistConnection!
-  githubreleases(
+  githubReleases(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -3523,7 +3523,7 @@ type Query {
     """Filtering options for GithubReleases returned from the connection."""
     where: GithubReleaseWhereInput
   ): GithubReleaseConnection!
-  githubrepositories(
+  githubRepositories(
     """Returns the elements in the list that come after the specified cursor."""
     after: Cursor
 
@@ -4431,7 +4431,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_githubassets_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_githubAssets_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *ent.Cursor
@@ -4491,7 +4491,7 @@ func (ec *executionContext) field_Query_githubassets_args(ctx context.Context, r
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_githubevents_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_githubEvents_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *ent.Cursor
@@ -4551,7 +4551,7 @@ func (ec *executionContext) field_Query_githubevents_args(ctx context.Context, r
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_githubgists_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_githubGists_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *ent.Cursor
@@ -4611,7 +4611,7 @@ func (ec *executionContext) field_Query_githubgists_args(ctx context.Context, ra
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_githubreleases_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_githubReleases_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *ent.Cursor
@@ -4671,7 +4671,7 @@ func (ec *executionContext) field_Query_githubreleases_args(ctx context.Context,
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_githubrepositories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_githubRepositories_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 *ent.Cursor
@@ -13220,8 +13220,8 @@ func (ec *executionContext) fieldContext_Query_nodes(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_githubassets(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_githubassets(ctx, field)
+func (ec *executionContext) _Query_githubAssets(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubAssets(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -13234,7 +13234,7 @@ func (ec *executionContext) _Query_githubassets(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Githubassets(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubAssetOrder), fc.Args["where"].(*ent.GithubAssetWhereInput))
+		return ec.resolvers.Query().GithubAssets(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubAssetOrder), fc.Args["where"].(*ent.GithubAssetWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13251,7 +13251,7 @@ func (ec *executionContext) _Query_githubassets(ctx context.Context, field graph
 	return ec.marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_githubassets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_githubAssets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -13276,15 +13276,15 @@ func (ec *executionContext) fieldContext_Query_githubassets(ctx context.Context,
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_githubassets_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_githubAssets_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_githubevents(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_githubevents(ctx, field)
+func (ec *executionContext) _Query_githubEvents(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubEvents(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -13297,7 +13297,7 @@ func (ec *executionContext) _Query_githubevents(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Githubevents(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubEventOrder), fc.Args["where"].(*ent.GithubEventWhereInput))
+		return ec.resolvers.Query().GithubEvents(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubEventOrder), fc.Args["where"].(*ent.GithubEventWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13314,7 +13314,7 @@ func (ec *executionContext) _Query_githubevents(ctx context.Context, field graph
 	return ec.marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_githubevents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_githubEvents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -13339,15 +13339,15 @@ func (ec *executionContext) fieldContext_Query_githubevents(ctx context.Context,
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_githubevents_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_githubEvents_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_githubgists(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_githubgists(ctx, field)
+func (ec *executionContext) _Query_githubGists(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubGists(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -13360,7 +13360,7 @@ func (ec *executionContext) _Query_githubgists(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Githubgists(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubGistOrder), fc.Args["where"].(*ent.GithubGistWhereInput))
+		return ec.resolvers.Query().GithubGists(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubGistOrder), fc.Args["where"].(*ent.GithubGistWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13377,7 +13377,7 @@ func (ec *executionContext) _Query_githubgists(ctx context.Context, field graphq
 	return ec.marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_githubgists(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_githubGists(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -13402,15 +13402,15 @@ func (ec *executionContext) fieldContext_Query_githubgists(ctx context.Context, 
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_githubgists_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_githubGists_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_githubreleases(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_githubreleases(ctx, field)
+func (ec *executionContext) _Query_githubReleases(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubReleases(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -13423,7 +13423,7 @@ func (ec *executionContext) _Query_githubreleases(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Githubreleases(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubReleaseOrder), fc.Args["where"].(*ent.GithubReleaseWhereInput))
+		return ec.resolvers.Query().GithubReleases(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubReleaseOrder), fc.Args["where"].(*ent.GithubReleaseWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13440,7 +13440,7 @@ func (ec *executionContext) _Query_githubreleases(ctx context.Context, field gra
 	return ec.marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_githubreleases(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_githubReleases(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -13465,15 +13465,15 @@ func (ec *executionContext) fieldContext_Query_githubreleases(ctx context.Contex
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_githubreleases_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_githubReleases_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_githubrepositories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_githubrepositories(ctx, field)
+func (ec *executionContext) _Query_githubRepositories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubRepositories(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -13486,7 +13486,7 @@ func (ec *executionContext) _Query_githubrepositories(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Githubrepositories(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubRepositoryOrder), fc.Args["where"].(*ent.GithubRepositoryWhereInput))
+		return ec.resolvers.Query().GithubRepositories(rctx, fc.Args["after"].(*ent.Cursor), fc.Args["first"].(*int), fc.Args["before"].(*ent.Cursor), fc.Args["last"].(*int), fc.Args["orderBy"].(*ent.GithubRepositoryOrder), fc.Args["where"].(*ent.GithubRepositoryWhereInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13503,7 +13503,7 @@ func (ec *executionContext) _Query_githubrepositories(ctx context.Context, field
 	return ec.marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryConnection(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_githubrepositories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_githubRepositories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -13528,7 +13528,7 @@ func (ec *executionContext) fieldContext_Query_githubrepositories(ctx context.Co
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_githubrepositories_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_githubRepositories_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -26934,7 +26934,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "githubassets":
+		case "githubAssets":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -26943,7 +26943,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_githubassets(ctx, field)
+				res = ec._Query_githubAssets(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -26957,7 +26957,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "githubevents":
+		case "githubEvents":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -26966,7 +26966,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_githubevents(ctx, field)
+				res = ec._Query_githubEvents(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -26980,7 +26980,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "githubgists":
+		case "githubGists":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -26989,7 +26989,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_githubgists(ctx, field)
+				res = ec._Query_githubGists(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -27003,7 +27003,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "githubreleases":
+		case "githubReleases":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -27012,7 +27012,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_githubreleases(ctx, field)
+				res = ec._Query_githubReleases(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -27026,7 +27026,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
-		case "githubrepositories":
+		case "githubRepositories":
 			field := field
 
 			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
@@ -27035,7 +27035,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_githubrepositories(ctx, field)
+				res = ec._Query_githubRepositories(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
