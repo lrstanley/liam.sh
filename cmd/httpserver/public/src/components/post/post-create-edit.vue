@@ -63,8 +63,8 @@
 </template>
 
 <script setup lang="ts">
+import { EditorView } from "codemirror"
 import { Codemirror } from "vue-codemirror"
-import { EditorView } from "@codemirror/view"
 import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
 import type { Post } from "@/lib/api"
