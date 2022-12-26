@@ -77,7 +77,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 	var user *github.User
 	var err error
 
-	user, _, err = Client.Users.Get(ctx, "")
+	user, _, err = RestClient.Users.Get(ctx, "")
 	if err != nil {
 		logger.WithError(err).Error("failed to get user")
 		return err
@@ -95,7 +95,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		var events []*github.Event
 
 		logger.WithField("page", opts.Page).Info("querying events")
-		events, resp, err = Client.Activity.ListEventsPerformedByUser(ctx, user.GetLogin(), false, opts)
+		events, resp, err = RestClient.Activity.ListEventsPerformedByUser(ctx, user.GetLogin(), false, opts)
 		if err != nil {
 			return err
 		}

@@ -43,7 +43,7 @@ func fetchReleases(
 			"page": opts.Page,
 			"repo": repo.GetFullName(),
 		}).Info("querying repository releases")
-		releases, resp, err = Client.Repositories.ListReleases(ctx, repo.GetOwner().GetLogin(), repo.GetName(), opts)
+		releases, resp, err = RestClient.Repositories.ListReleases(ctx, repo.GetOwner().GetLogin(), repo.GetName(), opts)
 		if err != nil {
 			return nil, err
 		}

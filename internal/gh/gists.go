@@ -76,7 +76,7 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 				}
 
 				buf.Reset()
-				_, err = Client.Do(ctx, req, buf)
+				_, err = RestClient.Do(ctx, req, buf)
 				if err != nil {
 					return fmt.Errorf("failed to fetch gist: %w", err)
 				}
@@ -123,7 +123,7 @@ func fetchGists(ctx context.Context, logger log.Interface, db *ent.Tx) (allGists
 		var gists []*github.Gist
 
 		logger.WithField("page", opts.ListOptions.Page).Info("querying gists")
-		gists, resp, err = Client.Gists.List(ctx, "", opts)
+		gists, resp, err = RestClient.Gists.List(ctx, "", opts)
 		if err != nil {
 			return nil, err
 		}

@@ -45,6 +45,7 @@ func main() {
 	if err := chix.RunCtx(
 		ctx, httpServer(ctx),
 		gh.UserRunner,
+		gh.StatsRunner,
 		gh.EventsRunner,
 		gh.RepositoryRunner,
 		gh.GistRunner,

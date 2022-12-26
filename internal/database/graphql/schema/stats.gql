@@ -11,6 +11,19 @@ type LanguageStat {
     totalDuration: String!
 }
 
+type GithubStats {
+    commitsYear: Int!
+    pullRequests: Int!
+    openIssues: Int!
+    closedIssues: Int!
+    issues: Int!
+    followers: Int!
+    repos: Int!
+    contributedRepos: Int!
+    stars: Int!
+}
+
 extend type Query {
     codingStats: CodingStats!
+    githubStats: GithubStats!
 }

@@ -7,6 +7,7 @@ package resolver
 import (
 	"context"
 
+	"github.com/lrstanley/liam.sh/internal/gh"
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/liam.sh/internal/wakapi"
 )
@@ -14,4 +15,9 @@ import (
 // CodingStats is the resolver for the codingStats field.
 func (r *queryResolver) CodingStats(ctx context.Context) (*models.CodingStats, error) {
 	return wakapi.Statistics.Load(), nil
+}
+
+// GithubStats is the resolver for the githubStats field.
+func (r *queryResolver) GithubStats(ctx context.Context) (*models.GithubStats, error) {
+	return gh.Stats.Load(), nil
 }

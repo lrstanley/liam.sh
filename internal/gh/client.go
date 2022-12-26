@@ -11,6 +11,7 @@ import (
 	"github.com/google/go-github/v48/github"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
+	ghql "github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
 )
 
@@ -19,7 +20,8 @@ const (
 )
 
 var (
-	Client      *github.Client
+	RestClient  *github.Client
+	GraphClient *ghql.Client
 	clientOnce  sync.Once
 	SyncOnStart = false
 )
@@ -32,6 +34,7 @@ func NewClient(ctx context.Context, token string) {
 	}
 
 	clientOnce.Do(func() {
-		Client = github.NewClient(tc)
+		RestClient = github.NewClient(tc)
+		GraphClient = ghql.NewClient(tc)
 	})
 }

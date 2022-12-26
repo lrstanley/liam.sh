@@ -33,7 +33,7 @@ func UserRunner(ctx context.Context) error {
 }
 
 func getUser(ctx context.Context, logger log.Interface) {
-	user, _, err := Client.Users.Get(ctx, "lrstanley")
+	user, _, err := RestClient.Users.Get(ctx, "lrstanley")
 	if err != nil {
 		logger.WithError(err).Error("failed to get user")
 		return

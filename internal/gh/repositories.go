@@ -61,7 +61,7 @@ func getRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) erro
 		return fmt.Errorf("failed to fetch repositories: %w", err)
 	}
 
-	user, _, err := Client.Users.Get(ctx, "")
+	user, _, err := RestClient.Users.Get(ctx, "")
 	if err != nil {
 		logger.WithError(err).Error("failed to get user")
 		return err
@@ -154,7 +154,7 @@ func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) (a
 		var repos []*github.Repository
 
 		logger.WithField("page", opts.ListOptions.Page).Info("querying repositories")
-		repos, resp, err = Client.Repositories.List(ctx, "", opts)
+		repos, resp, err = RestClient.Repositories.List(ctx, "", opts)
 		if err != nil {
 			return nil, err
 		}
@@ -176,7 +176,7 @@ func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) (a
 func storeRepository(ctx context.Context, db *ent.Tx, lc *database.LabelCreator, repo *github.Repository) (id int, err error) {
 	// Languages aren't embedded into the repository struct, so we have to
 	// make a separate request for each repo to get the list of languages.
-	languages, _, err := Client.Repositories.ListLanguages(ctx, repo.GetOwner().GetLogin(), repo.GetName())
+	languages, _, err := RestClient.Repositories.ListLanguages(ctx, repo.GetOwner().GetLogin(), repo.GetName())
 	if err != nil {
 		return id, err
 	}

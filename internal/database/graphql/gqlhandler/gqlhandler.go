@@ -210,6 +210,18 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	GithubStats struct {
+		ClosedIssues     func(childComplexity int) int
+		CommitsYear      func(childComplexity int) int
+		ContributedRepos func(childComplexity int) int
+		Followers        func(childComplexity int) int
+		Issues           func(childComplexity int) int
+		OpenIssues       func(childComplexity int) int
+		PullRequests     func(childComplexity int) int
+		Repos            func(childComplexity int) int
+		Stars            func(childComplexity int) int
+	}
+
 	GithubUser struct {
 		AvatarURL   func(childComplexity int) int
 		Bio         func(childComplexity int) int
@@ -247,6 +259,7 @@ type ComplexityRoot struct {
 	}
 
 	LanguageStat struct {
+		HexColor      func(childComplexity int) int
 		Language      func(childComplexity int) int
 		TotalDuration func(childComplexity int) int
 		TotalSeconds  func(childComplexity int) int
@@ -309,6 +322,7 @@ type ComplexityRoot struct {
 		GithubGists        func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubGistOrder, where *ent.GithubGistWhereInput) int
 		GithubReleases     func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubReleaseOrder, where *ent.GithubReleaseWhereInput) int
 		GithubRepositories func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.GithubRepositoryOrder, where *ent.GithubRepositoryWhereInput) int
+		GithubStats        func(childComplexity int) int
 		GithubUser         func(childComplexity int) int
 		Labels             func(childComplexity int, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.LabelOrder, where *ent.LabelWhereInput) int
 		Node               func(childComplexity int, id int) int
@@ -385,6 +399,7 @@ type QueryResolver interface {
 	Users(ctx context.Context, after *ent.Cursor, first *int, before *ent.Cursor, last *int, orderBy *ent.UserOrder, where *ent.UserWhereInput) (*ent.UserConnection, error)
 	GithubUser(ctx context.Context) (*github.User, error)
 	CodingStats(ctx context.Context) (*models.CodingStats, error)
+	GithubStats(ctx context.Context) (*models.GithubStats, error)
 	Self(ctx context.Context) (*ent.User, error)
 	Version(ctx context.Context) (*clix.NonSensitiveVersion, error)
 }
@@ -1175,6 +1190,69 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.GithubRepositoryEdge.Node(childComplexity), true
 
+	case "GithubStats.closedIssues":
+		if e.complexity.GithubStats.ClosedIssues == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.ClosedIssues(childComplexity), true
+
+	case "GithubStats.commitsYear":
+		if e.complexity.GithubStats.CommitsYear == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.CommitsYear(childComplexity), true
+
+	case "GithubStats.contributedRepos":
+		if e.complexity.GithubStats.ContributedRepos == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.ContributedRepos(childComplexity), true
+
+	case "GithubStats.followers":
+		if e.complexity.GithubStats.Followers == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.Followers(childComplexity), true
+
+	case "GithubStats.issues":
+		if e.complexity.GithubStats.Issues == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.Issues(childComplexity), true
+
+	case "GithubStats.openIssues":
+		if e.complexity.GithubStats.OpenIssues == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.OpenIssues(childComplexity), true
+
+	case "GithubStats.pullRequests":
+		if e.complexity.GithubStats.PullRequests == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.PullRequests(childComplexity), true
+
+	case "GithubStats.repos":
+		if e.complexity.GithubStats.Repos == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.Repos(childComplexity), true
+
+	case "GithubStats.stars":
+		if e.complexity.GithubStats.Stars == nil {
+			break
+		}
+
+		return e.complexity.GithubStats.Stars(childComplexity), true
+
 	case "GithubUser.avatarURL":
 		if e.complexity.GithubUser.AvatarURL == nil {
 			break
@@ -1352,6 +1430,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.LabelEdge.Node(childComplexity), true
+
+	case "LanguageStat.hexColor":
+		if e.complexity.LanguageStat.HexColor == nil {
+			break
+		}
+
+		return e.complexity.LanguageStat.HexColor(childComplexity), true
 
 	case "LanguageStat.language":
 		if e.complexity.LanguageStat.Language == nil {
@@ -1699,6 +1784,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GithubRepositories(childComplexity, args["after"].(*ent.Cursor), args["first"].(*int), args["before"].(*ent.Cursor), args["last"].(*int), args["orderBy"].(*ent.GithubRepositoryOrder), args["where"].(*ent.GithubRepositoryWhereInput)), true
+
+	case "Query.githubStats":
+		if e.complexity.Query.GithubStats == nil {
+			break
+		}
+
+		return e.complexity.Query.GithubStats(childComplexity), true
 
 	case "Query.githubUser":
 		if e.complexity.Query.GithubUser == nil {
@@ -3908,12 +4000,26 @@ type GithubLicense {
 
 type LanguageStat {
     language: String!
+    hexColor: String!
     totalSeconds: Int!
     totalDuration: String!
 }
 
+type GithubStats {
+    commitsYear: Int!
+    pullRequests: Int!
+    openIssues: Int!
+    closedIssues: Int!
+    issues: Int!
+    followers: Int!
+    repos: Int!
+    contributedRepos: Int!
+    stars: Int!
+}
+
 extend type Query {
     codingStats: CodingStats!
+    githubStats: GithubStats!
 }
 `, BuiltIn: false},
 	{Name: "../schema/user.gql", Input: `extend type Query {
@@ -5077,6 +5183,8 @@ func (ec *executionContext) fieldContext_CodingStats_languages(ctx context.Conte
 			switch field.Name {
 			case "language":
 				return ec.fieldContext_LanguageStat_language(ctx, field)
+			case "hexColor":
+				return ec.fieldContext_LanguageStat_hexColor(ctx, field)
 			case "totalSeconds":
 				return ec.fieldContext_LanguageStat_totalSeconds(ctx, field)
 			case "totalDuration":
@@ -10253,6 +10361,402 @@ func (ec *executionContext) fieldContext_GithubRepositoryEdge_cursor(ctx context
 	return fc, nil
 }
 
+func (ec *executionContext) _GithubStats_commitsYear(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_commitsYear(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CommitsYear, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_commitsYear(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_pullRequests(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_pullRequests(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PullRequests, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_pullRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_openIssues(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_openIssues(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OpenIssues, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_openIssues(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_closedIssues(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_closedIssues(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ClosedIssues, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_closedIssues(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_issues(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_issues(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Issues, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_issues(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_followers(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_followers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Followers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_followers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_repos(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_repos(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Repos, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_repos(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_contributedRepos(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_contributedRepos(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ContributedRepos, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_contributedRepos(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GithubStats_stars(ctx context.Context, field graphql.CollectedField, obj *models.GithubStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GithubStats_stars(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Stars, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GithubStats_stars(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GithubStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GithubUser_id(ctx context.Context, field graphql.CollectedField, obj *github.User) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GithubUser_id(ctx, field)
 	if err != nil {
@@ -11381,6 +11885,50 @@ func (ec *executionContext) _LanguageStat_language(ctx context.Context, field gr
 }
 
 func (ec *executionContext) fieldContext_LanguageStat_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "LanguageStat",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _LanguageStat_hexColor(ctx context.Context, field graphql.CollectedField, obj *models.LanguageStat) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_LanguageStat_hexColor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HexColor, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_LanguageStat_hexColor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "LanguageStat",
 		Field:      field,
@@ -13845,6 +14393,70 @@ func (ec *executionContext) fieldContext_Query_codingStats(ctx context.Context, 
 				return ec.fieldContext_CodingStats_calculatedDays(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CodingStats", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_githubStats(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_githubStats(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GithubStats(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*models.GithubStats)
+	fc.Result = res
+	return ec.marshalNGithubStats2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐGithubStats(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_githubStats(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "commitsYear":
+				return ec.fieldContext_GithubStats_commitsYear(ctx, field)
+			case "pullRequests":
+				return ec.fieldContext_GithubStats_pullRequests(ctx, field)
+			case "openIssues":
+				return ec.fieldContext_GithubStats_openIssues(ctx, field)
+			case "closedIssues":
+				return ec.fieldContext_GithubStats_closedIssues(ctx, field)
+			case "issues":
+				return ec.fieldContext_GithubStats_issues(ctx, field)
+			case "followers":
+				return ec.fieldContext_GithubStats_followers(ctx, field)
+			case "repos":
+				return ec.fieldContext_GithubStats_repos(ctx, field)
+			case "contributedRepos":
+				return ec.fieldContext_GithubStats_contributedRepos(ctx, field)
+			case "stars":
+				return ec.fieldContext_GithubStats_stars(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GithubStats", field.Name)
 		},
 	}
 	return fc, nil
@@ -26202,6 +26814,90 @@ func (ec *executionContext) _GithubRepositoryEdge(ctx context.Context, sel ast.S
 	return out
 }
 
+var githubStatsImplementors = []string{"GithubStats"}
+
+func (ec *executionContext) _GithubStats(ctx context.Context, sel ast.SelectionSet, obj *models.GithubStats) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, githubStatsImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GithubStats")
+		case "commitsYear":
+
+			out.Values[i] = ec._GithubStats_commitsYear(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "pullRequests":
+
+			out.Values[i] = ec._GithubStats_pullRequests(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "openIssues":
+
+			out.Values[i] = ec._GithubStats_openIssues(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "closedIssues":
+
+			out.Values[i] = ec._GithubStats_closedIssues(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "issues":
+
+			out.Values[i] = ec._GithubStats_issues(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "followers":
+
+			out.Values[i] = ec._GithubStats_followers(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "repos":
+
+			out.Values[i] = ec._GithubStats_repos(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "contributedRepos":
+
+			out.Values[i] = ec._GithubStats_contributedRepos(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "stars":
+
+			out.Values[i] = ec._GithubStats_stars(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var githubUserImplementors = []string{"GithubUser"}
 
 func (ec *executionContext) _GithubUser(ctx context.Context, sel ast.SelectionSet, obj *github.User) graphql.Marshaler {
@@ -26457,6 +27153,13 @@ func (ec *executionContext) _LanguageStat(ctx context.Context, sel ast.Selection
 		case "language":
 
 			out.Values[i] = ec._LanguageStat_language(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hexColor":
+
+			out.Values[i] = ec._LanguageStat_hexColor(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -27151,6 +27854,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_codingStats(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "githubStats":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_githubStats(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -28080,6 +28806,20 @@ func (ec *executionContext) marshalNGithubRepositoryOrderField2ᚖgithubᚗcom�
 func (ec *executionContext) unmarshalNGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx context.Context, v interface{}) (*ent.GithubRepositoryWhereInput, error) {
 	res, err := ec.unmarshalInputGithubRepositoryWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNGithubStats2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐGithubStats(ctx context.Context, sel ast.SelectionSet, v models.GithubStats) graphql.Marshaler {
+	return ec._GithubStats(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNGithubStats2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋmodelsᚐGithubStats(ctx context.Context, sel ast.SelectionSet, v *models.GithubStats) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._GithubStats(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNGithubUser2githubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v github.User) graphql.Marshaler {
