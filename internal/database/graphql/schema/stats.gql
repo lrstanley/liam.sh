@@ -7,6 +7,7 @@ type CodingStats {
 
 type LanguageStat {
     language: String!
+    hexColor: String!
     totalSeconds: Int!
     totalDuration: String!
 }

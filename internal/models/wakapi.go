@@ -13,6 +13,7 @@ type CodingStats struct {
 
 type LanguageStat struct {
 	Language      string `json:"key"`
+	HexColor      string `json:"hex_color"`
 	TotalSeconds  int    `json:"total"`
 	TotalDuration string `json:"total_duration"`
 }

@@ -90,6 +90,7 @@ func (r *Runner) fetch(ctx context.Context) error {
 
 	// Calculate misc stats for the frontend.
 	for i := range stats.Languages {
+		stats.Languages[i].HexColor = lookupColor(stats.Languages[i].Language)
 		stats.Languages[i].TotalDuration = formatDuration(stats.Languages[i].TotalSeconds)
 		stats.TotalSeconds += stats.Languages[i].TotalSeconds
 	}
