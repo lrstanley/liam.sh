@@ -13,7 +13,7 @@ import (
 
 	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v48/github"
 	"github.com/lrstanley/chix"
 )
 

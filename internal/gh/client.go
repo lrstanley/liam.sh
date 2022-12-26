@@ -8,7 +8,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/google/go-github/v44/github"
+	"github.com/google/go-github/v48/github"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
 	"golang.org/x/oauth2"
