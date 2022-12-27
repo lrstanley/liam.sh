@@ -78,24 +78,8 @@
           </template>
           ... or just gofmt
         </n-tooltip>
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <a
-              class="px-2 transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"
-              style="color: white !important"
-              :href="state.base.githubUser.htmlurl"
-            >
-              <n-icon class="align-middle mt-[-3px] mr-[-7px]">
-                <i-mdi-github />
-              </n-icon>
-              {{ state.base.githubUser.login }}
-            </a>
-          </template>
-          <p>
-            <n-icon class="align-middle"><i-mdi-github /></n-icon>
-            {{ state.base.githubUser.name }} &middot; {{ state.base.githubUser.bio }}
-          </p>
-        </n-tooltip>
+
+        <GithubStats placement="top-end" />
       </span>
     </n-layout-footer>
   </n-card>

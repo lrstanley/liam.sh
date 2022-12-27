@@ -23,7 +23,7 @@ query base {
     }
 
     codingStats {
-        totalDurationShort
+        totalDuration
         totalSeconds
         calculatedDays
 
@@ -32,6 +32,14 @@ query base {
             hexColor
             totalSeconds
         }
+    }
+
+    githubStats {
+        commitsYear
+        pullRequests
+        issues
+        contributedRepos
+        stars
     }
 }
 

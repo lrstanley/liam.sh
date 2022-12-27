@@ -1,6 +1,5 @@
 <template>
   <n-popover
-    placement="top-start"
     :width="250"
     raw
     :show-arrow="false"
@@ -12,7 +11,7 @@
         <n-icon class="mr-1 align-middle text-violet-400">
           <i-mdi-history />
         </n-icon>
-        {{ state.base.codingStats.totalDurationShort }}
+        {{ state.base.codingStats.totalDuration }}
       </span>
     </template>
 

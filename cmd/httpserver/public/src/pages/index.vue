@@ -12,7 +12,7 @@ meta:
     />
 
     <template #footer>
-      <CodingStats />
+      <CodingStats placement="top-start" />
 
       <span class="ml-auto" />
 
