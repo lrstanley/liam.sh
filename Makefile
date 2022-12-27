@@ -22,6 +22,15 @@ up: node-upgrade-deps go-upgrade-deps
 clean:
 	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
 
+generate-language-colors:
+	curl -LsS -o- https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml \
+		| yq '{"languages": .} | tojson' \
+		| go run -mod=mod github.com/wrouesnel/p2cli/cmd/p2@latest \
+			--format=json \
+			--template="internal/wakapi/colorconst.go.j2" \
+			--output="internal/wakapi/colorconst.go"
+	gofmt -l -w internal/wakapi/colorconst.go
+
 docker:
 	docker compose \
 		--project-name ${COMPOSE_PROJECT} \
@@ -84,13 +93,6 @@ node-preview: node-build
 
 # backend
 go-prepare: license go-fetch
-	curl -LsS -o- https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml \
-		| yq '{"languages": .} | tojson' \
-		| go run -mod=mod github.com/wrouesnel/p2cli/cmd/p2@latest \
-			--format=json \
-			--template="internal/wakapi/colorconst.go.j2" \
-			--output="internal/wakapi/colorconst.go"
-	gofmt -l -w internal/wakapi/colorconst.go
 	go generate -x ./...
 
 go-fetch:
