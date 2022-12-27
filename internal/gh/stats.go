@@ -51,9 +51,6 @@ type baseStatsQuery struct {
 		ClosedIssues struct {
 			TotalCount int
 		} `graphql:"closedIssues: issues(states: CLOSED)"`
-		Followers struct {
-			TotalCount int
-		}
 		Repositories struct {
 			TotalCount int
 		} `graphql:"repositories(ownerAffiliations: OWNER)"`
@@ -92,7 +89,6 @@ func getStats(ctx context.Context, logger log.Interface) {
 		OpenIssues:       base.Viewer.OpenIssues.TotalCount,
 		ClosedIssues:     base.Viewer.ClosedIssues.TotalCount,
 		Issues:           base.Viewer.OpenIssues.TotalCount + base.Viewer.ClosedIssues.TotalCount,
-		Followers:        base.Viewer.Followers.TotalCount,
 		Repos:            base.Viewer.Repositories.TotalCount,
 		ContributedRepos: base.Viewer.RepositoriesContributedTo.TotalCount,
 	}

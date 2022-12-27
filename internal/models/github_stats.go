@@ -10,7 +10,6 @@ type GithubStats struct {
 	OpenIssues       int `json:"open_issues"`
 	ClosedIssues     int `json:"closed_issues"`
 	Issues           int `json:"all_issues"`
-	Followers        int `json:"followers"`
 	Repos            int `json:"repositories"`
 	ContributedRepos int `json:"contributed_repositories"`
 	Stars            int `json:"stars"`

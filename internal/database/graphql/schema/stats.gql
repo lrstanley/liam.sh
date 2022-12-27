@@ -19,7 +19,6 @@ type GithubStats {
     openIssues: Int!
     closedIssues: Int!
     issues: Int!
-    followers: Int!
     repos: Int!
     contributedRepos: Int!
     stars: Int!
