@@ -5,10 +5,11 @@
 package models
 
 type CodingStats struct {
-	Languages      []LanguageStat `json:"languages"`
-	TotalSeconds   int            `json:"total_seconds"`
-	TotalDuration  string         `json:"total_duration"`
-	CalculatedDays int            `json:"calculated_days"`
+	Languages          []LanguageStat `json:"languages"`
+	TotalSeconds       int            `json:"total_seconds"`
+	TotalDuration      string         `json:"total_duration"`
+	TotalDurationShort string         `json:"total_duration_short"`
+	CalculatedDays     int            `json:"calculated_days"`
 }
 
 type LanguageStat struct {

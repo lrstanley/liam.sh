@@ -23,7 +23,7 @@ query base {
     }
 
     codingStats {
-        totalDuration
+        totalDurationShort
         totalSeconds
         calculatedDays
 

@@ -49,10 +49,11 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	CodingStats struct {
-		CalculatedDays func(childComplexity int) int
-		Languages      func(childComplexity int) int
-		TotalDuration  func(childComplexity int) int
-		TotalSeconds   func(childComplexity int) int
+		CalculatedDays     func(childComplexity int) int
+		Languages          func(childComplexity int) int
+		TotalDuration      func(childComplexity int) int
+		TotalDurationShort func(childComplexity int) int
+		TotalSeconds       func(childComplexity int) int
 	}
 
 	GithubAsset struct {
@@ -439,6 +440,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CodingStats.TotalDuration(childComplexity), true
+
+	case "CodingStats.totalDurationShort":
+		if e.complexity.CodingStats.TotalDurationShort == nil {
+			break
+		}
+
+		return e.complexity.CodingStats.TotalDurationShort(childComplexity), true
 
 	case "CodingStats.totalSeconds":
 		if e.complexity.CodingStats.TotalSeconds == nil {
@@ -3995,6 +4003,7 @@ type GithubLicense {
     languages: [LanguageStat!]
     totalSeconds: Int!
     totalDuration: String!
+    totalDurationShort: String!
     calculatedDays: Int!
 }
 
@@ -5272,6 +5281,50 @@ func (ec *executionContext) _CodingStats_totalDuration(ctx context.Context, fiel
 }
 
 func (ec *executionContext) fieldContext_CodingStats_totalDuration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CodingStats",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CodingStats_totalDurationShort(ctx context.Context, field graphql.CollectedField, obj *models.CodingStats) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CodingStats_totalDurationShort(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalDurationShort, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CodingStats_totalDurationShort(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CodingStats",
 		Field:      field,
@@ -14389,6 +14442,8 @@ func (ec *executionContext) fieldContext_Query_codingStats(ctx context.Context, 
 				return ec.fieldContext_CodingStats_totalSeconds(ctx, field)
 			case "totalDuration":
 				return ec.fieldContext_CodingStats_totalDuration(ctx, field)
+			case "totalDurationShort":
+				return ec.fieldContext_CodingStats_totalDurationShort(ctx, field)
 			case "calculatedDays":
 				return ec.fieldContext_CodingStats_calculatedDays(ctx, field)
 			}
@@ -25708,6 +25763,13 @@ func (ec *executionContext) _CodingStats(ctx context.Context, sel ast.SelectionS
 		case "totalDuration":
 
 			out.Values[i] = ec._CodingStats_totalDuration(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totalDurationShort":
+
+			out.Values[i] = ec._CodingStats_totalDurationShort(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

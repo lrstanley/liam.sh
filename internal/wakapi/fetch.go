@@ -95,6 +95,7 @@ func (r *Runner) fetch(ctx context.Context) error {
 		stats.TotalSeconds += stats.Languages[i].TotalSeconds
 	}
 	stats.TotalDuration = formatDuration(stats.TotalSeconds)
+	stats.TotalDurationShort = formatDurationShort(stats.TotalSeconds)
 	stats.CalculatedDays = 30
 
 	Statistics.Store(&stats)
@@ -110,4 +111,15 @@ func formatDuration(seconds int) (out string) {
 	}
 
 	return fmt.Sprintf("%d hrs %d mins", hours, minutes)
+}
+
+func formatDurationShort(seconds int) (out string) {
+	hours := seconds / 3600
+	minutes := (seconds / 60) % 60
+
+	if hours < 1 {
+		return fmt.Sprintf("%d mins", minutes)
+	}
+
+	return fmt.Sprintf("%d hrs", hours)
 }

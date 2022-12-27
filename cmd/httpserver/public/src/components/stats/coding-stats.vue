@@ -12,7 +12,7 @@
         <n-icon class="mr-1 align-middle text-violet-400">
           <i-mdi-history />
         </n-icon>
-        {{ state.base.codingStats.totalDuration }}
+        {{ state.base.codingStats.totalDurationShort }}
       </span>
     </template>
 
