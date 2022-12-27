@@ -37,7 +37,7 @@ services:
   #     - /src/.cache/go-build
   #     - /go
   postgres:
-    image: postgres
+    image: postgres:14
     ports: [5432:5432]
     env_file: .env
     environment:
