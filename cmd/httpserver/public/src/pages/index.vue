@@ -28,7 +28,9 @@ meta:
           </span>
         </template>
 
-        <p class="text-violet-400">last {{ state.base.codingStats.calculatedDays }} day coding stats</p>
+        <p class="text-center text-violet-400">
+          last {{ state.base.codingStats.calculatedDays }} day coding stats
+        </p>
 
         <div
           v-for="stat in codingStats"
@@ -39,10 +41,10 @@ meta:
             {{ stat.language }}
           </div>
 
-          <div class="w-full rounded bg-zinc-900">
+          <div class="w-full rounded o bg-zinc-900">
             <div
-              class="h-2 rounded bg-gradient-to-r from-fuchsia-600 to-pink-600"
-              :style="{ width: stat.percentage + '%' }"
+              class="h-2 rounded"
+              :style="{ width: stat.percentage + '%', 'background-color': stat.hexColor }"
             />
           </div>
           <div class="shrink-0 ml-[1ch] w-[3ch]">{{ stat.percentage }}%</div>
@@ -62,6 +64,7 @@ const state = useState()
 
 interface LanguageBucket {
   language: string
+  hexColor: string
   totalSeconds: number
   percentage?: number
   titleLength?: number
@@ -75,6 +78,7 @@ const codingStats = computed(() => {
   for (const stat of state.base.codingStats.languages) {
     if (out.length === 6) {
       out[5].language = "Other"
+      out[5].hexColor = stat.hexColor
       out[5].totalSeconds += stat.totalSeconds
       continue
     }

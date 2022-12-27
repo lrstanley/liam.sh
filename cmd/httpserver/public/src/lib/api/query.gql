@@ -29,6 +29,7 @@ query base {
 
         languages {
             language
+            hexColor
             totalSeconds
         }
     }
