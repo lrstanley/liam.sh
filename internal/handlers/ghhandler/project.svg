@@ -2,14 +2,14 @@
     <foreignObject width="100%" height="100%">
         <div class="container" xmlns="http://www.w3.org/1999/xhtml">
             <div class="title">
-                {{- if (.Repo.FullName) -}}
+                {{- if and .Repo .Repo.FullName -}}
                     {{ .Repo.FullName }}
                 {{- else -}}
                     {{ .Title|html }}
                 {{- end -}}
             </div>
             <div class="subtitle">
-                {{- if (.Repo.Description) -}}
+                {{- if and .Repo .Repo.Description -}}
                     {{ .Repo.Description }}
                 {{- else -}}
                     {{ .Description|html }}
