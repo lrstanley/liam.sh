@@ -22,7 +22,7 @@ require (
 	github.com/jackc/pgx/v4 v4.17.2
 	github.com/lrstanley/chix v0.0.0-20221217035201-38748eed7705
 	github.com/lrstanley/clix v0.0.0-20220918173828-afa1308b68ae
-	github.com/markbates/goth v1.75.2
+	github.com/markbates/goth v1.76.0
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/shurcooL/githubv4 v0.0.0-20221203213311-70889c5dac07
 	github.com/vektah/gqlparser/v2 v2.5.1
