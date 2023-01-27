@@ -27,7 +27,7 @@ var (
 	//go:embed project.svg
 	rawSVG string
 
-	iconCache = cache.New[string, string](100, 1*time.Hour, nil)
+	iconCache = cache.New[string, string](100, 6*time.Hour, nil)
 )
 
 const svgDocs = `# SVG Generator Routes:
