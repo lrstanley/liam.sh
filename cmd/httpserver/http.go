@@ -26,6 +26,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/handlers/webhookhandler"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 //go:generate sh -c "mkdir -vp public/dist;touch public/dist/index.html"
@@ -119,6 +120,7 @@ func httpServer(ctx context.Context) *http.Server {
 	r.Mount("/-/auth", auth)
 	r.Route("/-/gh", ghhandler.New(db).Route)
 	r.Route("/-/webhook/discord", webhookhandler.New().Route)
+	r.With(chix.UsePrivateIP).Mount("/metrics", promhttp.Handler())
 
 	if cli.Debug {
 		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
