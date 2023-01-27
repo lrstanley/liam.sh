@@ -1,4 +1,5 @@
 #!/bin/bash -eu
+# shellcheck disable=SC2155
 
 NAMESPACE="liam-sh"
 SERVICE="liam-sh-postgres-ro"

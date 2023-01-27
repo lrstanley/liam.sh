@@ -1,5 +1,6 @@
 ## TODO
 
+- contributor bubbles on repo/project banners
 - "last 30 day coding stats" to "past 30d" badge or something? make it more compact?
 - SVG's for github stats and coding stats
 - graphql triggers for grabbing events, repos, etc.
