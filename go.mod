@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	ariga.io/entcache v0.1.0
-	entgo.io/contrib v0.3.4
-	entgo.io/ent v0.11.5-0.20221031135557-521f9b57bc3d
+	entgo.io/contrib v0.3.5
+	entgo.io/ent v0.11.6
 	github.com/99designs/gqlgen v0.17.22
 	github.com/agnivade/levenshtein v1.1.1
 	github.com/alecthomas/chroma v0.10.0
@@ -30,14 +30,14 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5
 	github.com/yuin/goldmark v1.5.3
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
-	golang.org/x/exp v0.0.0-20221215174704-0915cd710c24
+	golang.org/x/exp v0.0.0-20221230185412-738e83a70c30
 	golang.org/x/oauth2 v0.4.0
 	golang.org/x/sync v0.1.0
 	mvdan.cc/xurls/v2 v2.4.0
 )
 
 require (
-	ariga.io/atlas v0.8.3 // indirect
+	ariga.io/atlas v0.9.1-0.20230119123307-a3ab6808892b // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -81,7 +81,7 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/lrstanley/go-bogon v0.0.0-20220507183221-362a880cf97b // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
