@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 )
@@ -193,14 +193,14 @@ func (ga *GithubAsset) assignValues(columns []string, values []any) error {
 
 // QueryRelease queries the "release" edge of the GithubAsset entity.
 func (ga *GithubAsset) QueryRelease() *GithubReleaseQuery {
-	return (&GithubAssetClient{config: ga.config}).QueryRelease(ga)
+	return NewGithubAssetClient(ga.config).QueryRelease(ga)
 }
 
 // Update returns a builder for updating this GithubAsset.
 // Note that you need to call GithubAsset.Unwrap() before calling this method if this GithubAsset
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (ga *GithubAsset) Update() *GithubAssetUpdateOne {
-	return (&GithubAssetClient{config: ga.config}).UpdateOne(ga)
+	return NewGithubAssetClient(ga.config).UpdateOne(ga)
 }
 
 // Unwrap unwraps the GithubAsset entity that was returned from a transaction after it was closed,
@@ -257,9 +257,3 @@ func (ga *GithubAsset) String() string {
 
 // GithubAssets is a parsable slice of GithubAsset.
 type GithubAssets []*GithubAsset
-
-func (ga GithubAssets) config(cfg config) {
-	for _i := range ga {
-		ga[_i].config = cfg
-	}
-}

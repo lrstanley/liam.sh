@@ -1538,8 +1538,10 @@ input UpdateLabelInput {
   name: String
   addPostIDs: [ID!]
   removePostIDs: [ID!]
+  clearPosts: Boolean
   addGithubRepositoryIDs: [ID!]
   removeGithubRepositoryIDs: [ID!]
+  clearGithubRepositories: Boolean
 }
 """
 UpdatePostInput is used for update Post object.
@@ -1554,6 +1556,7 @@ input UpdatePostInput {
   public: Boolean
   addLabelIDs: [ID!]
   removeLabelIDs: [ID!]
+  clearLabels: Boolean
 }
 type User implements Node {
   id: ID!

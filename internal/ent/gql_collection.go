@@ -40,7 +40,7 @@ func (ga *GithubAssetQuery) collectField(ctx context.Context, op *graphql.Operat
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &GithubReleaseQuery{config: ga.config}
+				query = (&GithubReleaseClient{config: ga.config}).Query()
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
 				return err
@@ -258,7 +258,7 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &GithubRepositoryQuery{config: gr.config}
+				query = (&GithubRepositoryClient{config: gr.config}).Query()
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
 				return err
@@ -268,7 +268,7 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &GithubAssetQuery{config: gr.config}
+				query = (&GithubAssetClient{config: gr.config}).Query()
 			)
 			args := newGithubAssetPaginateArgs(fieldArgs(ctx, new(GithubAssetWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -423,7 +423,7 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &LabelQuery{config: gr.config}
+				query = (&LabelClient{config: gr.config}).Query()
 			)
 			args := newLabelPaginateArgs(fieldArgs(ctx, new(LabelWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -510,7 +510,7 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &GithubReleaseQuery{config: gr.config}
+				query = (&GithubReleaseClient{config: gr.config}).Query()
 			)
 			args := newGithubReleasePaginateArgs(fieldArgs(ctx, new(GithubReleaseWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -665,7 +665,7 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &PostQuery{config: l.config}
+				query = (&PostClient{config: l.config}).Query()
 			)
 			args := newPostPaginateArgs(fieldArgs(ctx, new(PostWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -752,7 +752,7 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &GithubRepositoryQuery{config: l.config}
+				query = (&GithubRepositoryClient{config: l.config}).Query()
 			)
 			args := newGithubRepositoryPaginateArgs(fieldArgs(ctx, new(GithubRepositoryWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -911,7 +911,7 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &UserQuery{config: po.config}
+				query = (&UserClient{config: po.config}).Query()
 			)
 			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
 				return err
@@ -921,7 +921,7 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &LabelQuery{config: po.config}
+				query = (&LabelClient{config: po.config}).Query()
 			)
 			args := newLabelPaginateArgs(fieldArgs(ctx, new(LabelWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {
@@ -1080,7 +1080,7 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 			var (
 				alias = field.Alias
 				path  = append(path, alias)
-				query = &PostQuery{config: u.config}
+				query = (&PostClient{config: u.config}).Query()
 			)
 			args := newPostPaginateArgs(fieldArgs(ctx, new(PostWhereInput), path...))
 			if err := validateFirstLast(args.first, args.last); err != nil {

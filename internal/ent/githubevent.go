@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 )
 
@@ -147,7 +147,7 @@ func (ge *GithubEvent) assignValues(columns []string, values []any) error {
 // Note that you need to call GithubEvent.Unwrap() before calling this method if this GithubEvent
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (ge *GithubEvent) Update() *GithubEventUpdateOne {
-	return (&GithubEventClient{config: ge.config}).UpdateOne(ge)
+	return NewGithubEventClient(ge.config).UpdateOne(ge)
 }
 
 // Unwrap unwraps the GithubEvent entity that was returned from a transaction after it was closed,
@@ -198,9 +198,3 @@ func (ge *GithubEvent) String() string {
 
 // GithubEvents is a parsable slice of GithubEvent.
 type GithubEvents []*GithubEvent
-
-func (ge GithubEvents) config(cfg config) {
-	for _i := range ge {
-		ge[_i].config = cfg
-	}
-}

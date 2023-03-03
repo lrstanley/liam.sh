@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 )
@@ -136,49 +136,7 @@ func (gac *GithubAssetCreate) Mutation() *GithubAssetMutation {
 
 // Save creates the GithubAsset in the database.
 func (gac *GithubAssetCreate) Save(ctx context.Context) (*GithubAsset, error) {
-	var (
-		err  error
-		node *GithubAsset
-	)
-	if len(gac.hooks) == 0 {
-		if err = gac.check(); err != nil {
-			return nil, err
-		}
-		node, err = gac.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubAssetMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gac.check(); err != nil {
-				return nil, err
-			}
-			gac.mutation = mutation
-			if node, err = gac.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(gac.hooks) - 1; i >= 0; i-- {
-			if gac.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gac.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, gac.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubAsset)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubAssetMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubAsset, GithubAssetMutation](ctx, gac.sqlSave, gac.mutation, gac.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -251,6 +209,9 @@ func (gac *GithubAssetCreate) check() error {
 }
 
 func (gac *GithubAssetCreate) sqlSave(ctx context.Context) (*GithubAsset, error) {
+	if err := gac.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := gac.createSpec()
 	if err := sqlgraph.CreateNode(ctx, gac.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -260,19 +221,15 @@ func (gac *GithubAssetCreate) sqlSave(ctx context.Context) (*GithubAsset, error)
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
+	gac.mutation.id = &_node.ID
+	gac.mutation.done = true
 	return _node, nil
 }
 
 func (gac *GithubAssetCreate) createSpec() (*GithubAsset, *sqlgraph.CreateSpec) {
 	var (
 		_node = &GithubAsset{config: gac.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: githubasset.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubasset.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(githubasset.Table, sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = gac.conflict
 	if value, ok := gac.mutation.AssetID(); ok {

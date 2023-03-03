@@ -22,11 +22,9 @@ import (
 // GithubEventQuery is the builder for querying GithubEvent entities.
 type GithubEventQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
+	ctx        *QueryContext
 	order      []OrderFunc
-	fields     []string
+	inters     []Interceptor
 	predicates []predicate.GithubEvent
 	modifiers  []func(*sql.Selector)
 	loadTotal  []func(context.Context, []*GithubEvent) error
@@ -41,26 +39,26 @@ func (geq *GithubEventQuery) Where(ps ...predicate.GithubEvent) *GithubEventQuer
 	return geq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (geq *GithubEventQuery) Limit(limit int) *GithubEventQuery {
-	geq.limit = &limit
+	geq.ctx.Limit = &limit
 	return geq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (geq *GithubEventQuery) Offset(offset int) *GithubEventQuery {
-	geq.offset = &offset
+	geq.ctx.Offset = &offset
 	return geq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (geq *GithubEventQuery) Unique(unique bool) *GithubEventQuery {
-	geq.unique = &unique
+	geq.ctx.Unique = &unique
 	return geq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (geq *GithubEventQuery) Order(o ...OrderFunc) *GithubEventQuery {
 	geq.order = append(geq.order, o...)
 	return geq
@@ -69,7 +67,7 @@ func (geq *GithubEventQuery) Order(o ...OrderFunc) *GithubEventQuery {
 // First returns the first GithubEvent entity from the query.
 // Returns a *NotFoundError when no GithubEvent was found.
 func (geq *GithubEventQuery) First(ctx context.Context) (*GithubEvent, error) {
-	nodes, err := geq.Limit(1).All(ctx)
+	nodes, err := geq.Limit(1).All(setContextOp(ctx, geq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +90,7 @@ func (geq *GithubEventQuery) FirstX(ctx context.Context) *GithubEvent {
 // Returns a *NotFoundError when no GithubEvent ID was found.
 func (geq *GithubEventQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = geq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = geq.Limit(1).IDs(setContextOp(ctx, geq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -115,7 +113,7 @@ func (geq *GithubEventQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubEvent entity is found.
 // Returns a *NotFoundError when no GithubEvent entities are found.
 func (geq *GithubEventQuery) Only(ctx context.Context) (*GithubEvent, error) {
-	nodes, err := geq.Limit(2).All(ctx)
+	nodes, err := geq.Limit(2).All(setContextOp(ctx, geq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +141,7 @@ func (geq *GithubEventQuery) OnlyX(ctx context.Context) *GithubEvent {
 // Returns a *NotFoundError when no entities are found.
 func (geq *GithubEventQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = geq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = geq.Limit(2).IDs(setContextOp(ctx, geq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -168,10 +166,12 @@ func (geq *GithubEventQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubEvents.
 func (geq *GithubEventQuery) All(ctx context.Context) ([]*GithubEvent, error) {
+	ctx = setContextOp(ctx, geq.ctx, "All")
 	if err := geq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return geq.sqlAll(ctx)
+	qr := querierAll[[]*GithubEvent, *GithubEventQuery]()
+	return withInterceptors[[]*GithubEvent](ctx, geq, qr, geq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -184,9 +184,12 @@ func (geq *GithubEventQuery) AllX(ctx context.Context) []*GithubEvent {
 }
 
 // IDs executes the query and returns a list of GithubEvent IDs.
-func (geq *GithubEventQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
-	if err := geq.Select(githubevent.FieldID).Scan(ctx, &ids); err != nil {
+func (geq *GithubEventQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if geq.ctx.Unique == nil && geq.path != nil {
+		geq.Unique(true)
+	}
+	ctx = setContextOp(ctx, geq.ctx, "IDs")
+	if err = geq.Select(githubevent.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -203,10 +206,11 @@ func (geq *GithubEventQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (geq *GithubEventQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, geq.ctx, "Count")
 	if err := geq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return geq.sqlCount(ctx)
+	return withInterceptors[int](ctx, geq, querierCount[*GithubEventQuery](), geq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -220,10 +224,15 @@ func (geq *GithubEventQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (geq *GithubEventQuery) Exist(ctx context.Context) (bool, error) {
-	if err := geq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = setContextOp(ctx, geq.ctx, "Exist")
+	switch _, err := geq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return geq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -243,14 +252,13 @@ func (geq *GithubEventQuery) Clone() *GithubEventQuery {
 	}
 	return &GithubEventQuery{
 		config:     geq.config,
-		limit:      geq.limit,
-		offset:     geq.offset,
+		ctx:        geq.ctx.Clone(),
 		order:      append([]OrderFunc{}, geq.order...),
+		inters:     append([]Interceptor{}, geq.inters...),
 		predicates: append([]predicate.GithubEvent{}, geq.predicates...),
 		// clone intermediate query.
-		sql:    geq.sql.Clone(),
-		path:   geq.path,
-		unique: geq.unique,
+		sql:  geq.sql.Clone(),
+		path: geq.path,
 	}
 }
 
@@ -269,16 +277,11 @@ func (geq *GithubEventQuery) Clone() *GithubEventQuery {
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (geq *GithubEventQuery) GroupBy(field string, fields ...string) *GithubEventGroupBy {
-	grbuild := &GithubEventGroupBy{config: geq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := geq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return geq.sqlQuery(ctx), nil
-	}
+	geq.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &GithubEventGroupBy{build: geq}
+	grbuild.flds = &geq.ctx.Fields
 	grbuild.label = githubevent.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -295,11 +298,11 @@ func (geq *GithubEventQuery) GroupBy(field string, fields ...string) *GithubEven
 //		Select(githubevent.FieldEventID).
 //		Scan(ctx, &v)
 func (geq *GithubEventQuery) Select(fields ...string) *GithubEventSelect {
-	geq.fields = append(geq.fields, fields...)
-	selbuild := &GithubEventSelect{GithubEventQuery: geq}
-	selbuild.label = githubevent.Label
-	selbuild.flds, selbuild.scan = &geq.fields, selbuild.Scan
-	return selbuild
+	geq.ctx.Fields = append(geq.ctx.Fields, fields...)
+	sbuild := &GithubEventSelect{GithubEventQuery: geq}
+	sbuild.label = githubevent.Label
+	sbuild.flds, sbuild.scan = &geq.ctx.Fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a GithubEventSelect configured with the given aggregations.
@@ -308,7 +311,17 @@ func (geq *GithubEventQuery) Aggregate(fns ...AggregateFunc) *GithubEventSelect 
 }
 
 func (geq *GithubEventQuery) prepareQuery(ctx context.Context) error {
-	for _, f := range geq.fields {
+	for _, inter := range geq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, geq); err != nil {
+				return err
+			}
+		}
+	}
+	for _, f := range geq.ctx.Fields {
 		if !githubevent.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -367,41 +380,22 @@ func (geq *GithubEventQuery) sqlCount(ctx context.Context) (int, error) {
 	if len(geq.modifiers) > 0 {
 		_spec.Modifiers = geq.modifiers
 	}
-	_spec.Node.Columns = geq.fields
-	if len(geq.fields) > 0 {
-		_spec.Unique = geq.unique != nil && *geq.unique
+	_spec.Node.Columns = geq.ctx.Fields
+	if len(geq.ctx.Fields) > 0 {
+		_spec.Unique = geq.ctx.Unique != nil && *geq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, geq.driver, _spec)
 }
 
-func (geq *GithubEventQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := geq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (geq *GithubEventQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubevent.Table,
-			Columns: githubevent.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubevent.FieldID,
-			},
-		},
-		From:   geq.sql,
-		Unique: true,
-	}
-	if unique := geq.unique; unique != nil {
+	_spec := sqlgraph.NewQuerySpec(githubevent.Table, githubevent.Columns, sqlgraph.NewFieldSpec(githubevent.FieldID, field.TypeInt))
+	_spec.From = geq.sql
+	if unique := geq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if geq.path != nil {
+		_spec.Unique = true
 	}
-	if fields := geq.fields; len(fields) > 0 {
+	if fields := geq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, githubevent.FieldID)
 		for i := range fields {
@@ -417,10 +411,10 @@ func (geq *GithubEventQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := geq.limit; limit != nil {
+	if limit := geq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := geq.offset; offset != nil {
+	if offset := geq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := geq.order; len(ps) > 0 {
@@ -436,7 +430,7 @@ func (geq *GithubEventQuery) querySpec() *sqlgraph.QuerySpec {
 func (geq *GithubEventQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(geq.driver.Dialect())
 	t1 := builder.Table(githubevent.Table)
-	columns := geq.fields
+	columns := geq.ctx.Fields
 	if len(columns) == 0 {
 		columns = githubevent.Columns
 	}
@@ -445,7 +439,7 @@ func (geq *GithubEventQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = geq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if geq.unique != nil && *geq.unique {
+	if geq.ctx.Unique != nil && *geq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range geq.predicates {
@@ -454,12 +448,12 @@ func (geq *GithubEventQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range geq.order {
 		p(selector)
 	}
-	if offset := geq.offset; offset != nil {
+	if offset := geq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := geq.limit; limit != nil {
+	if limit := geq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -467,13 +461,8 @@ func (geq *GithubEventQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // GithubEventGroupBy is the group-by builder for GithubEvent entities.
 type GithubEventGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *GithubEventQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -482,58 +471,46 @@ func (gegb *GithubEventGroupBy) Aggregate(fns ...AggregateFunc) *GithubEventGrou
 	return gegb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (gegb *GithubEventGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := gegb.path(ctx)
-	if err != nil {
+	ctx = setContextOp(ctx, gegb.build.ctx, "GroupBy")
+	if err := gegb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	gegb.sql = query
-	return gegb.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubEventQuery, *GithubEventGroupBy](ctx, gegb.build, gegb, gegb.build.inters, v)
 }
 
-func (gegb *GithubEventGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range gegb.fields {
-		if !githubevent.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (gegb *GithubEventGroupBy) sqlScan(ctx context.Context, root *GithubEventQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(gegb.fns))
+	for _, fn := range gegb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := gegb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*gegb.flds)+len(gegb.fns))
+		for _, f := range *gegb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*gegb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := gegb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := gegb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (gegb *GithubEventGroupBy) sqlQuery() *sql.Selector {
-	selector := gegb.sql.Select()
-	aggregation := make([]string, 0, len(gegb.fns))
-	for _, fn := range gegb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(gegb.fields)+len(gegb.fns))
-		for _, f := range gegb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(gegb.fields...)...)
-}
-
 // GithubEventSelect is the builder for selecting fields of GithubEvent entities.
 type GithubEventSelect struct {
 	*GithubEventQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -544,26 +521,27 @@ func (ges *GithubEventSelect) Aggregate(fns ...AggregateFunc) *GithubEventSelect
 
 // Scan applies the selector query and scans the result into the given value.
 func (ges *GithubEventSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, ges.ctx, "Select")
 	if err := ges.prepareQuery(ctx); err != nil {
 		return err
 	}
-	ges.sql = ges.GithubEventQuery.sqlQuery(ctx)
-	return ges.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubEventQuery, *GithubEventSelect](ctx, ges.GithubEventQuery, ges, ges.inters, v)
 }
 
-func (ges *GithubEventSelect) sqlScan(ctx context.Context, v any) error {
+func (ges *GithubEventSelect) sqlScan(ctx context.Context, root *GithubEventQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(ges.fns))
 	for _, fn := range ges.fns {
-		aggregation = append(aggregation, fn(ges.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*ges.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		ges.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		ges.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := ges.sql.Query()
+	query, args := selector.Query()
 	if err := ges.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

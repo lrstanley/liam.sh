@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
@@ -187,40 +187,7 @@ func (gau *GithubAssetUpdate) ClearRelease() *GithubAssetUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gau *GithubAssetUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(gau.hooks) == 0 {
-		if err = gau.check(); err != nil {
-			return 0, err
-		}
-		affected, err = gau.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubAssetMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gau.check(); err != nil {
-				return 0, err
-			}
-			gau.mutation = mutation
-			affected, err = gau.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(gau.hooks) - 1; i >= 0; i-- {
-			if gau.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gau.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, gau.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubAssetMutation](ctx, gau.sqlSave, gau.mutation, gau.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -269,16 +236,10 @@ func (gau *GithubAssetUpdate) check() error {
 }
 
 func (gau *GithubAssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubasset.Table,
-			Columns: githubasset.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubasset.FieldID,
-			},
-		},
+	if err := gau.check(); err != nil {
+		return n, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubasset.Table, githubasset.Columns, sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt))
 	if ps := gau.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -380,6 +341,7 @@ func (gau *GithubAssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	gau.mutation.done = true
 	return n, nil
 }
 
@@ -542,6 +504,12 @@ func (gauo *GithubAssetUpdateOne) ClearRelease() *GithubAssetUpdateOne {
 	return gauo
 }
 
+// Where appends a list predicates to the GithubAssetUpdate builder.
+func (gauo *GithubAssetUpdateOne) Where(ps ...predicate.GithubAsset) *GithubAssetUpdateOne {
+	gauo.mutation.Where(ps...)
+	return gauo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (gauo *GithubAssetUpdateOne) Select(field string, fields ...string) *GithubAssetUpdateOne {
@@ -551,46 +519,7 @@ func (gauo *GithubAssetUpdateOne) Select(field string, fields ...string) *Github
 
 // Save executes the query and returns the updated GithubAsset entity.
 func (gauo *GithubAssetUpdateOne) Save(ctx context.Context) (*GithubAsset, error) {
-	var (
-		err  error
-		node *GithubAsset
-	)
-	if len(gauo.hooks) == 0 {
-		if err = gauo.check(); err != nil {
-			return nil, err
-		}
-		node, err = gauo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubAssetMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gauo.check(); err != nil {
-				return nil, err
-			}
-			gauo.mutation = mutation
-			node, err = gauo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(gauo.hooks) - 1; i >= 0; i-- {
-			if gauo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gauo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, gauo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubAsset)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubAssetMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubAsset, GithubAssetMutation](ctx, gauo.sqlSave, gauo.mutation, gauo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -639,16 +568,10 @@ func (gauo *GithubAssetUpdateOne) check() error {
 }
 
 func (gauo *GithubAssetUpdateOne) sqlSave(ctx context.Context) (_node *GithubAsset, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubasset.Table,
-			Columns: githubasset.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubasset.FieldID,
-			},
-		},
+	if err := gauo.check(); err != nil {
+		return _node, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubasset.Table, githubasset.Columns, sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt))
 	id, ok := gauo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GithubAsset.id" for update`)}
@@ -770,5 +693,6 @@ func (gauo *GithubAssetUpdateOne) sqlSave(ctx context.Context) (_node *GithubAss
 		}
 		return nil, err
 	}
+	gauo.mutation.done = true
 	return _node, nil
 }

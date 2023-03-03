@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 )
 
@@ -96,52 +96,10 @@ func (gec *GithubEventCreate) Mutation() *GithubEventMutation {
 
 // Save creates the GithubEvent in the database.
 func (gec *GithubEventCreate) Save(ctx context.Context) (*GithubEvent, error) {
-	var (
-		err  error
-		node *GithubEvent
-	)
 	if err := gec.defaults(); err != nil {
 		return nil, err
 	}
-	if len(gec.hooks) == 0 {
-		if err = gec.check(); err != nil {
-			return nil, err
-		}
-		node, err = gec.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubEventMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gec.check(); err != nil {
-				return nil, err
-			}
-			gec.mutation = mutation
-			if node, err = gec.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(gec.hooks) - 1; i >= 0; i-- {
-			if gec.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gec.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, gec.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubEvent)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubEventMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubEvent, GithubEventMutation](ctx, gec.sqlSave, gec.mutation, gec.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -218,6 +176,9 @@ func (gec *GithubEventCreate) check() error {
 }
 
 func (gec *GithubEventCreate) sqlSave(ctx context.Context) (*GithubEvent, error) {
+	if err := gec.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := gec.createSpec()
 	if err := sqlgraph.CreateNode(ctx, gec.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -227,19 +188,15 @@ func (gec *GithubEventCreate) sqlSave(ctx context.Context) (*GithubEvent, error)
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
+	gec.mutation.id = &_node.ID
+	gec.mutation.done = true
 	return _node, nil
 }
 
 func (gec *GithubEventCreate) createSpec() (*GithubEvent, *sqlgraph.CreateSpec) {
 	var (
 		_node = &GithubEvent{config: gec.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: githubevent.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubevent.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(githubevent.Table, sqlgraph.NewFieldSpec(githubevent.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = gec.conflict
 	if value, ok := gec.mutation.EventID(); ok {

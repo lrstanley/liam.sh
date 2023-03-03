@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
@@ -65,7 +65,7 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		for _, file := range gist.GetFiles() {
 			content, _ := db.GithubGist.Query().Where(
 				githubgist.GistID(gist.GetID()),
-				githubgist.UpdatedAt(gist.GetUpdatedAt()),
+				githubgist.UpdatedAt(gist.GetUpdatedAt().Time),
 				githubgist.Name(file.GetFilename()),
 			).Limit(1).Select(githubgist.FieldContent).String(ctx)
 
@@ -149,8 +149,8 @@ func storeGist(ctx context.Context, db *ent.Tx, gist *github.Gist, file github.G
 		SetGistID(gist.GetID()).
 		SetHTMLURL(gist.GetHTMLURL()).
 		SetPublic(gist.GetPublic()).
-		SetCreatedAt(gist.GetCreatedAt()).
-		SetUpdatedAt(gist.GetUpdatedAt()).
+		SetCreatedAt(gist.GetCreatedAt().Time).
+		SetUpdatedAt(gist.GetUpdatedAt().Time).
 		SetDescription(gist.GetDescription()).
 		SetOwner(gist.GetOwner()).
 		SetName(file.GetFilename()).

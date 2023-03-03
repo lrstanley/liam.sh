@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -260,52 +260,10 @@ func (grc *GithubRepositoryCreate) Mutation() *GithubRepositoryMutation {
 
 // Save creates the GithubRepository in the database.
 func (grc *GithubRepositoryCreate) Save(ctx context.Context) (*GithubRepository, error) {
-	var (
-		err  error
-		node *GithubRepository
-	)
 	if err := grc.defaults(); err != nil {
 		return nil, err
 	}
-	if len(grc.hooks) == 0 {
-		if err = grc.check(); err != nil {
-			return nil, err
-		}
-		node, err = grc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubRepositoryMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = grc.check(); err != nil {
-				return nil, err
-			}
-			grc.mutation = mutation
-			if node, err = grc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(grc.hooks) - 1; i >= 0; i-- {
-			if grc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = grc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, grc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubRepository)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubRepositoryMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubRepository, GithubRepositoryMutation](ctx, grc.sqlSave, grc.mutation, grc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -437,6 +395,9 @@ func (grc *GithubRepositoryCreate) check() error {
 }
 
 func (grc *GithubRepositoryCreate) sqlSave(ctx context.Context) (*GithubRepository, error) {
+	if err := grc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := grc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, grc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -446,19 +407,15 @@ func (grc *GithubRepositoryCreate) sqlSave(ctx context.Context) (*GithubReposito
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
+	grc.mutation.id = &_node.ID
+	grc.mutation.done = true
 	return _node, nil
 }
 
 func (grc *GithubRepositoryCreate) createSpec() (*GithubRepository, *sqlgraph.CreateSpec) {
 	var (
 		_node = &GithubRepository{config: grc.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: githubrepository.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrepository.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(githubrepository.Table, sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = grc.conflict
 	if value, ok := grc.mutation.RepoID(); ok {

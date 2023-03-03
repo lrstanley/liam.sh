@@ -46,8 +46,10 @@ func (c *LabelCreate) SetInput(i CreateLabelInput) *LabelCreate {
 type UpdateLabelInput struct {
 	UpdateTime                *time.Time
 	Name                      *string
+	ClearPosts                bool
 	AddPostIDs                []int
 	RemovePostIDs             []int
+	ClearGithubRepositories   bool
 	AddGithubRepositoryIDs    []int
 	RemoveGithubRepositoryIDs []int
 }
@@ -60,11 +62,17 @@ func (i *UpdateLabelInput) Mutate(m *LabelMutation) {
 	if v := i.Name; v != nil {
 		m.SetName(*v)
 	}
+	if i.ClearPosts {
+		m.ClearPosts()
+	}
 	if v := i.AddPostIDs; len(v) > 0 {
 		m.AddPostIDs(v...)
 	}
 	if v := i.RemovePostIDs; len(v) > 0 {
 		m.RemovePostIDs(v...)
+	}
+	if i.ClearGithubRepositories {
+		m.ClearGithubRepositories()
 	}
 	if v := i.AddGithubRepositoryIDs; len(v) > 0 {
 		m.AddGithubRepositoryIDs(v...)
@@ -134,6 +142,7 @@ type UpdatePostInput struct {
 	Content        *string
 	PublishedAt    *time.Time
 	Public         *bool
+	ClearLabels    bool
 	AddLabelIDs    []int
 	RemoveLabelIDs []int
 }
@@ -157,6 +166,9 @@ func (i *UpdatePostInput) Mutate(m *PostMutation) {
 	}
 	if v := i.Public; v != nil {
 		m.SetPublic(*v)
+	}
+	if i.ClearLabels {
+		m.ClearLabels()
 	}
 	if v := i.AddLabelIDs; len(v) > 0 {
 		m.AddLabelIDs(v...)

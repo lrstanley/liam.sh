@@ -25,11 +25,9 @@ import (
 // GithubReleaseQuery is the builder for querying GithubRelease entities.
 type GithubReleaseQuery struct {
 	config
-	limit           *int
-	offset          *int
-	unique          *bool
+	ctx             *QueryContext
 	order           []OrderFunc
-	fields          []string
+	inters          []Interceptor
 	predicates      []predicate.GithubRelease
 	withRepository  *GithubRepositoryQuery
 	withAssets      *GithubAssetQuery
@@ -48,26 +46,26 @@ func (grq *GithubReleaseQuery) Where(ps ...predicate.GithubRelease) *GithubRelea
 	return grq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (grq *GithubReleaseQuery) Limit(limit int) *GithubReleaseQuery {
-	grq.limit = &limit
+	grq.ctx.Limit = &limit
 	return grq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (grq *GithubReleaseQuery) Offset(offset int) *GithubReleaseQuery {
-	grq.offset = &offset
+	grq.ctx.Offset = &offset
 	return grq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (grq *GithubReleaseQuery) Unique(unique bool) *GithubReleaseQuery {
-	grq.unique = &unique
+	grq.ctx.Unique = &unique
 	return grq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (grq *GithubReleaseQuery) Order(o ...OrderFunc) *GithubReleaseQuery {
 	grq.order = append(grq.order, o...)
 	return grq
@@ -75,7 +73,7 @@ func (grq *GithubReleaseQuery) Order(o ...OrderFunc) *GithubReleaseQuery {
 
 // QueryRepository chains the current query on the "repository" edge.
 func (grq *GithubReleaseQuery) QueryRepository() *GithubRepositoryQuery {
-	query := &GithubRepositoryQuery{config: grq.config}
+	query := (&GithubRepositoryClient{config: grq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := grq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -97,7 +95,7 @@ func (grq *GithubReleaseQuery) QueryRepository() *GithubRepositoryQuery {
 
 // QueryAssets chains the current query on the "assets" edge.
 func (grq *GithubReleaseQuery) QueryAssets() *GithubAssetQuery {
-	query := &GithubAssetQuery{config: grq.config}
+	query := (&GithubAssetClient{config: grq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := grq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -120,7 +118,7 @@ func (grq *GithubReleaseQuery) QueryAssets() *GithubAssetQuery {
 // First returns the first GithubRelease entity from the query.
 // Returns a *NotFoundError when no GithubRelease was found.
 func (grq *GithubReleaseQuery) First(ctx context.Context) (*GithubRelease, error) {
-	nodes, err := grq.Limit(1).All(ctx)
+	nodes, err := grq.Limit(1).All(setContextOp(ctx, grq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +141,7 @@ func (grq *GithubReleaseQuery) FirstX(ctx context.Context) *GithubRelease {
 // Returns a *NotFoundError when no GithubRelease ID was found.
 func (grq *GithubReleaseQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = grq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = grq.Limit(1).IDs(setContextOp(ctx, grq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -166,7 +164,7 @@ func (grq *GithubReleaseQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubRelease entity is found.
 // Returns a *NotFoundError when no GithubRelease entities are found.
 func (grq *GithubReleaseQuery) Only(ctx context.Context) (*GithubRelease, error) {
-	nodes, err := grq.Limit(2).All(ctx)
+	nodes, err := grq.Limit(2).All(setContextOp(ctx, grq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +192,7 @@ func (grq *GithubReleaseQuery) OnlyX(ctx context.Context) *GithubRelease {
 // Returns a *NotFoundError when no entities are found.
 func (grq *GithubReleaseQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = grq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = grq.Limit(2).IDs(setContextOp(ctx, grq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -219,10 +217,12 @@ func (grq *GithubReleaseQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubReleases.
 func (grq *GithubReleaseQuery) All(ctx context.Context) ([]*GithubRelease, error) {
+	ctx = setContextOp(ctx, grq.ctx, "All")
 	if err := grq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return grq.sqlAll(ctx)
+	qr := querierAll[[]*GithubRelease, *GithubReleaseQuery]()
+	return withInterceptors[[]*GithubRelease](ctx, grq, qr, grq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -235,9 +235,12 @@ func (grq *GithubReleaseQuery) AllX(ctx context.Context) []*GithubRelease {
 }
 
 // IDs executes the query and returns a list of GithubRelease IDs.
-func (grq *GithubReleaseQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
-	if err := grq.Select(githubrelease.FieldID).Scan(ctx, &ids); err != nil {
+func (grq *GithubReleaseQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if grq.ctx.Unique == nil && grq.path != nil {
+		grq.Unique(true)
+	}
+	ctx = setContextOp(ctx, grq.ctx, "IDs")
+	if err = grq.Select(githubrelease.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -254,10 +257,11 @@ func (grq *GithubReleaseQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (grq *GithubReleaseQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, grq.ctx, "Count")
 	if err := grq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return grq.sqlCount(ctx)
+	return withInterceptors[int](ctx, grq, querierCount[*GithubReleaseQuery](), grq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -271,10 +275,15 @@ func (grq *GithubReleaseQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (grq *GithubReleaseQuery) Exist(ctx context.Context) (bool, error) {
-	if err := grq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = setContextOp(ctx, grq.ctx, "Exist")
+	switch _, err := grq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return grq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -294,23 +303,22 @@ func (grq *GithubReleaseQuery) Clone() *GithubReleaseQuery {
 	}
 	return &GithubReleaseQuery{
 		config:         grq.config,
-		limit:          grq.limit,
-		offset:         grq.offset,
+		ctx:            grq.ctx.Clone(),
 		order:          append([]OrderFunc{}, grq.order...),
+		inters:         append([]Interceptor{}, grq.inters...),
 		predicates:     append([]predicate.GithubRelease{}, grq.predicates...),
 		withRepository: grq.withRepository.Clone(),
 		withAssets:     grq.withAssets.Clone(),
 		// clone intermediate query.
-		sql:    grq.sql.Clone(),
-		path:   grq.path,
-		unique: grq.unique,
+		sql:  grq.sql.Clone(),
+		path: grq.path,
 	}
 }
 
 // WithRepository tells the query-builder to eager-load the nodes that are connected to
 // the "repository" edge. The optional arguments are used to configure the query builder of the edge.
 func (grq *GithubReleaseQuery) WithRepository(opts ...func(*GithubRepositoryQuery)) *GithubReleaseQuery {
-	query := &GithubRepositoryQuery{config: grq.config}
+	query := (&GithubRepositoryClient{config: grq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -321,7 +329,7 @@ func (grq *GithubReleaseQuery) WithRepository(opts ...func(*GithubRepositoryQuer
 // WithAssets tells the query-builder to eager-load the nodes that are connected to
 // the "assets" edge. The optional arguments are used to configure the query builder of the edge.
 func (grq *GithubReleaseQuery) WithAssets(opts ...func(*GithubAssetQuery)) *GithubReleaseQuery {
-	query := &GithubAssetQuery{config: grq.config}
+	query := (&GithubAssetClient{config: grq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -344,16 +352,11 @@ func (grq *GithubReleaseQuery) WithAssets(opts ...func(*GithubAssetQuery)) *Gith
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (grq *GithubReleaseQuery) GroupBy(field string, fields ...string) *GithubReleaseGroupBy {
-	grbuild := &GithubReleaseGroupBy{config: grq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := grq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return grq.sqlQuery(ctx), nil
-	}
+	grq.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &GithubReleaseGroupBy{build: grq}
+	grbuild.flds = &grq.ctx.Fields
 	grbuild.label = githubrelease.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -370,11 +373,11 @@ func (grq *GithubReleaseQuery) GroupBy(field string, fields ...string) *GithubRe
 //		Select(githubrelease.FieldReleaseID).
 //		Scan(ctx, &v)
 func (grq *GithubReleaseQuery) Select(fields ...string) *GithubReleaseSelect {
-	grq.fields = append(grq.fields, fields...)
-	selbuild := &GithubReleaseSelect{GithubReleaseQuery: grq}
-	selbuild.label = githubrelease.Label
-	selbuild.flds, selbuild.scan = &grq.fields, selbuild.Scan
-	return selbuild
+	grq.ctx.Fields = append(grq.ctx.Fields, fields...)
+	sbuild := &GithubReleaseSelect{GithubReleaseQuery: grq}
+	sbuild.label = githubrelease.Label
+	sbuild.flds, sbuild.scan = &grq.ctx.Fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a GithubReleaseSelect configured with the given aggregations.
@@ -383,7 +386,17 @@ func (grq *GithubReleaseQuery) Aggregate(fns ...AggregateFunc) *GithubReleaseSel
 }
 
 func (grq *GithubReleaseQuery) prepareQuery(ctx context.Context) error {
-	for _, f := range grq.fields {
+	for _, inter := range grq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, grq); err != nil {
+				return err
+			}
+		}
+	}
+	for _, f := range grq.ctx.Fields {
 		if !githubrelease.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -482,6 +495,9 @@ func (grq *GithubReleaseQuery) loadRepository(ctx context.Context, query *Github
 		}
 		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
+	if len(ids) == 0 {
+		return nil
+	}
 	query.Where(githubrepository.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -535,41 +551,22 @@ func (grq *GithubReleaseQuery) sqlCount(ctx context.Context) (int, error) {
 	if len(grq.modifiers) > 0 {
 		_spec.Modifiers = grq.modifiers
 	}
-	_spec.Node.Columns = grq.fields
-	if len(grq.fields) > 0 {
-		_spec.Unique = grq.unique != nil && *grq.unique
+	_spec.Node.Columns = grq.ctx.Fields
+	if len(grq.ctx.Fields) > 0 {
+		_spec.Unique = grq.ctx.Unique != nil && *grq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, grq.driver, _spec)
 }
 
-func (grq *GithubReleaseQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := grq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (grq *GithubReleaseQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubrelease.Table,
-			Columns: githubrelease.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrelease.FieldID,
-			},
-		},
-		From:   grq.sql,
-		Unique: true,
-	}
-	if unique := grq.unique; unique != nil {
+	_spec := sqlgraph.NewQuerySpec(githubrelease.Table, githubrelease.Columns, sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt))
+	_spec.From = grq.sql
+	if unique := grq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if grq.path != nil {
+		_spec.Unique = true
 	}
-	if fields := grq.fields; len(fields) > 0 {
+	if fields := grq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, githubrelease.FieldID)
 		for i := range fields {
@@ -585,10 +582,10 @@ func (grq *GithubReleaseQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := grq.limit; limit != nil {
+	if limit := grq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := grq.offset; offset != nil {
+	if offset := grq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := grq.order; len(ps) > 0 {
@@ -604,7 +601,7 @@ func (grq *GithubReleaseQuery) querySpec() *sqlgraph.QuerySpec {
 func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(grq.driver.Dialect())
 	t1 := builder.Table(githubrelease.Table)
-	columns := grq.fields
+	columns := grq.ctx.Fields
 	if len(columns) == 0 {
 		columns = githubrelease.Columns
 	}
@@ -613,7 +610,7 @@ func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = grq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if grq.unique != nil && *grq.unique {
+	if grq.ctx.Unique != nil && *grq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range grq.predicates {
@@ -622,12 +619,12 @@ func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range grq.order {
 		p(selector)
 	}
-	if offset := grq.offset; offset != nil {
+	if offset := grq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := grq.limit; limit != nil {
+	if limit := grq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -636,7 +633,7 @@ func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 // WithNamedAssets tells the query-builder to eager-load the nodes that are connected to the "assets"
 // edge with the given name. The optional arguments are used to configure the query builder of the edge.
 func (grq *GithubReleaseQuery) WithNamedAssets(name string, opts ...func(*GithubAssetQuery)) *GithubReleaseQuery {
-	query := &GithubAssetQuery{config: grq.config}
+	query := (&GithubAssetClient{config: grq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -649,13 +646,8 @@ func (grq *GithubReleaseQuery) WithNamedAssets(name string, opts ...func(*Github
 
 // GithubReleaseGroupBy is the group-by builder for GithubRelease entities.
 type GithubReleaseGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *GithubReleaseQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -664,58 +656,46 @@ func (grgb *GithubReleaseGroupBy) Aggregate(fns ...AggregateFunc) *GithubRelease
 	return grgb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (grgb *GithubReleaseGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := grgb.path(ctx)
-	if err != nil {
+	ctx = setContextOp(ctx, grgb.build.ctx, "GroupBy")
+	if err := grgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	grgb.sql = query
-	return grgb.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubReleaseQuery, *GithubReleaseGroupBy](ctx, grgb.build, grgb, grgb.build.inters, v)
 }
 
-func (grgb *GithubReleaseGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range grgb.fields {
-		if !githubrelease.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (grgb *GithubReleaseGroupBy) sqlScan(ctx context.Context, root *GithubReleaseQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(grgb.fns))
+	for _, fn := range grgb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := grgb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*grgb.flds)+len(grgb.fns))
+		for _, f := range *grgb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*grgb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := grgb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := grgb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (grgb *GithubReleaseGroupBy) sqlQuery() *sql.Selector {
-	selector := grgb.sql.Select()
-	aggregation := make([]string, 0, len(grgb.fns))
-	for _, fn := range grgb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(grgb.fields)+len(grgb.fns))
-		for _, f := range grgb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(grgb.fields...)...)
-}
-
 // GithubReleaseSelect is the builder for selecting fields of GithubRelease entities.
 type GithubReleaseSelect struct {
 	*GithubReleaseQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -726,26 +706,27 @@ func (grs *GithubReleaseSelect) Aggregate(fns ...AggregateFunc) *GithubReleaseSe
 
 // Scan applies the selector query and scans the result into the given value.
 func (grs *GithubReleaseSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, grs.ctx, "Select")
 	if err := grs.prepareQuery(ctx); err != nil {
 		return err
 	}
-	grs.sql = grs.GithubReleaseQuery.sqlQuery(ctx)
-	return grs.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubReleaseQuery, *GithubReleaseSelect](ctx, grs.GithubReleaseQuery, grs, grs.inters, v)
 }
 
-func (grs *GithubReleaseSelect) sqlScan(ctx context.Context, v any) error {
+func (grs *GithubReleaseSelect) sqlScan(ctx context.Context, root *GithubReleaseQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(grs.fns))
 	for _, fn := range grs.fns {
-		aggregation = append(aggregation, fn(grs.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*grs.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		grs.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		grs.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := grs.sql.Query()
+	query, args := selector.Query()
 	if err := grs.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

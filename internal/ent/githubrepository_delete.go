@@ -8,7 +8,6 @@ package ent
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -32,34 +31,7 @@ func (grd *GithubRepositoryDelete) Where(ps ...predicate.GithubRepository) *Gith
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (grd *GithubRepositoryDelete) Exec(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(grd.hooks) == 0 {
-		affected, err = grd.sqlExec(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubRepositoryMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			grd.mutation = mutation
-			affected, err = grd.sqlExec(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(grd.hooks) - 1; i >= 0; i-- {
-			if grd.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = grd.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, grd.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubRepositoryMutation](ctx, grd.sqlExec, grd.mutation, grd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
@@ -72,15 +44,7 @@ func (grd *GithubRepositoryDelete) ExecX(ctx context.Context) int {
 }
 
 func (grd *GithubRepositoryDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := &sqlgraph.DeleteSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table: githubrepository.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrepository.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewDeleteSpec(githubrepository.Table, sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt))
 	if ps := grd.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -92,12 +56,19 @@ func (grd *GithubRepositoryDelete) sqlExec(ctx context.Context) (int, error) {
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
+	grd.mutation.done = true
 	return affected, err
 }
 
 // GithubRepositoryDeleteOne is the builder for deleting a single GithubRepository entity.
 type GithubRepositoryDeleteOne struct {
 	grd *GithubRepositoryDelete
+}
+
+// Where appends a list predicates to the GithubRepositoryDelete builder.
+func (grdo *GithubRepositoryDeleteOne) Where(ps ...predicate.GithubRepository) *GithubRepositoryDeleteOne {
+	grdo.grd.mutation.Where(ps...)
+	return grdo
 }
 
 // Exec executes the deletion query.
@@ -115,5 +86,7 @@ func (grdo *GithubRepositoryDeleteOne) Exec(ctx context.Context) error {
 
 // ExecX is like Exec, but panics if an error occurs.
 func (grdo *GithubRepositoryDeleteOne) ExecX(ctx context.Context) {
-	grdo.grd.ExecX(ctx)
+	if err := grdo.Exec(ctx); err != nil {
+		panic(err)
+	}
 }

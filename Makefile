@@ -13,7 +13,10 @@ export LICENSE_IGNORE := "graphql-tag"
 license:
 	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
-build-all: clean node-fetch go-fetch node-build go-build
+prepare: clean node-prepare node-build go-prepare
+	@echo
+
+build-all: prepare go-build
 	@echo
 
 up: node-upgrade-deps go-upgrade-deps

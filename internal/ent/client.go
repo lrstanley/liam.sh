@@ -14,6 +14,10 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/ent/migrate"
 
+	"entgo.io/ent"
+	"entgo.io/ent/dialect"
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
@@ -22,10 +26,6 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
-
-	"entgo.io/ent/dialect"
-	"entgo.io/ent/dialect/sql"
-	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -55,7 +55,7 @@ type Client struct {
 
 // NewClient creates a new client configured with the given options.
 func NewClient(opts ...Option) *Client {
-	cfg := config{log: log.Println, hooks: &hooks{}}
+	cfg := config{log: log.Println, hooks: &hooks{}, inters: &inters{}}
 	cfg.options(opts...)
 	client := &Client{config: cfg}
 	client.init()
@@ -72,6 +72,55 @@ func (c *Client) init() {
 	c.Label = NewLabelClient(c.config)
 	c.Post = NewPostClient(c.config)
 	c.User = NewUserClient(c.config)
+}
+
+type (
+	// config is the configuration for the client and its builder.
+	config struct {
+		// driver used for executing database requests.
+		driver dialect.Driver
+		// debug enable a debug logging.
+		debug bool
+		// log used for logging on debug mode.
+		log func(...any)
+		// hooks to execute on mutations.
+		hooks *hooks
+		// interceptors to execute on queries.
+		inters *inters
+	}
+	// Option function to configure the client.
+	Option func(*config)
+)
+
+// options applies the options on the config object.
+func (c *config) options(opts ...Option) {
+	for _, opt := range opts {
+		opt(c)
+	}
+	if c.debug {
+		c.driver = dialect.Debug(c.driver, c.log)
+	}
+}
+
+// Debug enables debug logging on the ent.Driver.
+func Debug() Option {
+	return func(c *config) {
+		c.debug = true
+	}
+}
+
+// Log sets the logging function for debug mode.
+func Log(fn func(...any)) Option {
+	return func(c *config) {
+		c.log = fn
+	}
+}
+
+// Driver configures the client driver.
+func Driver(driver dialect.Driver) Option {
+	return func(c *config) {
+		c.driver = driver
+	}
 }
 
 // Open opens a database/sql.DB specified by the driver name and
@@ -168,14 +217,47 @@ func (c *Client) Close() error {
 // Use adds the mutation hooks to all the entity clients.
 // In order to add hooks to a specific client, call: `client.Node.Use(...)`.
 func (c *Client) Use(hooks ...Hook) {
-	c.GithubAsset.Use(hooks...)
-	c.GithubEvent.Use(hooks...)
-	c.GithubGist.Use(hooks...)
-	c.GithubRelease.Use(hooks...)
-	c.GithubRepository.Use(hooks...)
-	c.Label.Use(hooks...)
-	c.Post.Use(hooks...)
-	c.User.Use(hooks...)
+	for _, n := range []interface{ Use(...Hook) }{
+		c.GithubAsset, c.GithubEvent, c.GithubGist, c.GithubRelease, c.GithubRepository,
+		c.Label, c.Post, c.User,
+	} {
+		n.Use(hooks...)
+	}
+}
+
+// Intercept adds the query interceptors to all the entity clients.
+// In order to add interceptors to a specific client, call: `client.Node.Intercept(...)`.
+func (c *Client) Intercept(interceptors ...Interceptor) {
+	for _, n := range []interface{ Intercept(...Interceptor) }{
+		c.GithubAsset, c.GithubEvent, c.GithubGist, c.GithubRelease, c.GithubRepository,
+		c.Label, c.Post, c.User,
+	} {
+		n.Intercept(interceptors...)
+	}
+}
+
+// Mutate implements the ent.Mutator interface.
+func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
+	switch m := m.(type) {
+	case *GithubAssetMutation:
+		return c.GithubAsset.mutate(ctx, m)
+	case *GithubEventMutation:
+		return c.GithubEvent.mutate(ctx, m)
+	case *GithubGistMutation:
+		return c.GithubGist.mutate(ctx, m)
+	case *GithubReleaseMutation:
+		return c.GithubRelease.mutate(ctx, m)
+	case *GithubRepositoryMutation:
+		return c.GithubRepository.mutate(ctx, m)
+	case *LabelMutation:
+		return c.Label.mutate(ctx, m)
+	case *PostMutation:
+		return c.Post.mutate(ctx, m)
+	case *UserMutation:
+		return c.User.mutate(ctx, m)
+	default:
+		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
+	}
 }
 
 // GithubAssetClient is a client for the GithubAsset schema.
@@ -192,6 +274,12 @@ func NewGithubAssetClient(c config) *GithubAssetClient {
 // A call to `Use(f, g, h)` equals to `githubasset.Hooks(f(g(h())))`.
 func (c *GithubAssetClient) Use(hooks ...Hook) {
 	c.hooks.GithubAsset = append(c.hooks.GithubAsset, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `githubasset.Intercept(f(g(h())))`.
+func (c *GithubAssetClient) Intercept(interceptors ...Interceptor) {
+	c.inters.GithubAsset = append(c.inters.GithubAsset, interceptors...)
 }
 
 // Create returns a builder for creating a GithubAsset entity.
@@ -246,6 +334,8 @@ func (c *GithubAssetClient) DeleteOneID(id int) *GithubAssetDeleteOne {
 func (c *GithubAssetClient) Query() *GithubAssetQuery {
 	return &GithubAssetQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeGithubAsset},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -265,7 +355,7 @@ func (c *GithubAssetClient) GetX(ctx context.Context, id int) *GithubAsset {
 
 // QueryRelease queries the release edge of a GithubAsset.
 func (c *GithubAssetClient) QueryRelease(ga *GithubAsset) *GithubReleaseQuery {
-	query := &GithubReleaseQuery{config: c.config}
+	query := (&GithubReleaseClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := ga.ID
 		step := sqlgraph.NewStep(
@@ -285,6 +375,26 @@ func (c *GithubAssetClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubasset.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *GithubAssetClient) Interceptors() []Interceptor {
+	return c.inters.GithubAsset
+}
+
+func (c *GithubAssetClient) mutate(ctx context.Context, m *GithubAssetMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&GithubAssetCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&GithubAssetUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&GithubAssetUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&GithubAssetDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown GithubAsset mutation op: %q", m.Op())
+	}
+}
+
 // GithubEventClient is a client for the GithubEvent schema.
 type GithubEventClient struct {
 	config
@@ -299,6 +409,12 @@ func NewGithubEventClient(c config) *GithubEventClient {
 // A call to `Use(f, g, h)` equals to `githubevent.Hooks(f(g(h())))`.
 func (c *GithubEventClient) Use(hooks ...Hook) {
 	c.hooks.GithubEvent = append(c.hooks.GithubEvent, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `githubevent.Intercept(f(g(h())))`.
+func (c *GithubEventClient) Intercept(interceptors ...Interceptor) {
+	c.inters.GithubEvent = append(c.inters.GithubEvent, interceptors...)
 }
 
 // Create returns a builder for creating a GithubEvent entity.
@@ -353,6 +469,8 @@ func (c *GithubEventClient) DeleteOneID(id int) *GithubEventDeleteOne {
 func (c *GithubEventClient) Query() *GithubEventQuery {
 	return &GithubEventQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeGithubEvent},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -376,6 +494,26 @@ func (c *GithubEventClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubevent.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *GithubEventClient) Interceptors() []Interceptor {
+	return c.inters.GithubEvent
+}
+
+func (c *GithubEventClient) mutate(ctx context.Context, m *GithubEventMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&GithubEventCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&GithubEventUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&GithubEventUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&GithubEventDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown GithubEvent mutation op: %q", m.Op())
+	}
+}
+
 // GithubGistClient is a client for the GithubGist schema.
 type GithubGistClient struct {
 	config
@@ -390,6 +528,12 @@ func NewGithubGistClient(c config) *GithubGistClient {
 // A call to `Use(f, g, h)` equals to `githubgist.Hooks(f(g(h())))`.
 func (c *GithubGistClient) Use(hooks ...Hook) {
 	c.hooks.GithubGist = append(c.hooks.GithubGist, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `githubgist.Intercept(f(g(h())))`.
+func (c *GithubGistClient) Intercept(interceptors ...Interceptor) {
+	c.inters.GithubGist = append(c.inters.GithubGist, interceptors...)
 }
 
 // Create returns a builder for creating a GithubGist entity.
@@ -444,6 +588,8 @@ func (c *GithubGistClient) DeleteOneID(id int) *GithubGistDeleteOne {
 func (c *GithubGistClient) Query() *GithubGistQuery {
 	return &GithubGistQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeGithubGist},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -467,6 +613,26 @@ func (c *GithubGistClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubgist.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *GithubGistClient) Interceptors() []Interceptor {
+	return c.inters.GithubGist
+}
+
+func (c *GithubGistClient) mutate(ctx context.Context, m *GithubGistMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&GithubGistCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&GithubGistUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&GithubGistUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&GithubGistDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown GithubGist mutation op: %q", m.Op())
+	}
+}
+
 // GithubReleaseClient is a client for the GithubRelease schema.
 type GithubReleaseClient struct {
 	config
@@ -481,6 +647,12 @@ func NewGithubReleaseClient(c config) *GithubReleaseClient {
 // A call to `Use(f, g, h)` equals to `githubrelease.Hooks(f(g(h())))`.
 func (c *GithubReleaseClient) Use(hooks ...Hook) {
 	c.hooks.GithubRelease = append(c.hooks.GithubRelease, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `githubrelease.Intercept(f(g(h())))`.
+func (c *GithubReleaseClient) Intercept(interceptors ...Interceptor) {
+	c.inters.GithubRelease = append(c.inters.GithubRelease, interceptors...)
 }
 
 // Create returns a builder for creating a GithubRelease entity.
@@ -535,6 +707,8 @@ func (c *GithubReleaseClient) DeleteOneID(id int) *GithubReleaseDeleteOne {
 func (c *GithubReleaseClient) Query() *GithubReleaseQuery {
 	return &GithubReleaseQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeGithubRelease},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -554,7 +728,7 @@ func (c *GithubReleaseClient) GetX(ctx context.Context, id int) *GithubRelease {
 
 // QueryRepository queries the repository edge of a GithubRelease.
 func (c *GithubReleaseClient) QueryRepository(gr *GithubRelease) *GithubRepositoryQuery {
-	query := &GithubRepositoryQuery{config: c.config}
+	query := (&GithubRepositoryClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
@@ -570,7 +744,7 @@ func (c *GithubReleaseClient) QueryRepository(gr *GithubRelease) *GithubReposito
 
 // QueryAssets queries the assets edge of a GithubRelease.
 func (c *GithubReleaseClient) QueryAssets(gr *GithubRelease) *GithubAssetQuery {
-	query := &GithubAssetQuery{config: c.config}
+	query := (&GithubAssetClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
@@ -590,6 +764,26 @@ func (c *GithubReleaseClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubrelease.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *GithubReleaseClient) Interceptors() []Interceptor {
+	return c.inters.GithubRelease
+}
+
+func (c *GithubReleaseClient) mutate(ctx context.Context, m *GithubReleaseMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&GithubReleaseCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&GithubReleaseUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&GithubReleaseUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&GithubReleaseDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown GithubRelease mutation op: %q", m.Op())
+	}
+}
+
 // GithubRepositoryClient is a client for the GithubRepository schema.
 type GithubRepositoryClient struct {
 	config
@@ -604,6 +798,12 @@ func NewGithubRepositoryClient(c config) *GithubRepositoryClient {
 // A call to `Use(f, g, h)` equals to `githubrepository.Hooks(f(g(h())))`.
 func (c *GithubRepositoryClient) Use(hooks ...Hook) {
 	c.hooks.GithubRepository = append(c.hooks.GithubRepository, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `githubrepository.Intercept(f(g(h())))`.
+func (c *GithubRepositoryClient) Intercept(interceptors ...Interceptor) {
+	c.inters.GithubRepository = append(c.inters.GithubRepository, interceptors...)
 }
 
 // Create returns a builder for creating a GithubRepository entity.
@@ -658,6 +858,8 @@ func (c *GithubRepositoryClient) DeleteOneID(id int) *GithubRepositoryDeleteOne 
 func (c *GithubRepositoryClient) Query() *GithubRepositoryQuery {
 	return &GithubRepositoryQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeGithubRepository},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -677,7 +879,7 @@ func (c *GithubRepositoryClient) GetX(ctx context.Context, id int) *GithubReposi
 
 // QueryLabels queries the labels edge of a GithubRepository.
 func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
-	query := &LabelQuery{config: c.config}
+	query := (&LabelClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
@@ -693,7 +895,7 @@ func (c *GithubRepositoryClient) QueryLabels(gr *GithubRepository) *LabelQuery {
 
 // QueryReleases queries the releases edge of a GithubRepository.
 func (c *GithubRepositoryClient) QueryReleases(gr *GithubRepository) *GithubReleaseQuery {
-	query := &GithubReleaseQuery{config: c.config}
+	query := (&GithubReleaseClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := gr.ID
 		step := sqlgraph.NewStep(
@@ -713,6 +915,26 @@ func (c *GithubRepositoryClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], githubrepository.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *GithubRepositoryClient) Interceptors() []Interceptor {
+	return c.inters.GithubRepository
+}
+
+func (c *GithubRepositoryClient) mutate(ctx context.Context, m *GithubRepositoryMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&GithubRepositoryCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&GithubRepositoryUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&GithubRepositoryUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&GithubRepositoryDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown GithubRepository mutation op: %q", m.Op())
+	}
+}
+
 // LabelClient is a client for the Label schema.
 type LabelClient struct {
 	config
@@ -727,6 +949,12 @@ func NewLabelClient(c config) *LabelClient {
 // A call to `Use(f, g, h)` equals to `label.Hooks(f(g(h())))`.
 func (c *LabelClient) Use(hooks ...Hook) {
 	c.hooks.Label = append(c.hooks.Label, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `label.Intercept(f(g(h())))`.
+func (c *LabelClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Label = append(c.inters.Label, interceptors...)
 }
 
 // Create returns a builder for creating a Label entity.
@@ -781,6 +1009,8 @@ func (c *LabelClient) DeleteOneID(id int) *LabelDeleteOne {
 func (c *LabelClient) Query() *LabelQuery {
 	return &LabelQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeLabel},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -800,7 +1030,7 @@ func (c *LabelClient) GetX(ctx context.Context, id int) *Label {
 
 // QueryPosts queries the posts edge of a Label.
 func (c *LabelClient) QueryPosts(l *Label) *PostQuery {
-	query := &PostQuery{config: c.config}
+	query := (&PostClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := l.ID
 		step := sqlgraph.NewStep(
@@ -816,7 +1046,7 @@ func (c *LabelClient) QueryPosts(l *Label) *PostQuery {
 
 // QueryGithubRepositories queries the github_repositories edge of a Label.
 func (c *LabelClient) QueryGithubRepositories(l *Label) *GithubRepositoryQuery {
-	query := &GithubRepositoryQuery{config: c.config}
+	query := (&GithubRepositoryClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := l.ID
 		step := sqlgraph.NewStep(
@@ -836,6 +1066,26 @@ func (c *LabelClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], label.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *LabelClient) Interceptors() []Interceptor {
+	return c.inters.Label
+}
+
+func (c *LabelClient) mutate(ctx context.Context, m *LabelMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&LabelCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&LabelUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&LabelUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&LabelDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Label mutation op: %q", m.Op())
+	}
+}
+
 // PostClient is a client for the Post schema.
 type PostClient struct {
 	config
@@ -850,6 +1100,12 @@ func NewPostClient(c config) *PostClient {
 // A call to `Use(f, g, h)` equals to `post.Hooks(f(g(h())))`.
 func (c *PostClient) Use(hooks ...Hook) {
 	c.hooks.Post = append(c.hooks.Post, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `post.Intercept(f(g(h())))`.
+func (c *PostClient) Intercept(interceptors ...Interceptor) {
+	c.inters.Post = append(c.inters.Post, interceptors...)
 }
 
 // Create returns a builder for creating a Post entity.
@@ -904,6 +1160,8 @@ func (c *PostClient) DeleteOneID(id int) *PostDeleteOne {
 func (c *PostClient) Query() *PostQuery {
 	return &PostQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypePost},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -923,7 +1181,7 @@ func (c *PostClient) GetX(ctx context.Context, id int) *Post {
 
 // QueryAuthor queries the author edge of a Post.
 func (c *PostClient) QueryAuthor(po *Post) *UserQuery {
-	query := &UserQuery{config: c.config}
+	query := (&UserClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := po.ID
 		step := sqlgraph.NewStep(
@@ -939,7 +1197,7 @@ func (c *PostClient) QueryAuthor(po *Post) *UserQuery {
 
 // QueryLabels queries the labels edge of a Post.
 func (c *PostClient) QueryLabels(po *Post) *LabelQuery {
-	query := &LabelQuery{config: c.config}
+	query := (&LabelClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := po.ID
 		step := sqlgraph.NewStep(
@@ -959,6 +1217,26 @@ func (c *PostClient) Hooks() []Hook {
 	return append(hooks[:len(hooks):len(hooks)], post.Hooks[:]...)
 }
 
+// Interceptors returns the client interceptors.
+func (c *PostClient) Interceptors() []Interceptor {
+	return c.inters.Post
+}
+
+func (c *PostClient) mutate(ctx context.Context, m *PostMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&PostCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&PostUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&PostUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&PostDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown Post mutation op: %q", m.Op())
+	}
+}
+
 // UserClient is a client for the User schema.
 type UserClient struct {
 	config
@@ -973,6 +1251,12 @@ func NewUserClient(c config) *UserClient {
 // A call to `Use(f, g, h)` equals to `user.Hooks(f(g(h())))`.
 func (c *UserClient) Use(hooks ...Hook) {
 	c.hooks.User = append(c.hooks.User, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `user.Intercept(f(g(h())))`.
+func (c *UserClient) Intercept(interceptors ...Interceptor) {
+	c.inters.User = append(c.inters.User, interceptors...)
 }
 
 // Create returns a builder for creating a User entity.
@@ -1027,6 +1311,8 @@ func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
 func (c *UserClient) Query() *UserQuery {
 	return &UserQuery{
 		config: c.config,
+		ctx:    &QueryContext{Type: TypeUser},
+		inters: c.Interceptors(),
 	}
 }
 
@@ -1046,7 +1332,7 @@ func (c *UserClient) GetX(ctx context.Context, id int) *User {
 
 // QueryPosts queries the posts edge of a User.
 func (c *UserClient) QueryPosts(u *User) *PostQuery {
-	query := &PostQuery{config: c.config}
+	query := (&PostClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := u.ID
 		step := sqlgraph.NewStep(
@@ -1065,3 +1351,35 @@ func (c *UserClient) Hooks() []Hook {
 	hooks := c.hooks.User
 	return append(hooks[:len(hooks):len(hooks)], user.Hooks[:]...)
 }
+
+// Interceptors returns the client interceptors.
+func (c *UserClient) Interceptors() []Interceptor {
+	return c.inters.User
+}
+
+func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&UserCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&UserUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&UserUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&UserDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown User mutation op: %q", m.Op())
+	}
+}
+
+// hooks and interceptors per client, for fast access.
+type (
+	hooks struct {
+		GithubAsset, GithubEvent, GithubGist, GithubRelease, GithubRepository, Label,
+		Post, User []ent.Hook
+	}
+	inters struct {
+		GithubAsset, GithubEvent, GithubGist, GithubRelease, GithubRepository, Label,
+		Post, User []ent.Interceptor
+	}
+)

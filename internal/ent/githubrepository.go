@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 )
 
@@ -260,19 +260,19 @@ func (gr *GithubRepository) assignValues(columns []string, values []any) error {
 
 // QueryLabels queries the "labels" edge of the GithubRepository entity.
 func (gr *GithubRepository) QueryLabels() *LabelQuery {
-	return (&GithubRepositoryClient{config: gr.config}).QueryLabels(gr)
+	return NewGithubRepositoryClient(gr.config).QueryLabels(gr)
 }
 
 // QueryReleases queries the "releases" edge of the GithubRepository entity.
 func (gr *GithubRepository) QueryReleases() *GithubReleaseQuery {
-	return (&GithubRepositoryClient{config: gr.config}).QueryReleases(gr)
+	return NewGithubRepositoryClient(gr.config).QueryReleases(gr)
 }
 
 // Update returns a builder for updating this GithubRepository.
 // Note that you need to call GithubRepository.Unwrap() before calling this method if this GithubRepository
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (gr *GithubRepository) Update() *GithubRepositoryUpdateOne {
-	return (&GithubRepositoryClient{config: gr.config}).UpdateOne(gr)
+	return NewGithubRepositoryClient(gr.config).UpdateOne(gr)
 }
 
 // Unwrap unwraps the GithubRepository entity that was returned from a transaction after it was closed,
@@ -401,9 +401,3 @@ func (gr *GithubRepository) appendNamedReleases(name string, edges ...*GithubRel
 
 // GithubRepositories is a parsable slice of GithubRepository.
 type GithubRepositories []*GithubRepository
-
-func (gr GithubRepositories) config(cfg config) {
-	for _i := range gr {
-		gr[_i].config = cfg
-	}
-}

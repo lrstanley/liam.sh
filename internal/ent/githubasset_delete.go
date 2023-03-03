@@ -8,7 +8,6 @@ package ent
 
 import (
 	"context"
-	"fmt"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -32,34 +31,7 @@ func (gad *GithubAssetDelete) Where(ps ...predicate.GithubAsset) *GithubAssetDel
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (gad *GithubAssetDelete) Exec(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(gad.hooks) == 0 {
-		affected, err = gad.sqlExec(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubAssetMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			gad.mutation = mutation
-			affected, err = gad.sqlExec(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(gad.hooks) - 1; i >= 0; i-- {
-			if gad.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gad.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, gad.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubAssetMutation](ctx, gad.sqlExec, gad.mutation, gad.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
@@ -72,15 +44,7 @@ func (gad *GithubAssetDelete) ExecX(ctx context.Context) int {
 }
 
 func (gad *GithubAssetDelete) sqlExec(ctx context.Context) (int, error) {
-	_spec := &sqlgraph.DeleteSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table: githubasset.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubasset.FieldID,
-			},
-		},
-	}
+	_spec := sqlgraph.NewDeleteSpec(githubasset.Table, sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt))
 	if ps := gad.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -92,12 +56,19 @@ func (gad *GithubAssetDelete) sqlExec(ctx context.Context) (int, error) {
 	if err != nil && sqlgraph.IsConstraintError(err) {
 		err = &ConstraintError{msg: err.Error(), wrap: err}
 	}
+	gad.mutation.done = true
 	return affected, err
 }
 
 // GithubAssetDeleteOne is the builder for deleting a single GithubAsset entity.
 type GithubAssetDeleteOne struct {
 	gad *GithubAssetDelete
+}
+
+// Where appends a list predicates to the GithubAssetDelete builder.
+func (gado *GithubAssetDeleteOne) Where(ps ...predicate.GithubAsset) *GithubAssetDeleteOne {
+	gado.gad.mutation.Where(ps...)
+	return gado
 }
 
 // Exec executes the deletion query.
@@ -115,5 +86,7 @@ func (gado *GithubAssetDeleteOne) Exec(ctx context.Context) error {
 
 // ExecX is like Exec, but panics if an error occurs.
 func (gado *GithubAssetDeleteOne) ExecX(ctx context.Context) {
-	gado.gad.ExecX(ctx)
+	if err := gado.Exec(ctx); err != nil {
+		panic(err)
+	}
 }

@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 )
@@ -200,19 +200,19 @@ func (gr *GithubRelease) assignValues(columns []string, values []any) error {
 
 // QueryRepository queries the "repository" edge of the GithubRelease entity.
 func (gr *GithubRelease) QueryRepository() *GithubRepositoryQuery {
-	return (&GithubReleaseClient{config: gr.config}).QueryRepository(gr)
+	return NewGithubReleaseClient(gr.config).QueryRepository(gr)
 }
 
 // QueryAssets queries the "assets" edge of the GithubRelease entity.
 func (gr *GithubRelease) QueryAssets() *GithubAssetQuery {
-	return (&GithubReleaseClient{config: gr.config}).QueryAssets(gr)
+	return NewGithubReleaseClient(gr.config).QueryAssets(gr)
 }
 
 // Update returns a builder for updating this GithubRelease.
 // Note that you need to call GithubRelease.Unwrap() before calling this method if this GithubRelease
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (gr *GithubRelease) Update() *GithubReleaseUpdateOne {
-	return (&GithubReleaseClient{config: gr.config}).UpdateOne(gr)
+	return NewGithubReleaseClient(gr.config).UpdateOne(gr)
 }
 
 // Unwrap unwraps the GithubRelease entity that was returned from a transaction after it was closed,
@@ -290,9 +290,3 @@ func (gr *GithubRelease) appendNamedAssets(name string, edges ...*GithubAsset) {
 
 // GithubReleases is a parsable slice of GithubRelease.
 type GithubReleases []*GithubRelease
-
-func (gr GithubReleases) config(cfg config) {
-	for _i := range gr {
-		gr[_i].config = cfg
-	}
-}

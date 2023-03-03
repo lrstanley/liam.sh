@@ -23,11 +23,9 @@ import (
 // GithubAssetQuery is the builder for querying GithubAsset entities.
 type GithubAssetQuery struct {
 	config
-	limit       *int
-	offset      *int
-	unique      *bool
+	ctx         *QueryContext
 	order       []OrderFunc
-	fields      []string
+	inters      []Interceptor
 	predicates  []predicate.GithubAsset
 	withRelease *GithubReleaseQuery
 	withFKs     bool
@@ -44,26 +42,26 @@ func (gaq *GithubAssetQuery) Where(ps ...predicate.GithubAsset) *GithubAssetQuer
 	return gaq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (gaq *GithubAssetQuery) Limit(limit int) *GithubAssetQuery {
-	gaq.limit = &limit
+	gaq.ctx.Limit = &limit
 	return gaq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (gaq *GithubAssetQuery) Offset(offset int) *GithubAssetQuery {
-	gaq.offset = &offset
+	gaq.ctx.Offset = &offset
 	return gaq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (gaq *GithubAssetQuery) Unique(unique bool) *GithubAssetQuery {
-	gaq.unique = &unique
+	gaq.ctx.Unique = &unique
 	return gaq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (gaq *GithubAssetQuery) Order(o ...OrderFunc) *GithubAssetQuery {
 	gaq.order = append(gaq.order, o...)
 	return gaq
@@ -71,7 +69,7 @@ func (gaq *GithubAssetQuery) Order(o ...OrderFunc) *GithubAssetQuery {
 
 // QueryRelease chains the current query on the "release" edge.
 func (gaq *GithubAssetQuery) QueryRelease() *GithubReleaseQuery {
-	query := &GithubReleaseQuery{config: gaq.config}
+	query := (&GithubReleaseClient{config: gaq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := gaq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -94,7 +92,7 @@ func (gaq *GithubAssetQuery) QueryRelease() *GithubReleaseQuery {
 // First returns the first GithubAsset entity from the query.
 // Returns a *NotFoundError when no GithubAsset was found.
 func (gaq *GithubAssetQuery) First(ctx context.Context) (*GithubAsset, error) {
-	nodes, err := gaq.Limit(1).All(ctx)
+	nodes, err := gaq.Limit(1).All(setContextOp(ctx, gaq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +115,7 @@ func (gaq *GithubAssetQuery) FirstX(ctx context.Context) *GithubAsset {
 // Returns a *NotFoundError when no GithubAsset ID was found.
 func (gaq *GithubAssetQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = gaq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = gaq.Limit(1).IDs(setContextOp(ctx, gaq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -140,7 +138,7 @@ func (gaq *GithubAssetQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubAsset entity is found.
 // Returns a *NotFoundError when no GithubAsset entities are found.
 func (gaq *GithubAssetQuery) Only(ctx context.Context) (*GithubAsset, error) {
-	nodes, err := gaq.Limit(2).All(ctx)
+	nodes, err := gaq.Limit(2).All(setContextOp(ctx, gaq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -168,7 +166,7 @@ func (gaq *GithubAssetQuery) OnlyX(ctx context.Context) *GithubAsset {
 // Returns a *NotFoundError when no entities are found.
 func (gaq *GithubAssetQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = gaq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = gaq.Limit(2).IDs(setContextOp(ctx, gaq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -193,10 +191,12 @@ func (gaq *GithubAssetQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubAssets.
 func (gaq *GithubAssetQuery) All(ctx context.Context) ([]*GithubAsset, error) {
+	ctx = setContextOp(ctx, gaq.ctx, "All")
 	if err := gaq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return gaq.sqlAll(ctx)
+	qr := querierAll[[]*GithubAsset, *GithubAssetQuery]()
+	return withInterceptors[[]*GithubAsset](ctx, gaq, qr, gaq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -209,9 +209,12 @@ func (gaq *GithubAssetQuery) AllX(ctx context.Context) []*GithubAsset {
 }
 
 // IDs executes the query and returns a list of GithubAsset IDs.
-func (gaq *GithubAssetQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
-	if err := gaq.Select(githubasset.FieldID).Scan(ctx, &ids); err != nil {
+func (gaq *GithubAssetQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if gaq.ctx.Unique == nil && gaq.path != nil {
+		gaq.Unique(true)
+	}
+	ctx = setContextOp(ctx, gaq.ctx, "IDs")
+	if err = gaq.Select(githubasset.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -228,10 +231,11 @@ func (gaq *GithubAssetQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (gaq *GithubAssetQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, gaq.ctx, "Count")
 	if err := gaq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return gaq.sqlCount(ctx)
+	return withInterceptors[int](ctx, gaq, querierCount[*GithubAssetQuery](), gaq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -245,10 +249,15 @@ func (gaq *GithubAssetQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (gaq *GithubAssetQuery) Exist(ctx context.Context) (bool, error) {
-	if err := gaq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = setContextOp(ctx, gaq.ctx, "Exist")
+	switch _, err := gaq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return gaq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -268,22 +277,21 @@ func (gaq *GithubAssetQuery) Clone() *GithubAssetQuery {
 	}
 	return &GithubAssetQuery{
 		config:      gaq.config,
-		limit:       gaq.limit,
-		offset:      gaq.offset,
+		ctx:         gaq.ctx.Clone(),
 		order:       append([]OrderFunc{}, gaq.order...),
+		inters:      append([]Interceptor{}, gaq.inters...),
 		predicates:  append([]predicate.GithubAsset{}, gaq.predicates...),
 		withRelease: gaq.withRelease.Clone(),
 		// clone intermediate query.
-		sql:    gaq.sql.Clone(),
-		path:   gaq.path,
-		unique: gaq.unique,
+		sql:  gaq.sql.Clone(),
+		path: gaq.path,
 	}
 }
 
 // WithRelease tells the query-builder to eager-load the nodes that are connected to
 // the "release" edge. The optional arguments are used to configure the query builder of the edge.
 func (gaq *GithubAssetQuery) WithRelease(opts ...func(*GithubReleaseQuery)) *GithubAssetQuery {
-	query := &GithubReleaseQuery{config: gaq.config}
+	query := (&GithubReleaseClient{config: gaq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
@@ -306,16 +314,11 @@ func (gaq *GithubAssetQuery) WithRelease(opts ...func(*GithubReleaseQuery)) *Git
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (gaq *GithubAssetQuery) GroupBy(field string, fields ...string) *GithubAssetGroupBy {
-	grbuild := &GithubAssetGroupBy{config: gaq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := gaq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return gaq.sqlQuery(ctx), nil
-	}
+	gaq.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &GithubAssetGroupBy{build: gaq}
+	grbuild.flds = &gaq.ctx.Fields
 	grbuild.label = githubasset.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -332,11 +335,11 @@ func (gaq *GithubAssetQuery) GroupBy(field string, fields ...string) *GithubAsse
 //		Select(githubasset.FieldAssetID).
 //		Scan(ctx, &v)
 func (gaq *GithubAssetQuery) Select(fields ...string) *GithubAssetSelect {
-	gaq.fields = append(gaq.fields, fields...)
-	selbuild := &GithubAssetSelect{GithubAssetQuery: gaq}
-	selbuild.label = githubasset.Label
-	selbuild.flds, selbuild.scan = &gaq.fields, selbuild.Scan
-	return selbuild
+	gaq.ctx.Fields = append(gaq.ctx.Fields, fields...)
+	sbuild := &GithubAssetSelect{GithubAssetQuery: gaq}
+	sbuild.label = githubasset.Label
+	sbuild.flds, sbuild.scan = &gaq.ctx.Fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a GithubAssetSelect configured with the given aggregations.
@@ -345,7 +348,17 @@ func (gaq *GithubAssetQuery) Aggregate(fns ...AggregateFunc) *GithubAssetSelect 
 }
 
 func (gaq *GithubAssetQuery) prepareQuery(ctx context.Context) error {
-	for _, f := range gaq.fields {
+	for _, inter := range gaq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, gaq); err != nil {
+				return err
+			}
+		}
+	}
+	for _, f := range gaq.ctx.Fields {
 		if !githubasset.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -429,6 +442,9 @@ func (gaq *GithubAssetQuery) loadRelease(ctx context.Context, query *GithubRelea
 		}
 		nodeids[fk] = append(nodeids[fk], nodes[i])
 	}
+	if len(ids) == 0 {
+		return nil
+	}
 	query.Where(githubrelease.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -451,41 +467,22 @@ func (gaq *GithubAssetQuery) sqlCount(ctx context.Context) (int, error) {
 	if len(gaq.modifiers) > 0 {
 		_spec.Modifiers = gaq.modifiers
 	}
-	_spec.Node.Columns = gaq.fields
-	if len(gaq.fields) > 0 {
-		_spec.Unique = gaq.unique != nil && *gaq.unique
+	_spec.Node.Columns = gaq.ctx.Fields
+	if len(gaq.ctx.Fields) > 0 {
+		_spec.Unique = gaq.ctx.Unique != nil && *gaq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, gaq.driver, _spec)
 }
 
-func (gaq *GithubAssetQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := gaq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (gaq *GithubAssetQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubasset.Table,
-			Columns: githubasset.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubasset.FieldID,
-			},
-		},
-		From:   gaq.sql,
-		Unique: true,
-	}
-	if unique := gaq.unique; unique != nil {
+	_spec := sqlgraph.NewQuerySpec(githubasset.Table, githubasset.Columns, sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt))
+	_spec.From = gaq.sql
+	if unique := gaq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if gaq.path != nil {
+		_spec.Unique = true
 	}
-	if fields := gaq.fields; len(fields) > 0 {
+	if fields := gaq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, githubasset.FieldID)
 		for i := range fields {
@@ -501,10 +498,10 @@ func (gaq *GithubAssetQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := gaq.limit; limit != nil {
+	if limit := gaq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := gaq.offset; offset != nil {
+	if offset := gaq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := gaq.order; len(ps) > 0 {
@@ -520,7 +517,7 @@ func (gaq *GithubAssetQuery) querySpec() *sqlgraph.QuerySpec {
 func (gaq *GithubAssetQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(gaq.driver.Dialect())
 	t1 := builder.Table(githubasset.Table)
-	columns := gaq.fields
+	columns := gaq.ctx.Fields
 	if len(columns) == 0 {
 		columns = githubasset.Columns
 	}
@@ -529,7 +526,7 @@ func (gaq *GithubAssetQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = gaq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if gaq.unique != nil && *gaq.unique {
+	if gaq.ctx.Unique != nil && *gaq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range gaq.predicates {
@@ -538,12 +535,12 @@ func (gaq *GithubAssetQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range gaq.order {
 		p(selector)
 	}
-	if offset := gaq.offset; offset != nil {
+	if offset := gaq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := gaq.limit; limit != nil {
+	if limit := gaq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -551,13 +548,8 @@ func (gaq *GithubAssetQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // GithubAssetGroupBy is the group-by builder for GithubAsset entities.
 type GithubAssetGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *GithubAssetQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -566,58 +558,46 @@ func (gagb *GithubAssetGroupBy) Aggregate(fns ...AggregateFunc) *GithubAssetGrou
 	return gagb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (gagb *GithubAssetGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := gagb.path(ctx)
-	if err != nil {
+	ctx = setContextOp(ctx, gagb.build.ctx, "GroupBy")
+	if err := gagb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	gagb.sql = query
-	return gagb.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubAssetQuery, *GithubAssetGroupBy](ctx, gagb.build, gagb, gagb.build.inters, v)
 }
 
-func (gagb *GithubAssetGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range gagb.fields {
-		if !githubasset.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (gagb *GithubAssetGroupBy) sqlScan(ctx context.Context, root *GithubAssetQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(gagb.fns))
+	for _, fn := range gagb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := gagb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*gagb.flds)+len(gagb.fns))
+		for _, f := range *gagb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*gagb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := gagb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := gagb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (gagb *GithubAssetGroupBy) sqlQuery() *sql.Selector {
-	selector := gagb.sql.Select()
-	aggregation := make([]string, 0, len(gagb.fns))
-	for _, fn := range gagb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(gagb.fields)+len(gagb.fns))
-		for _, f := range gagb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(gagb.fields...)...)
-}
-
 // GithubAssetSelect is the builder for selecting fields of GithubAsset entities.
 type GithubAssetSelect struct {
 	*GithubAssetQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -628,26 +608,27 @@ func (gas *GithubAssetSelect) Aggregate(fns ...AggregateFunc) *GithubAssetSelect
 
 // Scan applies the selector query and scans the result into the given value.
 func (gas *GithubAssetSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, gas.ctx, "Select")
 	if err := gas.prepareQuery(ctx); err != nil {
 		return err
 	}
-	gas.sql = gas.GithubAssetQuery.sqlQuery(ctx)
-	return gas.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubAssetQuery, *GithubAssetSelect](ctx, gas.GithubAssetQuery, gas, gas.inters, v)
 }
 
-func (gas *GithubAssetSelect) sqlScan(ctx context.Context, v any) error {
+func (gas *GithubAssetSelect) sqlScan(ctx context.Context, root *GithubAssetQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(gas.fns))
 	for _, fn := range gas.fns {
-		aggregation = append(aggregation, fn(gas.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*gas.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		gas.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		gas.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := gas.sql.Query()
+	query, args := selector.Query()
 	if err := gas.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 )
 
@@ -128,49 +128,7 @@ func (ggc *GithubGistCreate) Mutation() *GithubGistMutation {
 
 // Save creates the GithubGist in the database.
 func (ggc *GithubGistCreate) Save(ctx context.Context) (*GithubGist, error) {
-	var (
-		err  error
-		node *GithubGist
-	)
-	if len(ggc.hooks) == 0 {
-		if err = ggc.check(); err != nil {
-			return nil, err
-		}
-		node, err = ggc.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubGistMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = ggc.check(); err != nil {
-				return nil, err
-			}
-			ggc.mutation = mutation
-			if node, err = ggc.sqlSave(ctx); err != nil {
-				return nil, err
-			}
-			mutation.id = &node.ID
-			mutation.done = true
-			return node, err
-		})
-		for i := len(ggc.hooks) - 1; i >= 0; i-- {
-			if ggc.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = ggc.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, ggc.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubGist)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubGistMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubGist, GithubGistMutation](ctx, ggc.sqlSave, ggc.mutation, ggc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.
@@ -239,6 +197,9 @@ func (ggc *GithubGistCreate) check() error {
 }
 
 func (ggc *GithubGistCreate) sqlSave(ctx context.Context) (*GithubGist, error) {
+	if err := ggc.check(); err != nil {
+		return nil, err
+	}
 	_node, _spec := ggc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, ggc.driver, _spec); err != nil {
 		if sqlgraph.IsConstraintError(err) {
@@ -248,19 +209,15 @@ func (ggc *GithubGistCreate) sqlSave(ctx context.Context) (*GithubGist, error) {
 	}
 	id := _spec.ID.Value.(int64)
 	_node.ID = int(id)
+	ggc.mutation.id = &_node.ID
+	ggc.mutation.done = true
 	return _node, nil
 }
 
 func (ggc *GithubGistCreate) createSpec() (*GithubGist, *sqlgraph.CreateSpec) {
 	var (
 		_node = &GithubGist{config: ggc.config}
-		_spec = &sqlgraph.CreateSpec{
-			Table: githubgist.Table,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubgist.FieldID,
-			},
-		}
+		_spec = sqlgraph.NewCreateSpec(githubgist.Table, sqlgraph.NewFieldSpec(githubgist.FieldID, field.TypeInt))
 	)
 	_spec.OnConflict = ggc.conflict
 	if value, ok := ggc.mutation.GistID(); ok {

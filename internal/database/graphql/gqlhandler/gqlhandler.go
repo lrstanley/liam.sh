@@ -14,7 +14,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/clix"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/models"
@@ -3703,8 +3703,10 @@ input UpdateLabelInput {
   name: String
   addPostIDs: [ID!]
   removePostIDs: [ID!]
+  clearPosts: Boolean
   addGithubRepositoryIDs: [ID!]
   removeGithubRepositoryIDs: [ID!]
+  clearGithubRepositories: Boolean
 }
 """
 UpdatePostInput is used for update Post object.
@@ -3719,6 +3721,7 @@ input UpdatePostInput {
   public: Boolean
   addLabelIDs: [ID!]
   removeLabelIDs: [ID!]
+  clearLabels: Boolean
 }
 type User implements Node {
   id: ID!
@@ -5875,7 +5878,7 @@ func (ec *executionContext) _GithubAsset_uploader(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubAsset_uploader(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6541,7 +6544,7 @@ func (ec *executionContext) _GithubEvent_actor(ctx context.Context, field graphq
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEvent_actor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6657,7 +6660,7 @@ func (ec *executionContext) _GithubEvent_repo(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.Repository)
 	fc.Result = res
-	return ec.marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐRepository(ctx, field.Selections, res)
+	return ec.marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐRepository(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEvent_repo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7442,7 +7445,7 @@ func (ec *executionContext) _GithubGist_owner(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubGist_owner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8645,7 +8648,7 @@ func (ec *executionContext) _GithubRelease_author(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRelease_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9348,7 +9351,7 @@ func (ec *executionContext) _GithubRepository_owner(ctx context.Context, field g
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_owner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9977,7 +9980,7 @@ func (ec *executionContext) _GithubRepository_license(ctx context.Context, field
 	}
 	res := resTmp.(*github.License)
 	fc.Result = res
-	return ec.marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐLicense(ctx, field.Selections, res)
+	return ec.marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐLicense(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_license(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11242,7 +11245,7 @@ func (ec *executionContext) _GithubUser_createdAt(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.Timestamp)
 	fc.Result = res
-	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐTimestamp(ctx, field.Selections, res)
+	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubUser_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11287,7 +11290,7 @@ func (ec *executionContext) _GithubUser_updatedAt(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.Timestamp)
 	fc.Result = res
-	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐTimestamp(ctx, field.Selections, res)
+	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubUser_updatedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12135,7 +12138,6 @@ func (ec *executionContext) _Mutation_ping(ctx context.Context, field graphql.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -12176,7 +12178,6 @@ func (ec *executionContext) _Mutation_createLabel(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12245,7 +12246,6 @@ func (ec *executionContext) _Mutation_updateLabel(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12314,7 +12314,6 @@ func (ec *executionContext) _Mutation_deleteLabel(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12369,7 +12368,6 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12452,7 +12450,6 @@ func (ec *executionContext) _Mutation_updatePost(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12535,7 +12532,6 @@ func (ec *executionContext) _Mutation_deletePost(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -12590,7 +12586,6 @@ func (ec *executionContext) _Mutation_regeneratePosts(ctx context.Context, field
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -13679,7 +13674,6 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -13731,7 +13725,6 @@ func (ec *executionContext) _Query_nodes(ctx context.Context, field graphql.Coll
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -13786,7 +13779,6 @@ func (ec *executionContext) _Query_githubAssets(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -13849,7 +13841,6 @@ func (ec *executionContext) _Query_githubEvents(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -13912,7 +13903,6 @@ func (ec *executionContext) _Query_githubGists(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -13975,7 +13965,6 @@ func (ec *executionContext) _Query_githubReleases(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14038,7 +14027,6 @@ func (ec *executionContext) _Query_githubRepositories(ctx context.Context, field
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14101,7 +14089,6 @@ func (ec *executionContext) _Query_labels(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14164,7 +14151,6 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14227,7 +14213,6 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14290,7 +14275,6 @@ func (ec *executionContext) _Query_githubUser(ctx context.Context, field graphql
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14300,7 +14284,7 @@ func (ec *executionContext) _Query_githubUser(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14362,7 +14346,6 @@ func (ec *executionContext) _Query_codingStats(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14418,7 +14401,6 @@ func (ec *executionContext) _Query_githubStats(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14480,7 +14462,6 @@ func (ec *executionContext) _Query_self(ctx context.Context, field graphql.Colle
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -14547,7 +14528,6 @@ func (ec *executionContext) _Query_version(ctx context.Context, field graphql.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -14611,7 +14591,6 @@ func (ec *executionContext) _Query___type(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -14685,7 +14664,6 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
-		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -24302,7 +24280,7 @@ func (ec *executionContext) unmarshalInputUpdateLabelInput(ctx context.Context, 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"updateTime", "name", "addPostIDs", "removePostIDs", "addGithubRepositoryIDs", "removeGithubRepositoryIDs"}
+	fieldsInOrder := [...]string{"updateTime", "name", "addPostIDs", "removePostIDs", "clearPosts", "addGithubRepositoryIDs", "removeGithubRepositoryIDs", "clearGithubRepositories"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -24341,6 +24319,14 @@ func (ec *executionContext) unmarshalInputUpdateLabelInput(ctx context.Context, 
 			if err != nil {
 				return it, err
 			}
+		case "clearPosts":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearPosts"))
+			it.ClearPosts, err = ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		case "addGithubRepositoryIDs":
 			var err error
 
@@ -24357,6 +24343,14 @@ func (ec *executionContext) unmarshalInputUpdateLabelInput(ctx context.Context, 
 			if err != nil {
 				return it, err
 			}
+		case "clearGithubRepositories":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearGithubRepositories"))
+			it.ClearGithubRepositories, err = ec.unmarshalOBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -24370,7 +24364,7 @@ func (ec *executionContext) unmarshalInputUpdatePostInput(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"updateTime", "slug", "title", "content", "publishedAt", "public", "addLabelIDs", "removeLabelIDs"}
+	fieldsInOrder := [...]string{"updateTime", "slug", "title", "content", "publishedAt", "public", "addLabelIDs", "removeLabelIDs", "clearLabels"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -24438,6 +24432,14 @@ func (ec *executionContext) unmarshalInputUpdatePostInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("removeLabelIDs"))
 			it.RemoveLabelIDs, err = ec.unmarshalOID2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "clearLabels":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clearLabels"))
+			it.ClearLabels, err = ec.unmarshalOBoolean2bool(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -27233,7 +27235,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	})
 
 	out := graphql.NewFieldSet(fields)
-	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -27255,71 +27256,47 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_createLabel(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updateLabel":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateLabel(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "deleteLabel":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteLabel(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "createPost":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createPost(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "updatePost":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updatePost(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "deletePost":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deletePost(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "regeneratePosts":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_regeneratePosts(ctx, field)
 			})
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
 	}
 	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
 	return out
 }
 
@@ -27584,7 +27561,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	})
 
 	out := graphql.NewFieldSet(fields)
-	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -27624,9 +27600,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_nodes(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27647,9 +27620,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubAssets(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27670,9 +27640,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubEvents(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27693,9 +27660,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubGists(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27716,9 +27680,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubReleases(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27739,9 +27700,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubRepositories(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27762,9 +27720,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_labels(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27785,9 +27740,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_posts(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27808,9 +27760,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_users(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27831,9 +27780,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubUser(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27854,9 +27800,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_codingStats(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27877,9 +27820,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_githubStats(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27920,9 +27860,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_version(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
 				return res
 			}
 
@@ -27950,9 +27887,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		}
 	}
 	out.Dispatch()
-	if invalids > 0 {
-		return graphql.Null
-	}
 	return out
 }
 
@@ -28668,7 +28602,7 @@ func (ec *executionContext) marshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrst
 	return v
 }
 
-func (ec *executionContext) marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐRepository(ctx context.Context, sel ast.SelectionSet, v *github.Repository) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐRepository(ctx context.Context, sel ast.SelectionSet, v *github.Repository) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28822,11 +28756,11 @@ func (ec *executionContext) marshalNGithubStats2ᚖgithubᚗcomᚋlrstanleyᚋli
 	return ec._GithubStats(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGithubUser2githubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v github.User) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubUser2githubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v github.User) graphql.Marshaler {
 	return ec._GithubUser(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v *github.User) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v *github.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29801,7 +29735,7 @@ func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrs
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐLicense(ctx context.Context, sel ast.SelectionSet, v *github.License) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐLicense(ctx context.Context, sel ast.SelectionSet, v *github.License) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -30563,7 +30497,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv48ᚋgithubᚐTimestamp(ctx context.Context, sel ast.SelectionSet, v *github.Timestamp) graphql.Marshaler {
+func (ec *executionContext) marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx context.Context, sel ast.SelectionSet, v *github.Timestamp) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

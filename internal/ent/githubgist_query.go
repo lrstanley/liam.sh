@@ -22,11 +22,9 @@ import (
 // GithubGistQuery is the builder for querying GithubGist entities.
 type GithubGistQuery struct {
 	config
-	limit      *int
-	offset     *int
-	unique     *bool
+	ctx        *QueryContext
 	order      []OrderFunc
-	fields     []string
+	inters     []Interceptor
 	predicates []predicate.GithubGist
 	modifiers  []func(*sql.Selector)
 	loadTotal  []func(context.Context, []*GithubGist) error
@@ -41,26 +39,26 @@ func (ggq *GithubGistQuery) Where(ps ...predicate.GithubGist) *GithubGistQuery {
 	return ggq
 }
 
-// Limit adds a limit step to the query.
+// Limit the number of records to be returned by this query.
 func (ggq *GithubGistQuery) Limit(limit int) *GithubGistQuery {
-	ggq.limit = &limit
+	ggq.ctx.Limit = &limit
 	return ggq
 }
 
-// Offset adds an offset step to the query.
+// Offset to start from.
 func (ggq *GithubGistQuery) Offset(offset int) *GithubGistQuery {
-	ggq.offset = &offset
+	ggq.ctx.Offset = &offset
 	return ggq
 }
 
 // Unique configures the query builder to filter duplicate records on query.
 // By default, unique is set to true, and can be disabled using this method.
 func (ggq *GithubGistQuery) Unique(unique bool) *GithubGistQuery {
-	ggq.unique = &unique
+	ggq.ctx.Unique = &unique
 	return ggq
 }
 
-// Order adds an order step to the query.
+// Order specifies how the records should be ordered.
 func (ggq *GithubGistQuery) Order(o ...OrderFunc) *GithubGistQuery {
 	ggq.order = append(ggq.order, o...)
 	return ggq
@@ -69,7 +67,7 @@ func (ggq *GithubGistQuery) Order(o ...OrderFunc) *GithubGistQuery {
 // First returns the first GithubGist entity from the query.
 // Returns a *NotFoundError when no GithubGist was found.
 func (ggq *GithubGistQuery) First(ctx context.Context) (*GithubGist, error) {
-	nodes, err := ggq.Limit(1).All(ctx)
+	nodes, err := ggq.Limit(1).All(setContextOp(ctx, ggq.ctx, "First"))
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +90,7 @@ func (ggq *GithubGistQuery) FirstX(ctx context.Context) *GithubGist {
 // Returns a *NotFoundError when no GithubGist ID was found.
 func (ggq *GithubGistQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ggq.Limit(1).IDs(ctx); err != nil {
+	if ids, err = ggq.Limit(1).IDs(setContextOp(ctx, ggq.ctx, "FirstID")); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -115,7 +113,7 @@ func (ggq *GithubGistQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubGist entity is found.
 // Returns a *NotFoundError when no GithubGist entities are found.
 func (ggq *GithubGistQuery) Only(ctx context.Context) (*GithubGist, error) {
-	nodes, err := ggq.Limit(2).All(ctx)
+	nodes, err := ggq.Limit(2).All(setContextOp(ctx, ggq.ctx, "Only"))
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +141,7 @@ func (ggq *GithubGistQuery) OnlyX(ctx context.Context) *GithubGist {
 // Returns a *NotFoundError when no entities are found.
 func (ggq *GithubGistQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ggq.Limit(2).IDs(ctx); err != nil {
+	if ids, err = ggq.Limit(2).IDs(setContextOp(ctx, ggq.ctx, "OnlyID")); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -168,10 +166,12 @@ func (ggq *GithubGistQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubGists.
 func (ggq *GithubGistQuery) All(ctx context.Context) ([]*GithubGist, error) {
+	ctx = setContextOp(ctx, ggq.ctx, "All")
 	if err := ggq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
-	return ggq.sqlAll(ctx)
+	qr := querierAll[[]*GithubGist, *GithubGistQuery]()
+	return withInterceptors[[]*GithubGist](ctx, ggq, qr, ggq.inters)
 }
 
 // AllX is like All, but panics if an error occurs.
@@ -184,9 +184,12 @@ func (ggq *GithubGistQuery) AllX(ctx context.Context) []*GithubGist {
 }
 
 // IDs executes the query and returns a list of GithubGist IDs.
-func (ggq *GithubGistQuery) IDs(ctx context.Context) ([]int, error) {
-	var ids []int
-	if err := ggq.Select(githubgist.FieldID).Scan(ctx, &ids); err != nil {
+func (ggq *GithubGistQuery) IDs(ctx context.Context) (ids []int, err error) {
+	if ggq.ctx.Unique == nil && ggq.path != nil {
+		ggq.Unique(true)
+	}
+	ctx = setContextOp(ctx, ggq.ctx, "IDs")
+	if err = ggq.Select(githubgist.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
 	return ids, nil
@@ -203,10 +206,11 @@ func (ggq *GithubGistQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (ggq *GithubGistQuery) Count(ctx context.Context) (int, error) {
+	ctx = setContextOp(ctx, ggq.ctx, "Count")
 	if err := ggq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
-	return ggq.sqlCount(ctx)
+	return withInterceptors[int](ctx, ggq, querierCount[*GithubGistQuery](), ggq.inters)
 }
 
 // CountX is like Count, but panics if an error occurs.
@@ -220,10 +224,15 @@ func (ggq *GithubGistQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (ggq *GithubGistQuery) Exist(ctx context.Context) (bool, error) {
-	if err := ggq.prepareQuery(ctx); err != nil {
-		return false, err
+	ctx = setContextOp(ctx, ggq.ctx, "Exist")
+	switch _, err := ggq.FirstID(ctx); {
+	case IsNotFound(err):
+		return false, nil
+	case err != nil:
+		return false, fmt.Errorf("ent: check existence: %w", err)
+	default:
+		return true, nil
 	}
-	return ggq.sqlExist(ctx)
 }
 
 // ExistX is like Exist, but panics if an error occurs.
@@ -243,14 +252,13 @@ func (ggq *GithubGistQuery) Clone() *GithubGistQuery {
 	}
 	return &GithubGistQuery{
 		config:     ggq.config,
-		limit:      ggq.limit,
-		offset:     ggq.offset,
+		ctx:        ggq.ctx.Clone(),
 		order:      append([]OrderFunc{}, ggq.order...),
+		inters:     append([]Interceptor{}, ggq.inters...),
 		predicates: append([]predicate.GithubGist{}, ggq.predicates...),
 		// clone intermediate query.
-		sql:    ggq.sql.Clone(),
-		path:   ggq.path,
-		unique: ggq.unique,
+		sql:  ggq.sql.Clone(),
+		path: ggq.path,
 	}
 }
 
@@ -269,16 +277,11 @@ func (ggq *GithubGistQuery) Clone() *GithubGistQuery {
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (ggq *GithubGistQuery) GroupBy(field string, fields ...string) *GithubGistGroupBy {
-	grbuild := &GithubGistGroupBy{config: ggq.config}
-	grbuild.fields = append([]string{field}, fields...)
-	grbuild.path = func(ctx context.Context) (prev *sql.Selector, err error) {
-		if err := ggq.prepareQuery(ctx); err != nil {
-			return nil, err
-		}
-		return ggq.sqlQuery(ctx), nil
-	}
+	ggq.ctx.Fields = append([]string{field}, fields...)
+	grbuild := &GithubGistGroupBy{build: ggq}
+	grbuild.flds = &ggq.ctx.Fields
 	grbuild.label = githubgist.Label
-	grbuild.flds, grbuild.scan = &grbuild.fields, grbuild.Scan
+	grbuild.scan = grbuild.Scan
 	return grbuild
 }
 
@@ -295,11 +298,11 @@ func (ggq *GithubGistQuery) GroupBy(field string, fields ...string) *GithubGistG
 //		Select(githubgist.FieldGistID).
 //		Scan(ctx, &v)
 func (ggq *GithubGistQuery) Select(fields ...string) *GithubGistSelect {
-	ggq.fields = append(ggq.fields, fields...)
-	selbuild := &GithubGistSelect{GithubGistQuery: ggq}
-	selbuild.label = githubgist.Label
-	selbuild.flds, selbuild.scan = &ggq.fields, selbuild.Scan
-	return selbuild
+	ggq.ctx.Fields = append(ggq.ctx.Fields, fields...)
+	sbuild := &GithubGistSelect{GithubGistQuery: ggq}
+	sbuild.label = githubgist.Label
+	sbuild.flds, sbuild.scan = &ggq.ctx.Fields, sbuild.Scan
+	return sbuild
 }
 
 // Aggregate returns a GithubGistSelect configured with the given aggregations.
@@ -308,7 +311,17 @@ func (ggq *GithubGistQuery) Aggregate(fns ...AggregateFunc) *GithubGistSelect {
 }
 
 func (ggq *GithubGistQuery) prepareQuery(ctx context.Context) error {
-	for _, f := range ggq.fields {
+	for _, inter := range ggq.inters {
+		if inter == nil {
+			return fmt.Errorf("ent: uninitialized interceptor (forgotten import ent/runtime?)")
+		}
+		if trv, ok := inter.(Traverser); ok {
+			if err := trv.Traverse(ctx, ggq); err != nil {
+				return err
+			}
+		}
+	}
+	for _, f := range ggq.ctx.Fields {
 		if !githubgist.ValidColumn(f) {
 			return &ValidationError{Name: f, err: fmt.Errorf("ent: invalid field %q for query", f)}
 		}
@@ -367,41 +380,22 @@ func (ggq *GithubGistQuery) sqlCount(ctx context.Context) (int, error) {
 	if len(ggq.modifiers) > 0 {
 		_spec.Modifiers = ggq.modifiers
 	}
-	_spec.Node.Columns = ggq.fields
-	if len(ggq.fields) > 0 {
-		_spec.Unique = ggq.unique != nil && *ggq.unique
+	_spec.Node.Columns = ggq.ctx.Fields
+	if len(ggq.ctx.Fields) > 0 {
+		_spec.Unique = ggq.ctx.Unique != nil && *ggq.ctx.Unique
 	}
 	return sqlgraph.CountNodes(ctx, ggq.driver, _spec)
 }
 
-func (ggq *GithubGistQuery) sqlExist(ctx context.Context) (bool, error) {
-	switch _, err := ggq.FirstID(ctx); {
-	case IsNotFound(err):
-		return false, nil
-	case err != nil:
-		return false, fmt.Errorf("ent: check existence: %w", err)
-	default:
-		return true, nil
-	}
-}
-
 func (ggq *GithubGistQuery) querySpec() *sqlgraph.QuerySpec {
-	_spec := &sqlgraph.QuerySpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubgist.Table,
-			Columns: githubgist.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubgist.FieldID,
-			},
-		},
-		From:   ggq.sql,
-		Unique: true,
-	}
-	if unique := ggq.unique; unique != nil {
+	_spec := sqlgraph.NewQuerySpec(githubgist.Table, githubgist.Columns, sqlgraph.NewFieldSpec(githubgist.FieldID, field.TypeInt))
+	_spec.From = ggq.sql
+	if unique := ggq.ctx.Unique; unique != nil {
 		_spec.Unique = *unique
+	} else if ggq.path != nil {
+		_spec.Unique = true
 	}
-	if fields := ggq.fields; len(fields) > 0 {
+	if fields := ggq.ctx.Fields; len(fields) > 0 {
 		_spec.Node.Columns = make([]string, 0, len(fields))
 		_spec.Node.Columns = append(_spec.Node.Columns, githubgist.FieldID)
 		for i := range fields {
@@ -417,10 +411,10 @@ func (ggq *GithubGistQuery) querySpec() *sqlgraph.QuerySpec {
 			}
 		}
 	}
-	if limit := ggq.limit; limit != nil {
+	if limit := ggq.ctx.Limit; limit != nil {
 		_spec.Limit = *limit
 	}
-	if offset := ggq.offset; offset != nil {
+	if offset := ggq.ctx.Offset; offset != nil {
 		_spec.Offset = *offset
 	}
 	if ps := ggq.order; len(ps) > 0 {
@@ -436,7 +430,7 @@ func (ggq *GithubGistQuery) querySpec() *sqlgraph.QuerySpec {
 func (ggq *GithubGistQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	builder := sql.Dialect(ggq.driver.Dialect())
 	t1 := builder.Table(githubgist.Table)
-	columns := ggq.fields
+	columns := ggq.ctx.Fields
 	if len(columns) == 0 {
 		columns = githubgist.Columns
 	}
@@ -445,7 +439,7 @@ func (ggq *GithubGistQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector = ggq.sql
 		selector.Select(selector.Columns(columns...)...)
 	}
-	if ggq.unique != nil && *ggq.unique {
+	if ggq.ctx.Unique != nil && *ggq.ctx.Unique {
 		selector.Distinct()
 	}
 	for _, p := range ggq.predicates {
@@ -454,12 +448,12 @@ func (ggq *GithubGistQuery) sqlQuery(ctx context.Context) *sql.Selector {
 	for _, p := range ggq.order {
 		p(selector)
 	}
-	if offset := ggq.offset; offset != nil {
+	if offset := ggq.ctx.Offset; offset != nil {
 		// limit is mandatory for offset clause. We start
 		// with default value, and override it below if needed.
 		selector.Offset(*offset).Limit(math.MaxInt32)
 	}
-	if limit := ggq.limit; limit != nil {
+	if limit := ggq.ctx.Limit; limit != nil {
 		selector.Limit(*limit)
 	}
 	return selector
@@ -467,13 +461,8 @@ func (ggq *GithubGistQuery) sqlQuery(ctx context.Context) *sql.Selector {
 
 // GithubGistGroupBy is the group-by builder for GithubGist entities.
 type GithubGistGroupBy struct {
-	config
 	selector
-	fields []string
-	fns    []AggregateFunc
-	// intermediate query (i.e. traversal path).
-	sql  *sql.Selector
-	path func(context.Context) (*sql.Selector, error)
+	build *GithubGistQuery
 }
 
 // Aggregate adds the given aggregation functions to the group-by query.
@@ -482,58 +471,46 @@ func (gggb *GithubGistGroupBy) Aggregate(fns ...AggregateFunc) *GithubGistGroupB
 	return gggb
 }
 
-// Scan applies the group-by query and scans the result into the given value.
+// Scan applies the selector query and scans the result into the given value.
 func (gggb *GithubGistGroupBy) Scan(ctx context.Context, v any) error {
-	query, err := gggb.path(ctx)
-	if err != nil {
+	ctx = setContextOp(ctx, gggb.build.ctx, "GroupBy")
+	if err := gggb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
-	gggb.sql = query
-	return gggb.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubGistQuery, *GithubGistGroupBy](ctx, gggb.build, gggb, gggb.build.inters, v)
 }
 
-func (gggb *GithubGistGroupBy) sqlScan(ctx context.Context, v any) error {
-	for _, f := range gggb.fields {
-		if !githubgist.ValidColumn(f) {
-			return &ValidationError{Name: f, err: fmt.Errorf("invalid field %q for group-by", f)}
-		}
+func (gggb *GithubGistGroupBy) sqlScan(ctx context.Context, root *GithubGistQuery, v any) error {
+	selector := root.sqlQuery(ctx).Select()
+	aggregation := make([]string, 0, len(gggb.fns))
+	for _, fn := range gggb.fns {
+		aggregation = append(aggregation, fn(selector))
 	}
-	selector := gggb.sqlQuery()
+	if len(selector.SelectedColumns()) == 0 {
+		columns := make([]string, 0, len(*gggb.flds)+len(gggb.fns))
+		for _, f := range *gggb.flds {
+			columns = append(columns, selector.C(f))
+		}
+		columns = append(columns, aggregation...)
+		selector.Select(columns...)
+	}
+	selector.GroupBy(selector.Columns(*gggb.flds...)...)
 	if err := selector.Err(); err != nil {
 		return err
 	}
 	rows := &sql.Rows{}
 	query, args := selector.Query()
-	if err := gggb.driver.Query(ctx, query, args, rows); err != nil {
+	if err := gggb.build.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}
 	defer rows.Close()
 	return sql.ScanSlice(rows, v)
 }
 
-func (gggb *GithubGistGroupBy) sqlQuery() *sql.Selector {
-	selector := gggb.sql.Select()
-	aggregation := make([]string, 0, len(gggb.fns))
-	for _, fn := range gggb.fns {
-		aggregation = append(aggregation, fn(selector))
-	}
-	if len(selector.SelectedColumns()) == 0 {
-		columns := make([]string, 0, len(gggb.fields)+len(gggb.fns))
-		for _, f := range gggb.fields {
-			columns = append(columns, selector.C(f))
-		}
-		columns = append(columns, aggregation...)
-		selector.Select(columns...)
-	}
-	return selector.GroupBy(selector.Columns(gggb.fields...)...)
-}
-
 // GithubGistSelect is the builder for selecting fields of GithubGist entities.
 type GithubGistSelect struct {
 	*GithubGistQuery
 	selector
-	// intermediate query (i.e. traversal path).
-	sql *sql.Selector
 }
 
 // Aggregate adds the given aggregation functions to the selector query.
@@ -544,26 +521,27 @@ func (ggs *GithubGistSelect) Aggregate(fns ...AggregateFunc) *GithubGistSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ggs *GithubGistSelect) Scan(ctx context.Context, v any) error {
+	ctx = setContextOp(ctx, ggs.ctx, "Select")
 	if err := ggs.prepareQuery(ctx); err != nil {
 		return err
 	}
-	ggs.sql = ggs.GithubGistQuery.sqlQuery(ctx)
-	return ggs.sqlScan(ctx, v)
+	return scanWithInterceptors[*GithubGistQuery, *GithubGistSelect](ctx, ggs.GithubGistQuery, ggs, ggs.inters, v)
 }
 
-func (ggs *GithubGistSelect) sqlScan(ctx context.Context, v any) error {
+func (ggs *GithubGistSelect) sqlScan(ctx context.Context, root *GithubGistQuery, v any) error {
+	selector := root.sqlQuery(ctx)
 	aggregation := make([]string, 0, len(ggs.fns))
 	for _, fn := range ggs.fns {
-		aggregation = append(aggregation, fn(ggs.sql))
+		aggregation = append(aggregation, fn(selector))
 	}
 	switch n := len(*ggs.selector.flds); {
 	case n == 0 && len(aggregation) > 0:
-		ggs.sql.Select(aggregation...)
+		selector.Select(aggregation...)
 	case n != 0 && len(aggregation) > 0:
-		ggs.sql.AppendSelect(aggregation...)
+		selector.AppendSelect(aggregation...)
 	}
 	rows := &sql.Rows{}
-	query, args := ggs.sql.Query()
+	query, args := selector.Query()
 	if err := ggs.driver.Query(ctx, query, args, rows); err != nil {
 		return err
 	}

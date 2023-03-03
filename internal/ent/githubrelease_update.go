@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
@@ -176,40 +176,7 @@ func (gru *GithubReleaseUpdate) RemoveAssets(g ...*GithubAsset) *GithubReleaseUp
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gru *GithubReleaseUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(gru.hooks) == 0 {
-		if err = gru.check(); err != nil {
-			return 0, err
-		}
-		affected, err = gru.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubReleaseMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gru.check(); err != nil {
-				return 0, err
-			}
-			gru.mutation = mutation
-			affected, err = gru.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(gru.hooks) - 1; i >= 0; i-- {
-			if gru.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gru.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, gru.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubReleaseMutation](ctx, gru.sqlSave, gru.mutation, gru.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -263,16 +230,10 @@ func (gru *GithubReleaseUpdate) check() error {
 }
 
 func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubrelease.Table,
-			Columns: githubrelease.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrelease.FieldID,
-			},
-		},
+	if err := gru.check(); err != nil {
+		return n, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubrelease.Table, githubrelease.Columns, sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt))
 	if ps := gru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -413,6 +374,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 		}
 		return 0, err
 	}
+	gru.mutation.done = true
 	return n, nil
 }
 
@@ -563,6 +525,12 @@ func (gruo *GithubReleaseUpdateOne) RemoveAssets(g ...*GithubAsset) *GithubRelea
 	return gruo.RemoveAssetIDs(ids...)
 }
 
+// Where appends a list predicates to the GithubReleaseUpdate builder.
+func (gruo *GithubReleaseUpdateOne) Where(ps ...predicate.GithubRelease) *GithubReleaseUpdateOne {
+	gruo.mutation.Where(ps...)
+	return gruo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (gruo *GithubReleaseUpdateOne) Select(field string, fields ...string) *GithubReleaseUpdateOne {
@@ -572,46 +540,7 @@ func (gruo *GithubReleaseUpdateOne) Select(field string, fields ...string) *Gith
 
 // Save executes the query and returns the updated GithubRelease entity.
 func (gruo *GithubReleaseUpdateOne) Save(ctx context.Context) (*GithubRelease, error) {
-	var (
-		err  error
-		node *GithubRelease
-	)
-	if len(gruo.hooks) == 0 {
-		if err = gruo.check(); err != nil {
-			return nil, err
-		}
-		node, err = gruo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubReleaseMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gruo.check(); err != nil {
-				return nil, err
-			}
-			gruo.mutation = mutation
-			node, err = gruo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(gruo.hooks) - 1; i >= 0; i-- {
-			if gruo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gruo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, gruo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubRelease)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubReleaseMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubRelease, GithubReleaseMutation](ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -665,16 +594,10 @@ func (gruo *GithubReleaseUpdateOne) check() error {
 }
 
 func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubRelease, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubrelease.Table,
-			Columns: githubrelease.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrelease.FieldID,
-			},
-		},
+	if err := gruo.check(); err != nil {
+		return _node, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubrelease.Table, githubrelease.Columns, sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt))
 	id, ok := gruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GithubRelease.id" for update`)}
@@ -835,5 +758,6 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 		}
 		return nil, err
 	}
+	gruo.mutation.done = true
 	return _node, nil
 }

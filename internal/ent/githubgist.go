@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 )
 
@@ -175,7 +175,7 @@ func (gg *GithubGist) assignValues(columns []string, values []any) error {
 // Note that you need to call GithubGist.Unwrap() before calling this method if this GithubGist
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (gg *GithubGist) Update() *GithubGistUpdateOne {
-	return (&GithubGistClient{config: gg.config}).UpdateOne(gg)
+	return NewGithubGistClient(gg.config).UpdateOne(gg)
 }
 
 // Unwrap unwraps the GithubGist entity that was returned from a transaction after it was closed,
@@ -238,9 +238,3 @@ func (gg *GithubGist) String() string {
 
 // GithubGists is a parsable slice of GithubGist.
 type GithubGists []*GithubGist
-
-func (gg GithubGists) config(cfg config) {
-	for _i := range gg {
-		gg[_i].config = cfg
-	}
-}

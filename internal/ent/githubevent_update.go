@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/ent/predicate"
 )
@@ -116,40 +116,7 @@ func (geu *GithubEventUpdate) Mutation() *GithubEventMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (geu *GithubEventUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(geu.hooks) == 0 {
-		if err = geu.check(); err != nil {
-			return 0, err
-		}
-		affected, err = geu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubEventMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = geu.check(); err != nil {
-				return 0, err
-			}
-			geu.mutation = mutation
-			affected, err = geu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(geu.hooks) - 1; i >= 0; i-- {
-			if geu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = geu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, geu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubEventMutation](ctx, geu.sqlSave, geu.mutation, geu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -190,16 +157,10 @@ func (geu *GithubEventUpdate) check() error {
 }
 
 func (geu *GithubEventUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubevent.Table,
-			Columns: githubevent.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubevent.FieldID,
-			},
-		},
+	if err := geu.check(); err != nil {
+		return n, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubevent.Table, githubevent.Columns, sqlgraph.NewFieldSpec(githubevent.FieldID, field.TypeInt))
 	if ps := geu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -248,6 +209,7 @@ func (geu *GithubEventUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	geu.mutation.done = true
 	return n, nil
 }
 
@@ -340,6 +302,12 @@ func (geuo *GithubEventUpdateOne) Mutation() *GithubEventMutation {
 	return geuo.mutation
 }
 
+// Where appends a list predicates to the GithubEventUpdate builder.
+func (geuo *GithubEventUpdateOne) Where(ps ...predicate.GithubEvent) *GithubEventUpdateOne {
+	geuo.mutation.Where(ps...)
+	return geuo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (geuo *GithubEventUpdateOne) Select(field string, fields ...string) *GithubEventUpdateOne {
@@ -349,46 +317,7 @@ func (geuo *GithubEventUpdateOne) Select(field string, fields ...string) *Github
 
 // Save executes the query and returns the updated GithubEvent entity.
 func (geuo *GithubEventUpdateOne) Save(ctx context.Context) (*GithubEvent, error) {
-	var (
-		err  error
-		node *GithubEvent
-	)
-	if len(geuo.hooks) == 0 {
-		if err = geuo.check(); err != nil {
-			return nil, err
-		}
-		node, err = geuo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubEventMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = geuo.check(); err != nil {
-				return nil, err
-			}
-			geuo.mutation = mutation
-			node, err = geuo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(geuo.hooks) - 1; i >= 0; i-- {
-			if geuo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = geuo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, geuo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubEvent)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubEventMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubEvent, GithubEventMutation](ctx, geuo.sqlSave, geuo.mutation, geuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -429,16 +358,10 @@ func (geuo *GithubEventUpdateOne) check() error {
 }
 
 func (geuo *GithubEventUpdateOne) sqlSave(ctx context.Context) (_node *GithubEvent, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubevent.Table,
-			Columns: githubevent.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubevent.FieldID,
-			},
-		},
+	if err := geuo.check(); err != nil {
+		return _node, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubevent.Table, githubevent.Columns, sqlgraph.NewFieldSpec(githubevent.FieldID, field.TypeInt))
 	id, ok := geuo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GithubEvent.id" for update`)}
@@ -507,5 +430,6 @@ func (geuo *GithubEventUpdateOne) sqlSave(ctx context.Context) (_node *GithubEve
 		}
 		return nil, err
 	}
+	geuo.mutation.done = true
 	return _node, nil
 }

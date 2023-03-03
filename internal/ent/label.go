@@ -122,19 +122,19 @@ func (l *Label) assignValues(columns []string, values []any) error {
 
 // QueryPosts queries the "posts" edge of the Label entity.
 func (l *Label) QueryPosts() *PostQuery {
-	return (&LabelClient{config: l.config}).QueryPosts(l)
+	return NewLabelClient(l.config).QueryPosts(l)
 }
 
 // QueryGithubRepositories queries the "github_repositories" edge of the Label entity.
 func (l *Label) QueryGithubRepositories() *GithubRepositoryQuery {
-	return (&LabelClient{config: l.config}).QueryGithubRepositories(l)
+	return NewLabelClient(l.config).QueryGithubRepositories(l)
 }
 
 // Update returns a builder for updating this Label.
 // Note that you need to call Label.Unwrap() before calling this method if this Label
 // was returned from a transaction, and the transaction was committed or rolled back.
 func (l *Label) Update() *LabelUpdateOne {
-	return (&LabelClient{config: l.config}).UpdateOne(l)
+	return NewLabelClient(l.config).UpdateOne(l)
 }
 
 // Unwrap unwraps the Label entity that was returned from a transaction after it was closed,
@@ -215,9 +215,3 @@ func (l *Label) appendNamedGithubRepositories(name string, edges ...*GithubRepos
 
 // Labels is a parsable slice of Label.
 type Labels []*Label
-
-func (l Labels) config(cfg config) {
-	for _i := range l {
-		l[_i].config = cfg
-	}
-}

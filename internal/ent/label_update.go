@@ -125,43 +125,10 @@ func (lu *LabelUpdate) RemoveGithubRepositories(g ...*GithubRepository) *LabelUp
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (lu *LabelUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
 	if err := lu.defaults(); err != nil {
 		return 0, err
 	}
-	if len(lu.hooks) == 0 {
-		if err = lu.check(); err != nil {
-			return 0, err
-		}
-		affected, err = lu.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LabelMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = lu.check(); err != nil {
-				return 0, err
-			}
-			lu.mutation = mutation
-			affected, err = lu.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(lu.hooks) - 1; i >= 0; i-- {
-			if lu.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = lu.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, lu.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, LabelMutation](ctx, lu.sqlSave, lu.mutation, lu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -209,16 +176,10 @@ func (lu *LabelUpdate) check() error {
 }
 
 func (lu *LabelUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   label.Table,
-			Columns: label.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: label.FieldID,
-			},
-		},
+	if err := lu.check(); err != nil {
+		return n, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(label.Table, label.Columns, sqlgraph.NewFieldSpec(label.FieldID, field.TypeInt))
 	if ps := lu.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -348,6 +309,7 @@ func (lu *LabelUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 		return 0, err
 	}
+	lu.mutation.done = true
 	return n, nil
 }
 
@@ -448,6 +410,12 @@ func (luo *LabelUpdateOne) RemoveGithubRepositories(g ...*GithubRepository) *Lab
 	return luo.RemoveGithubRepositoryIDs(ids...)
 }
 
+// Where appends a list predicates to the LabelUpdate builder.
+func (luo *LabelUpdateOne) Where(ps ...predicate.Label) *LabelUpdateOne {
+	luo.mutation.Where(ps...)
+	return luo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (luo *LabelUpdateOne) Select(field string, fields ...string) *LabelUpdateOne {
@@ -457,49 +425,10 @@ func (luo *LabelUpdateOne) Select(field string, fields ...string) *LabelUpdateOn
 
 // Save executes the query and returns the updated Label entity.
 func (luo *LabelUpdateOne) Save(ctx context.Context) (*Label, error) {
-	var (
-		err  error
-		node *Label
-	)
 	if err := luo.defaults(); err != nil {
 		return nil, err
 	}
-	if len(luo.hooks) == 0 {
-		if err = luo.check(); err != nil {
-			return nil, err
-		}
-		node, err = luo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*LabelMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = luo.check(); err != nil {
-				return nil, err
-			}
-			luo.mutation = mutation
-			node, err = luo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(luo.hooks) - 1; i >= 0; i-- {
-			if luo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = luo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, luo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*Label)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from LabelMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*Label, LabelMutation](ctx, luo.sqlSave, luo.mutation, luo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -547,16 +476,10 @@ func (luo *LabelUpdateOne) check() error {
 }
 
 func (luo *LabelUpdateOne) sqlSave(ctx context.Context) (_node *Label, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   label.Table,
-			Columns: label.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: label.FieldID,
-			},
-		},
+	if err := luo.check(); err != nil {
+		return _node, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(label.Table, label.Columns, sqlgraph.NewFieldSpec(label.FieldID, field.TypeInt))
 	id, ok := luo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "Label.id" for update`)}
@@ -706,5 +629,6 @@ func (luo *LabelUpdateOne) sqlSave(ctx context.Context) (_node *Label, err error
 		}
 		return nil, err
 	}
+	luo.mutation.done = true
 	return _node, nil
 }

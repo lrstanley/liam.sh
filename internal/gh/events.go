@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/ent"
 	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
@@ -146,7 +146,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 		err = db.GithubEvent.Create().
 			SetEventID(event.GetID()).
 			SetEventType(event.GetType()).
-			SetCreatedAt(event.GetCreatedAt()).
+			SetCreatedAt(event.GetCreatedAt().Time).
 			SetPublic(event.GetPublic()).
 			SetActorID(event.GetActor().GetID()).
 			SetActor(event.GetActor()).

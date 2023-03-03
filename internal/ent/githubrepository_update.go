@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v48/github"
+	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -352,40 +352,7 @@ func (gru *GithubRepositoryUpdate) RemoveReleases(g ...*GithubRelease) *GithubRe
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gru *GithubRepositoryUpdate) Save(ctx context.Context) (int, error) {
-	var (
-		err      error
-		affected int
-	)
-	if len(gru.hooks) == 0 {
-		if err = gru.check(); err != nil {
-			return 0, err
-		}
-		affected, err = gru.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubRepositoryMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gru.check(); err != nil {
-				return 0, err
-			}
-			gru.mutation = mutation
-			affected, err = gru.sqlSave(ctx)
-			mutation.done = true
-			return affected, err
-		})
-		for i := len(gru.hooks) - 1; i >= 0; i-- {
-			if gru.hooks[i] == nil {
-				return 0, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gru.hooks[i](mut)
-		}
-		if _, err := mut.Mutate(ctx, gru.mutation); err != nil {
-			return 0, err
-		}
-	}
-	return affected, err
+	return withHooks[int, GithubRepositoryMutation](ctx, gru.sqlSave, gru.mutation, gru.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -446,16 +413,10 @@ func (gru *GithubRepositoryUpdate) check() error {
 }
 
 func (gru *GithubRepositoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubrepository.Table,
-			Columns: githubrepository.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrepository.FieldID,
-			},
-		},
+	if err := gru.check(); err != nil {
+		return n, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubrepository.Table, githubrepository.Columns, sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt))
 	if ps := gru.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
 			for i := range ps {
@@ -657,6 +618,7 @@ func (gru *GithubRepositoryUpdate) sqlSave(ctx context.Context) (n int, err erro
 		}
 		return 0, err
 	}
+	gru.mutation.done = true
 	return n, nil
 }
 
@@ -983,6 +945,12 @@ func (gruo *GithubRepositoryUpdateOne) RemoveReleases(g ...*GithubRelease) *Gith
 	return gruo.RemoveReleaseIDs(ids...)
 }
 
+// Where appends a list predicates to the GithubRepositoryUpdate builder.
+func (gruo *GithubRepositoryUpdateOne) Where(ps ...predicate.GithubRepository) *GithubRepositoryUpdateOne {
+	gruo.mutation.Where(ps...)
+	return gruo
+}
+
 // Select allows selecting one or more fields (columns) of the returned entity.
 // The default is selecting all fields defined in the entity schema.
 func (gruo *GithubRepositoryUpdateOne) Select(field string, fields ...string) *GithubRepositoryUpdateOne {
@@ -992,46 +960,7 @@ func (gruo *GithubRepositoryUpdateOne) Select(field string, fields ...string) *G
 
 // Save executes the query and returns the updated GithubRepository entity.
 func (gruo *GithubRepositoryUpdateOne) Save(ctx context.Context) (*GithubRepository, error) {
-	var (
-		err  error
-		node *GithubRepository
-	)
-	if len(gruo.hooks) == 0 {
-		if err = gruo.check(); err != nil {
-			return nil, err
-		}
-		node, err = gruo.sqlSave(ctx)
-	} else {
-		var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-			mutation, ok := m.(*GithubRepositoryMutation)
-			if !ok {
-				return nil, fmt.Errorf("unexpected mutation type %T", m)
-			}
-			if err = gruo.check(); err != nil {
-				return nil, err
-			}
-			gruo.mutation = mutation
-			node, err = gruo.sqlSave(ctx)
-			mutation.done = true
-			return node, err
-		})
-		for i := len(gruo.hooks) - 1; i >= 0; i-- {
-			if gruo.hooks[i] == nil {
-				return nil, fmt.Errorf("ent: uninitialized hook (forgotten import ent/runtime?)")
-			}
-			mut = gruo.hooks[i](mut)
-		}
-		v, err := mut.Mutate(ctx, gruo.mutation)
-		if err != nil {
-			return nil, err
-		}
-		nv, ok := v.(*GithubRepository)
-		if !ok {
-			return nil, fmt.Errorf("unexpected node type %T returned from GithubRepositoryMutation", v)
-		}
-		node = nv
-	}
-	return node, err
+	return withHooks[*GithubRepository, GithubRepositoryMutation](ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -1092,16 +1021,10 @@ func (gruo *GithubRepositoryUpdateOne) check() error {
 }
 
 func (gruo *GithubRepositoryUpdateOne) sqlSave(ctx context.Context) (_node *GithubRepository, err error) {
-	_spec := &sqlgraph.UpdateSpec{
-		Node: &sqlgraph.NodeSpec{
-			Table:   githubrepository.Table,
-			Columns: githubrepository.Columns,
-			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
-				Column: githubrepository.FieldID,
-			},
-		},
+	if err := gruo.check(); err != nil {
+		return _node, err
 	}
+	_spec := sqlgraph.NewUpdateSpec(githubrepository.Table, githubrepository.Columns, sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt))
 	id, ok := gruo.mutation.ID()
 	if !ok {
 		return nil, &ValidationError{Name: "id", err: errors.New(`ent: missing "GithubRepository.id" for update`)}
@@ -1323,5 +1246,6 @@ func (gruo *GithubRepositoryUpdateOne) sqlSave(ctx context.Context) (_node *Gith
 		}
 		return nil, err
 	}
+	gruo.mutation.done = true
 	return _node, nil
 }

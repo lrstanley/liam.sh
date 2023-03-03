@@ -19,11 +19,10 @@ type GithubAssetFunc func(context.Context, *ent.GithubAssetMutation) (ent.Value,
 
 // Mutate calls f(ctx, m).
 func (f GithubAssetFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.GithubAssetMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubAssetMutation", m)
+	if mv, ok := m.(*ent.GithubAssetMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubAssetMutation", m)
 }
 
 // The GithubEventFunc type is an adapter to allow the use of ordinary
@@ -32,11 +31,10 @@ type GithubEventFunc func(context.Context, *ent.GithubEventMutation) (ent.Value,
 
 // Mutate calls f(ctx, m).
 func (f GithubEventFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.GithubEventMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubEventMutation", m)
+	if mv, ok := m.(*ent.GithubEventMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubEventMutation", m)
 }
 
 // The GithubGistFunc type is an adapter to allow the use of ordinary
@@ -45,11 +43,10 @@ type GithubGistFunc func(context.Context, *ent.GithubGistMutation) (ent.Value, e
 
 // Mutate calls f(ctx, m).
 func (f GithubGistFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.GithubGistMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubGistMutation", m)
+	if mv, ok := m.(*ent.GithubGistMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubGistMutation", m)
 }
 
 // The GithubReleaseFunc type is an adapter to allow the use of ordinary
@@ -58,11 +55,10 @@ type GithubReleaseFunc func(context.Context, *ent.GithubReleaseMutation) (ent.Va
 
 // Mutate calls f(ctx, m).
 func (f GithubReleaseFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.GithubReleaseMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubReleaseMutation", m)
+	if mv, ok := m.(*ent.GithubReleaseMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubReleaseMutation", m)
 }
 
 // The GithubRepositoryFunc type is an adapter to allow the use of ordinary
@@ -71,11 +67,10 @@ type GithubRepositoryFunc func(context.Context, *ent.GithubRepositoryMutation) (
 
 // Mutate calls f(ctx, m).
 func (f GithubRepositoryFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.GithubRepositoryMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubRepositoryMutation", m)
+	if mv, ok := m.(*ent.GithubRepositoryMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.GithubRepositoryMutation", m)
 }
 
 // The LabelFunc type is an adapter to allow the use of ordinary
@@ -84,11 +79,10 @@ type LabelFunc func(context.Context, *ent.LabelMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f LabelFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.LabelMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LabelMutation", m)
+	if mv, ok := m.(*ent.LabelMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.LabelMutation", m)
 }
 
 // The PostFunc type is an adapter to allow the use of ordinary
@@ -97,11 +91,10 @@ type PostFunc func(context.Context, *ent.PostMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f PostFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.PostMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PostMutation", m)
+	if mv, ok := m.(*ent.PostMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.PostMutation", m)
 }
 
 // The UserFunc type is an adapter to allow the use of ordinary
@@ -110,11 +103,10 @@ type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
 func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	mv, ok := m.(*ent.UserMutation)
-	if !ok {
-		return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+	if mv, ok := m.(*ent.UserMutation); ok {
+		return f(ctx, mv)
 	}
-	return f(ctx, mv)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
 }
 
 // Condition is a hook condition function.
