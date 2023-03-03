@@ -55,6 +55,7 @@ docker-clean:
 docker-build:
 	docker build \
 		--tag ${PROJECT} \
+		--pull \
 		--force-rm .
 
 # frontend
