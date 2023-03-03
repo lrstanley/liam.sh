@@ -121,6 +121,6 @@ Below are a few guidelines if you would like to contribute:
 [discussions]: https://github.com/lrstanley/liam.sh/discussions
 [issues]: https://github.com/lrstanley/liam.sh/issues/new/choose
 [license]: https://github.com/lrstanley/liam.sh/blob/master/LICENSE
-[pull-requests]: https://github.com/lrstanley/liam.sh/issues/new/choose
+[pull-requests]: https://github.com/lrstanley/liam.sh/pulls?q=is%3Aopen+is%3Apr
 [security]: https://github.com/lrstanley/liam.sh/security/policy
 [support]: https://github.com/lrstanley/liam.sh/blob/master/.github/SUPPORT.md
