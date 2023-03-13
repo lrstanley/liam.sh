@@ -23,7 +23,7 @@ require (
 	github.com/lrstanley/chix v0.0.0-20230303033217-81add2938aae
 	github.com/lrstanley/clix v0.0.0-20230226163402-0df0b71358c2
 	github.com/markbates/goth v1.76.1
-	github.com/microcosm-cc/bluemonday v1.0.22
+	github.com/microcosm-cc/bluemonday v1.0.23
 	github.com/prometheus/client_golang v1.14.0
 	github.com/shurcooL/githubv4 v0.0.0-20230215024106-420ad0987b9b
 	github.com/vektah/gqlparser/v2 v2.5.1
