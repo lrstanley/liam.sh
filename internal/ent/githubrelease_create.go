@@ -282,10 +282,7 @@ func (grc *GithubReleaseCreate) createSpec() (*GithubRelease, *sqlgraph.CreateSp
 			Columns: []string{githubrelease.RepositoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -302,10 +299,7 @@ func (grc *GithubReleaseCreate) createSpec() (*GithubRelease, *sqlgraph.CreateSp
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

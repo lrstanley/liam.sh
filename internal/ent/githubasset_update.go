@@ -306,10 +306,7 @@ func (gau *GithubAssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{githubasset.ReleaseColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrelease.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -322,10 +319,7 @@ func (gau *GithubAssetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Columns: []string{githubasset.ReleaseColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrelease.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -655,10 +649,7 @@ func (gauo *GithubAssetUpdateOne) sqlSave(ctx context.Context) (_node *GithubAss
 			Columns: []string{githubasset.ReleaseColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrelease.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -671,10 +662,7 @@ func (gauo *GithubAssetUpdateOne) sqlSave(ctx context.Context) (_node *GithubAss
 			Columns: []string{githubasset.ReleaseColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrelease.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrelease.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

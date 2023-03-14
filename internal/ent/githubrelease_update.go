@@ -285,10 +285,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{githubrelease.RepositoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -301,10 +298,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{githubrelease.RepositoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -320,10 +314,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -336,10 +327,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -355,10 +343,7 @@ func (gru *GithubReleaseUpdate) sqlSave(ctx context.Context) (n int, err error) 
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -666,10 +651,7 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 			Columns: []string{githubrelease.RepositoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -682,10 +664,7 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 			Columns: []string{githubrelease.RepositoryColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -701,10 +680,7 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
@@ -717,10 +693,7 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -736,10 +709,7 @@ func (gruo *GithubReleaseUpdateOne) sqlSave(ctx context.Context) (_node *GithubR
 			Columns: []string{githubrelease.AssetsColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubasset.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubasset.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

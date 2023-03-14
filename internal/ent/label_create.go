@@ -209,10 +209,7 @@ func (lc *LabelCreate) createSpec() (*Label, *sqlgraph.CreateSpec) {
 			Columns: label.PostsPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: post.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(post.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -228,10 +225,7 @@ func (lc *LabelCreate) createSpec() (*Label, *sqlgraph.CreateSpec) {
 			Columns: label.GithubRepositoriesPrimaryKey,
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: &sqlgraph.FieldSpec{
-					Type:   field.TypeInt,
-					Column: githubrepository.FieldID,
-				},
+				IDSpec: sqlgraph.NewFieldSpec(githubrepository.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
