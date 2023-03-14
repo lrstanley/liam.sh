@@ -47,12 +47,7 @@ export function useSorter(
         direction.value = direction.value === desc ? asc : desc
       } else {
         field.value = newField
-        // https://github.com/vueuse/vueuse/issues/901
-        setTimeout(() => {
-          nextTick(() => {
-            direction.value = defaultDirection
-          })
-        }, 1)
+        direction.value = defaultDirection
       }
     },
     fields: fields,
