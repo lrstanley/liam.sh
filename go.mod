@@ -5,7 +5,7 @@ go 1.20
 require (
 	ariga.io/entcache v0.1.0
 	entgo.io/contrib v0.3.5
-	entgo.io/ent v0.11.10
+	entgo.io/ent v0.12.0
 	github.com/99designs/gqlgen v0.17.26
 	github.com/agnivade/levenshtein v1.1.1
 	github.com/alecthomas/chroma v0.10.0
@@ -37,7 +37,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.9.2-0.20230303073438-03a4779a6338 // indirect
+	ariga.io/atlas v0.10.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
