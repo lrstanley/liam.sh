@@ -17,7 +17,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/clix"
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/models"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -3308,7 +3308,7 @@ scalar Map
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
-interface Node @goModel(model: "github.com/lrstanley/liam.sh/internal/ent.Noder") {
+interface Node @goModel(model: "github.com/lrstanley/liam.sh/internal/database/ent.Noder") {
   """The id of the object."""
   id: ID!
 }
@@ -4100,7 +4100,7 @@ func (ec *executionContext) field_GithubRelease_assets_args(ctx context.Context,
 	var arg4 *ent.GithubAssetOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4109,7 +4109,7 @@ func (ec *executionContext) field_GithubRelease_assets_args(ctx context.Context,
 	var arg5 *ent.GithubAssetWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4160,7 +4160,7 @@ func (ec *executionContext) field_GithubRepository_labels_args(ctx context.Conte
 	var arg4 *ent.LabelOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4169,7 +4169,7 @@ func (ec *executionContext) field_GithubRepository_labels_args(ctx context.Conte
 	var arg5 *ent.LabelWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4220,7 +4220,7 @@ func (ec *executionContext) field_GithubRepository_releases_args(ctx context.Con
 	var arg4 *ent.GithubReleaseOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4229,7 +4229,7 @@ func (ec *executionContext) field_GithubRepository_releases_args(ctx context.Con
 	var arg5 *ent.GithubReleaseWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4280,7 +4280,7 @@ func (ec *executionContext) field_Label_githubRepositories_args(ctx context.Cont
 	var arg4 *ent.GithubRepositoryOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4289,7 +4289,7 @@ func (ec *executionContext) field_Label_githubRepositories_args(ctx context.Cont
 	var arg5 *ent.GithubRepositoryWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4340,7 +4340,7 @@ func (ec *executionContext) field_Label_posts_args(ctx context.Context, rawArgs 
 	var arg4 *ent.PostOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4349,7 +4349,7 @@ func (ec *executionContext) field_Label_posts_args(ctx context.Context, rawArgs 
 	var arg5 *ent.PostWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4364,7 +4364,7 @@ func (ec *executionContext) field_Mutation_createLabel_args(ctx context.Context,
 	var arg0 ent.CreateLabelInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐCreateLabelInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐCreateLabelInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4379,7 +4379,7 @@ func (ec *executionContext) field_Mutation_createPost_args(ctx context.Context, 
 	var arg0 ent.CreatePostInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNCreatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐCreatePostInput(ctx, tmp)
+		arg0, err = ec.unmarshalNCreatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐCreatePostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4433,7 +4433,7 @@ func (ec *executionContext) field_Mutation_updateLabel_args(ctx context.Context,
 	var arg1 ent.UpdateLabelInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNUpdateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUpdateLabelInput(ctx, tmp)
+		arg1, err = ec.unmarshalNUpdateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUpdateLabelInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4457,7 +4457,7 @@ func (ec *executionContext) field_Mutation_updatePost_args(ctx context.Context, 
 	var arg1 ent.UpdatePostInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg1, err = ec.unmarshalNUpdatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUpdatePostInput(ctx, tmp)
+		arg1, err = ec.unmarshalNUpdatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUpdatePostInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4508,7 +4508,7 @@ func (ec *executionContext) field_Post_labels_args(ctx context.Context, rawArgs 
 	var arg4 *ent.LabelOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4517,7 +4517,7 @@ func (ec *executionContext) field_Post_labels_args(ctx context.Context, rawArgs 
 	var arg5 *ent.LabelWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4583,7 +4583,7 @@ func (ec *executionContext) field_Query_githubAssets_args(ctx context.Context, r
 	var arg4 *ent.GithubAssetOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4592,7 +4592,7 @@ func (ec *executionContext) field_Query_githubAssets_args(ctx context.Context, r
 	var arg5 *ent.GithubAssetWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4643,7 +4643,7 @@ func (ec *executionContext) field_Query_githubEvents_args(ctx context.Context, r
 	var arg4 *ent.GithubEventOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubEventOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubEventOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4652,7 +4652,7 @@ func (ec *executionContext) field_Query_githubEvents_args(ctx context.Context, r
 	var arg5 *ent.GithubEventWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4703,7 +4703,7 @@ func (ec *executionContext) field_Query_githubGists_args(ctx context.Context, ra
 	var arg4 *ent.GithubGistOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubGistOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubGistOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4712,7 +4712,7 @@ func (ec *executionContext) field_Query_githubGists_args(ctx context.Context, ra
 	var arg5 *ent.GithubGistWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4763,7 +4763,7 @@ func (ec *executionContext) field_Query_githubReleases_args(ctx context.Context,
 	var arg4 *ent.GithubReleaseOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4772,7 +4772,7 @@ func (ec *executionContext) field_Query_githubReleases_args(ctx context.Context,
 	var arg5 *ent.GithubReleaseWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4823,7 +4823,7 @@ func (ec *executionContext) field_Query_githubRepositories_args(ctx context.Cont
 	var arg4 *ent.GithubRepositoryOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4832,7 +4832,7 @@ func (ec *executionContext) field_Query_githubRepositories_args(ctx context.Cont
 	var arg5 *ent.GithubRepositoryWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4883,7 +4883,7 @@ func (ec *executionContext) field_Query_labels_args(ctx context.Context, rawArgs
 	var arg4 *ent.LabelOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4892,7 +4892,7 @@ func (ec *executionContext) field_Query_labels_args(ctx context.Context, rawArgs
 	var arg5 *ent.LabelWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4973,7 +4973,7 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 	var arg4 *ent.PostOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4982,7 +4982,7 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 	var arg5 *ent.PostWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5033,7 +5033,7 @@ func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs 
 	var arg4 *ent.UserOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOUserOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOUserOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5042,7 +5042,7 @@ func (ec *executionContext) field_Query_users_args(ctx context.Context, rawArgs 
 	var arg5 *ent.UserWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5093,7 +5093,7 @@ func (ec *executionContext) field_User_posts_args(ctx context.Context, rawArgs m
 	var arg4 *ent.PostOrder
 	if tmp, ok := rawArgs["orderBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("orderBy"))
-		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrder(ctx, tmp)
+		arg4, err = ec.unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5102,7 +5102,7 @@ func (ec *executionContext) field_User_posts_args(ctx context.Context, rawArgs m
 	var arg5 *ent.PostWhereInput
 	if tmp, ok := rawArgs["where"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("where"))
-		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx, tmp)
+		arg5, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5951,7 +5951,7 @@ func (ec *executionContext) _GithubAsset_release(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.GithubRelease)
 	fc.Result = res
-	return ec.marshalNGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRelease(ctx, field.Selections, res)
+	return ec.marshalNGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRelease(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubAsset_release(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6020,7 +6020,7 @@ func (ec *executionContext) _GithubAssetConnection_edges(ctx context.Context, fi
 	}
 	res := resTmp.([]*ent.GithubAssetEdge)
 	fc.Result = res
-	return ec.marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetEdge(ctx, field.Selections, res)
+	return ec.marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubAssetConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6165,7 +6165,7 @@ func (ec *executionContext) _GithubAssetEdge_node(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.GithubAsset)
 	fc.Result = res
-	return ec.marshalOGithubAsset2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAsset(ctx, field.Selections, res)
+	return ec.marshalOGithubAsset2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAsset(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubAssetEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6754,7 +6754,7 @@ func (ec *executionContext) _GithubEventConnection_edges(ctx context.Context, fi
 	}
 	res := resTmp.([]*ent.GithubEventEdge)
 	fc.Result = res
-	return ec.marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventEdge(ctx, field.Selections, res)
+	return ec.marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEventConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6899,7 +6899,7 @@ func (ec *executionContext) _GithubEventEdge_node(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.GithubEvent)
 	fc.Result = res
-	return ec.marshalOGithubEvent2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEvent(ctx, field.Selections, res)
+	return ec.marshalOGithubEvent2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEvent(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEventEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7776,7 +7776,7 @@ func (ec *executionContext) _GithubGistConnection_edges(ctx context.Context, fie
 	}
 	res := resTmp.([]*ent.GithubGistEdge)
 	fc.Result = res
-	return ec.marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistEdge(ctx, field.Selections, res)
+	return ec.marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubGistConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7921,7 +7921,7 @@ func (ec *executionContext) _GithubGistEdge_node(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.GithubGist)
 	fc.Result = res
-	return ec.marshalOGithubGist2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGist(ctx, field.Selections, res)
+	return ec.marshalOGithubGist2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGist(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubGistEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8721,7 +8721,7 @@ func (ec *executionContext) _GithubRelease_repository(ctx context.Context, field
 	}
 	res := resTmp.(*ent.GithubRepository)
 	fc.Result = res
-	return ec.marshalNGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepository(ctx, field.Selections, res)
+	return ec.marshalNGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepository(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRelease_repository(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8811,7 +8811,7 @@ func (ec *executionContext) _GithubRelease_assets(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.GithubAssetConnection)
 	fc.Result = res
-	return ec.marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRelease_assets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8871,7 +8871,7 @@ func (ec *executionContext) _GithubReleaseConnection_edges(ctx context.Context, 
 	}
 	res := resTmp.([]*ent.GithubReleaseEdge)
 	fc.Result = res
-	return ec.marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseEdge(ctx, field.Selections, res)
+	return ec.marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubReleaseConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9016,7 +9016,7 @@ func (ec *executionContext) _GithubReleaseEdge_node(ctx context.Context, field g
 	}
 	res := resTmp.(*ent.GithubRelease)
 	fc.Result = res
-	return ec.marshalOGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRelease(ctx, field.Selections, res)
+	return ec.marshalOGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRelease(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubReleaseEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10035,7 +10035,7 @@ func (ec *executionContext) _GithubRepository_labels(ctx context.Context, field 
 	}
 	res := resTmp.(*ent.LabelConnection)
 	fc.Result = res
-	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelConnection(ctx, field.Selections, res)
+	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_labels(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10098,7 +10098,7 @@ func (ec *executionContext) _GithubRepository_releases(ctx context.Context, fiel
 	}
 	res := resTmp.(*ent.GithubReleaseConnection)
 	fc.Result = res
-	return ec.marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_releases(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10158,7 +10158,7 @@ func (ec *executionContext) _GithubRepositoryConnection_edges(ctx context.Contex
 	}
 	res := resTmp.([]*ent.GithubRepositoryEdge)
 	fc.Result = res
-	return ec.marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryEdge(ctx, field.Selections, res)
+	return ec.marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepositoryConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10303,7 +10303,7 @@ func (ec *executionContext) _GithubRepositoryEdge_node(ctx context.Context, fiel
 	}
 	res := resTmp.(*ent.GithubRepository)
 	fc.Result = res
-	return ec.marshalOGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepository(ctx, field.Selections, res)
+	return ec.marshalOGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepository(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepositoryEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11515,7 +11515,7 @@ func (ec *executionContext) _Label_posts(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.PostConnection)
 	fc.Result = res
-	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostConnection(ctx, field.Selections, res)
+	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Label_posts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11578,7 +11578,7 @@ func (ec *executionContext) _Label_githubRepositories(ctx context.Context, field
 	}
 	res := resTmp.(*ent.GithubRepositoryConnection)
 	fc.Result = res
-	return ec.marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Label_githubRepositories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11638,7 +11638,7 @@ func (ec *executionContext) _LabelConnection_edges(ctx context.Context, field gr
 	}
 	res := resTmp.([]*ent.LabelEdge)
 	fc.Result = res
-	return ec.marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelEdge(ctx, field.Selections, res)
+	return ec.marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_LabelConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11783,7 +11783,7 @@ func (ec *executionContext) _LabelEdge_node(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*ent.Label)
 	fc.Result = res
-	return ec.marshalOLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx, field.Selections, res)
+	return ec.marshalOLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_LabelEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12190,7 +12190,7 @@ func (ec *executionContext) _Mutation_createLabel(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.Label)
 	fc.Result = res
-	return ec.marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx, field.Selections, res)
+	return ec.marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createLabel(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12259,7 +12259,7 @@ func (ec *executionContext) _Mutation_updateLabel(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.Label)
 	fc.Result = res
-	return ec.marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx, field.Selections, res)
+	return ec.marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updateLabel(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12383,7 +12383,7 @@ func (ec *executionContext) _Mutation_createPost(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.Post)
 	fc.Result = res
-	return ec.marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx, field.Selections, res)
+	return ec.marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_createPost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12466,7 +12466,7 @@ func (ec *executionContext) _Mutation_updatePost(ctx context.Context, field grap
 	}
 	res := resTmp.(*ent.Post)
 	fc.Result = res
-	return ec.marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx, field.Selections, res)
+	return ec.marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_updatePost(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13302,7 +13302,7 @@ func (ec *executionContext) _Post_author(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalNUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalNUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Post_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13372,7 +13372,7 @@ func (ec *executionContext) _Post_labels(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.LabelConnection)
 	fc.Result = res
-	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelConnection(ctx, field.Selections, res)
+	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Post_labels(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13432,7 +13432,7 @@ func (ec *executionContext) _PostConnection_edges(ctx context.Context, field gra
 	}
 	res := resTmp.([]*ent.PostEdge)
 	fc.Result = res
-	return ec.marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostEdge(ctx, field.Selections, res)
+	return ec.marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PostConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13577,7 +13577,7 @@ func (ec *executionContext) _PostEdge_node(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.Post)
 	fc.Result = res
-	return ec.marshalOPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx, field.Selections, res)
+	return ec.marshalOPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13690,7 +13690,7 @@ func (ec *executionContext) _Query_node(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(ent.Noder)
 	fc.Result = res
-	return ec.marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13745,7 +13745,7 @@ func (ec *executionContext) _Query_nodes(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.([]ent.Noder)
 	fc.Result = res
-	return ec.marshalNNode2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐNoder(ctx, field.Selections, res)
+	return ec.marshalNNode2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐNoder(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_nodes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13800,7 +13800,7 @@ func (ec *executionContext) _Query_githubAssets(ctx context.Context, field graph
 	}
 	res := resTmp.(*ent.GithubAssetConnection)
 	fc.Result = res
-	return ec.marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubAssets(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13863,7 +13863,7 @@ func (ec *executionContext) _Query_githubEvents(ctx context.Context, field graph
 	}
 	res := resTmp.(*ent.GithubEventConnection)
 	fc.Result = res
-	return ec.marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubEvents(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13926,7 +13926,7 @@ func (ec *executionContext) _Query_githubGists(ctx context.Context, field graphq
 	}
 	res := resTmp.(*ent.GithubGistConnection)
 	fc.Result = res
-	return ec.marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubGists(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13989,7 +13989,7 @@ func (ec *executionContext) _Query_githubReleases(ctx context.Context, field gra
 	}
 	res := resTmp.(*ent.GithubReleaseConnection)
 	fc.Result = res
-	return ec.marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubReleases(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14052,7 +14052,7 @@ func (ec *executionContext) _Query_githubRepositories(ctx context.Context, field
 	}
 	res := resTmp.(*ent.GithubRepositoryConnection)
 	fc.Result = res
-	return ec.marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryConnection(ctx, field.Selections, res)
+	return ec.marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubRepositories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14115,7 +14115,7 @@ func (ec *executionContext) _Query_labels(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*ent.LabelConnection)
 	fc.Result = res
-	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelConnection(ctx, field.Selections, res)
+	return ec.marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_labels(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14178,7 +14178,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.PostConnection)
 	fc.Result = res
-	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostConnection(ctx, field.Selections, res)
+	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_posts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14241,7 +14241,7 @@ func (ec *executionContext) _Query_users(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(*ent.UserConnection)
 	fc.Result = res
-	return ec.marshalNUserConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserConnection(ctx, field.Selections, res)
+	return ec.marshalNUserConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_users(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14491,7 +14491,7 @@ func (ec *executionContext) _Query_self(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_self(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -15264,7 +15264,7 @@ func (ec *executionContext) _User_posts(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(*ent.PostConnection)
 	fc.Result = res
-	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostConnection(ctx, field.Selections, res)
+	return ec.marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostConnection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_User_posts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -15324,7 +15324,7 @@ func (ec *executionContext) _UserConnection_edges(ctx context.Context, field gra
 	}
 	res := resTmp.([]*ent.UserEdge)
 	fc.Result = res
-	return ec.marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserEdge(ctx, field.Selections, res)
+	return ec.marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserEdge(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserConnection_edges(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -15469,7 +15469,7 @@ func (ec *executionContext) _UserEdge_node(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*ent.User)
 	fc.Result = res
-	return ec.marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUser(ctx, field.Selections, res)
+	return ec.marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_UserEdge_node(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -17901,7 +17901,7 @@ func (ec *executionContext) unmarshalInputGithubAssetOrder(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17929,7 +17929,7 @@ func (ec *executionContext) unmarshalInputGithubAssetWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17937,7 +17937,7 @@ func (ec *executionContext) unmarshalInputGithubAssetWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17945,7 +17945,7 @@ func (ec *executionContext) unmarshalInputGithubAssetWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18913,7 +18913,7 @@ func (ec *executionContext) unmarshalInputGithubAssetWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasReleaseWith"))
-			it.HasReleaseWith, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
+			it.HasReleaseWith, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18953,7 +18953,7 @@ func (ec *executionContext) unmarshalInputGithubEventOrder(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18981,7 +18981,7 @@ func (ec *executionContext) unmarshalInputGithubEventWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18989,7 +18989,7 @@ func (ec *executionContext) unmarshalInputGithubEventWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -18997,7 +18997,7 @@ func (ec *executionContext) unmarshalInputGithubEventWhereInput(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19517,7 +19517,7 @@ func (ec *executionContext) unmarshalInputGithubGistOrder(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19545,7 +19545,7 @@ func (ec *executionContext) unmarshalInputGithubGistWhereInput(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19553,7 +19553,7 @@ func (ec *executionContext) unmarshalInputGithubGistWhereInput(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -19561,7 +19561,7 @@ func (ec *executionContext) unmarshalInputGithubGistWhereInput(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20737,7 +20737,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseOrder(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20765,7 +20765,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20773,7 +20773,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -20781,7 +20781,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21517,7 +21517,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasRepositoryWith"))
-			it.HasRepositoryWith, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
+			it.HasRepositoryWith, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21533,7 +21533,7 @@ func (ec *executionContext) unmarshalInputGithubReleaseWhereInput(ctx context.Co
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasAssetsWith"))
-			it.HasAssetsWith, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
+			it.HasAssetsWith, err = ec.unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21573,7 +21573,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryOrder(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21601,7 +21601,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryWhereInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21609,7 +21609,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryWhereInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -21617,7 +21617,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryWhereInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22889,7 +22889,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryWhereInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasLabelsWith"))
-			it.HasLabelsWith, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInputᚄ(ctx, v)
+			it.HasLabelsWith, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22905,7 +22905,7 @@ func (ec *executionContext) unmarshalInputGithubRepositoryWhereInput(ctx context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasReleasesWith"))
-			it.HasReleasesWith, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
+			it.HasReleasesWith, err = ec.unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22945,7 +22945,7 @@ func (ec *executionContext) unmarshalInputLabelOrder(ctx context.Context, obj in
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22973,7 +22973,7 @@ func (ec *executionContext) unmarshalInputLabelWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22981,7 +22981,7 @@ func (ec *executionContext) unmarshalInputLabelWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -22989,7 +22989,7 @@ func (ec *executionContext) unmarshalInputLabelWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23301,7 +23301,7 @@ func (ec *executionContext) unmarshalInputLabelWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasPostsWith"))
-			it.HasPostsWith, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInputᚄ(ctx, v)
+			it.HasPostsWith, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23317,7 +23317,7 @@ func (ec *executionContext) unmarshalInputLabelWhereInput(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasGithubRepositoriesWith"))
-			it.HasGithubRepositoriesWith, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
+			it.HasGithubRepositoriesWith, err = ec.unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23357,7 +23357,7 @@ func (ec *executionContext) unmarshalInputPostOrder(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23385,7 +23385,7 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23393,7 +23393,7 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -23401,7 +23401,7 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24273,7 +24273,7 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasAuthorWith"))
-			it.HasAuthorWith, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInputᚄ(ctx, v)
+			it.HasAuthorWith, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24289,7 +24289,7 @@ func (ec *executionContext) unmarshalInputPostWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasLabelsWith"))
-			it.HasLabelsWith, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInputᚄ(ctx, v)
+			it.HasLabelsWith, err = ec.unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24505,7 +24505,7 @@ func (ec *executionContext) unmarshalInputUserOrder(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserOrderField(ctx, v)
+			it.Field, err = ec.unmarshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserOrderField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24533,7 +24533,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("not"))
-			it.Not, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInput(ctx, v)
+			it.Not, err = ec.unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24541,7 +24541,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("and"))
-			it.And, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInputᚄ(ctx, v)
+			it.And, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -24549,7 +24549,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("or"))
-			it.Or, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInputᚄ(ctx, v)
+			it.Or, err = ec.unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -25645,7 +25645,7 @@ func (ec *executionContext) unmarshalInputUserWhereInput(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("hasPostsWith"))
-			it.HasPostsWith, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInputᚄ(ctx, v)
+			it.HasPostsWith, err = ec.unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -28611,12 +28611,12 @@ func (ec *executionContext) marshalNCodingStats2ᚖgithubᚗcomᚋlrstanleyᚋli
 	return ec._CodingStats(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNCreateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐCreateLabelInput(ctx context.Context, v interface{}) (ent.CreateLabelInput, error) {
+func (ec *executionContext) unmarshalNCreateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐCreateLabelInput(ctx context.Context, v interface{}) (ent.CreateLabelInput, error) {
 	res, err := ec.unmarshalInputCreateLabelInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNCreatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐCreatePostInput(ctx context.Context, v interface{}) (ent.CreatePostInput, error) {
+func (ec *executionContext) unmarshalNCreatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐCreatePostInput(ctx context.Context, v interface{}) (ent.CreatePostInput, error) {
 	res, err := ec.unmarshalInputCreatePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
@@ -28631,11 +28631,11 @@ func (ec *executionContext) marshalNCursor2entgoᚗioᚋcontribᚋentgqlᚐCurso
 	return v
 }
 
-func (ec *executionContext) marshalNGithubAssetConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubAssetConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubAssetConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubAssetConnection) graphql.Marshaler {
 	return ec._GithubAssetConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28645,13 +28645,13 @@ func (ec *executionContext) marshalNGithubAssetConnection2ᚖgithubᚗcomᚋlrst
 	return ec._GithubAssetConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrderField(ctx context.Context, v interface{}) (*ent.GithubAssetOrderField, error) {
+func (ec *executionContext) unmarshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrderField(ctx context.Context, v interface{}) (*ent.GithubAssetOrderField, error) {
 	var res = new(ent.GithubAssetOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28661,16 +28661,16 @@ func (ec *executionContext) marshalNGithubAssetOrderField2ᚖgithubᚗcomᚋlrst
 	return v
 }
 
-func (ec *executionContext) unmarshalNGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx context.Context, v interface{}) (*ent.GithubAssetWhereInput, error) {
+func (ec *executionContext) unmarshalNGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx context.Context, v interface{}) (*ent.GithubAssetWhereInput, error) {
 	res, err := ec.unmarshalInputGithubAssetWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubEventConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubEventConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubEventConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubEventConnection) graphql.Marshaler {
 	return ec._GithubEventConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28680,13 +28680,13 @@ func (ec *executionContext) marshalNGithubEventConnection2ᚖgithubᚗcomᚋlrst
 	return ec._GithubEventConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventOrderField(ctx context.Context, v interface{}) (*ent.GithubEventOrderField, error) {
+func (ec *executionContext) unmarshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventOrderField(ctx context.Context, v interface{}) (*ent.GithubEventOrderField, error) {
 	var res = new(ent.GithubEventOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28706,16 +28706,16 @@ func (ec *executionContext) marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋg
 	return ec._GithubEventRepo(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInput(ctx context.Context, v interface{}) (*ent.GithubEventWhereInput, error) {
+func (ec *executionContext) unmarshalNGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInput(ctx context.Context, v interface{}) (*ent.GithubEventWhereInput, error) {
 	res, err := ec.unmarshalInputGithubEventWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubGistConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubGistConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubGistConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubGistConnection) graphql.Marshaler {
 	return ec._GithubGistConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28725,13 +28725,13 @@ func (ec *executionContext) marshalNGithubGistConnection2ᚖgithubᚗcomᚋlrsta
 	return ec._GithubGistConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistOrderField(ctx context.Context, v interface{}) (*ent.GithubGistOrderField, error) {
+func (ec *executionContext) unmarshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistOrderField(ctx context.Context, v interface{}) (*ent.GithubGistOrderField, error) {
 	var res = new(ent.GithubGistOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28741,12 +28741,12 @@ func (ec *executionContext) marshalNGithubGistOrderField2ᚖgithubᚗcomᚋlrsta
 	return v
 }
 
-func (ec *executionContext) unmarshalNGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInput(ctx context.Context, v interface{}) (*ent.GithubGistWhereInput, error) {
+func (ec *executionContext) unmarshalNGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInput(ctx context.Context, v interface{}) (*ent.GithubGistWhereInput, error) {
 	res, err := ec.unmarshalInputGithubGistWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRelease(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRelease) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRelease(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRelease) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28756,11 +28756,11 @@ func (ec *executionContext) marshalNGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋ
 	return ec._GithubRelease(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGithubReleaseConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubReleaseConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubReleaseConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubReleaseConnection) graphql.Marshaler {
 	return ec._GithubReleaseConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28770,13 +28770,13 @@ func (ec *executionContext) marshalNGithubReleaseConnection2ᚖgithubᚗcomᚋlr
 	return ec._GithubReleaseConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrderField(ctx context.Context, v interface{}) (*ent.GithubReleaseOrderField, error) {
+func (ec *executionContext) unmarshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrderField(ctx context.Context, v interface{}) (*ent.GithubReleaseOrderField, error) {
 	var res = new(ent.GithubReleaseOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28786,12 +28786,12 @@ func (ec *executionContext) marshalNGithubReleaseOrderField2ᚖgithubᚗcomᚋlr
 	return v
 }
 
-func (ec *executionContext) unmarshalNGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx context.Context, v interface{}) (*ent.GithubReleaseWhereInput, error) {
+func (ec *executionContext) unmarshalNGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx context.Context, v interface{}) (*ent.GithubReleaseWhereInput, error) {
 	res, err := ec.unmarshalInputGithubReleaseWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepository(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepository) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepository(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepository) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28801,11 +28801,11 @@ func (ec *executionContext) marshalNGithubRepository2ᚖgithubᚗcomᚋlrstanley
 	return ec._GithubRepository(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGithubRepositoryConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubRepositoryConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubRepositoryConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryConnection(ctx context.Context, sel ast.SelectionSet, v ent.GithubRepositoryConnection) graphql.Marshaler {
 	return ec._GithubRepositoryConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubRepositoryConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryConnection(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28815,13 +28815,13 @@ func (ec *executionContext) marshalNGithubRepositoryConnection2ᚖgithubᚗcom�
 	return ec._GithubRepositoryConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrderField(ctx context.Context, v interface{}) (*ent.GithubRepositoryOrderField, error) {
+func (ec *executionContext) unmarshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrderField(ctx context.Context, v interface{}) (*ent.GithubRepositoryOrderField, error) {
 	var res = new(ent.GithubRepositoryOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubRepositoryOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28831,7 +28831,7 @@ func (ec *executionContext) marshalNGithubRepositoryOrderField2ᚖgithubᚗcom�
 	return v
 }
 
-func (ec *executionContext) unmarshalNGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx context.Context, v interface{}) (*ent.GithubRepositoryWhereInput, error) {
+func (ec *executionContext) unmarshalNGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx context.Context, v interface{}) (*ent.GithubRepositoryWhereInput, error) {
 	res, err := ec.unmarshalInputGithubRepositoryWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -28962,11 +28962,11 @@ func (ec *executionContext) marshalNInt2ᚖint64(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNLabel2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v ent.Label) graphql.Marshaler {
+func (ec *executionContext) marshalNLabel2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v ent.Label) graphql.Marshaler {
 	return ec._Label(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v *ent.Label) graphql.Marshaler {
+func (ec *executionContext) marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v *ent.Label) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28976,11 +28976,11 @@ func (ec *executionContext) marshalNLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗs
 	return ec._Label(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNLabelConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelConnection(ctx context.Context, sel ast.SelectionSet, v ent.LabelConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNLabelConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelConnection(ctx context.Context, sel ast.SelectionSet, v ent.LabelConnection) graphql.Marshaler {
 	return ec._LabelConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelConnection(ctx context.Context, sel ast.SelectionSet, v *ent.LabelConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelConnection(ctx context.Context, sel ast.SelectionSet, v *ent.LabelConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28990,13 +28990,13 @@ func (ec *executionContext) marshalNLabelConnection2ᚖgithubᚗcomᚋlrstanley�
 	return ec._LabelConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrderField(ctx context.Context, v interface{}) (*ent.LabelOrderField, error) {
+func (ec *executionContext) unmarshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrderField(ctx context.Context, v interface{}) (*ent.LabelOrderField, error) {
 	var res = new(ent.LabelOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.LabelOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.LabelOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29006,7 +29006,7 @@ func (ec *executionContext) marshalNLabelOrderField2ᚖgithubᚗcomᚋlrstanley�
 	return v
 }
 
-func (ec *executionContext) unmarshalNLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx context.Context, v interface{}) (*ent.LabelWhereInput, error) {
+func (ec *executionContext) unmarshalNLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx context.Context, v interface{}) (*ent.LabelWhereInput, error) {
 	res, err := ec.unmarshalInputLabelWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -29040,7 +29040,7 @@ func (ec *executionContext) marshalNMap2map(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v []ent.Noder) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -29064,7 +29064,7 @@ func (ec *executionContext) marshalNNode2ᚕgithubᚗcomᚋlrstanleyᚋliamᚗsh
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐNoder(ctx, sel, v[i])
+			ret[i] = ec.marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐNoder(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29092,11 +29092,11 @@ func (ec *executionContext) marshalNPageInfo2entgoᚗioᚋcontribᚋentgqlᚐPag
 	return ec._PageInfo(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPost2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v ent.Post) graphql.Marshaler {
+func (ec *executionContext) marshalNPost2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v ent.Post) graphql.Marshaler {
 	return ec._Post(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v *ent.Post) graphql.Marshaler {
+func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v *ent.Post) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29106,11 +29106,11 @@ func (ec *executionContext) marshalNPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗsh
 	return ec._Post(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNPostConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v ent.PostConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNPostConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v ent.PostConnection) graphql.Marshaler {
 	return ec._PostConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v *ent.PostConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNPostConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostConnection(ctx context.Context, sel ast.SelectionSet, v *ent.PostConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29120,13 +29120,13 @@ func (ec *executionContext) marshalNPostConnection2ᚖgithubᚗcomᚋlrstanley�
 	return ec._PostConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrderField(ctx context.Context, v interface{}) (*ent.PostOrderField, error) {
+func (ec *executionContext) unmarshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrderField(ctx context.Context, v interface{}) (*ent.PostOrderField, error) {
 	var res = new(ent.PostOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.PostOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNPostOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.PostOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29136,7 +29136,7 @@ func (ec *executionContext) marshalNPostOrderField2ᚖgithubᚗcomᚋlrstanley�
 	return v
 }
 
-func (ec *executionContext) unmarshalNPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx context.Context, v interface{}) (*ent.PostWhereInput, error) {
+func (ec *executionContext) unmarshalNPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx context.Context, v interface{}) (*ent.PostWhereInput, error) {
 	res, err := ec.unmarshalInputPostWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -29192,17 +29192,17 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) unmarshalNUpdateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUpdateLabelInput(ctx context.Context, v interface{}) (ent.UpdateLabelInput, error) {
+func (ec *executionContext) unmarshalNUpdateLabelInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUpdateLabelInput(ctx context.Context, v interface{}) (ent.UpdateLabelInput, error) {
 	res, err := ec.unmarshalInputUpdateLabelInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNUpdatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUpdatePostInput(ctx context.Context, v interface{}) (ent.UpdatePostInput, error) {
+func (ec *executionContext) unmarshalNUpdatePostInput2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUpdatePostInput(ctx context.Context, v interface{}) (ent.UpdatePostInput, error) {
 	res, err := ec.unmarshalInputUpdatePostInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29212,11 +29212,11 @@ func (ec *executionContext) marshalNUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗsh
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNUserConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v ent.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v ent.UserConnection) graphql.Marshaler {
 	return ec._UserConnection(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *ent.UserConnection) graphql.Marshaler {
+func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserConnection(ctx context.Context, sel ast.SelectionSet, v *ent.UserConnection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29226,13 +29226,13 @@ func (ec *executionContext) marshalNUserConnection2ᚖgithubᚗcomᚋlrstanley�
 	return ec._UserConnection(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserOrderField(ctx context.Context, v interface{}) (*ent.UserOrderField, error) {
+func (ec *executionContext) unmarshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserOrderField(ctx context.Context, v interface{}) (*ent.UserOrderField, error) {
 	var res = new(ent.UserOrderField)
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.UserOrderField) graphql.Marshaler {
+func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserOrderField(ctx context.Context, sel ast.SelectionSet, v *ent.UserOrderField) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29242,7 +29242,7 @@ func (ec *executionContext) marshalNUserOrderField2ᚖgithubᚗcomᚋlrstanley�
 	return v
 }
 
-func (ec *executionContext) unmarshalNUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalNUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
 	res, err := ec.unmarshalInputUserWhereInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -29556,14 +29556,14 @@ func (ec *executionContext) marshalOCursor2ᚖentgoᚗioᚋcontribᚋentgqlᚐCu
 	return v
 }
 
-func (ec *executionContext) marshalOGithubAsset2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAsset(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAsset) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubAsset2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAsset(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAsset) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubAsset(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubAssetEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubAssetEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -29590,7 +29590,7 @@ func (ec *executionContext) marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanl
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGithubAssetEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOGithubAssetEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29604,14 +29604,14 @@ func (ec *executionContext) marshalOGithubAssetEdge2ᚕᚖgithubᚗcomᚋlrstanl
 	return ret
 }
 
-func (ec *executionContext) marshalOGithubAssetEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubAssetEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubAssetEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubAssetEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetOrder(ctx context.Context, v interface{}) (*ent.GithubAssetOrder, error) {
+func (ec *executionContext) unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetOrder(ctx context.Context, v interface{}) (*ent.GithubAssetOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29619,7 +29619,7 @@ func (ec *executionContext) unmarshalOGithubAssetOrder2ᚖgithubᚗcomᚋlrstanl
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubAssetWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubAssetWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29631,7 +29631,7 @@ func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcom�
 	res := make([]*ent.GithubAssetWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -29639,7 +29639,7 @@ func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚕᚖgithubᚗcom�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubAssetWhereInput(ctx context.Context, v interface{}) (*ent.GithubAssetWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubAssetWhereInput(ctx context.Context, v interface{}) (*ent.GithubAssetWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29647,14 +29647,14 @@ func (ec *executionContext) unmarshalOGithubAssetWhereInput2ᚖgithubᚗcomᚋlr
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGithubEvent2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEvent(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEvent) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubEvent2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEvent(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEvent) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubEvent(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubEventEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubEventEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -29681,7 +29681,7 @@ func (ec *executionContext) marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanl
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGithubEventEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOGithubEventEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29695,14 +29695,14 @@ func (ec *executionContext) marshalOGithubEventEdge2ᚕᚖgithubᚗcomᚋlrstanl
 	return ret
 }
 
-func (ec *executionContext) marshalOGithubEventEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubEventEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubEventEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubEventEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGithubEventOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventOrder(ctx context.Context, v interface{}) (*ent.GithubEventOrder, error) {
+func (ec *executionContext) unmarshalOGithubEventOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventOrder(ctx context.Context, v interface{}) (*ent.GithubEventOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29710,7 +29710,7 @@ func (ec *executionContext) unmarshalOGithubEventOrder2ᚖgithubᚗcomᚋlrstanl
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubEventWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubEventWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29722,7 +29722,7 @@ func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcom�
 	res := make([]*ent.GithubEventWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -29730,7 +29730,7 @@ func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚕᚖgithubᚗcom�
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubEventWhereInput(ctx context.Context, v interface{}) (*ent.GithubEventWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubEventWhereInput(ctx context.Context, v interface{}) (*ent.GithubEventWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29738,14 +29738,14 @@ func (ec *executionContext) unmarshalOGithubEventWhereInput2ᚖgithubᚗcomᚋlr
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGithubGist2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGist(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGist) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubGist2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGist(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGist) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubGist(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubGistEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubGistEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -29772,7 +29772,7 @@ func (ec *executionContext) marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanle
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGithubGistEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOGithubGistEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29786,14 +29786,14 @@ func (ec *executionContext) marshalOGithubGistEdge2ᚕᚖgithubᚗcomᚋlrstanle
 	return ret
 }
 
-func (ec *executionContext) marshalOGithubGistEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubGistEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubGistEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubGistEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGithubGistOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistOrder(ctx context.Context, v interface{}) (*ent.GithubGistOrder, error) {
+func (ec *executionContext) unmarshalOGithubGistOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistOrder(ctx context.Context, v interface{}) (*ent.GithubGistOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29801,7 +29801,7 @@ func (ec *executionContext) unmarshalOGithubGistOrder2ᚖgithubᚗcomᚋlrstanle
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubGistWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubGistWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29813,7 +29813,7 @@ func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋ
 	res := make([]*ent.GithubGistWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -29821,7 +29821,7 @@ func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚕᚖgithubᚗcomᚋ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubGistWhereInput(ctx context.Context, v interface{}) (*ent.GithubGistWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubGistWhereInput(ctx context.Context, v interface{}) (*ent.GithubGistWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29836,14 +29836,14 @@ func (ec *executionContext) marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgo�
 	return ec._GithubLicense(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRelease(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRelease) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubRelease2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRelease(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRelease) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubRelease(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubReleaseEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubReleaseEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -29870,7 +29870,7 @@ func (ec *executionContext) marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrsta
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGithubReleaseEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOGithubReleaseEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29884,14 +29884,14 @@ func (ec *executionContext) marshalOGithubReleaseEdge2ᚕᚖgithubᚗcomᚋlrsta
 	return ret
 }
 
-func (ec *executionContext) marshalOGithubReleaseEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubReleaseEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubReleaseEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubReleaseEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseOrder(ctx context.Context, v interface{}) (*ent.GithubReleaseOrder, error) {
+func (ec *executionContext) unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseOrder(ctx context.Context, v interface{}) (*ent.GithubReleaseOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29899,7 +29899,7 @@ func (ec *executionContext) unmarshalOGithubReleaseOrder2ᚖgithubᚗcomᚋlrsta
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubReleaseWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubReleaseWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29911,7 +29911,7 @@ func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcom
 	res := make([]*ent.GithubReleaseWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -29919,7 +29919,7 @@ func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚕᚖgithubᚗcom
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubReleaseWhereInput(ctx context.Context, v interface{}) (*ent.GithubReleaseWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubReleaseWhereInput(ctx context.Context, v interface{}) (*ent.GithubReleaseWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29927,14 +29927,14 @@ func (ec *executionContext) unmarshalOGithubReleaseWhereInput2ᚖgithubᚗcomᚋ
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepository(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepository) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubRepository2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepository(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepository) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubRepository(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubRepositoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.GithubRepositoryEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -29961,7 +29961,7 @@ func (ec *executionContext) marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlr
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOGithubRepositoryEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOGithubRepositoryEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -29975,14 +29975,14 @@ func (ec *executionContext) marshalOGithubRepositoryEdge2ᚕᚖgithubᚗcomᚋlr
 	return ret
 }
 
-func (ec *executionContext) marshalOGithubRepositoryEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubRepositoryEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryEdge(ctx context.Context, sel ast.SelectionSet, v *ent.GithubRepositoryEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._GithubRepositoryEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryOrder(ctx context.Context, v interface{}) (*ent.GithubRepositoryOrder, error) {
+func (ec *executionContext) unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryOrder(ctx context.Context, v interface{}) (*ent.GithubRepositoryOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -29990,7 +29990,7 @@ func (ec *executionContext) unmarshalOGithubRepositoryOrder2ᚖgithubᚗcomᚋlr
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubRepositoryWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.GithubRepositoryWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30002,7 +30002,7 @@ func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗ
 	res := make([]*ent.GithubRepositoryWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -30010,7 +30010,7 @@ func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚕᚖgithubᚗ
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐGithubRepositoryWhereInput(ctx context.Context, v interface{}) (*ent.GithubRepositoryWhereInput, error) {
+func (ec *executionContext) unmarshalOGithubRepositoryWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐGithubRepositoryWhereInput(ctx context.Context, v interface{}) (*ent.GithubRepositoryWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30180,14 +30180,14 @@ func (ec *executionContext) marshalOInt2ᚖint64(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalOLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v *ent.Label) graphql.Marshaler {
+func (ec *executionContext) marshalOLabel2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabel(ctx context.Context, sel ast.SelectionSet, v *ent.Label) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Label(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.LabelEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.LabelEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -30214,7 +30214,7 @@ func (ec *executionContext) marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋl
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOLabelEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOLabelEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -30228,14 +30228,14 @@ func (ec *executionContext) marshalOLabelEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋl
 	return ret
 }
 
-func (ec *executionContext) marshalOLabelEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelEdge(ctx context.Context, sel ast.SelectionSet, v *ent.LabelEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOLabelEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelEdge(ctx context.Context, sel ast.SelectionSet, v *ent.LabelEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._LabelEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelOrder(ctx context.Context, v interface{}) (*ent.LabelOrder, error) {
+func (ec *executionContext) unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelOrder(ctx context.Context, v interface{}) (*ent.LabelOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30243,7 +30243,7 @@ func (ec *executionContext) unmarshalOLabelOrder2ᚖgithubᚗcomᚋlrstanleyᚋl
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.LabelWhereInput, error) {
+func (ec *executionContext) unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.LabelWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30255,7 +30255,7 @@ func (ec *executionContext) unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrsta
 	res := make([]*ent.LabelWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -30263,7 +30263,7 @@ func (ec *executionContext) unmarshalOLabelWhereInput2ᚕᚖgithubᚗcomᚋlrsta
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐLabelWhereInput(ctx context.Context, v interface{}) (*ent.LabelWhereInput, error) {
+func (ec *executionContext) unmarshalOLabelWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐLabelWhereInput(ctx context.Context, v interface{}) (*ent.LabelWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30365,21 +30365,21 @@ func (ec *executionContext) marshalOLink2ᚕgithubᚗcomᚋlrstanleyᚋclixᚐLi
 	return ret
 }
 
-func (ec *executionContext) marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
+func (ec *executionContext) marshalONode2githubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐNoder(ctx context.Context, sel ast.SelectionSet, v ent.Noder) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Node(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v *ent.Post) graphql.Marshaler {
+func (ec *executionContext) marshalOPost2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPost(ctx context.Context, sel ast.SelectionSet, v *ent.Post) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Post(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.PostEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -30406,7 +30406,7 @@ func (ec *executionContext) marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋli
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOPostEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOPostEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -30420,14 +30420,14 @@ func (ec *executionContext) marshalOPostEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋli
 	return ret
 }
 
-func (ec *executionContext) marshalOPostEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v *ent.PostEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOPostEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostEdge(ctx context.Context, sel ast.SelectionSet, v *ent.PostEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._PostEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostOrder(ctx context.Context, v interface{}) (*ent.PostOrder, error) {
+func (ec *executionContext) unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostOrder(ctx context.Context, v interface{}) (*ent.PostOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30435,7 +30435,7 @@ func (ec *executionContext) unmarshalOPostOrder2ᚖgithubᚗcomᚋlrstanleyᚋli
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.PostWhereInput, error) {
+func (ec *executionContext) unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.PostWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30447,7 +30447,7 @@ func (ec *executionContext) unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstan
 	res := make([]*ent.PostWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -30455,7 +30455,7 @@ func (ec *executionContext) unmarshalOPostWhereInput2ᚕᚖgithubᚗcomᚋlrstan
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐPostWhereInput(ctx context.Context, v interface{}) (*ent.PostWhereInput, error) {
+func (ec *executionContext) unmarshalOPostWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐPostWhereInput(ctx context.Context, v interface{}) (*ent.PostWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30598,14 +30598,14 @@ func (ec *executionContext) marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgi
 	return ec._Timestamp(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
+func (ec *executionContext) marshalOUser2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUser(ctx context.Context, sel ast.SelectionSet, v *ent.User) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._User(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.UserEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v []*ent.UserEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -30632,7 +30632,7 @@ func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋli
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOUserEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserEdge(ctx, sel, v[i])
+			ret[i] = ec.marshalOUserEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserEdge(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -30646,14 +30646,14 @@ func (ec *executionContext) marshalOUserEdge2ᚕᚖgithubᚗcomᚋlrstanleyᚋli
 	return ret
 }
 
-func (ec *executionContext) marshalOUserEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v *ent.UserEdge) graphql.Marshaler {
+func (ec *executionContext) marshalOUserEdge2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserEdge(ctx context.Context, sel ast.SelectionSet, v *ent.UserEdge) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UserEdge(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserOrder(ctx context.Context, v interface{}) (*ent.UserOrder, error) {
+func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserOrder(ctx context.Context, v interface{}) (*ent.UserOrder, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30661,7 +30661,7 @@ func (ec *executionContext) unmarshalOUserOrder2ᚖgithubᚗcomᚋlrstanleyᚋli
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInputᚄ(ctx context.Context, v interface{}) ([]*ent.UserWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -30673,7 +30673,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstan
 	res := make([]*ent.UserWhereInput, len(vSlice))
 	for i := range vSlice {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInput(ctx, vSlice[i])
+		res[i], err = ec.unmarshalNUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInput(ctx, vSlice[i])
 		if err != nil {
 			return nil, err
 		}
@@ -30681,7 +30681,7 @@ func (ec *executionContext) unmarshalOUserWhereInput2ᚕᚖgithubᚗcomᚋlrstan
 	return res, nil
 }
 
-func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
+func (ec *executionContext) unmarshalOUserWhereInput2ᚖgithubᚗcomᚋlrstanleyᚋliamᚗshᚋinternalᚋdatabaseᚋentᚐUserWhereInput(ctx context.Context, v interface{}) (*ent.UserWhereInput, error) {
 	if v == nil {
 		return nil, nil
 	}

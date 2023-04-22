@@ -17,9 +17,9 @@ import (
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/apex/log"
 	_ "github.com/jackc/pgx/v4/stdlib"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/migrate"
-	_ "github.com/lrstanley/liam.sh/internal/ent/runtime"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/migrate"
+	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime"
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 

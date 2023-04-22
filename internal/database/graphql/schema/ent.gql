@@ -1142,7 +1142,7 @@ scalar Map
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
-interface Node @goModel(model: "github.com/lrstanley/liam.sh/internal/ent.Noder") {
+interface Node @goModel(model: "github.com/lrstanley/liam.sh/internal/database/ent.Noder") {
   """The id of the object."""
   id: ID!
 }

@@ -13,12 +13,10 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
-	"github.com/lrstanley/liam.sh/internal/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
-var (
-	reUserLogin = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{0,38}$`)
-)
+var reUserLogin = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{0,38}$`)
 
 // User holds the schema definition for the User entity.
 type User struct {

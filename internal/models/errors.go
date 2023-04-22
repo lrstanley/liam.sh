@@ -11,7 +11,7 @@ import (
 	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
 func init() {

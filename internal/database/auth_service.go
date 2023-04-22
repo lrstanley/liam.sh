@@ -10,8 +10,8 @@ import (
 
 	"ariga.io/entcache"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/user"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/user"
 	"github.com/markbates/goth"
 )
 

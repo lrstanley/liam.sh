@@ -9,8 +9,8 @@ import (
 
 	"github.com/apex/log"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/post"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 )
 
 // CreatePost is the resolver for the createPost field.

@@ -12,10 +12,10 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
-	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
-	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 )
 
 func (h *handler) getReleasesLegacy(w http.ResponseWriter, r *http.Request) {

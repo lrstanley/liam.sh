@@ -10,7 +10,7 @@ import (
 
 	"entgo.io/ent/entql"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
 func hasRole(ctx context.Context, allowed []string) bool {

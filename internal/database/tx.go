@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/apex/log"
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
 func Rollback(tx *ent.Tx, err error) error {

@@ -11,7 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/go-github/v50/github"
-	"github.com/lrstanley/liam.sh/internal/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
 type GithubGist struct {

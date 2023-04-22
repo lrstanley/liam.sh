@@ -7,7 +7,7 @@ package resolver
 import (
 	"context"
 
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
 // CreateLabel is the resolver for the createLabel field.

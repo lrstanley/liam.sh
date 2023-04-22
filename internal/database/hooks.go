@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/apex/log"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/hook"
-	"github.com/lrstanley/liam.sh/internal/ent/post"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/hook"
+	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/lrstanley/liam.sh/internal/markdown"
 	"github.com/microcosm-cc/bluemonday"
 )

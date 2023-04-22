@@ -9,7 +9,7 @@ import (
 	"fmt"
 
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
 // Self is the resolver for the self field.

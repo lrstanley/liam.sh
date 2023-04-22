@@ -10,8 +10,8 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
-	"github.com/lrstanley/liam.sh/internal/ent/predicate"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
+	"github.com/lrstanley/liam.sh/internal/database/ent/predicate"
 )
 
 func (h *handler) getGists(w http.ResponseWriter, r *http.Request) {

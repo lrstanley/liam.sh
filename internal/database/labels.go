@@ -10,8 +10,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/label"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/label"
 	"golang.org/x/exp/slices"
 )
 

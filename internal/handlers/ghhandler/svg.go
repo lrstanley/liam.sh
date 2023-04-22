@@ -18,8 +18,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/cache"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/gh"
 )
 

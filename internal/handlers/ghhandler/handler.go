@@ -8,7 +8,7 @@ import (
 	"text/template"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/lrstanley/liam.sh/internal/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
 type handler struct {

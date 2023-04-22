@@ -28,10 +28,10 @@ resolver:
 # autobind tells gqlgen to search for any type names in the GraphQL schema in the
 # provided Go package. If they match it will use them, otherwise it will generate new ones.
 autobind:
-  - github.com/lrstanley/liam.sh/internal/ent
-  - github.com/lrstanley/liam.sh/internal/ent/user
-  - github.com/lrstanley/liam.sh/internal/ent/post
-  - github.com/lrstanley/liam.sh/internal/ent/label
+  - github.com/lrstanley/liam.sh/internal/database/ent
+  - github.com/lrstanley/liam.sh/internal/database/ent/user
+  - github.com/lrstanley/liam.sh/internal/database/ent/post
+  - github.com/lrstanley/liam.sh/internal/database/ent/label
   - github.com/lrstanley/liam.sh/internal/models
 
 # This section declares type mapping between the GraphQL and Go type systems.
@@ -41,7 +41,7 @@ models:
       - github.com/99designs/gqlgen/graphql.IntID
   Node:
     model:
-      - github.com/lrstanley/liam.sh/internal/ent.Noder
+      - github.com/lrstanley/liam.sh/internal/database/ent.Noder
   GithubEventRepo:
     model:
       - github.com/google/go-github/v50/github.Repository

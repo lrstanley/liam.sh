@@ -15,9 +15,9 @@ import (
 	"github.com/apex/log"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/database"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
-	"github.com/lrstanley/liam.sh/internal/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
 const gistInterval = 120 * time.Minute

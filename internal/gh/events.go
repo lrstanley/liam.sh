@@ -12,9 +12,9 @@ import (
 	"github.com/apex/log"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/database"
-	"github.com/lrstanley/liam.sh/internal/ent"
-	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
-	"github.com/lrstanley/liam.sh/internal/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
 const eventsInterval = 30 * time.Minute
