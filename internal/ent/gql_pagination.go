@@ -8,13 +8,13 @@ package ent
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"io"
 	"strconv"
-	"strings"
 
+	"entgo.io/contrib/entgql"
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/errcode"
@@ -27,163 +27,20 @@ import (
 	"github.com/lrstanley/liam.sh/internal/ent/post"
 	"github.com/lrstanley/liam.sh/internal/ent/user"
 	"github.com/vektah/gqlparser/v2/gqlerror"
-	"github.com/vmihailenco/msgpack/v5"
 )
 
-// OrderDirection defines the directions in which to order a list of items.
-type OrderDirection string
-
-const (
-	// OrderDirectionAsc specifies an ascending order.
-	OrderDirectionAsc OrderDirection = "ASC"
-	// OrderDirectionDesc specifies a descending order.
-	OrderDirectionDesc OrderDirection = "DESC"
+// Common entgql types.
+type (
+	Cursor         = entgql.Cursor[int]
+	PageInfo       = entgql.PageInfo[int]
+	OrderDirection = entgql.OrderDirection
 )
 
-// Validate the order direction value.
-func (o OrderDirection) Validate() error {
-	if o != OrderDirectionAsc && o != OrderDirectionDesc {
-		return fmt.Errorf("%s is not a valid OrderDirection", o)
-	}
-	return nil
-}
-
-// String implements fmt.Stringer interface.
-func (o OrderDirection) String() string {
-	return string(o)
-}
-
-// MarshalGQL implements graphql.Marshaler interface.
-func (o OrderDirection) MarshalGQL(w io.Writer) {
-	io.WriteString(w, strconv.Quote(o.String()))
-}
-
-// UnmarshalGQL implements graphql.Unmarshaler interface.
-func (o *OrderDirection) UnmarshalGQL(val interface{}) error {
-	str, ok := val.(string)
-	if !ok {
-		return fmt.Errorf("order direction %T must be a string", val)
-	}
-	*o = OrderDirection(str)
-	return o.Validate()
-}
-
-func (o OrderDirection) reverse() OrderDirection {
-	if o == OrderDirectionDesc {
-		return OrderDirectionAsc
-	}
-	return OrderDirectionDesc
-}
-
-func (o OrderDirection) orderFunc(field string) OrderFunc {
-	if o == OrderDirectionDesc {
+func orderFunc(o OrderDirection, field string) func(*sql.Selector) {
+	if o == entgql.OrderDirectionDesc {
 		return Desc(field)
 	}
 	return Asc(field)
-}
-
-func cursorsToPredicates(direction OrderDirection, after, before *Cursor, field, idField string) []func(s *sql.Selector) {
-	var predicates []func(s *sql.Selector)
-	if after != nil {
-		if after.Value != nil {
-			var predicate func([]string, ...interface{}) *sql.Predicate
-			if direction == OrderDirectionAsc {
-				predicate = sql.CompositeGT
-			} else {
-				predicate = sql.CompositeLT
-			}
-			predicates = append(predicates, func(s *sql.Selector) {
-				s.Where(predicate(
-					s.Columns(field, idField),
-					after.Value, after.ID,
-				))
-			})
-		} else {
-			var predicate func(string, interface{}) *sql.Predicate
-			if direction == OrderDirectionAsc {
-				predicate = sql.GT
-			} else {
-				predicate = sql.LT
-			}
-			predicates = append(predicates, func(s *sql.Selector) {
-				s.Where(predicate(
-					s.C(idField),
-					after.ID,
-				))
-			})
-		}
-	}
-	if before != nil {
-		if before.Value != nil {
-			var predicate func([]string, ...interface{}) *sql.Predicate
-			if direction == OrderDirectionAsc {
-				predicate = sql.CompositeLT
-			} else {
-				predicate = sql.CompositeGT
-			}
-			predicates = append(predicates, func(s *sql.Selector) {
-				s.Where(predicate(
-					s.Columns(field, idField),
-					before.Value, before.ID,
-				))
-			})
-		} else {
-			var predicate func(string, interface{}) *sql.Predicate
-			if direction == OrderDirectionAsc {
-				predicate = sql.LT
-			} else {
-				predicate = sql.GT
-			}
-			predicates = append(predicates, func(s *sql.Selector) {
-				s.Where(predicate(
-					s.C(idField),
-					before.ID,
-				))
-			})
-		}
-	}
-	return predicates
-}
-
-// PageInfo of a connection type.
-type PageInfo struct {
-	HasNextPage     bool    `json:"hasNextPage"`
-	HasPreviousPage bool    `json:"hasPreviousPage"`
-	StartCursor     *Cursor `json:"startCursor"`
-	EndCursor       *Cursor `json:"endCursor"`
-}
-
-// Cursor of an edge type.
-type Cursor struct {
-	ID    int   `msgpack:"i"`
-	Value Value `msgpack:"v,omitempty"`
-}
-
-// MarshalGQL implements graphql.Marshaler interface.
-func (c Cursor) MarshalGQL(w io.Writer) {
-	quote := []byte{'"'}
-	w.Write(quote)
-	defer w.Write(quote)
-	wc := base64.NewEncoder(base64.RawStdEncoding, w)
-	defer wc.Close()
-	_ = msgpack.NewEncoder(wc).Encode(c)
-}
-
-// UnmarshalGQL implements graphql.Unmarshaler interface.
-func (c *Cursor) UnmarshalGQL(v interface{}) error {
-	s, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("%T is not a string", v)
-	}
-	if err := msgpack.NewDecoder(
-		base64.NewDecoder(
-			base64.RawStdEncoding,
-			strings.NewReader(s),
-		),
-	).Decode(c); err != nil {
-		return fmt.Errorf("cannot decode cursor: %w", err)
-	}
-	return nil
 }
 
 const errInvalidPagination = "INVALID_PAGINATION"
@@ -336,12 +193,13 @@ func WithGithubAssetFilter(filter func(*GithubAssetQuery) (*GithubAssetQuery, er
 }
 
 type githubassetPager struct {
-	order  *GithubAssetOrder
-	filter func(*GithubAssetQuery) (*GithubAssetQuery, error)
+	reverse bool
+	order   *GithubAssetOrder
+	filter  func(*GithubAssetQuery) (*GithubAssetQuery, error)
 }
 
-func newGithubAssetPager(opts []GithubAssetPaginateOption) (*githubassetPager, error) {
-	pager := &githubassetPager{}
+func newGithubAssetPager(opts []GithubAssetPaginateOption, reverse bool) (*githubassetPager, error) {
+	pager := &githubassetPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -364,37 +222,38 @@ func (p *githubassetPager) toCursor(ga *GithubAsset) Cursor {
 	return p.order.Field.toCursor(ga)
 }
 
-func (p *githubassetPager) applyCursors(query *GithubAssetQuery, after, before *Cursor) *GithubAssetQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultGithubAssetOrder.Field.field,
-	) {
+func (p *githubassetPager) applyCursors(query *GithubAssetQuery, after, before *Cursor) (*GithubAssetQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultGithubAssetOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *githubassetPager) applyOrder(query *GithubAssetQuery, reverse bool) *GithubAssetQuery {
+func (p *githubassetPager) applyOrder(query *GithubAssetQuery) *GithubAssetQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultGithubAssetOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultGithubAssetOrder.Field.field))
+		query = query.Order(DefaultGithubAssetOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *githubassetPager) orderExpr(reverse bool) sql.Querier {
+func (p *githubassetPager) orderExpr(query *GithubAssetQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultGithubAssetOrder.Field {
-			b.Comma().Ident(DefaultGithubAssetOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultGithubAssetOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -407,7 +266,7 @@ func (ga *GithubAssetQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newGithubAssetPager(opts)
+	pager, err := newGithubAssetPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -430,8 +289,10 @@ func (ga *GithubAssetQuery) Paginate(
 		return conn, nil
 	}
 
-	ga = pager.applyCursors(ga, after, before)
-	ga = pager.applyOrder(ga, last != nil)
+	if ga, err = pager.applyCursors(ga, after, before); err != nil {
+		return nil, err
+	}
+	ga = pager.applyOrder(ga)
 	if limit := paginateLimit(first, last); limit != 0 {
 		ga.Limit(limit)
 	}
@@ -452,7 +313,11 @@ func (ga *GithubAssetQuery) Paginate(
 var (
 	// GithubAssetOrderFieldName orders GithubAsset by name.
 	GithubAssetOrderFieldName = &GithubAssetOrderField{
-		field: githubasset.FieldName,
+		Value: func(ga *GithubAsset) (ent.Value, error) {
+			return ga.Name, nil
+		},
+		column: githubasset.FieldName,
+		toTerm: githubasset.ByName,
 		toCursor: func(ga *GithubAsset) Cursor {
 			return Cursor{
 				ID:    ga.ID,
@@ -462,7 +327,11 @@ var (
 	}
 	// GithubAssetOrderFieldDownloadCount orders GithubAsset by download_count.
 	GithubAssetOrderFieldDownloadCount = &GithubAssetOrderField{
-		field: githubasset.FieldDownloadCount,
+		Value: func(ga *GithubAsset) (ent.Value, error) {
+			return ga.DownloadCount, nil
+		},
+		column: githubasset.FieldDownloadCount,
+		toTerm: githubasset.ByDownloadCount,
 		toCursor: func(ga *GithubAsset) Cursor {
 			return Cursor{
 				ID:    ga.ID,
@@ -472,7 +341,11 @@ var (
 	}
 	// GithubAssetOrderFieldCreatedAt orders GithubAsset by created_at.
 	GithubAssetOrderFieldCreatedAt = &GithubAssetOrderField{
-		field: githubasset.FieldCreatedAt,
+		Value: func(ga *GithubAsset) (ent.Value, error) {
+			return ga.CreatedAt, nil
+		},
+		column: githubasset.FieldCreatedAt,
+		toTerm: githubasset.ByCreatedAt,
 		toCursor: func(ga *GithubAsset) Cursor {
 			return Cursor{
 				ID:    ga.ID,
@@ -482,7 +355,11 @@ var (
 	}
 	// GithubAssetOrderFieldUpdatedAt orders GithubAsset by updated_at.
 	GithubAssetOrderFieldUpdatedAt = &GithubAssetOrderField{
-		field: githubasset.FieldUpdatedAt,
+		Value: func(ga *GithubAsset) (ent.Value, error) {
+			return ga.UpdatedAt, nil
+		},
+		column: githubasset.FieldUpdatedAt,
+		toTerm: githubasset.ByUpdatedAt,
 		toCursor: func(ga *GithubAsset) Cursor {
 			return Cursor{
 				ID:    ga.ID,
@@ -495,14 +372,14 @@ var (
 // String implement fmt.Stringer interface.
 func (f GithubAssetOrderField) String() string {
 	var str string
-	switch f.field {
-	case githubasset.FieldName:
+	switch f.column {
+	case GithubAssetOrderFieldName.column:
 		str = "NAME"
-	case githubasset.FieldDownloadCount:
+	case GithubAssetOrderFieldDownloadCount.column:
 		str = "DOWNLOAD_COUNT"
-	case githubasset.FieldCreatedAt:
+	case GithubAssetOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
-	case githubasset.FieldUpdatedAt:
+	case GithubAssetOrderFieldUpdatedAt.column:
 		str = "UPDATED_AT"
 	}
 	return str
@@ -536,7 +413,10 @@ func (f *GithubAssetOrderField) UnmarshalGQL(v interface{}) error {
 
 // GithubAssetOrderField defines the ordering field of GithubAsset.
 type GithubAssetOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given GithubAsset.
+	Value    func(*GithubAsset) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) githubasset.OrderOption
 	toCursor func(*GithubAsset) Cursor
 }
 
@@ -548,9 +428,13 @@ type GithubAssetOrder struct {
 
 // DefaultGithubAssetOrder is the default ordering of GithubAsset.
 var DefaultGithubAssetOrder = &GithubAssetOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &GithubAssetOrderField{
-		field: githubasset.FieldID,
+		Value: func(ga *GithubAsset) (ent.Value, error) {
+			return ga.ID, nil
+		},
+		column: githubasset.FieldID,
+		toTerm: githubasset.ByID,
 		toCursor: func(ga *GithubAsset) Cursor {
 			return Cursor{ID: ga.ID}
 		},
@@ -652,12 +536,13 @@ func WithGithubEventFilter(filter func(*GithubEventQuery) (*GithubEventQuery, er
 }
 
 type githubeventPager struct {
-	order  *GithubEventOrder
-	filter func(*GithubEventQuery) (*GithubEventQuery, error)
+	reverse bool
+	order   *GithubEventOrder
+	filter  func(*GithubEventQuery) (*GithubEventQuery, error)
 }
 
-func newGithubEventPager(opts []GithubEventPaginateOption) (*githubeventPager, error) {
-	pager := &githubeventPager{}
+func newGithubEventPager(opts []GithubEventPaginateOption, reverse bool) (*githubeventPager, error) {
+	pager := &githubeventPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -680,37 +565,38 @@ func (p *githubeventPager) toCursor(ge *GithubEvent) Cursor {
 	return p.order.Field.toCursor(ge)
 }
 
-func (p *githubeventPager) applyCursors(query *GithubEventQuery, after, before *Cursor) *GithubEventQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultGithubEventOrder.Field.field,
-	) {
+func (p *githubeventPager) applyCursors(query *GithubEventQuery, after, before *Cursor) (*GithubEventQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultGithubEventOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *githubeventPager) applyOrder(query *GithubEventQuery, reverse bool) *GithubEventQuery {
+func (p *githubeventPager) applyOrder(query *GithubEventQuery) *GithubEventQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultGithubEventOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultGithubEventOrder.Field.field))
+		query = query.Order(DefaultGithubEventOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *githubeventPager) orderExpr(reverse bool) sql.Querier {
+func (p *githubeventPager) orderExpr(query *GithubEventQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultGithubEventOrder.Field {
-			b.Comma().Ident(DefaultGithubEventOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultGithubEventOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -723,7 +609,7 @@ func (ge *GithubEventQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newGithubEventPager(opts)
+	pager, err := newGithubEventPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -746,8 +632,10 @@ func (ge *GithubEventQuery) Paginate(
 		return conn, nil
 	}
 
-	ge = pager.applyCursors(ge, after, before)
-	ge = pager.applyOrder(ge, last != nil)
+	if ge, err = pager.applyCursors(ge, after, before); err != nil {
+		return nil, err
+	}
+	ge = pager.applyOrder(ge)
 	if limit := paginateLimit(first, last); limit != 0 {
 		ge.Limit(limit)
 	}
@@ -768,7 +656,11 @@ func (ge *GithubEventQuery) Paginate(
 var (
 	// GithubEventOrderFieldEventID orders GithubEvent by event_id.
 	GithubEventOrderFieldEventID = &GithubEventOrderField{
-		field: githubevent.FieldEventID,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.EventID, nil
+		},
+		column: githubevent.FieldEventID,
+		toTerm: githubevent.ByEventID,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{
 				ID:    ge.ID,
@@ -778,7 +670,11 @@ var (
 	}
 	// GithubEventOrderFieldEventType orders GithubEvent by event_type.
 	GithubEventOrderFieldEventType = &GithubEventOrderField{
-		field: githubevent.FieldEventType,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.EventType, nil
+		},
+		column: githubevent.FieldEventType,
+		toTerm: githubevent.ByEventType,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{
 				ID:    ge.ID,
@@ -788,7 +684,11 @@ var (
 	}
 	// GithubEventOrderFieldCreatedAt orders GithubEvent by created_at.
 	GithubEventOrderFieldCreatedAt = &GithubEventOrderField{
-		field: githubevent.FieldCreatedAt,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.CreatedAt, nil
+		},
+		column: githubevent.FieldCreatedAt,
+		toTerm: githubevent.ByCreatedAt,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{
 				ID:    ge.ID,
@@ -798,7 +698,11 @@ var (
 	}
 	// GithubEventOrderFieldActorID orders GithubEvent by actor_id.
 	GithubEventOrderFieldActorID = &GithubEventOrderField{
-		field: githubevent.FieldActorID,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.ActorID, nil
+		},
+		column: githubevent.FieldActorID,
+		toTerm: githubevent.ByActorID,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{
 				ID:    ge.ID,
@@ -808,7 +712,11 @@ var (
 	}
 	// GithubEventOrderFieldRepoID orders GithubEvent by repo_id.
 	GithubEventOrderFieldRepoID = &GithubEventOrderField{
-		field: githubevent.FieldRepoID,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.RepoID, nil
+		},
+		column: githubevent.FieldRepoID,
+		toTerm: githubevent.ByRepoID,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{
 				ID:    ge.ID,
@@ -821,16 +729,16 @@ var (
 // String implement fmt.Stringer interface.
 func (f GithubEventOrderField) String() string {
 	var str string
-	switch f.field {
-	case githubevent.FieldEventID:
+	switch f.column {
+	case GithubEventOrderFieldEventID.column:
 		str = "EVENT_ID"
-	case githubevent.FieldEventType:
+	case GithubEventOrderFieldEventType.column:
 		str = "EVENT_TYPE"
-	case githubevent.FieldCreatedAt:
+	case GithubEventOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
-	case githubevent.FieldActorID:
+	case GithubEventOrderFieldActorID.column:
 		str = "ACTOR_ID"
-	case githubevent.FieldRepoID:
+	case GithubEventOrderFieldRepoID.column:
 		str = "REPO_ID"
 	}
 	return str
@@ -866,7 +774,10 @@ func (f *GithubEventOrderField) UnmarshalGQL(v interface{}) error {
 
 // GithubEventOrderField defines the ordering field of GithubEvent.
 type GithubEventOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given GithubEvent.
+	Value    func(*GithubEvent) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) githubevent.OrderOption
 	toCursor func(*GithubEvent) Cursor
 }
 
@@ -878,9 +789,13 @@ type GithubEventOrder struct {
 
 // DefaultGithubEventOrder is the default ordering of GithubEvent.
 var DefaultGithubEventOrder = &GithubEventOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &GithubEventOrderField{
-		field: githubevent.FieldID,
+		Value: func(ge *GithubEvent) (ent.Value, error) {
+			return ge.ID, nil
+		},
+		column: githubevent.FieldID,
+		toTerm: githubevent.ByID,
 		toCursor: func(ge *GithubEvent) Cursor {
 			return Cursor{ID: ge.ID}
 		},
@@ -982,12 +897,13 @@ func WithGithubGistFilter(filter func(*GithubGistQuery) (*GithubGistQuery, error
 }
 
 type githubgistPager struct {
-	order  *GithubGistOrder
-	filter func(*GithubGistQuery) (*GithubGistQuery, error)
+	reverse bool
+	order   *GithubGistOrder
+	filter  func(*GithubGistQuery) (*GithubGistQuery, error)
 }
 
-func newGithubGistPager(opts []GithubGistPaginateOption) (*githubgistPager, error) {
-	pager := &githubgistPager{}
+func newGithubGistPager(opts []GithubGistPaginateOption, reverse bool) (*githubgistPager, error) {
+	pager := &githubgistPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -1010,37 +926,38 @@ func (p *githubgistPager) toCursor(gg *GithubGist) Cursor {
 	return p.order.Field.toCursor(gg)
 }
 
-func (p *githubgistPager) applyCursors(query *GithubGistQuery, after, before *Cursor) *GithubGistQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultGithubGistOrder.Field.field,
-	) {
+func (p *githubgistPager) applyCursors(query *GithubGistQuery, after, before *Cursor) (*GithubGistQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultGithubGistOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *githubgistPager) applyOrder(query *GithubGistQuery, reverse bool) *GithubGistQuery {
+func (p *githubgistPager) applyOrder(query *GithubGistQuery) *GithubGistQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultGithubGistOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultGithubGistOrder.Field.field))
+		query = query.Order(DefaultGithubGistOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *githubgistPager) orderExpr(reverse bool) sql.Querier {
+func (p *githubgistPager) orderExpr(query *GithubGistQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultGithubGistOrder.Field {
-			b.Comma().Ident(DefaultGithubGistOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultGithubGistOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -1053,7 +970,7 @@ func (gg *GithubGistQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newGithubGistPager(opts)
+	pager, err := newGithubGistPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1076,8 +993,10 @@ func (gg *GithubGistQuery) Paginate(
 		return conn, nil
 	}
 
-	gg = pager.applyCursors(gg, after, before)
-	gg = pager.applyOrder(gg, last != nil)
+	if gg, err = pager.applyCursors(gg, after, before); err != nil {
+		return nil, err
+	}
+	gg = pager.applyOrder(gg)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gg.Limit(limit)
 	}
@@ -1098,7 +1017,11 @@ func (gg *GithubGistQuery) Paginate(
 var (
 	// GithubGistOrderFieldCreatedAt orders GithubGist by created_at.
 	GithubGistOrderFieldCreatedAt = &GithubGistOrderField{
-		field: githubgist.FieldCreatedAt,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.CreatedAt, nil
+		},
+		column: githubgist.FieldCreatedAt,
+		toTerm: githubgist.ByCreatedAt,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1108,7 +1031,11 @@ var (
 	}
 	// GithubGistOrderFieldUpdatedAt orders GithubGist by updated_at.
 	GithubGistOrderFieldUpdatedAt = &GithubGistOrderField{
-		field: githubgist.FieldUpdatedAt,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.UpdatedAt, nil
+		},
+		column: githubgist.FieldUpdatedAt,
+		toTerm: githubgist.ByUpdatedAt,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1118,7 +1045,11 @@ var (
 	}
 	// GithubGistOrderFieldName orders GithubGist by name.
 	GithubGistOrderFieldName = &GithubGistOrderField{
-		field: githubgist.FieldName,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.Name, nil
+		},
+		column: githubgist.FieldName,
+		toTerm: githubgist.ByName,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1128,7 +1059,11 @@ var (
 	}
 	// GithubGistOrderFieldType orders GithubGist by type.
 	GithubGistOrderFieldType = &GithubGistOrderField{
-		field: githubgist.FieldType,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.Type, nil
+		},
+		column: githubgist.FieldType,
+		toTerm: githubgist.ByType,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1138,7 +1073,11 @@ var (
 	}
 	// GithubGistOrderFieldLanguage orders GithubGist by language.
 	GithubGistOrderFieldLanguage = &GithubGistOrderField{
-		field: githubgist.FieldLanguage,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.Language, nil
+		},
+		column: githubgist.FieldLanguage,
+		toTerm: githubgist.ByLanguage,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1148,7 +1087,11 @@ var (
 	}
 	// GithubGistOrderFieldSize orders GithubGist by size.
 	GithubGistOrderFieldSize = &GithubGistOrderField{
-		field: githubgist.FieldSize,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.Size, nil
+		},
+		column: githubgist.FieldSize,
+		toTerm: githubgist.BySize,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{
 				ID:    gg.ID,
@@ -1161,18 +1104,18 @@ var (
 // String implement fmt.Stringer interface.
 func (f GithubGistOrderField) String() string {
 	var str string
-	switch f.field {
-	case githubgist.FieldCreatedAt:
+	switch f.column {
+	case GithubGistOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
-	case githubgist.FieldUpdatedAt:
+	case GithubGistOrderFieldUpdatedAt.column:
 		str = "UPDATED_AT"
-	case githubgist.FieldName:
+	case GithubGistOrderFieldName.column:
 		str = "NAME"
-	case githubgist.FieldType:
+	case GithubGistOrderFieldType.column:
 		str = "TYPE"
-	case githubgist.FieldLanguage:
+	case GithubGistOrderFieldLanguage.column:
 		str = "LANGUAGE"
-	case githubgist.FieldSize:
+	case GithubGistOrderFieldSize.column:
 		str = "SIZE"
 	}
 	return str
@@ -1210,7 +1153,10 @@ func (f *GithubGistOrderField) UnmarshalGQL(v interface{}) error {
 
 // GithubGistOrderField defines the ordering field of GithubGist.
 type GithubGistOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given GithubGist.
+	Value    func(*GithubGist) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) githubgist.OrderOption
 	toCursor func(*GithubGist) Cursor
 }
 
@@ -1222,9 +1168,13 @@ type GithubGistOrder struct {
 
 // DefaultGithubGistOrder is the default ordering of GithubGist.
 var DefaultGithubGistOrder = &GithubGistOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &GithubGistOrderField{
-		field: githubgist.FieldID,
+		Value: func(gg *GithubGist) (ent.Value, error) {
+			return gg.ID, nil
+		},
+		column: githubgist.FieldID,
+		toTerm: githubgist.ByID,
 		toCursor: func(gg *GithubGist) Cursor {
 			return Cursor{ID: gg.ID}
 		},
@@ -1326,12 +1276,13 @@ func WithGithubReleaseFilter(filter func(*GithubReleaseQuery) (*GithubReleaseQue
 }
 
 type githubreleasePager struct {
-	order  *GithubReleaseOrder
-	filter func(*GithubReleaseQuery) (*GithubReleaseQuery, error)
+	reverse bool
+	order   *GithubReleaseOrder
+	filter  func(*GithubReleaseQuery) (*GithubReleaseQuery, error)
 }
 
-func newGithubReleasePager(opts []GithubReleasePaginateOption) (*githubreleasePager, error) {
-	pager := &githubreleasePager{}
+func newGithubReleasePager(opts []GithubReleasePaginateOption, reverse bool) (*githubreleasePager, error) {
+	pager := &githubreleasePager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -1354,37 +1305,38 @@ func (p *githubreleasePager) toCursor(gr *GithubRelease) Cursor {
 	return p.order.Field.toCursor(gr)
 }
 
-func (p *githubreleasePager) applyCursors(query *GithubReleaseQuery, after, before *Cursor) *GithubReleaseQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultGithubReleaseOrder.Field.field,
-	) {
+func (p *githubreleasePager) applyCursors(query *GithubReleaseQuery, after, before *Cursor) (*GithubReleaseQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultGithubReleaseOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *githubreleasePager) applyOrder(query *GithubReleaseQuery, reverse bool) *GithubReleaseQuery {
+func (p *githubreleasePager) applyOrder(query *GithubReleaseQuery) *GithubReleaseQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultGithubReleaseOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultGithubReleaseOrder.Field.field))
+		query = query.Order(DefaultGithubReleaseOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *githubreleasePager) orderExpr(reverse bool) sql.Querier {
+func (p *githubreleasePager) orderExpr(query *GithubReleaseQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultGithubReleaseOrder.Field {
-			b.Comma().Ident(DefaultGithubReleaseOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultGithubReleaseOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -1397,7 +1349,7 @@ func (gr *GithubReleaseQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newGithubReleasePager(opts)
+	pager, err := newGithubReleasePager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1420,8 +1372,10 @@ func (gr *GithubReleaseQuery) Paginate(
 		return conn, nil
 	}
 
-	gr = pager.applyCursors(gr, after, before)
-	gr = pager.applyOrder(gr, last != nil)
+	if gr, err = pager.applyCursors(gr, after, before); err != nil {
+		return nil, err
+	}
+	gr = pager.applyOrder(gr)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gr.Limit(limit)
 	}
@@ -1442,7 +1396,11 @@ func (gr *GithubReleaseQuery) Paginate(
 var (
 	// GithubReleaseOrderFieldTagName orders GithubRelease by tag_name.
 	GithubReleaseOrderFieldTagName = &GithubReleaseOrderField{
-		field: githubrelease.FieldTagName,
+		Value: func(gr *GithubRelease) (ent.Value, error) {
+			return gr.TagName, nil
+		},
+		column: githubrelease.FieldTagName,
+		toTerm: githubrelease.ByTagName,
 		toCursor: func(gr *GithubRelease) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1452,7 +1410,11 @@ var (
 	}
 	// GithubReleaseOrderFieldName orders GithubRelease by name.
 	GithubReleaseOrderFieldName = &GithubReleaseOrderField{
-		field: githubrelease.FieldName,
+		Value: func(gr *GithubRelease) (ent.Value, error) {
+			return gr.Name, nil
+		},
+		column: githubrelease.FieldName,
+		toTerm: githubrelease.ByName,
 		toCursor: func(gr *GithubRelease) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1462,7 +1424,11 @@ var (
 	}
 	// GithubReleaseOrderFieldCreatedAt orders GithubRelease by created_at.
 	GithubReleaseOrderFieldCreatedAt = &GithubReleaseOrderField{
-		field: githubrelease.FieldCreatedAt,
+		Value: func(gr *GithubRelease) (ent.Value, error) {
+			return gr.CreatedAt, nil
+		},
+		column: githubrelease.FieldCreatedAt,
+		toTerm: githubrelease.ByCreatedAt,
 		toCursor: func(gr *GithubRelease) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1472,7 +1438,11 @@ var (
 	}
 	// GithubReleaseOrderFieldPublishedAt orders GithubRelease by published_at.
 	GithubReleaseOrderFieldPublishedAt = &GithubReleaseOrderField{
-		field: githubrelease.FieldPublishedAt,
+		Value: func(gr *GithubRelease) (ent.Value, error) {
+			return gr.PublishedAt, nil
+		},
+		column: githubrelease.FieldPublishedAt,
+		toTerm: githubrelease.ByPublishedAt,
 		toCursor: func(gr *GithubRelease) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1485,14 +1455,14 @@ var (
 // String implement fmt.Stringer interface.
 func (f GithubReleaseOrderField) String() string {
 	var str string
-	switch f.field {
-	case githubrelease.FieldTagName:
+	switch f.column {
+	case GithubReleaseOrderFieldTagName.column:
 		str = "TAG_NAME"
-	case githubrelease.FieldName:
+	case GithubReleaseOrderFieldName.column:
 		str = "NAME"
-	case githubrelease.FieldCreatedAt:
+	case GithubReleaseOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
-	case githubrelease.FieldPublishedAt:
+	case GithubReleaseOrderFieldPublishedAt.column:
 		str = "PUBLISHED_AT"
 	}
 	return str
@@ -1526,7 +1496,10 @@ func (f *GithubReleaseOrderField) UnmarshalGQL(v interface{}) error {
 
 // GithubReleaseOrderField defines the ordering field of GithubRelease.
 type GithubReleaseOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given GithubRelease.
+	Value    func(*GithubRelease) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) githubrelease.OrderOption
 	toCursor func(*GithubRelease) Cursor
 }
 
@@ -1538,9 +1511,13 @@ type GithubReleaseOrder struct {
 
 // DefaultGithubReleaseOrder is the default ordering of GithubRelease.
 var DefaultGithubReleaseOrder = &GithubReleaseOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &GithubReleaseOrderField{
-		field: githubrelease.FieldID,
+		Value: func(gr *GithubRelease) (ent.Value, error) {
+			return gr.ID, nil
+		},
+		column: githubrelease.FieldID,
+		toTerm: githubrelease.ByID,
 		toCursor: func(gr *GithubRelease) Cursor {
 			return Cursor{ID: gr.ID}
 		},
@@ -1642,12 +1619,13 @@ func WithGithubRepositoryFilter(filter func(*GithubRepositoryQuery) (*GithubRepo
 }
 
 type githubrepositoryPager struct {
-	order  *GithubRepositoryOrder
-	filter func(*GithubRepositoryQuery) (*GithubRepositoryQuery, error)
+	reverse bool
+	order   *GithubRepositoryOrder
+	filter  func(*GithubRepositoryQuery) (*GithubRepositoryQuery, error)
 }
 
-func newGithubRepositoryPager(opts []GithubRepositoryPaginateOption) (*githubrepositoryPager, error) {
-	pager := &githubrepositoryPager{}
+func newGithubRepositoryPager(opts []GithubRepositoryPaginateOption, reverse bool) (*githubrepositoryPager, error) {
+	pager := &githubrepositoryPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -1670,37 +1648,38 @@ func (p *githubrepositoryPager) toCursor(gr *GithubRepository) Cursor {
 	return p.order.Field.toCursor(gr)
 }
 
-func (p *githubrepositoryPager) applyCursors(query *GithubRepositoryQuery, after, before *Cursor) *GithubRepositoryQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultGithubRepositoryOrder.Field.field,
-	) {
+func (p *githubrepositoryPager) applyCursors(query *GithubRepositoryQuery, after, before *Cursor) (*GithubRepositoryQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultGithubRepositoryOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *githubrepositoryPager) applyOrder(query *GithubRepositoryQuery, reverse bool) *GithubRepositoryQuery {
+func (p *githubrepositoryPager) applyOrder(query *GithubRepositoryQuery) *GithubRepositoryQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultGithubRepositoryOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultGithubRepositoryOrder.Field.field))
+		query = query.Order(DefaultGithubRepositoryOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *githubrepositoryPager) orderExpr(reverse bool) sql.Querier {
+func (p *githubrepositoryPager) orderExpr(query *GithubRepositoryQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultGithubRepositoryOrder.Field {
-			b.Comma().Ident(DefaultGithubRepositoryOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultGithubRepositoryOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -1713,7 +1692,7 @@ func (gr *GithubRepositoryQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newGithubRepositoryPager(opts)
+	pager, err := newGithubRepositoryPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -1736,8 +1715,10 @@ func (gr *GithubRepositoryQuery) Paginate(
 		return conn, nil
 	}
 
-	gr = pager.applyCursors(gr, after, before)
-	gr = pager.applyOrder(gr, last != nil)
+	if gr, err = pager.applyCursors(gr, after, before); err != nil {
+		return nil, err
+	}
+	gr = pager.applyOrder(gr)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gr.Limit(limit)
 	}
@@ -1758,7 +1739,11 @@ func (gr *GithubRepositoryQuery) Paginate(
 var (
 	// GithubRepositoryOrderFieldName orders GithubRepository by name.
 	GithubRepositoryOrderFieldName = &GithubRepositoryOrderField{
-		field: githubrepository.FieldName,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.Name, nil
+		},
+		column: githubrepository.FieldName,
+		toTerm: githubrepository.ByName,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1768,7 +1753,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldFullName orders GithubRepository by full_name.
 	GithubRepositoryOrderFieldFullName = &GithubRepositoryOrderField{
-		field: githubrepository.FieldFullName,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.FullName, nil
+		},
+		column: githubrepository.FieldFullName,
+		toTerm: githubrepository.ByFullName,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1778,7 +1767,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldOwnerLogin orders GithubRepository by owner_login.
 	GithubRepositoryOrderFieldOwnerLogin = &GithubRepositoryOrderField{
-		field: githubrepository.FieldOwnerLogin,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.OwnerLogin, nil
+		},
+		column: githubrepository.FieldOwnerLogin,
+		toTerm: githubrepository.ByOwnerLogin,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1788,7 +1781,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldStarCount orders GithubRepository by star_count.
 	GithubRepositoryOrderFieldStarCount = &GithubRepositoryOrderField{
-		field: githubrepository.FieldStarCount,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.StarCount, nil
+		},
+		column: githubrepository.FieldStarCount,
+		toTerm: githubrepository.ByStarCount,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1798,7 +1795,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldPushedAt orders GithubRepository by pushed_at.
 	GithubRepositoryOrderFieldPushedAt = &GithubRepositoryOrderField{
-		field: githubrepository.FieldPushedAt,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.PushedAt, nil
+		},
+		column: githubrepository.FieldPushedAt,
+		toTerm: githubrepository.ByPushedAt,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1808,7 +1809,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldCreatedAt orders GithubRepository by created_at.
 	GithubRepositoryOrderFieldCreatedAt = &GithubRepositoryOrderField{
-		field: githubrepository.FieldCreatedAt,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.CreatedAt, nil
+		},
+		column: githubrepository.FieldCreatedAt,
+		toTerm: githubrepository.ByCreatedAt,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1818,7 +1823,11 @@ var (
 	}
 	// GithubRepositoryOrderFieldUpdatedAt orders GithubRepository by updated_at.
 	GithubRepositoryOrderFieldUpdatedAt = &GithubRepositoryOrderField{
-		field: githubrepository.FieldUpdatedAt,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.UpdatedAt, nil
+		},
+		column: githubrepository.FieldUpdatedAt,
+		toTerm: githubrepository.ByUpdatedAt,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{
 				ID:    gr.ID,
@@ -1831,20 +1840,20 @@ var (
 // String implement fmt.Stringer interface.
 func (f GithubRepositoryOrderField) String() string {
 	var str string
-	switch f.field {
-	case githubrepository.FieldName:
+	switch f.column {
+	case GithubRepositoryOrderFieldName.column:
 		str = "NAME"
-	case githubrepository.FieldFullName:
+	case GithubRepositoryOrderFieldFullName.column:
 		str = "FULL_NAME"
-	case githubrepository.FieldOwnerLogin:
+	case GithubRepositoryOrderFieldOwnerLogin.column:
 		str = "OWNER_LOGIN"
-	case githubrepository.FieldStarCount:
+	case GithubRepositoryOrderFieldStarCount.column:
 		str = "STAR_COUNT"
-	case githubrepository.FieldPushedAt:
+	case GithubRepositoryOrderFieldPushedAt.column:
 		str = "PUSHED_AT"
-	case githubrepository.FieldCreatedAt:
+	case GithubRepositoryOrderFieldCreatedAt.column:
 		str = "CREATED_AT"
-	case githubrepository.FieldUpdatedAt:
+	case GithubRepositoryOrderFieldUpdatedAt.column:
 		str = "UPDATED_AT"
 	}
 	return str
@@ -1884,7 +1893,10 @@ func (f *GithubRepositoryOrderField) UnmarshalGQL(v interface{}) error {
 
 // GithubRepositoryOrderField defines the ordering field of GithubRepository.
 type GithubRepositoryOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given GithubRepository.
+	Value    func(*GithubRepository) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) githubrepository.OrderOption
 	toCursor func(*GithubRepository) Cursor
 }
 
@@ -1896,9 +1908,13 @@ type GithubRepositoryOrder struct {
 
 // DefaultGithubRepositoryOrder is the default ordering of GithubRepository.
 var DefaultGithubRepositoryOrder = &GithubRepositoryOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &GithubRepositoryOrderField{
-		field: githubrepository.FieldID,
+		Value: func(gr *GithubRepository) (ent.Value, error) {
+			return gr.ID, nil
+		},
+		column: githubrepository.FieldID,
+		toTerm: githubrepository.ByID,
 		toCursor: func(gr *GithubRepository) Cursor {
 			return Cursor{ID: gr.ID}
 		},
@@ -2000,12 +2016,13 @@ func WithLabelFilter(filter func(*LabelQuery) (*LabelQuery, error)) LabelPaginat
 }
 
 type labelPager struct {
-	order  *LabelOrder
-	filter func(*LabelQuery) (*LabelQuery, error)
+	reverse bool
+	order   *LabelOrder
+	filter  func(*LabelQuery) (*LabelQuery, error)
 }
 
-func newLabelPager(opts []LabelPaginateOption) (*labelPager, error) {
-	pager := &labelPager{}
+func newLabelPager(opts []LabelPaginateOption, reverse bool) (*labelPager, error) {
+	pager := &labelPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -2028,37 +2045,38 @@ func (p *labelPager) toCursor(l *Label) Cursor {
 	return p.order.Field.toCursor(l)
 }
 
-func (p *labelPager) applyCursors(query *LabelQuery, after, before *Cursor) *LabelQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultLabelOrder.Field.field,
-	) {
+func (p *labelPager) applyCursors(query *LabelQuery, after, before *Cursor) (*LabelQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultLabelOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *labelPager) applyOrder(query *LabelQuery, reverse bool) *LabelQuery {
+func (p *labelPager) applyOrder(query *LabelQuery) *LabelQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultLabelOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultLabelOrder.Field.field))
+		query = query.Order(DefaultLabelOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *labelPager) orderExpr(reverse bool) sql.Querier {
+func (p *labelPager) orderExpr(query *LabelQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultLabelOrder.Field {
-			b.Comma().Ident(DefaultLabelOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultLabelOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -2071,7 +2089,7 @@ func (l *LabelQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newLabelPager(opts)
+	pager, err := newLabelPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -2094,8 +2112,10 @@ func (l *LabelQuery) Paginate(
 		return conn, nil
 	}
 
-	l = pager.applyCursors(l, after, before)
-	l = pager.applyOrder(l, last != nil)
+	if l, err = pager.applyCursors(l, after, before); err != nil {
+		return nil, err
+	}
+	l = pager.applyOrder(l)
 	if limit := paginateLimit(first, last); limit != 0 {
 		l.Limit(limit)
 	}
@@ -2116,7 +2136,11 @@ func (l *LabelQuery) Paginate(
 var (
 	// LabelOrderFieldName orders Label by name.
 	LabelOrderFieldName = &LabelOrderField{
-		field: label.FieldName,
+		Value: func(l *Label) (ent.Value, error) {
+			return l.Name, nil
+		},
+		column: label.FieldName,
+		toTerm: label.ByName,
 		toCursor: func(l *Label) Cursor {
 			return Cursor{
 				ID:    l.ID,
@@ -2129,8 +2153,8 @@ var (
 // String implement fmt.Stringer interface.
 func (f LabelOrderField) String() string {
 	var str string
-	switch f.field {
-	case label.FieldName:
+	switch f.column {
+	case LabelOrderFieldName.column:
 		str = "NAME"
 	}
 	return str
@@ -2158,7 +2182,10 @@ func (f *LabelOrderField) UnmarshalGQL(v interface{}) error {
 
 // LabelOrderField defines the ordering field of Label.
 type LabelOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given Label.
+	Value    func(*Label) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) label.OrderOption
 	toCursor func(*Label) Cursor
 }
 
@@ -2170,9 +2197,13 @@ type LabelOrder struct {
 
 // DefaultLabelOrder is the default ordering of Label.
 var DefaultLabelOrder = &LabelOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &LabelOrderField{
-		field: label.FieldID,
+		Value: func(l *Label) (ent.Value, error) {
+			return l.ID, nil
+		},
+		column: label.FieldID,
+		toTerm: label.ByID,
 		toCursor: func(l *Label) Cursor {
 			return Cursor{ID: l.ID}
 		},
@@ -2274,12 +2305,13 @@ func WithPostFilter(filter func(*PostQuery) (*PostQuery, error)) PostPaginateOpt
 }
 
 type postPager struct {
-	order  *PostOrder
-	filter func(*PostQuery) (*PostQuery, error)
+	reverse bool
+	order   *PostOrder
+	filter  func(*PostQuery) (*PostQuery, error)
 }
 
-func newPostPager(opts []PostPaginateOption) (*postPager, error) {
-	pager := &postPager{}
+func newPostPager(opts []PostPaginateOption, reverse bool) (*postPager, error) {
+	pager := &postPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -2302,37 +2334,38 @@ func (p *postPager) toCursor(po *Post) Cursor {
 	return p.order.Field.toCursor(po)
 }
 
-func (p *postPager) applyCursors(query *PostQuery, after, before *Cursor) *PostQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultPostOrder.Field.field,
-	) {
+func (p *postPager) applyCursors(query *PostQuery, after, before *Cursor) (*PostQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultPostOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *postPager) applyOrder(query *PostQuery, reverse bool) *PostQuery {
+func (p *postPager) applyOrder(query *PostQuery) *PostQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultPostOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultPostOrder.Field.field))
+		query = query.Order(DefaultPostOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *postPager) orderExpr(reverse bool) sql.Querier {
+func (p *postPager) orderExpr(query *PostQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultPostOrder.Field {
-			b.Comma().Ident(DefaultPostOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultPostOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -2345,7 +2378,7 @@ func (po *PostQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newPostPager(opts)
+	pager, err := newPostPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -2368,8 +2401,10 @@ func (po *PostQuery) Paginate(
 		return conn, nil
 	}
 
-	po = pager.applyCursors(po, after, before)
-	po = pager.applyOrder(po, last != nil)
+	if po, err = pager.applyCursors(po, after, before); err != nil {
+		return nil, err
+	}
+	po = pager.applyOrder(po)
 	if limit := paginateLimit(first, last); limit != 0 {
 		po.Limit(limit)
 	}
@@ -2390,7 +2425,11 @@ func (po *PostQuery) Paginate(
 var (
 	// PostOrderFieldSlug orders Post by slug.
 	PostOrderFieldSlug = &PostOrderField{
-		field: post.FieldSlug,
+		Value: func(po *Post) (ent.Value, error) {
+			return po.Slug, nil
+		},
+		column: post.FieldSlug,
+		toTerm: post.BySlug,
 		toCursor: func(po *Post) Cursor {
 			return Cursor{
 				ID:    po.ID,
@@ -2400,7 +2439,11 @@ var (
 	}
 	// PostOrderFieldTitle orders Post by title.
 	PostOrderFieldTitle = &PostOrderField{
-		field: post.FieldTitle,
+		Value: func(po *Post) (ent.Value, error) {
+			return po.Title, nil
+		},
+		column: post.FieldTitle,
+		toTerm: post.ByTitle,
 		toCursor: func(po *Post) Cursor {
 			return Cursor{
 				ID:    po.ID,
@@ -2410,7 +2453,11 @@ var (
 	}
 	// PostOrderFieldPublishedAt orders Post by published_at.
 	PostOrderFieldPublishedAt = &PostOrderField{
-		field: post.FieldPublishedAt,
+		Value: func(po *Post) (ent.Value, error) {
+			return po.PublishedAt, nil
+		},
+		column: post.FieldPublishedAt,
+		toTerm: post.ByPublishedAt,
 		toCursor: func(po *Post) Cursor {
 			return Cursor{
 				ID:    po.ID,
@@ -2420,7 +2467,11 @@ var (
 	}
 	// PostOrderFieldViewCount orders Post by view_count.
 	PostOrderFieldViewCount = &PostOrderField{
-		field: post.FieldViewCount,
+		Value: func(po *Post) (ent.Value, error) {
+			return po.ViewCount, nil
+		},
+		column: post.FieldViewCount,
+		toTerm: post.ByViewCount,
 		toCursor: func(po *Post) Cursor {
 			return Cursor{
 				ID:    po.ID,
@@ -2433,14 +2484,14 @@ var (
 // String implement fmt.Stringer interface.
 func (f PostOrderField) String() string {
 	var str string
-	switch f.field {
-	case post.FieldSlug:
+	switch f.column {
+	case PostOrderFieldSlug.column:
 		str = "SLUG"
-	case post.FieldTitle:
+	case PostOrderFieldTitle.column:
 		str = "TITLE"
-	case post.FieldPublishedAt:
+	case PostOrderFieldPublishedAt.column:
 		str = "DATE"
-	case post.FieldViewCount:
+	case PostOrderFieldViewCount.column:
 		str = "VIEW_COUNT"
 	}
 	return str
@@ -2474,7 +2525,10 @@ func (f *PostOrderField) UnmarshalGQL(v interface{}) error {
 
 // PostOrderField defines the ordering field of Post.
 type PostOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given Post.
+	Value    func(*Post) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) post.OrderOption
 	toCursor func(*Post) Cursor
 }
 
@@ -2486,9 +2540,13 @@ type PostOrder struct {
 
 // DefaultPostOrder is the default ordering of Post.
 var DefaultPostOrder = &PostOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &PostOrderField{
-		field: post.FieldID,
+		Value: func(po *Post) (ent.Value, error) {
+			return po.ID, nil
+		},
+		column: post.FieldID,
+		toTerm: post.ByID,
 		toCursor: func(po *Post) Cursor {
 			return Cursor{ID: po.ID}
 		},
@@ -2590,12 +2648,13 @@ func WithUserFilter(filter func(*UserQuery) (*UserQuery, error)) UserPaginateOpt
 }
 
 type userPager struct {
-	order  *UserOrder
-	filter func(*UserQuery) (*UserQuery, error)
+	reverse bool
+	order   *UserOrder
+	filter  func(*UserQuery) (*UserQuery, error)
 }
 
-func newUserPager(opts []UserPaginateOption) (*userPager, error) {
-	pager := &userPager{}
+func newUserPager(opts []UserPaginateOption, reverse bool) (*userPager, error) {
+	pager := &userPager{reverse: reverse}
 	for _, opt := range opts {
 		if err := opt(pager); err != nil {
 			return nil, err
@@ -2618,37 +2677,38 @@ func (p *userPager) toCursor(u *User) Cursor {
 	return p.order.Field.toCursor(u)
 }
 
-func (p *userPager) applyCursors(query *UserQuery, after, before *Cursor) *UserQuery {
-	for _, predicate := range cursorsToPredicates(
-		p.order.Direction, after, before,
-		p.order.Field.field, DefaultUserOrder.Field.field,
-	) {
+func (p *userPager) applyCursors(query *UserQuery, after, before *Cursor) (*UserQuery, error) {
+	direction := p.order.Direction
+	if p.reverse {
+		direction = direction.Reverse()
+	}
+	for _, predicate := range entgql.CursorsPredicate(after, before, DefaultUserOrder.Field.column, p.order.Field.column, direction) {
 		query = query.Where(predicate)
 	}
-	return query
+	return query, nil
 }
 
-func (p *userPager) applyOrder(query *UserQuery, reverse bool) *UserQuery {
+func (p *userPager) applyOrder(query *UserQuery) *UserQuery {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
-	query = query.Order(direction.orderFunc(p.order.Field.field))
+	query = query.Order(p.order.Field.toTerm(direction.OrderTermOption()))
 	if p.order.Field != DefaultUserOrder.Field {
-		query = query.Order(direction.orderFunc(DefaultUserOrder.Field.field))
+		query = query.Order(DefaultUserOrder.Field.toTerm(direction.OrderTermOption()))
 	}
 	return query
 }
 
-func (p *userPager) orderExpr(reverse bool) sql.Querier {
+func (p *userPager) orderExpr(query *UserQuery) sql.Querier {
 	direction := p.order.Direction
-	if reverse {
-		direction = direction.reverse()
+	if p.reverse {
+		direction = direction.Reverse()
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
-		b.Ident(p.order.Field.field).Pad().WriteString(string(direction))
+		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
 		if p.order.Field != DefaultUserOrder.Field {
-			b.Comma().Ident(DefaultUserOrder.Field.field).Pad().WriteString(string(direction))
+			b.Comma().Ident(DefaultUserOrder.Field.column).Pad().WriteString(string(direction))
 		}
 	})
 }
@@ -2661,7 +2721,7 @@ func (u *UserQuery) Paginate(
 	if err := validateFirstLast(first, last); err != nil {
 		return nil, err
 	}
-	pager, err := newUserPager(opts)
+	pager, err := newUserPager(opts, last != nil)
 	if err != nil {
 		return nil, err
 	}
@@ -2684,8 +2744,10 @@ func (u *UserQuery) Paginate(
 		return conn, nil
 	}
 
-	u = pager.applyCursors(u, after, before)
-	u = pager.applyOrder(u, last != nil)
+	if u, err = pager.applyCursors(u, after, before); err != nil {
+		return nil, err
+	}
+	u = pager.applyOrder(u)
 	if limit := paginateLimit(first, last); limit != 0 {
 		u.Limit(limit)
 	}
@@ -2706,7 +2768,11 @@ func (u *UserQuery) Paginate(
 var (
 	// UserOrderFieldLogin orders User by login.
 	UserOrderFieldLogin = &UserOrderField{
-		field: user.FieldLogin,
+		Value: func(u *User) (ent.Value, error) {
+			return u.Login, nil
+		},
+		column: user.FieldLogin,
+		toTerm: user.ByLogin,
 		toCursor: func(u *User) Cursor {
 			return Cursor{
 				ID:    u.ID,
@@ -2716,7 +2782,11 @@ var (
 	}
 	// UserOrderFieldName orders User by name.
 	UserOrderFieldName = &UserOrderField{
-		field: user.FieldName,
+		Value: func(u *User) (ent.Value, error) {
+			return u.Name, nil
+		},
+		column: user.FieldName,
+		toTerm: user.ByName,
 		toCursor: func(u *User) Cursor {
 			return Cursor{
 				ID:    u.ID,
@@ -2726,7 +2796,11 @@ var (
 	}
 	// UserOrderFieldEmail orders User by email.
 	UserOrderFieldEmail = &UserOrderField{
-		field: user.FieldEmail,
+		Value: func(u *User) (ent.Value, error) {
+			return u.Email, nil
+		},
+		column: user.FieldEmail,
+		toTerm: user.ByEmail,
 		toCursor: func(u *User) Cursor {
 			return Cursor{
 				ID:    u.ID,
@@ -2739,12 +2813,12 @@ var (
 // String implement fmt.Stringer interface.
 func (f UserOrderField) String() string {
 	var str string
-	switch f.field {
-	case user.FieldLogin:
+	switch f.column {
+	case UserOrderFieldLogin.column:
 		str = "LOGIN"
-	case user.FieldName:
+	case UserOrderFieldName.column:
 		str = "NAME"
-	case user.FieldEmail:
+	case UserOrderFieldEmail.column:
 		str = "EMAIL"
 	}
 	return str
@@ -2776,7 +2850,10 @@ func (f *UserOrderField) UnmarshalGQL(v interface{}) error {
 
 // UserOrderField defines the ordering field of User.
 type UserOrderField struct {
-	field    string
+	// Value extracts the ordering value from the given User.
+	Value    func(*User) (ent.Value, error)
+	column   string // field or computed.
+	toTerm   func(...sql.OrderTermOption) user.OrderOption
 	toCursor func(*User) Cursor
 }
 
@@ -2788,9 +2865,13 @@ type UserOrder struct {
 
 // DefaultUserOrder is the default ordering of User.
 var DefaultUserOrder = &UserOrder{
-	Direction: OrderDirectionAsc,
+	Direction: entgql.OrderDirectionAsc,
 	Field: &UserOrderField{
-		field: user.FieldID,
+		Value: func(u *User) (ent.Value, error) {
+			return u.ID, nil
+		},
+		column: user.FieldID,
+		toTerm: user.ByID,
 		toCursor: func(u *User) Cursor {
 			return Cursor{ID: u.ID}
 		},

@@ -23,7 +23,7 @@ import (
 type GithubGistQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []githubgist.OrderOption
 	inters     []Interceptor
 	predicates []predicate.GithubGist
 	modifiers  []func(*sql.Selector)
@@ -59,7 +59,7 @@ func (ggq *GithubGistQuery) Unique(unique bool) *GithubGistQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (ggq *GithubGistQuery) Order(o ...OrderFunc) *GithubGistQuery {
+func (ggq *GithubGistQuery) Order(o ...githubgist.OrderOption) *GithubGistQuery {
 	ggq.order = append(ggq.order, o...)
 	return ggq
 }
@@ -253,7 +253,7 @@ func (ggq *GithubGistQuery) Clone() *GithubGistQuery {
 	return &GithubGistQuery{
 		config:     ggq.config,
 		ctx:        ggq.ctx.Clone(),
-		order:      append([]OrderFunc{}, ggq.order...),
+		order:      append([]githubgist.OrderOption{}, ggq.order...),
 		inters:     append([]Interceptor{}, ggq.inters...),
 		predicates: append([]predicate.GithubGist{}, ggq.predicates...),
 		// clone intermediate query.

@@ -233,11 +233,7 @@ func HasPosts() predicate.Label {
 // HasPostsWith applies the HasEdge predicate on the "posts" edge with a given conditions (other predicates).
 func HasPostsWith(preds ...predicate.Post) predicate.Label {
 	return predicate.Label(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(PostsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, PostsTable, PostsPrimaryKey...),
-		)
+		step := newPostsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -260,11 +256,7 @@ func HasGithubRepositories() predicate.Label {
 // HasGithubRepositoriesWith applies the HasEdge predicate on the "github_repositories" edge with a given conditions (other predicates).
 func HasGithubRepositoriesWith(preds ...predicate.GithubRepository) predicate.Label {
 	return predicate.Label(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(GithubRepositoriesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, false, GithubRepositoriesTable, GithubRepositoriesPrimaryKey...),
-		)
+		step := newGithubRepositoriesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

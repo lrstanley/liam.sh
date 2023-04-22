@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
@@ -62,7 +63,8 @@ type GithubRepository struct {
 	License *github.License `json:"license,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the GithubRepositoryQuery when eager-loading is set.
-	Edges GithubRepositoryEdges `json:"edges"`
+	Edges        GithubRepositoryEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // GithubRepositoryEdges holds the relations/edges for other nodes in the graph.
@@ -115,7 +117,7 @@ func (*GithubRepository) scanValues(columns []string) ([]any, error) {
 		case githubrepository.FieldPushedAt, githubrepository.FieldCreatedAt, githubrepository.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type GithubRepository", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -253,9 +255,17 @@ func (gr *GithubRepository) assignValues(columns []string, values []any) error {
 					return fmt.Errorf("unmarshal field license: %w", err)
 				}
 			}
+		default:
+			gr.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the GithubRepository.
+// This includes values selected through modifiers, order, etc.
+func (gr *GithubRepository) Value(name string) (ent.Value, error) {
+	return gr.selectValues.Get(name)
 }
 
 // QueryLabels queries the "labels" edge of the GithubRepository entity.

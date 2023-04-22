@@ -618,11 +618,7 @@ func HasAuthor() predicate.Post {
 // HasAuthorWith applies the HasEdge predicate on the "author" edge with a given conditions (other predicates).
 func HasAuthorWith(preds ...predicate.User) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(AuthorInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, AuthorTable, AuthorColumn),
-		)
+		step := newAuthorStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -645,11 +641,7 @@ func HasLabels() predicate.Post {
 // HasLabelsWith applies the HasEdge predicate on the "labels" edge with a given conditions (other predicates).
 func HasLabelsWith(preds ...predicate.Label) predicate.Post {
 	return predicate.Post(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LabelsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, LabelsTable, LabelsPrimaryKey...),
-		)
+		step := newLabelsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

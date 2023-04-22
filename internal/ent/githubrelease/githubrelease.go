@@ -8,6 +8,8 @@ package githubrelease
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -110,3 +112,91 @@ var (
 	// TargetCommitishValidator is a validator for the "target_commitish" field. It is called by the builders before save.
 	TargetCommitishValidator func(string) error
 )
+
+// OrderOption defines the ordering options for the GithubRelease queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByReleaseID orders the results by the release_id field.
+func ByReleaseID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldReleaseID, opts...).ToFunc()
+}
+
+// ByHTMLURL orders the results by the html_url field.
+func ByHTMLURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHTMLURL, opts...).ToFunc()
+}
+
+// ByTagName orders the results by the tag_name field.
+func ByTagName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTagName, opts...).ToFunc()
+}
+
+// ByTargetCommitish orders the results by the target_commitish field.
+func ByTargetCommitish(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldTargetCommitish, opts...).ToFunc()
+}
+
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByDraft orders the results by the draft field.
+func ByDraft(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDraft, opts...).ToFunc()
+}
+
+// ByPrerelease orders the results by the prerelease field.
+func ByPrerelease(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPrerelease, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByPublishedAt orders the results by the published_at field.
+func ByPublishedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPublishedAt, opts...).ToFunc()
+}
+
+// ByRepositoryField orders the results by repository field.
+func ByRepositoryField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newRepositoryStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByAssetsCount orders the results by assets count.
+func ByAssetsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAssetsStep(), opts...)
+	}
+}
+
+// ByAssets orders the results by assets terms.
+func ByAssets(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAssetsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newRepositoryStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(RepositoryInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, RepositoryTable, RepositoryColumn),
+	)
+}
+func newAssetsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AssetsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, AssetsTable, AssetsColumn),
+	)
+}

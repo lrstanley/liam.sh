@@ -26,7 +26,7 @@ import (
 type GithubReleaseQuery struct {
 	config
 	ctx             *QueryContext
-	order           []OrderFunc
+	order           []githubrelease.OrderOption
 	inters          []Interceptor
 	predicates      []predicate.GithubRelease
 	withRepository  *GithubRepositoryQuery
@@ -66,7 +66,7 @@ func (grq *GithubReleaseQuery) Unique(unique bool) *GithubReleaseQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (grq *GithubReleaseQuery) Order(o ...OrderFunc) *GithubReleaseQuery {
+func (grq *GithubReleaseQuery) Order(o ...githubrelease.OrderOption) *GithubReleaseQuery {
 	grq.order = append(grq.order, o...)
 	return grq
 }
@@ -304,7 +304,7 @@ func (grq *GithubReleaseQuery) Clone() *GithubReleaseQuery {
 	return &GithubReleaseQuery{
 		config:         grq.config,
 		ctx:            grq.ctx.Clone(),
-		order:          append([]OrderFunc{}, grq.order...),
+		order:          append([]githubrelease.OrderOption{}, grq.order...),
 		inters:         append([]Interceptor{}, grq.inters...),
 		predicates:     append([]predicate.GithubRelease{}, grq.predicates...),
 		withRepository: grq.withRepository.Clone(),
@@ -526,7 +526,7 @@ func (grq *GithubReleaseQuery) loadAssets(ctx context.Context, query *GithubAsse
 	}
 	query.withFKs = true
 	query.Where(predicate.GithubAsset(func(s *sql.Selector) {
-		s.Where(sql.InValues(githubrelease.AssetsColumn, fks...))
+		s.Where(sql.InValues(s.C(githubrelease.AssetsColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -539,7 +539,7 @@ func (grq *GithubReleaseQuery) loadAssets(ctx context.Context, query *GithubAsse
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "github_release_assets" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "github_release_assets" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

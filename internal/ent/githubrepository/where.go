@@ -913,11 +913,7 @@ func HasLabels() predicate.GithubRepository {
 // HasLabelsWith applies the HasEdge predicate on the "labels" edge with a given conditions (other predicates).
 func HasLabelsWith(preds ...predicate.Label) predicate.GithubRepository {
 	return predicate.GithubRepository(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(LabelsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2M, true, LabelsTable, LabelsPrimaryKey...),
-		)
+		step := newLabelsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -940,11 +936,7 @@ func HasReleases() predicate.GithubRepository {
 // HasReleasesWith applies the HasEdge predicate on the "releases" edge with a given conditions (other predicates).
 func HasReleasesWith(preds ...predicate.GithubRelease) predicate.GithubRepository {
 	return predicate.GithubRepository(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReleasesInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, ReleasesTable, ReleasesColumn),
-		)
+		step := newReleasesStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

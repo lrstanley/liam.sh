@@ -673,11 +673,7 @@ func HasRelease() predicate.GithubAsset {
 // HasReleaseWith applies the HasEdge predicate on the "release" edge with a given conditions (other predicates).
 func HasReleaseWith(preds ...predicate.GithubRelease) predicate.GithubAsset {
 	return predicate.GithubAsset(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(ReleaseInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, ReleaseTable, ReleaseColumn),
-		)
+		step := newReleaseStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

@@ -38,7 +38,7 @@ func (gr *GithubRelease) Assets(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := gr.Edges.totalCount[1][alias]
 	if nodes, err := gr.NamedAssets(alias); err == nil || hasTotalCount {
-		pager, err := newGithubAssetPager(opts)
+		pager, err := newGithubAssetPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -59,7 +59,7 @@ func (gr *GithubRepository) Labels(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := gr.Edges.totalCount[0][alias]
 	if nodes, err := gr.NamedLabels(alias); err == nil || hasTotalCount {
-		pager, err := newLabelPager(opts)
+		pager, err := newLabelPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -80,7 +80,7 @@ func (gr *GithubRepository) Releases(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := gr.Edges.totalCount[1][alias]
 	if nodes, err := gr.NamedReleases(alias); err == nil || hasTotalCount {
-		pager, err := newGithubReleasePager(opts)
+		pager, err := newGithubReleasePager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -101,7 +101,7 @@ func (l *Label) Posts(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := l.Edges.totalCount[0][alias]
 	if nodes, err := l.NamedPosts(alias); err == nil || hasTotalCount {
-		pager, err := newPostPager(opts)
+		pager, err := newPostPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -122,7 +122,7 @@ func (l *Label) GithubRepositories(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := l.Edges.totalCount[1][alias]
 	if nodes, err := l.NamedGithubRepositories(alias); err == nil || hasTotalCount {
-		pager, err := newGithubRepositoryPager(opts)
+		pager, err := newGithubRepositoryPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -151,7 +151,7 @@ func (po *Post) Labels(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := po.Edges.totalCount[1][alias]
 	if nodes, err := po.NamedLabels(alias); err == nil || hasTotalCount {
-		pager, err := newLabelPager(opts)
+		pager, err := newLabelPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}
@@ -172,7 +172,7 @@ func (u *User) Posts(
 	alias := graphql.GetFieldContext(ctx).Field.Alias
 	totalCount, hasTotalCount := u.Edges.totalCount[0][alias]
 	if nodes, err := u.NamedPosts(alias); err == nil || hasTotalCount {
-		pager, err := newPostPager(opts)
+		pager, err := newPostPager(opts, last != nil)
 		if err != nil {
 			return nil, err
 		}

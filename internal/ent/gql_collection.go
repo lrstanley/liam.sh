@@ -11,8 +11,12 @@ import (
 	"database/sql/driver"
 	"fmt"
 
+	"entgo.io/contrib/entgql"
 	"entgo.io/ent/dialect/sql"
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
+	"github.com/lrstanley/liam.sh/internal/ent/githubevent"
+	"github.com/lrstanley/liam.sh/internal/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
@@ -32,9 +36,14 @@ func (ga *GithubAssetQuery) CollectFields(ctx context.Context, satisfies ...stri
 	return ga, nil
 }
 
-func (ga *GithubAssetQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (ga *GithubAssetQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(githubasset.Columns))
+		selectedFields = []string{githubasset.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "release":
 			var (
@@ -42,11 +51,71 @@ func (ga *GithubAssetQuery) collectField(ctx context.Context, op *graphql.Operat
 				path  = append(path, alias)
 				query = (&GithubReleaseClient{config: ga.config}).Query()
 			)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
 				return err
 			}
 			ga.withRelease = query
+		case "assetID":
+			if _, ok := fieldSeen[githubasset.FieldAssetID]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldAssetID)
+				fieldSeen[githubasset.FieldAssetID] = struct{}{}
+			}
+		case "browserDownloadURL":
+			if _, ok := fieldSeen[githubasset.FieldBrowserDownloadURL]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldBrowserDownloadURL)
+				fieldSeen[githubasset.FieldBrowserDownloadURL] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[githubasset.FieldName]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldName)
+				fieldSeen[githubasset.FieldName] = struct{}{}
+			}
+		case "label":
+			if _, ok := fieldSeen[githubasset.FieldLabel]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldLabel)
+				fieldSeen[githubasset.FieldLabel] = struct{}{}
+			}
+		case "state":
+			if _, ok := fieldSeen[githubasset.FieldState]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldState)
+				fieldSeen[githubasset.FieldState] = struct{}{}
+			}
+		case "contentType":
+			if _, ok := fieldSeen[githubasset.FieldContentType]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldContentType)
+				fieldSeen[githubasset.FieldContentType] = struct{}{}
+			}
+		case "size":
+			if _, ok := fieldSeen[githubasset.FieldSize]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldSize)
+				fieldSeen[githubasset.FieldSize] = struct{}{}
+			}
+		case "downloadCount":
+			if _, ok := fieldSeen[githubasset.FieldDownloadCount]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldDownloadCount)
+				fieldSeen[githubasset.FieldDownloadCount] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[githubasset.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldCreatedAt)
+				fieldSeen[githubasset.FieldCreatedAt] = struct{}{}
+			}
+		case "updatedAt":
+			if _, ok := fieldSeen[githubasset.FieldUpdatedAt]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldUpdatedAt)
+				fieldSeen[githubasset.FieldUpdatedAt] = struct{}{}
+			}
+		case "uploader":
+			if _, ok := fieldSeen[githubasset.FieldUploader]; !ok {
+				selectedFields = append(selectedFields, githubasset.FieldUploader)
+				fieldSeen[githubasset.FieldUploader] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		ga.Select(selectedFields...)
 	}
 	return nil
 }
@@ -79,7 +148,7 @@ func newGithubAssetPaginateArgs(rv map[string]interface{}) *githubassetPaginateA
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &GithubAssetOrder{Field: &GithubAssetOrderField{}}
+				order      = &GithubAssetOrder{Field: &GithubAssetOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -114,8 +183,67 @@ func (ge *GithubEventQuery) CollectFields(ctx context.Context, satisfies ...stri
 	return ge, nil
 }
 
-func (ge *GithubEventQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (ge *GithubEventQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(githubevent.Columns))
+		selectedFields = []string{githubevent.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "eventID":
+			if _, ok := fieldSeen[githubevent.FieldEventID]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldEventID)
+				fieldSeen[githubevent.FieldEventID] = struct{}{}
+			}
+		case "eventType":
+			if _, ok := fieldSeen[githubevent.FieldEventType]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldEventType)
+				fieldSeen[githubevent.FieldEventType] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[githubevent.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldCreatedAt)
+				fieldSeen[githubevent.FieldCreatedAt] = struct{}{}
+			}
+		case "public":
+			if _, ok := fieldSeen[githubevent.FieldPublic]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldPublic)
+				fieldSeen[githubevent.FieldPublic] = struct{}{}
+			}
+		case "actorID":
+			if _, ok := fieldSeen[githubevent.FieldActorID]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldActorID)
+				fieldSeen[githubevent.FieldActorID] = struct{}{}
+			}
+		case "actor":
+			if _, ok := fieldSeen[githubevent.FieldActor]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldActor)
+				fieldSeen[githubevent.FieldActor] = struct{}{}
+			}
+		case "repoID":
+			if _, ok := fieldSeen[githubevent.FieldRepoID]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldRepoID)
+				fieldSeen[githubevent.FieldRepoID] = struct{}{}
+			}
+		case "repo":
+			if _, ok := fieldSeen[githubevent.FieldRepo]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldRepo)
+				fieldSeen[githubevent.FieldRepo] = struct{}{}
+			}
+		case "payload":
+			if _, ok := fieldSeen[githubevent.FieldPayload]; !ok {
+				selectedFields = append(selectedFields, githubevent.FieldPayload)
+				fieldSeen[githubevent.FieldPayload] = struct{}{}
+			}
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		ge.Select(selectedFields...)
+	}
 	return nil
 }
 
@@ -147,7 +275,7 @@ func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateA
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &GithubEventOrder{Field: &GithubEventOrderField{}}
+				order      = &GithubEventOrder{Field: &GithubEventOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -182,8 +310,87 @@ func (gg *GithubGistQuery) CollectFields(ctx context.Context, satisfies ...strin
 	return gg, nil
 }
 
-func (gg *GithubGistQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (gg *GithubGistQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(githubgist.Columns))
+		selectedFields = []string{githubgist.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
+		switch field.Name {
+		case "gistID":
+			if _, ok := fieldSeen[githubgist.FieldGistID]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldGistID)
+				fieldSeen[githubgist.FieldGistID] = struct{}{}
+			}
+		case "htmlURL":
+			if _, ok := fieldSeen[githubgist.FieldHTMLURL]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldHTMLURL)
+				fieldSeen[githubgist.FieldHTMLURL] = struct{}{}
+			}
+		case "public":
+			if _, ok := fieldSeen[githubgist.FieldPublic]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldPublic)
+				fieldSeen[githubgist.FieldPublic] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[githubgist.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldCreatedAt)
+				fieldSeen[githubgist.FieldCreatedAt] = struct{}{}
+			}
+		case "updatedAt":
+			if _, ok := fieldSeen[githubgist.FieldUpdatedAt]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldUpdatedAt)
+				fieldSeen[githubgist.FieldUpdatedAt] = struct{}{}
+			}
+		case "description":
+			if _, ok := fieldSeen[githubgist.FieldDescription]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldDescription)
+				fieldSeen[githubgist.FieldDescription] = struct{}{}
+			}
+		case "owner":
+			if _, ok := fieldSeen[githubgist.FieldOwner]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldOwner)
+				fieldSeen[githubgist.FieldOwner] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[githubgist.FieldName]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldName)
+				fieldSeen[githubgist.FieldName] = struct{}{}
+			}
+		case "type":
+			if _, ok := fieldSeen[githubgist.FieldType]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldType)
+				fieldSeen[githubgist.FieldType] = struct{}{}
+			}
+		case "language":
+			if _, ok := fieldSeen[githubgist.FieldLanguage]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldLanguage)
+				fieldSeen[githubgist.FieldLanguage] = struct{}{}
+			}
+		case "size":
+			if _, ok := fieldSeen[githubgist.FieldSize]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldSize)
+				fieldSeen[githubgist.FieldSize] = struct{}{}
+			}
+		case "rawURL":
+			if _, ok := fieldSeen[githubgist.FieldRawURL]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldRawURL)
+				fieldSeen[githubgist.FieldRawURL] = struct{}{}
+			}
+		case "content":
+			if _, ok := fieldSeen[githubgist.FieldContent]; !ok {
+				selectedFields = append(selectedFields, githubgist.FieldContent)
+				fieldSeen[githubgist.FieldContent] = struct{}{}
+			}
+		default:
+			unknownSeen = true
+		}
+	}
+	if !unknownSeen {
+		gg.Select(selectedFields...)
+	}
 	return nil
 }
 
@@ -215,7 +422,7 @@ func newGithubGistPaginateArgs(rv map[string]interface{}) *githubgistPaginateArg
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &GithubGistOrder{Field: &GithubGistOrderField{}}
+				order      = &GithubGistOrder{Field: &GithubGistOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -250,9 +457,14 @@ func (gr *GithubReleaseQuery) CollectFields(ctx context.Context, satisfies ...st
 	return gr, nil
 }
 
-func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (gr *GithubReleaseQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(githubrelease.Columns))
+		selectedFields = []string{githubrelease.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "repository":
 			var (
@@ -260,7 +472,7 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 				path  = append(path, alias)
 				query = (&GithubRepositoryClient{config: gr.config}).Query()
 			)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
 				return err
 			}
 			gr.withRepository = query
@@ -274,7 +486,7 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newGithubAssetPager(args.opts)
+			pager, err := newGithubAssetPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -296,7 +508,7 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 							Count  int `sql:"count"`
 						}
 						query.Where(func(s *sql.Selector) {
-							s.Where(sql.InValues(githubrelease.AssetsColumn, ids...))
+							s.Where(sql.InValues(s.C(githubrelease.AssetsColumn), ids...))
 						})
 						if err := query.GroupBy(githubrelease.AssetsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
 							return err
@@ -331,23 +543,80 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, op *graphql.Oper
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
 			gr.WithNamedAssets(alias, func(wq *GithubAssetQuery) {
 				*wq = *query
 			})
+		case "releaseID":
+			if _, ok := fieldSeen[githubrelease.FieldReleaseID]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldReleaseID)
+				fieldSeen[githubrelease.FieldReleaseID] = struct{}{}
+			}
+		case "htmlURL":
+			if _, ok := fieldSeen[githubrelease.FieldHTMLURL]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldHTMLURL)
+				fieldSeen[githubrelease.FieldHTMLURL] = struct{}{}
+			}
+		case "tagName":
+			if _, ok := fieldSeen[githubrelease.FieldTagName]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldTagName)
+				fieldSeen[githubrelease.FieldTagName] = struct{}{}
+			}
+		case "targetCommitish":
+			if _, ok := fieldSeen[githubrelease.FieldTargetCommitish]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldTargetCommitish)
+				fieldSeen[githubrelease.FieldTargetCommitish] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[githubrelease.FieldName]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldName)
+				fieldSeen[githubrelease.FieldName] = struct{}{}
+			}
+		case "draft":
+			if _, ok := fieldSeen[githubrelease.FieldDraft]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldDraft)
+				fieldSeen[githubrelease.FieldDraft] = struct{}{}
+			}
+		case "prerelease":
+			if _, ok := fieldSeen[githubrelease.FieldPrerelease]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldPrerelease)
+				fieldSeen[githubrelease.FieldPrerelease] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[githubrelease.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldCreatedAt)
+				fieldSeen[githubrelease.FieldCreatedAt] = struct{}{}
+			}
+		case "publishedAt":
+			if _, ok := fieldSeen[githubrelease.FieldPublishedAt]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldPublishedAt)
+				fieldSeen[githubrelease.FieldPublishedAt] = struct{}{}
+			}
+		case "author":
+			if _, ok := fieldSeen[githubrelease.FieldAuthor]; !ok {
+				selectedFields = append(selectedFields, githubrelease.FieldAuthor)
+				fieldSeen[githubrelease.FieldAuthor] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		gr.Select(selectedFields...)
 	}
 	return nil
 }
@@ -380,7 +649,7 @@ func newGithubReleasePaginateArgs(rv map[string]interface{}) *githubreleasePagin
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &GithubReleaseOrder{Field: &GithubReleaseOrderField{}}
+				order      = &GithubReleaseOrder{Field: &GithubReleaseOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -415,9 +684,14 @@ func (gr *GithubRepositoryQuery) CollectFields(ctx context.Context, satisfies ..
 	return gr, nil
 }
 
-func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (gr *GithubRepositoryQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(githubrepository.Columns))
+		selectedFields = []string{githubrepository.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "labels":
 			var (
@@ -429,7 +703,7 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newLabelPager(args.opts)
+			pager, err := newLabelPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -490,16 +764,18 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
@@ -516,7 +792,7 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newGithubReleasePager(args.opts)
+			pager, err := newGithubReleasePager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -538,7 +814,7 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 							Count  int `sql:"count"`
 						}
 						query.Where(func(s *sql.Selector) {
-							s.Where(sql.InValues(githubrepository.ReleasesColumn, ids...))
+							s.Where(sql.InValues(s.C(githubrepository.ReleasesColumn), ids...))
 						})
 						if err := query.GroupBy(githubrepository.ReleasesColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
 							return err
@@ -573,23 +849,125 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, op *graphql.O
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
 			gr.WithNamedReleases(alias, func(wq *GithubReleaseQuery) {
 				*wq = *query
 			})
+		case "repoID":
+			if _, ok := fieldSeen[githubrepository.FieldRepoID]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldRepoID)
+				fieldSeen[githubrepository.FieldRepoID] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[githubrepository.FieldName]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldName)
+				fieldSeen[githubrepository.FieldName] = struct{}{}
+			}
+		case "fullName":
+			if _, ok := fieldSeen[githubrepository.FieldFullName]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldFullName)
+				fieldSeen[githubrepository.FieldFullName] = struct{}{}
+			}
+		case "ownerLogin":
+			if _, ok := fieldSeen[githubrepository.FieldOwnerLogin]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldOwnerLogin)
+				fieldSeen[githubrepository.FieldOwnerLogin] = struct{}{}
+			}
+		case "owner":
+			if _, ok := fieldSeen[githubrepository.FieldOwner]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldOwner)
+				fieldSeen[githubrepository.FieldOwner] = struct{}{}
+			}
+		case "public":
+			if _, ok := fieldSeen[githubrepository.FieldPublic]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldPublic)
+				fieldSeen[githubrepository.FieldPublic] = struct{}{}
+			}
+		case "htmlURL":
+			if _, ok := fieldSeen[githubrepository.FieldHTMLURL]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldHTMLURL)
+				fieldSeen[githubrepository.FieldHTMLURL] = struct{}{}
+			}
+		case "description":
+			if _, ok := fieldSeen[githubrepository.FieldDescription]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldDescription)
+				fieldSeen[githubrepository.FieldDescription] = struct{}{}
+			}
+		case "fork":
+			if _, ok := fieldSeen[githubrepository.FieldFork]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldFork)
+				fieldSeen[githubrepository.FieldFork] = struct{}{}
+			}
+		case "homepage":
+			if _, ok := fieldSeen[githubrepository.FieldHomepage]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldHomepage)
+				fieldSeen[githubrepository.FieldHomepage] = struct{}{}
+			}
+		case "starCount":
+			if _, ok := fieldSeen[githubrepository.FieldStarCount]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldStarCount)
+				fieldSeen[githubrepository.FieldStarCount] = struct{}{}
+			}
+		case "defaultBranch":
+			if _, ok := fieldSeen[githubrepository.FieldDefaultBranch]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldDefaultBranch)
+				fieldSeen[githubrepository.FieldDefaultBranch] = struct{}{}
+			}
+		case "isTemplate":
+			if _, ok := fieldSeen[githubrepository.FieldIsTemplate]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldIsTemplate)
+				fieldSeen[githubrepository.FieldIsTemplate] = struct{}{}
+			}
+		case "hasIssues":
+			if _, ok := fieldSeen[githubrepository.FieldHasIssues]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldHasIssues)
+				fieldSeen[githubrepository.FieldHasIssues] = struct{}{}
+			}
+		case "archived":
+			if _, ok := fieldSeen[githubrepository.FieldArchived]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldArchived)
+				fieldSeen[githubrepository.FieldArchived] = struct{}{}
+			}
+		case "pushedAt":
+			if _, ok := fieldSeen[githubrepository.FieldPushedAt]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldPushedAt)
+				fieldSeen[githubrepository.FieldPushedAt] = struct{}{}
+			}
+		case "createdAt":
+			if _, ok := fieldSeen[githubrepository.FieldCreatedAt]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldCreatedAt)
+				fieldSeen[githubrepository.FieldCreatedAt] = struct{}{}
+			}
+		case "updatedAt":
+			if _, ok := fieldSeen[githubrepository.FieldUpdatedAt]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldUpdatedAt)
+				fieldSeen[githubrepository.FieldUpdatedAt] = struct{}{}
+			}
+		case "license":
+			if _, ok := fieldSeen[githubrepository.FieldLicense]; !ok {
+				selectedFields = append(selectedFields, githubrepository.FieldLicense)
+				fieldSeen[githubrepository.FieldLicense] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		gr.Select(selectedFields...)
 	}
 	return nil
 }
@@ -622,7 +1000,7 @@ func newGithubRepositoryPaginateArgs(rv map[string]interface{}) *githubrepositor
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &GithubRepositoryOrder{Field: &GithubRepositoryOrderField{}}
+				order      = &GithubRepositoryOrder{Field: &GithubRepositoryOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -657,9 +1035,14 @@ func (l *LabelQuery) CollectFields(ctx context.Context, satisfies ...string) (*L
 	return l, nil
 }
 
-func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (l *LabelQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(label.Columns))
+		selectedFields = []string{label.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "posts":
 			var (
@@ -671,7 +1054,7 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newPostPager(args.opts)
+			pager, err := newPostPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -732,16 +1115,18 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(label.PostsPrimaryKey[0], limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(label.PostsPrimaryKey[0], limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
@@ -758,7 +1143,7 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newGithubRepositoryPager(args.opts)
+			pager, err := newGithubRepositoryPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -819,23 +1204,45 @@ func (l *LabelQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
 			l.WithNamedGithubRepositories(alias, func(wq *GithubRepositoryQuery) {
 				*wq = *query
 			})
+		case "createTime":
+			if _, ok := fieldSeen[label.FieldCreateTime]; !ok {
+				selectedFields = append(selectedFields, label.FieldCreateTime)
+				fieldSeen[label.FieldCreateTime] = struct{}{}
+			}
+		case "updateTime":
+			if _, ok := fieldSeen[label.FieldUpdateTime]; !ok {
+				selectedFields = append(selectedFields, label.FieldUpdateTime)
+				fieldSeen[label.FieldUpdateTime] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[label.FieldName]; !ok {
+				selectedFields = append(selectedFields, label.FieldName)
+				fieldSeen[label.FieldName] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		l.Select(selectedFields...)
 	}
 	return nil
 }
@@ -868,7 +1275,7 @@ func newLabelPaginateArgs(rv map[string]interface{}) *labelPaginateArgs {
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &LabelOrder{Field: &LabelOrderField{}}
+				order      = &LabelOrder{Field: &LabelOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -903,9 +1310,14 @@ func (po *PostQuery) CollectFields(ctx context.Context, satisfies ...string) (*P
 	return po, nil
 }
 
-func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (po *PostQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(post.Columns))
+		selectedFields = []string{post.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "author":
 			var (
@@ -913,7 +1325,7 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				path  = append(path, alias)
 				query = (&UserClient{config: po.config}).Query()
 			)
-			if err := query.collectField(ctx, op, field, path, satisfies...); err != nil {
+			if err := query.collectField(ctx, opCtx, field, path, satisfies...); err != nil {
 				return err
 			}
 			po.withAuthor = query
@@ -927,7 +1339,7 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newLabelPager(args.opts)
+			pager, err := newLabelPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -988,23 +1400,80 @@ func (po *PostQuery) collectField(ctx context.Context, op *graphql.OperationCont
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(post.LabelsPrimaryKey[1], limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(post.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
 			po.WithNamedLabels(alias, func(wq *LabelQuery) {
 				*wq = *query
 			})
+		case "createTime":
+			if _, ok := fieldSeen[post.FieldCreateTime]; !ok {
+				selectedFields = append(selectedFields, post.FieldCreateTime)
+				fieldSeen[post.FieldCreateTime] = struct{}{}
+			}
+		case "updateTime":
+			if _, ok := fieldSeen[post.FieldUpdateTime]; !ok {
+				selectedFields = append(selectedFields, post.FieldUpdateTime)
+				fieldSeen[post.FieldUpdateTime] = struct{}{}
+			}
+		case "slug":
+			if _, ok := fieldSeen[post.FieldSlug]; !ok {
+				selectedFields = append(selectedFields, post.FieldSlug)
+				fieldSeen[post.FieldSlug] = struct{}{}
+			}
+		case "title":
+			if _, ok := fieldSeen[post.FieldTitle]; !ok {
+				selectedFields = append(selectedFields, post.FieldTitle)
+				fieldSeen[post.FieldTitle] = struct{}{}
+			}
+		case "content":
+			if _, ok := fieldSeen[post.FieldContent]; !ok {
+				selectedFields = append(selectedFields, post.FieldContent)
+				fieldSeen[post.FieldContent] = struct{}{}
+			}
+		case "contentHTML":
+			if _, ok := fieldSeen[post.FieldContentHTML]; !ok {
+				selectedFields = append(selectedFields, post.FieldContentHTML)
+				fieldSeen[post.FieldContentHTML] = struct{}{}
+			}
+		case "summary":
+			if _, ok := fieldSeen[post.FieldSummary]; !ok {
+				selectedFields = append(selectedFields, post.FieldSummary)
+				fieldSeen[post.FieldSummary] = struct{}{}
+			}
+		case "publishedAt":
+			if _, ok := fieldSeen[post.FieldPublishedAt]; !ok {
+				selectedFields = append(selectedFields, post.FieldPublishedAt)
+				fieldSeen[post.FieldPublishedAt] = struct{}{}
+			}
+		case "viewCount":
+			if _, ok := fieldSeen[post.FieldViewCount]; !ok {
+				selectedFields = append(selectedFields, post.FieldViewCount)
+				fieldSeen[post.FieldViewCount] = struct{}{}
+			}
+		case "public":
+			if _, ok := fieldSeen[post.FieldPublic]; !ok {
+				selectedFields = append(selectedFields, post.FieldPublic)
+				fieldSeen[post.FieldPublic] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		po.Select(selectedFields...)
 	}
 	return nil
 }
@@ -1037,7 +1506,7 @@ func newPostPaginateArgs(rv map[string]interface{}) *postPaginateArgs {
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &PostOrder{Field: &PostOrderField{}}
+				order      = &PostOrder{Field: &PostOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)
@@ -1072,9 +1541,14 @@ func (u *UserQuery) CollectFields(ctx context.Context, satisfies ...string) (*Us
 	return u, nil
 }
 
-func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationContext, field graphql.CollectedField, path []string, satisfies ...string) error {
+func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationContext, collected graphql.CollectedField, path []string, satisfies ...string) error {
 	path = append([]string(nil), path...)
-	for _, field := range graphql.CollectFields(op, field.Selections, satisfies) {
+	var (
+		unknownSeen    bool
+		fieldSeen      = make(map[string]struct{}, len(user.Columns))
+		selectedFields = []string{user.FieldID}
+	)
+	for _, field := range graphql.CollectFields(opCtx, collected.Selections, satisfies) {
 		switch field.Name {
 		case "posts":
 			var (
@@ -1086,7 +1560,7 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 			if err := validateFirstLast(args.first, args.last); err != nil {
 				return fmt.Errorf("validate first and last in path %q: %w", path, err)
 			}
-			pager, err := newPostPager(args.opts)
+			pager, err := newPostPager(args.opts, args.last != nil)
 			if err != nil {
 				return fmt.Errorf("create new pager in path %q: %w", path, err)
 			}
@@ -1108,7 +1582,7 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 							Count  int `sql:"count"`
 						}
 						query.Where(func(s *sql.Selector) {
-							s.Where(sql.InValues(user.PostsColumn, ids...))
+							s.Where(sql.InValues(s.C(user.PostsColumn), ids...))
 						})
 						if err := query.GroupBy(user.PostsColumn).Aggregate(Count()).Scan(ctx, &v); err != nil {
 							return err
@@ -1143,23 +1617,80 @@ func (u *UserQuery) collectField(ctx context.Context, op *graphql.OperationConte
 				continue
 			}
 
-			query = pager.applyCursors(query, args.after, args.before)
+			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
+				return err
+			}
 			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(user.PostsColumn, limit, pager.orderExpr(args.last != nil))
+				modify := limitRows(user.PostsColumn, limit, pager.orderExpr(query))
 				query.modifiers = append(query.modifiers, modify)
 			} else {
-				query = pager.applyOrder(query, args.last != nil)
+				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
-				if err := query.collectField(ctx, op, *field, path, satisfies...); err != nil {
+				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
 			}
 			u.WithNamedPosts(alias, func(wq *PostQuery) {
 				*wq = *query
 			})
+		case "createTime":
+			if _, ok := fieldSeen[user.FieldCreateTime]; !ok {
+				selectedFields = append(selectedFields, user.FieldCreateTime)
+				fieldSeen[user.FieldCreateTime] = struct{}{}
+			}
+		case "updateTime":
+			if _, ok := fieldSeen[user.FieldUpdateTime]; !ok {
+				selectedFields = append(selectedFields, user.FieldUpdateTime)
+				fieldSeen[user.FieldUpdateTime] = struct{}{}
+			}
+		case "userID":
+			if _, ok := fieldSeen[user.FieldUserID]; !ok {
+				selectedFields = append(selectedFields, user.FieldUserID)
+				fieldSeen[user.FieldUserID] = struct{}{}
+			}
+		case "login":
+			if _, ok := fieldSeen[user.FieldLogin]; !ok {
+				selectedFields = append(selectedFields, user.FieldLogin)
+				fieldSeen[user.FieldLogin] = struct{}{}
+			}
+		case "name":
+			if _, ok := fieldSeen[user.FieldName]; !ok {
+				selectedFields = append(selectedFields, user.FieldName)
+				fieldSeen[user.FieldName] = struct{}{}
+			}
+		case "avatarURL":
+			if _, ok := fieldSeen[user.FieldAvatarURL]; !ok {
+				selectedFields = append(selectedFields, user.FieldAvatarURL)
+				fieldSeen[user.FieldAvatarURL] = struct{}{}
+			}
+		case "htmlURL":
+			if _, ok := fieldSeen[user.FieldHTMLURL]; !ok {
+				selectedFields = append(selectedFields, user.FieldHTMLURL)
+				fieldSeen[user.FieldHTMLURL] = struct{}{}
+			}
+		case "email":
+			if _, ok := fieldSeen[user.FieldEmail]; !ok {
+				selectedFields = append(selectedFields, user.FieldEmail)
+				fieldSeen[user.FieldEmail] = struct{}{}
+			}
+		case "location":
+			if _, ok := fieldSeen[user.FieldLocation]; !ok {
+				selectedFields = append(selectedFields, user.FieldLocation)
+				fieldSeen[user.FieldLocation] = struct{}{}
+			}
+		case "bio":
+			if _, ok := fieldSeen[user.FieldBio]; !ok {
+				selectedFields = append(selectedFields, user.FieldBio)
+				fieldSeen[user.FieldBio] = struct{}{}
+			}
+		default:
+			unknownSeen = true
 		}
+	}
+	if !unknownSeen {
+		u.Select(selectedFields...)
 	}
 	return nil
 }
@@ -1192,7 +1723,7 @@ func newUserPaginateArgs(rv map[string]interface{}) *userPaginateArgs {
 		case map[string]interface{}:
 			var (
 				err1, err2 error
-				order      = &UserOrder{Field: &UserOrderField{}}
+				order      = &UserOrder{Field: &UserOrderField{}, Direction: entgql.OrderDirectionAsc}
 			)
 			if d, ok := v[directionField]; ok {
 				err1 = order.Direction.UnmarshalGQL(d)

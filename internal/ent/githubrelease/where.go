@@ -528,11 +528,7 @@ func HasRepository() predicate.GithubRelease {
 // HasRepositoryWith applies the HasEdge predicate on the "repository" edge with a given conditions (other predicates).
 func HasRepositoryWith(preds ...predicate.GithubRepository) predicate.GithubRelease {
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(RepositoryInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, true, RepositoryTable, RepositoryColumn),
-		)
+		step := newRepositoryStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)
@@ -555,11 +551,7 @@ func HasAssets() predicate.GithubRelease {
 // HasAssetsWith applies the HasEdge predicate on the "assets" edge with a given conditions (other predicates).
 func HasAssetsWith(preds ...predicate.GithubAsset) predicate.GithubRelease {
 	return predicate.GithubRelease(func(s *sql.Selector) {
-		step := sqlgraph.NewStep(
-			sqlgraph.From(Table, FieldID),
-			sqlgraph.To(AssetsInverseTable, FieldID),
-			sqlgraph.Edge(sqlgraph.O2M, false, AssetsTable, AssetsColumn),
-		)
+		step := newAssetsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

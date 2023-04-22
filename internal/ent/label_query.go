@@ -26,7 +26,7 @@ import (
 type LabelQuery struct {
 	config
 	ctx                         *QueryContext
-	order                       []OrderFunc
+	order                       []label.OrderOption
 	inters                      []Interceptor
 	predicates                  []predicate.Label
 	withPosts                   *PostQuery
@@ -66,7 +66,7 @@ func (lq *LabelQuery) Unique(unique bool) *LabelQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (lq *LabelQuery) Order(o ...OrderFunc) *LabelQuery {
+func (lq *LabelQuery) Order(o ...label.OrderOption) *LabelQuery {
 	lq.order = append(lq.order, o...)
 	return lq
 }
@@ -304,7 +304,7 @@ func (lq *LabelQuery) Clone() *LabelQuery {
 	return &LabelQuery{
 		config:                 lq.config,
 		ctx:                    lq.ctx.Clone(),
-		order:                  append([]OrderFunc{}, lq.order...),
+		order:                  append([]label.OrderOption{}, lq.order...),
 		inters:                 append([]Interceptor{}, lq.inters...),
 		predicates:             append([]predicate.Label{}, lq.predicates...),
 		withPosts:              lq.withPosts.Clone(),

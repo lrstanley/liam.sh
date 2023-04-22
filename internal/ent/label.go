@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/lrstanley/liam.sh/internal/ent/label"
 )
@@ -28,7 +29,8 @@ type Label struct {
 	Name string `json:"name,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LabelQuery when eager-loading is set.
-	Edges LabelEdges `json:"edges"`
+	Edges        LabelEdges `json:"edges"`
+	selectValues sql.SelectValues
 }
 
 // LabelEdges holds the relations/edges for other nodes in the graph.
@@ -77,7 +79,7 @@ func (*Label) scanValues(columns []string) ([]any, error) {
 		case label.FieldCreateTime, label.FieldUpdateTime:
 			values[i] = new(sql.NullTime)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type Label", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -115,9 +117,17 @@ func (l *Label) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				l.Name = value.String
 			}
+		default:
+			l.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the Label.
+// This includes values selected through modifiers, order, etc.
+func (l *Label) Value(name string) (ent.Value, error) {
+	return l.selectValues.Get(name)
 }
 
 // QueryPosts queries the "posts" edge of the Label entity.

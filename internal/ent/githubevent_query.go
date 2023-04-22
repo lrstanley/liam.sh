@@ -23,7 +23,7 @@ import (
 type GithubEventQuery struct {
 	config
 	ctx        *QueryContext
-	order      []OrderFunc
+	order      []githubevent.OrderOption
 	inters     []Interceptor
 	predicates []predicate.GithubEvent
 	modifiers  []func(*sql.Selector)
@@ -59,7 +59,7 @@ func (geq *GithubEventQuery) Unique(unique bool) *GithubEventQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (geq *GithubEventQuery) Order(o ...OrderFunc) *GithubEventQuery {
+func (geq *GithubEventQuery) Order(o ...githubevent.OrderOption) *GithubEventQuery {
 	geq.order = append(geq.order, o...)
 	return geq
 }
@@ -253,7 +253,7 @@ func (geq *GithubEventQuery) Clone() *GithubEventQuery {
 	return &GithubEventQuery{
 		config:     geq.config,
 		ctx:        geq.ctx.Clone(),
-		order:      append([]OrderFunc{}, geq.order...),
+		order:      append([]githubevent.OrderOption{}, geq.order...),
 		inters:     append([]Interceptor{}, geq.inters...),
 		predicates: append([]predicate.GithubEvent{}, geq.predicates...),
 		// clone intermediate query.

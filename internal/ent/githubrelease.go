@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubrelease"
@@ -47,6 +48,7 @@ type GithubRelease struct {
 	// The values are being populated by the GithubReleaseQuery when eager-loading is set.
 	Edges                      GithubReleaseEdges `json:"edges"`
 	github_repository_releases *int
+	selectValues               sql.SelectValues
 }
 
 // GithubReleaseEdges holds the relations/edges for other nodes in the graph.
@@ -104,7 +106,7 @@ func (*GithubRelease) scanValues(columns []string) ([]any, error) {
 		case githubrelease.ForeignKeys[0]: // github_repository_releases
 			values[i] = new(sql.NullInt64)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type GithubRelease", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -193,9 +195,17 @@ func (gr *GithubRelease) assignValues(columns []string, values []any) error {
 				gr.github_repository_releases = new(int)
 				*gr.github_repository_releases = int(value.Int64)
 			}
+		default:
+			gr.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the GithubRelease.
+// This includes values selected through modifiers, order, etc.
+func (gr *GithubRelease) Value(name string) (ent.Value, error) {
+	return gr.selectValues.Get(name)
 }
 
 // QueryRepository queries the "repository" edge of the GithubRelease entity.

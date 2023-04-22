@@ -8,6 +8,8 @@ package githubrepository
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 const (
@@ -146,3 +148,138 @@ var (
 	// DefaultArchived holds the default value on creation for the "archived" field.
 	DefaultArchived bool
 )
+
+// OrderOption defines the ordering options for the GithubRepository queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByRepoID orders the results by the repo_id field.
+func ByRepoID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRepoID, opts...).ToFunc()
+}
+
+// ByName orders the results by the name field.
+func ByName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldName, opts...).ToFunc()
+}
+
+// ByFullName orders the results by the full_name field.
+func ByFullName(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFullName, opts...).ToFunc()
+}
+
+// ByOwnerLogin orders the results by the owner_login field.
+func ByOwnerLogin(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOwnerLogin, opts...).ToFunc()
+}
+
+// ByPublic orders the results by the public field.
+func ByPublic(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPublic, opts...).ToFunc()
+}
+
+// ByHTMLURL orders the results by the html_url field.
+func ByHTMLURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHTMLURL, opts...).ToFunc()
+}
+
+// ByDescription orders the results by the description field.
+func ByDescription(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDescription, opts...).ToFunc()
+}
+
+// ByFork orders the results by the fork field.
+func ByFork(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldFork, opts...).ToFunc()
+}
+
+// ByHomepage orders the results by the homepage field.
+func ByHomepage(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHomepage, opts...).ToFunc()
+}
+
+// ByStarCount orders the results by the star_count field.
+func ByStarCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStarCount, opts...).ToFunc()
+}
+
+// ByDefaultBranch orders the results by the default_branch field.
+func ByDefaultBranch(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDefaultBranch, opts...).ToFunc()
+}
+
+// ByIsTemplate orders the results by the is_template field.
+func ByIsTemplate(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsTemplate, opts...).ToFunc()
+}
+
+// ByHasIssues orders the results by the has_issues field.
+func ByHasIssues(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHasIssues, opts...).ToFunc()
+}
+
+// ByArchived orders the results by the archived field.
+func ByArchived(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldArchived, opts...).ToFunc()
+}
+
+// ByPushedAt orders the results by the pushed_at field.
+func ByPushedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPushedAt, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByLabelsCount orders the results by labels count.
+func ByLabelsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newLabelsStep(), opts...)
+	}
+}
+
+// ByLabels orders the results by labels terms.
+func ByLabels(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newLabelsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByReleasesCount orders the results by releases count.
+func ByReleasesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newReleasesStep(), opts...)
+	}
+}
+
+// ByReleases orders the results by releases terms.
+func ByReleases(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReleasesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newLabelsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(LabelsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2M, true, LabelsTable, LabelsPrimaryKey...),
+	)
+}
+func newReleasesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReleasesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ReleasesTable, ReleasesColumn),
+	)
+}

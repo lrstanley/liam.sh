@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/go-github/v50/github"
 	"github.com/lrstanley/liam.sh/internal/ent/githubasset"
@@ -49,6 +50,7 @@ type GithubAsset struct {
 	// The values are being populated by the GithubAssetQuery when eager-loading is set.
 	Edges                 GithubAssetEdges `json:"edges"`
 	github_release_assets *int
+	selectValues          sql.SelectValues
 }
 
 // GithubAssetEdges holds the relations/edges for other nodes in the graph.
@@ -91,7 +93,7 @@ func (*GithubAsset) scanValues(columns []string) ([]any, error) {
 		case githubasset.ForeignKeys[0]: // github_release_assets
 			values[i] = new(sql.NullInt64)
 		default:
-			return nil, fmt.Errorf("unexpected column %q for type GithubAsset", columns[i])
+			values[i] = new(sql.UnknownType)
 		}
 	}
 	return values, nil
@@ -186,9 +188,17 @@ func (ga *GithubAsset) assignValues(columns []string, values []any) error {
 				ga.github_release_assets = new(int)
 				*ga.github_release_assets = int(value.Int64)
 			}
+		default:
+			ga.selectValues.Set(columns[i], values[i])
 		}
 	}
 	return nil
+}
+
+// Value returns the ent.Value that was dynamically selected and assigned to the GithubAsset.
+// This includes values selected through modifiers, order, etc.
+func (ga *GithubAsset) Value(name string) (ent.Value, error) {
+	return ga.selectValues.Get(name)
 }
 
 // QueryRelease queries the "release" edge of the GithubAsset entity.

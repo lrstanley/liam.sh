@@ -24,7 +24,7 @@ import (
 type GithubAssetQuery struct {
 	config
 	ctx         *QueryContext
-	order       []OrderFunc
+	order       []githubasset.OrderOption
 	inters      []Interceptor
 	predicates  []predicate.GithubAsset
 	withRelease *GithubReleaseQuery
@@ -62,7 +62,7 @@ func (gaq *GithubAssetQuery) Unique(unique bool) *GithubAssetQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (gaq *GithubAssetQuery) Order(o ...OrderFunc) *GithubAssetQuery {
+func (gaq *GithubAssetQuery) Order(o ...githubasset.OrderOption) *GithubAssetQuery {
 	gaq.order = append(gaq.order, o...)
 	return gaq
 }
@@ -278,7 +278,7 @@ func (gaq *GithubAssetQuery) Clone() *GithubAssetQuery {
 	return &GithubAssetQuery{
 		config:      gaq.config,
 		ctx:         gaq.ctx.Clone(),
-		order:       append([]OrderFunc{}, gaq.order...),
+		order:       append([]githubasset.OrderOption{}, gaq.order...),
 		inters:      append([]Interceptor{}, gaq.inters...),
 		predicates:  append([]predicate.GithubAsset{}, gaq.predicates...),
 		withRelease: gaq.withRelease.Clone(),

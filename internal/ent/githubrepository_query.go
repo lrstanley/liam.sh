@@ -26,7 +26,7 @@ import (
 type GithubRepositoryQuery struct {
 	config
 	ctx               *QueryContext
-	order             []OrderFunc
+	order             []githubrepository.OrderOption
 	inters            []Interceptor
 	predicates        []predicate.GithubRepository
 	withLabels        *LabelQuery
@@ -66,7 +66,7 @@ func (grq *GithubRepositoryQuery) Unique(unique bool) *GithubRepositoryQuery {
 }
 
 // Order specifies how the records should be ordered.
-func (grq *GithubRepositoryQuery) Order(o ...OrderFunc) *GithubRepositoryQuery {
+func (grq *GithubRepositoryQuery) Order(o ...githubrepository.OrderOption) *GithubRepositoryQuery {
 	grq.order = append(grq.order, o...)
 	return grq
 }
@@ -304,7 +304,7 @@ func (grq *GithubRepositoryQuery) Clone() *GithubRepositoryQuery {
 	return &GithubRepositoryQuery{
 		config:       grq.config,
 		ctx:          grq.ctx.Clone(),
-		order:        append([]OrderFunc{}, grq.order...),
+		order:        append([]githubrepository.OrderOption{}, grq.order...),
 		inters:       append([]Interceptor{}, grq.inters...),
 		predicates:   append([]predicate.GithubRepository{}, grq.predicates...),
 		withLabels:   grq.withLabels.Clone(),
@@ -556,7 +556,7 @@ func (grq *GithubRepositoryQuery) loadReleases(ctx context.Context, query *Githu
 	}
 	query.withFKs = true
 	query.Where(predicate.GithubRelease(func(s *sql.Selector) {
-		s.Where(sql.InValues(githubrepository.ReleasesColumn, fks...))
+		s.Where(sql.InValues(s.C(githubrepository.ReleasesColumn), fks...))
 	}))
 	neighbors, err := query.All(ctx)
 	if err != nil {
@@ -569,7 +569,7 @@ func (grq *GithubRepositoryQuery) loadReleases(ctx context.Context, query *Githu
 		}
 		node, ok := nodeids[*fk]
 		if !ok {
-			return fmt.Errorf(`unexpected foreign-key "github_repository_releases" returned %v for node %v`, *fk, n.ID)
+			return fmt.Errorf(`unexpected referenced foreign-key "github_repository_releases" returned %v for node %v`, *fk, n.ID)
 		}
 		assign(node, n)
 	}

@@ -8,6 +8,7 @@ package githubevent
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/dialect/sql"
 )
 
 const (
@@ -76,3 +77,41 @@ var (
 	// RepoIDValidator is a validator for the "repo_id" field. It is called by the builders before save.
 	RepoIDValidator func(int64) error
 )
+
+// OrderOption defines the ordering options for the GithubEvent queries.
+type OrderOption func(*sql.Selector)
+
+// ByID orders the results by the id field.
+func ByID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByEventID orders the results by the event_id field.
+func ByEventID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEventID, opts...).ToFunc()
+}
+
+// ByEventType orders the results by the event_type field.
+func ByEventType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEventType, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByPublic orders the results by the public field.
+func ByPublic(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPublic, opts...).ToFunc()
+}
+
+// ByActorID orders the results by the actor_id field.
+func ByActorID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldActorID, opts...).ToFunc()
+}
+
+// ByRepoID orders the results by the repo_id field.
+func ByRepoID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRepoID, opts...).ToFunc()
+}
