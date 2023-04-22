@@ -134,7 +134,8 @@
     "singleQuote": false,
     "trailingComma": "es5",
     "useTabs": false,
-    "vueIndentScriptAndStyle": false
+    "vueIndentScriptAndStyle": false,
+    "htmlWhitespaceSensitivity": "ignore"
   },
   "private": true,
   "scripts": {
