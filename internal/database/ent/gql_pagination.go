@@ -242,6 +242,9 @@ func (p *githubassetPager) applyOrder(query *GithubAssetQuery) *GithubAssetQuery
 	if p.order.Field != DefaultGithubAssetOrder.Field {
 		query = query.Order(DefaultGithubAssetOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -249,6 +252,9 @@ func (p *githubassetPager) orderExpr(query *GithubAssetQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -288,11 +294,9 @@ func (ga *GithubAssetQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if ga, err = pager.applyCursors(ga, after, before); err != nil {
 		return nil, err
 	}
-	ga = pager.applyOrder(ga)
 	if limit := paginateLimit(first, last); limit != 0 {
 		ga.Limit(limit)
 	}
@@ -301,7 +305,7 @@ func (ga *GithubAssetQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	ga = pager.applyOrder(ga)
 	nodes, err := ga.All(ctx)
 	if err != nil {
 		return nil, err
@@ -585,6 +589,9 @@ func (p *githubeventPager) applyOrder(query *GithubEventQuery) *GithubEventQuery
 	if p.order.Field != DefaultGithubEventOrder.Field {
 		query = query.Order(DefaultGithubEventOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -592,6 +599,9 @@ func (p *githubeventPager) orderExpr(query *GithubEventQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -631,11 +641,9 @@ func (ge *GithubEventQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if ge, err = pager.applyCursors(ge, after, before); err != nil {
 		return nil, err
 	}
-	ge = pager.applyOrder(ge)
 	if limit := paginateLimit(first, last); limit != 0 {
 		ge.Limit(limit)
 	}
@@ -644,7 +652,7 @@ func (ge *GithubEventQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	ge = pager.applyOrder(ge)
 	nodes, err := ge.All(ctx)
 	if err != nil {
 		return nil, err
@@ -946,6 +954,9 @@ func (p *githubgistPager) applyOrder(query *GithubGistQuery) *GithubGistQuery {
 	if p.order.Field != DefaultGithubGistOrder.Field {
 		query = query.Order(DefaultGithubGistOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -953,6 +964,9 @@ func (p *githubgistPager) orderExpr(query *GithubGistQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -992,11 +1006,9 @@ func (gg *GithubGistQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if gg, err = pager.applyCursors(gg, after, before); err != nil {
 		return nil, err
 	}
-	gg = pager.applyOrder(gg)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gg.Limit(limit)
 	}
@@ -1005,7 +1017,7 @@ func (gg *GithubGistQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	gg = pager.applyOrder(gg)
 	nodes, err := gg.All(ctx)
 	if err != nil {
 		return nil, err
@@ -1325,6 +1337,9 @@ func (p *githubreleasePager) applyOrder(query *GithubReleaseQuery) *GithubReleas
 	if p.order.Field != DefaultGithubReleaseOrder.Field {
 		query = query.Order(DefaultGithubReleaseOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -1332,6 +1347,9 @@ func (p *githubreleasePager) orderExpr(query *GithubReleaseQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -1371,11 +1389,9 @@ func (gr *GithubReleaseQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if gr, err = pager.applyCursors(gr, after, before); err != nil {
 		return nil, err
 	}
-	gr = pager.applyOrder(gr)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gr.Limit(limit)
 	}
@@ -1384,7 +1400,7 @@ func (gr *GithubReleaseQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	gr = pager.applyOrder(gr)
 	nodes, err := gr.All(ctx)
 	if err != nil {
 		return nil, err
@@ -1668,6 +1684,9 @@ func (p *githubrepositoryPager) applyOrder(query *GithubRepositoryQuery) *Github
 	if p.order.Field != DefaultGithubRepositoryOrder.Field {
 		query = query.Order(DefaultGithubRepositoryOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -1675,6 +1694,9 @@ func (p *githubrepositoryPager) orderExpr(query *GithubRepositoryQuery) sql.Quer
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -1714,11 +1736,9 @@ func (gr *GithubRepositoryQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if gr, err = pager.applyCursors(gr, after, before); err != nil {
 		return nil, err
 	}
-	gr = pager.applyOrder(gr)
 	if limit := paginateLimit(first, last); limit != 0 {
 		gr.Limit(limit)
 	}
@@ -1727,7 +1747,7 @@ func (gr *GithubRepositoryQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	gr = pager.applyOrder(gr)
 	nodes, err := gr.All(ctx)
 	if err != nil {
 		return nil, err
@@ -2065,6 +2085,9 @@ func (p *labelPager) applyOrder(query *LabelQuery) *LabelQuery {
 	if p.order.Field != DefaultLabelOrder.Field {
 		query = query.Order(DefaultLabelOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -2072,6 +2095,9 @@ func (p *labelPager) orderExpr(query *LabelQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -2111,11 +2137,9 @@ func (l *LabelQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if l, err = pager.applyCursors(l, after, before); err != nil {
 		return nil, err
 	}
-	l = pager.applyOrder(l)
 	if limit := paginateLimit(first, last); limit != 0 {
 		l.Limit(limit)
 	}
@@ -2124,7 +2148,7 @@ func (l *LabelQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	l = pager.applyOrder(l)
 	nodes, err := l.All(ctx)
 	if err != nil {
 		return nil, err
@@ -2354,6 +2378,9 @@ func (p *postPager) applyOrder(query *PostQuery) *PostQuery {
 	if p.order.Field != DefaultPostOrder.Field {
 		query = query.Order(DefaultPostOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -2361,6 +2388,9 @@ func (p *postPager) orderExpr(query *PostQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -2400,11 +2430,9 @@ func (po *PostQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if po, err = pager.applyCursors(po, after, before); err != nil {
 		return nil, err
 	}
-	po = pager.applyOrder(po)
 	if limit := paginateLimit(first, last); limit != 0 {
 		po.Limit(limit)
 	}
@@ -2413,7 +2441,7 @@ func (po *PostQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	po = pager.applyOrder(po)
 	nodes, err := po.All(ctx)
 	if err != nil {
 		return nil, err
@@ -2697,6 +2725,9 @@ func (p *userPager) applyOrder(query *UserQuery) *UserQuery {
 	if p.order.Field != DefaultUserOrder.Field {
 		query = query.Order(DefaultUserOrder.Field.toTerm(direction.OrderTermOption()))
 	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
+	}
 	return query
 }
 
@@ -2704,6 +2735,9 @@ func (p *userPager) orderExpr(query *UserQuery) sql.Querier {
 	direction := p.order.Direction
 	if p.reverse {
 		direction = direction.Reverse()
+	}
+	if len(query.ctx.Fields) > 0 {
+		query.ctx.AppendFieldOnce(p.order.Field.column)
 	}
 	return sql.ExprFunc(func(b *sql.Builder) {
 		b.Ident(p.order.Field.column).Pad().WriteString(string(direction))
@@ -2743,11 +2777,9 @@ func (u *UserQuery) Paginate(
 	if ignoredEdges || (first != nil && *first == 0) || (last != nil && *last == 0) {
 		return conn, nil
 	}
-
 	if u, err = pager.applyCursors(u, after, before); err != nil {
 		return nil, err
 	}
-	u = pager.applyOrder(u)
 	if limit := paginateLimit(first, last); limit != 0 {
 		u.Limit(limit)
 	}
@@ -2756,7 +2788,7 @@ func (u *UserQuery) Paginate(
 			return nil, err
 		}
 	}
-
+	u = pager.applyOrder(u)
 	nodes, err := u.All(ctx)
 	if err != nil {
 		return nil, err

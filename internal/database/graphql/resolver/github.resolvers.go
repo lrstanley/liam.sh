@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v52/github"
 	"github.com/lrstanley/liam.sh/internal/gh"
 )
 

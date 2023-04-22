@@ -44,16 +44,16 @@ models:
       - github.com/lrstanley/liam.sh/internal/database/ent.Noder
   GithubEventRepo:
     model:
-      - github.com/google/go-github/v50/github.Repository
+      - github.com/google/go-github/v52/github.Repository
   GithubUser:
     model:
-      - github.com/google/go-github/v50/github.User
+      - github.com/google/go-github/v52/github.User
   GithubLicense:
     model:
-      - github.com/google/go-github/v50/github.License
+      - github.com/google/go-github/v52/github.License
   Timestamp:
     model:
-      - github.com/google/go-github/v50/github.Timestamp
+      - github.com/google/go-github/v52/github.Timestamp
   VersionInfo:
     model:
       - github.com/lrstanley/clix.NonSensitiveVersion

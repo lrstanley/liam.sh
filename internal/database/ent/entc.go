@@ -34,7 +34,7 @@ func main() {
 	err = entc.Generate(
 		"./database/schema",
 		&gen.Config{
-			Target:  "./ent/",
+			Target:  "./database/ent/",
 			Schema:  "github.com/lrstanley/liam.sh/internal/database/schema",
 			Package: "github.com/lrstanley/liam.sh/internal/database/ent",
 			Header:  header,

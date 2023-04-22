@@ -15,7 +15,7 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/google/go-github/v50/github"
+	"github.com/google/go-github/v52/github"
 	"github.com/lrstanley/clix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/models"
@@ -5879,7 +5879,7 @@ func (ec *executionContext) _GithubAsset_uploader(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubAsset_uploader(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6545,7 +6545,7 @@ func (ec *executionContext) _GithubEvent_actor(ctx context.Context, field graphq
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEvent_actor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6661,7 +6661,7 @@ func (ec *executionContext) _GithubEvent_repo(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.Repository)
 	fc.Result = res
-	return ec.marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐRepository(ctx, field.Selections, res)
+	return ec.marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐRepository(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubEvent_repo(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7446,7 +7446,7 @@ func (ec *executionContext) _GithubGist_owner(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubGist_owner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8649,7 +8649,7 @@ func (ec *executionContext) _GithubRelease_author(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRelease_author(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9352,7 +9352,7 @@ func (ec *executionContext) _GithubRepository_owner(ctx context.Context, field g
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_owner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9981,7 +9981,7 @@ func (ec *executionContext) _GithubRepository_license(ctx context.Context, field
 	}
 	res := resTmp.(*github.License)
 	fc.Result = res
-	return ec.marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐLicense(ctx, field.Selections, res)
+	return ec.marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐLicense(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubRepository_license(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11246,7 +11246,7 @@ func (ec *executionContext) _GithubUser_createdAt(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.Timestamp)
 	fc.Result = res
-	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx, field.Selections, res)
+	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐTimestamp(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubUser_createdAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11291,7 +11291,7 @@ func (ec *executionContext) _GithubUser_updatedAt(ctx context.Context, field gra
 	}
 	res := resTmp.(*github.Timestamp)
 	fc.Result = res
-	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx, field.Selections, res)
+	return ec.marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐTimestamp(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GithubUser_updatedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -14304,7 +14304,7 @@ func (ec *executionContext) _Query_githubUser(ctx context.Context, field graphql
 	}
 	res := resTmp.(*github.User)
 	fc.Result = res
-	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx, field.Selections, res)
+	return ec.marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_githubUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -28696,7 +28696,7 @@ func (ec *executionContext) marshalNGithubEventOrderField2ᚖgithubᚗcomᚋlrst
 	return v
 }
 
-func (ec *executionContext) marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐRepository(ctx context.Context, sel ast.SelectionSet, v *github.Repository) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubEventRepo2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐRepository(ctx context.Context, sel ast.SelectionSet, v *github.Repository) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -28850,11 +28850,11 @@ func (ec *executionContext) marshalNGithubStats2ᚖgithubᚗcomᚋlrstanleyᚋli
 	return ec._GithubStats(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGithubUser2githubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v github.User) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubUser2githubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v github.User) graphql.Marshaler {
 	return ec._GithubUser(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v *github.User) graphql.Marshaler {
+func (ec *executionContext) marshalNGithubUser2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐUser(ctx context.Context, sel ast.SelectionSet, v *github.User) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -29829,7 +29829,7 @@ func (ec *executionContext) unmarshalOGithubGistWhereInput2ᚖgithubᚗcomᚋlrs
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐLicense(ctx context.Context, sel ast.SelectionSet, v *github.License) graphql.Marshaler {
+func (ec *executionContext) marshalOGithubLicense2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐLicense(ctx context.Context, sel ast.SelectionSet, v *github.License) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -30591,7 +30591,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return res
 }
 
-func (ec *executionContext) marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv50ᚋgithubᚐTimestamp(ctx context.Context, sel ast.SelectionSet, v *github.Timestamp) graphql.Marshaler {
+func (ec *executionContext) marshalOTimestamp2ᚖgithubᚗcomᚋgoogleᚋgoᚑgithubᚋv52ᚋgithubᚐTimestamp(ctx context.Context, sel ast.SelectionSet, v *github.Timestamp) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

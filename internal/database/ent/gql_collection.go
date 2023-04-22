@@ -110,6 +110,8 @@ func (ga *GithubAssetQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 				selectedFields = append(selectedFields, githubasset.FieldUploader)
 				fieldSeen[githubasset.FieldUploader] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -237,6 +239,8 @@ func (ge *GithubEventQuery) collectField(ctx context.Context, opCtx *graphql.Ope
 				selectedFields = append(selectedFields, githubevent.FieldPayload)
 				fieldSeen[githubevent.FieldPayload] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -384,6 +388,8 @@ func (gg *GithubGistQuery) collectField(ctx context.Context, opCtx *graphql.Oper
 				selectedFields = append(selectedFields, githubgist.FieldContent)
 				fieldSeen[githubgist.FieldContent] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -542,21 +548,20 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, opCtx *graphql.O
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrelease.AssetsColumn, limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			gr.WithNamedAssets(alias, func(wq *GithubAssetQuery) {
 				*wq = *query
@@ -611,6 +616,8 @@ func (gr *GithubReleaseQuery) collectField(ctx context.Context, opCtx *graphql.O
 				selectedFields = append(selectedFields, githubrelease.FieldAuthor)
 				fieldSeen[githubrelease.FieldAuthor] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -763,21 +770,20 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, opCtx *graphq
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrepository.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			gr.WithNamedLabels(alias, func(wq *LabelQuery) {
 				*wq = *query
@@ -848,21 +854,20 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, opCtx *graphq
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(githubrepository.ReleasesColumn, limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			gr.WithNamedReleases(alias, func(wq *GithubReleaseQuery) {
 				*wq = *query
@@ -962,6 +967,8 @@ func (gr *GithubRepositoryQuery) collectField(ctx context.Context, opCtx *graphq
 				selectedFields = append(selectedFields, githubrepository.FieldLicense)
 				fieldSeen[githubrepository.FieldLicense] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -1114,21 +1121,20 @@ func (l *LabelQuery) collectField(ctx context.Context, opCtx *graphql.OperationC
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(label.PostsPrimaryKey[0], limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(label.PostsPrimaryKey[0], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			l.WithNamedPosts(alias, func(wq *PostQuery) {
 				*wq = *query
@@ -1203,21 +1209,20 @@ func (l *LabelQuery) collectField(ctx context.Context, opCtx *graphql.OperationC
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(label.GithubRepositoriesPrimaryKey[0], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			l.WithNamedGithubRepositories(alias, func(wq *GithubRepositoryQuery) {
 				*wq = *query
@@ -1237,6 +1242,8 @@ func (l *LabelQuery) collectField(ctx context.Context, opCtx *graphql.OperationC
 				selectedFields = append(selectedFields, label.FieldName)
 				fieldSeen[label.FieldName] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -1399,21 +1406,20 @@ func (po *PostQuery) collectField(ctx context.Context, opCtx *graphql.OperationC
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(post.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(post.LabelsPrimaryKey[1], limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			po.WithNamedLabels(alias, func(wq *LabelQuery) {
 				*wq = *query
@@ -1468,6 +1474,8 @@ func (po *PostQuery) collectField(ctx context.Context, opCtx *graphql.OperationC
 				selectedFields = append(selectedFields, post.FieldPublic)
 				fieldSeen[post.FieldPublic] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
@@ -1616,21 +1624,20 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 			if ignoredEdges || (args.first != nil && *args.first == 0) || (args.last != nil && *args.last == 0) {
 				continue
 			}
-
 			if query, err = pager.applyCursors(query, args.after, args.before); err != nil {
 				return err
-			}
-			if limit := paginateLimit(args.first, args.last); limit > 0 {
-				modify := limitRows(user.PostsColumn, limit, pager.orderExpr(query))
-				query.modifiers = append(query.modifiers, modify)
-			} else {
-				query = pager.applyOrder(query)
 			}
 			path = append(path, edgesField, nodeField)
 			if field := collectedField(ctx, path...); field != nil {
 				if err := query.collectField(ctx, opCtx, *field, path, satisfies...); err != nil {
 					return err
 				}
+			}
+			if limit := paginateLimit(args.first, args.last); limit > 0 {
+				modify := limitRows(user.PostsColumn, limit, pager.orderExpr(query))
+				query.modifiers = append(query.modifiers, modify)
+			} else {
+				query = pager.applyOrder(query)
 			}
 			u.WithNamedPosts(alias, func(wq *PostQuery) {
 				*wq = *query
@@ -1685,6 +1692,8 @@ func (u *UserQuery) collectField(ctx context.Context, opCtx *graphql.OperationCo
 				selectedFields = append(selectedFields, user.FieldBio)
 				fieldSeen[user.FieldBio] = struct{}{}
 			}
+		case "id":
+		case "__typename":
 		default:
 			unknownSeen = true
 		}
