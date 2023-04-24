@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1.4
 
 # frontend
-FROM node:19 as build-node
+FROM node:20 as build-node
 WORKDIR /build
 
 COPY . /build
