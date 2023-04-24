@@ -17,7 +17,7 @@
     "@graphql-codegen/typescript-vue-urql": "^2.3.6",
     "@iconify-json/logos": "^1.1.25",
     "@iconify-json/mdi": "^1.1.50",
-    "@types/node": "^18.15.13",
+    "@types/node": "^18.16.0",
     "@urql/exchange-retry": "^1.1.0",
     "@urql/vue": "^1.1.0",
     "@vitejs/plugin-vue": "^4.1.0",
@@ -51,8 +51,8 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.59.0",
-    "@typescript-eslint/parser": "^5.59.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.2",
     "eslint": "^8.39.0",
@@ -60,8 +60,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tailwindcss": "^3.11.0",
     "eslint-plugin-vue": "^9.11.0",
-    "prettier": "^2.8.7",
-    "vue-tsc": "^1.4.3"
+    "prettier": "^2.8.8",
+    "vue-tsc": "^1.4.4"
   },
   "eslintConfig": {
     "env": {
