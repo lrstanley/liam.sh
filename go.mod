@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	ariga.io/entcache v0.1.0
-	entgo.io/contrib v0.4.3
+	entgo.io/contrib v0.4.4
 	entgo.io/ent v0.12.2
 	github.com/99designs/gqlgen v0.17.30
 	github.com/agnivade/levenshtein v1.1.1
@@ -20,16 +20,16 @@ require (
 	github.com/jackc/pgconn v1.14.0
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v4 v4.18.1
-	github.com/lrstanley/chix v0.0.0-20230402152728-7bd69ca2cd1d
-	github.com/lrstanley/clix v0.0.0-20230402152634-af9e9bf92363
+	github.com/lrstanley/chix v1.0.0
+	github.com/lrstanley/clix v1.0.0
 	github.com/markbates/goth v1.77.0
 	github.com/microcosm-cc/bluemonday v1.0.23
 	github.com/prometheus/client_golang v1.15.0
-	github.com/shurcooL/githubv4 v0.0.0-20230305132112-efb623903184
+	github.com/shurcooL/githubv4 v0.0.0-20230424031643-6cea62ecd5a9
 	github.com/vektah/gqlparser/v2 v2.5.1
 	github.com/yuin/goldmark v1.5.4
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
-	golang.org/x/exp v0.0.0-20230420155640-133eef4313cb
+	golang.org/x/exp v0.0.0-20230424174712-0ee363d48fb1
 	golang.org/x/oauth2 v0.7.0
 	golang.org/x/sync v0.1.0
 	mvdan.cc/xurls/v2 v2.5.0
@@ -37,7 +37,7 @@ require (
 
 require (
 	ariga.io/atlas v0.10.1 // indirect
-	github.com/ProtonMail/go-crypto v0.0.0-20230417170513-8ee5748c52b5 // indirect
+	github.com/ProtonMail/go-crypto v0.0.0-20230424174541-a2e3b023bd29 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -80,7 +80,7 @@ require (
 	github.com/jessevdk/go-flags v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/leodido/go-urn v1.2.3 // indirect
-	github.com/lrstanley/go-bogon v0.0.0-20230303230239-e33fb462737f // indirect
+	github.com/lrstanley/go-bogon v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.18 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
