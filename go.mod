@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	ariga.io/entcache v0.1.0
-	entgo.io/contrib v0.4.4
+	entgo.io/contrib v0.4.5
 	entgo.io/ent v0.12.2
 	github.com/99designs/gqlgen v0.17.30
 	github.com/agnivade/levenshtein v1.1.1
