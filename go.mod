@@ -24,7 +24,7 @@ require (
 	github.com/lrstanley/clix v1.0.0
 	github.com/markbates/goth v1.77.0
 	github.com/microcosm-cc/bluemonday v1.0.23
-	github.com/prometheus/client_golang v1.15.0
+	github.com/prometheus/client_golang v1.15.1
 	github.com/shurcooL/githubv4 v0.0.0-20230424031643-6cea62ecd5a9
 	github.com/vektah/gqlparser/v2 v2.5.1
 	github.com/yuin/goldmark v1.5.4
