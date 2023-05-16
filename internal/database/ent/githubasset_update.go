@@ -187,7 +187,7 @@ func (gau *GithubAssetUpdate) ClearRelease() *GithubAssetUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gau *GithubAssetUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, GithubAssetMutation](ctx, gau.sqlSave, gau.mutation, gau.hooks)
+	return withHooks(ctx, gau.sqlSave, gau.mutation, gau.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -513,7 +513,7 @@ func (gauo *GithubAssetUpdateOne) Select(field string, fields ...string) *Github
 
 // Save executes the query and returns the updated GithubAsset entity.
 func (gauo *GithubAssetUpdateOne) Save(ctx context.Context) (*GithubAsset, error) {
-	return withHooks[*GithubAsset, GithubAssetMutation](ctx, gauo.sqlSave, gauo.mutation, gauo.hooks)
+	return withHooks(ctx, gauo.sqlSave, gauo.mutation, gauo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

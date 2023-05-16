@@ -128,7 +128,7 @@ type githubassetPaginateArgs struct {
 	opts          []GithubAssetPaginateOption
 }
 
-func newGithubAssetPaginateArgs(rv map[string]interface{}) *githubassetPaginateArgs {
+func newGithubAssetPaginateArgs(rv map[string]any) *githubassetPaginateArgs {
 	args := &githubassetPaginateArgs{}
 	if rv == nil {
 		return args
@@ -147,7 +147,7 @@ func newGithubAssetPaginateArgs(rv map[string]interface{}) *githubassetPaginateA
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &GithubAssetOrder{Field: &GithubAssetOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -257,7 +257,7 @@ type githubeventPaginateArgs struct {
 	opts          []GithubEventPaginateOption
 }
 
-func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateArgs {
+func newGithubEventPaginateArgs(rv map[string]any) *githubeventPaginateArgs {
 	args := &githubeventPaginateArgs{}
 	if rv == nil {
 		return args
@@ -276,7 +276,7 @@ func newGithubEventPaginateArgs(rv map[string]interface{}) *githubeventPaginateA
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &GithubEventOrder{Field: &GithubEventOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -406,7 +406,7 @@ type githubgistPaginateArgs struct {
 	opts          []GithubGistPaginateOption
 }
 
-func newGithubGistPaginateArgs(rv map[string]interface{}) *githubgistPaginateArgs {
+func newGithubGistPaginateArgs(rv map[string]any) *githubgistPaginateArgs {
 	args := &githubgistPaginateArgs{}
 	if rv == nil {
 		return args
@@ -425,7 +425,7 @@ func newGithubGistPaginateArgs(rv map[string]interface{}) *githubgistPaginateArg
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &GithubGistOrder{Field: &GithubGistOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -634,7 +634,7 @@ type githubreleasePaginateArgs struct {
 	opts          []GithubReleasePaginateOption
 }
 
-func newGithubReleasePaginateArgs(rv map[string]interface{}) *githubreleasePaginateArgs {
+func newGithubReleasePaginateArgs(rv map[string]any) *githubreleasePaginateArgs {
 	args := &githubreleasePaginateArgs{}
 	if rv == nil {
 		return args
@@ -653,7 +653,7 @@ func newGithubReleasePaginateArgs(rv map[string]interface{}) *githubreleasePagin
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &GithubReleaseOrder{Field: &GithubReleaseOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -985,7 +985,7 @@ type githubrepositoryPaginateArgs struct {
 	opts          []GithubRepositoryPaginateOption
 }
 
-func newGithubRepositoryPaginateArgs(rv map[string]interface{}) *githubrepositoryPaginateArgs {
+func newGithubRepositoryPaginateArgs(rv map[string]any) *githubrepositoryPaginateArgs {
 	args := &githubrepositoryPaginateArgs{}
 	if rv == nil {
 		return args
@@ -1004,7 +1004,7 @@ func newGithubRepositoryPaginateArgs(rv map[string]interface{}) *githubrepositor
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &GithubRepositoryOrder{Field: &GithubRepositoryOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -1260,7 +1260,7 @@ type labelPaginateArgs struct {
 	opts          []LabelPaginateOption
 }
 
-func newLabelPaginateArgs(rv map[string]interface{}) *labelPaginateArgs {
+func newLabelPaginateArgs(rv map[string]any) *labelPaginateArgs {
 	args := &labelPaginateArgs{}
 	if rv == nil {
 		return args
@@ -1279,7 +1279,7 @@ func newLabelPaginateArgs(rv map[string]interface{}) *labelPaginateArgs {
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &LabelOrder{Field: &LabelOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -1492,7 +1492,7 @@ type postPaginateArgs struct {
 	opts          []PostPaginateOption
 }
 
-func newPostPaginateArgs(rv map[string]interface{}) *postPaginateArgs {
+func newPostPaginateArgs(rv map[string]any) *postPaginateArgs {
 	args := &postPaginateArgs{}
 	if rv == nil {
 		return args
@@ -1511,7 +1511,7 @@ func newPostPaginateArgs(rv map[string]interface{}) *postPaginateArgs {
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &PostOrder{Field: &PostOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -1710,7 +1710,7 @@ type userPaginateArgs struct {
 	opts          []UserPaginateOption
 }
 
-func newUserPaginateArgs(rv map[string]interface{}) *userPaginateArgs {
+func newUserPaginateArgs(rv map[string]any) *userPaginateArgs {
 	args := &userPaginateArgs{}
 	if rv == nil {
 		return args
@@ -1729,7 +1729,7 @@ func newUserPaginateArgs(rv map[string]interface{}) *userPaginateArgs {
 	}
 	if v, ok := rv[orderByField]; ok {
 		switch v := v.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			var (
 				err1, err2 error
 				order      = &UserOrder{Field: &UserOrderField{}, Direction: entgql.OrderDirectionAsc}
@@ -1766,35 +1766,18 @@ const (
 	whereField     = "where"
 )
 
-func fieldArgs(ctx context.Context, whereInput interface{}, path ...string) map[string]interface{} {
-	fc := graphql.GetFieldContext(ctx)
-	if fc == nil {
+func fieldArgs(ctx context.Context, whereInput any, path ...string) map[string]any {
+	field := collectedField(ctx, path...)
+	if field == nil || field.Arguments == nil {
 		return nil
 	}
 	oc := graphql.GetOperationContext(ctx)
-	for _, name := range path {
-		var field *graphql.CollectedField
-		for _, f := range graphql.CollectFields(oc, fc.Field.Selections, nil) {
-			if f.Alias == name {
-				field = &f
-				break
-			}
-		}
-		if field == nil {
-			return nil
-		}
-		cf, err := fc.Child(ctx, *field)
-		if err != nil {
-			args := field.ArgumentMap(oc.Variables)
-			return unmarshalArgs(ctx, whereInput, args)
-		}
-		fc = cf
-	}
-	return fc.Args
+	args := field.ArgumentMap(oc.Variables)
+	return unmarshalArgs(ctx, whereInput, args)
 }
 
 // unmarshalArgs allows extracting the field arguments from their raw representation.
-func unmarshalArgs(ctx context.Context, whereInput interface{}, args map[string]interface{}) map[string]interface{} {
+func unmarshalArgs(ctx context.Context, whereInput any, args map[string]any) map[string]any {
 	for _, k := range []string{firstField, lastField} {
 		v, ok := args[k]
 		if !ok {

@@ -182,7 +182,7 @@ func (pu *PostUpdate) Save(ctx context.Context) (int, error) {
 	if err := pu.defaults(); err != nil {
 		return 0, err
 	}
-	return withHooks[int, PostMutation](ctx, pu.sqlSave, pu.mutation, pu.hooks)
+	return withHooks(ctx, pu.sqlSave, pu.mutation, pu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -554,7 +554,7 @@ func (puo *PostUpdateOne) Save(ctx context.Context) (*Post, error) {
 	if err := puo.defaults(); err != nil {
 		return nil, err
 	}
-	return withHooks[*Post, PostMutation](ctx, puo.sqlSave, puo.mutation, puo.hooks)
+	return withHooks(ctx, puo.sqlSave, puo.mutation, puo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

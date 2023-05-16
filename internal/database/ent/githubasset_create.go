@@ -136,7 +136,7 @@ func (gac *GithubAssetCreate) Mutation() *GithubAssetMutation {
 
 // Save creates the GithubAsset in the database.
 func (gac *GithubAssetCreate) Save(ctx context.Context) (*GithubAsset, error) {
-	return withHooks[*GithubAsset, GithubAssetMutation](ctx, gac.sqlSave, gac.mutation, gac.hooks)
+	return withHooks(ctx, gac.sqlSave, gac.mutation, gac.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

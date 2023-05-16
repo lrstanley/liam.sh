@@ -176,7 +176,7 @@ func (gru *GithubReleaseUpdate) RemoveAssets(g ...*GithubAsset) *GithubReleaseUp
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gru *GithubReleaseUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, GithubReleaseMutation](ctx, gru.sqlSave, gru.mutation, gru.hooks)
+	return withHooks(ctx, gru.sqlSave, gru.mutation, gru.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -525,7 +525,7 @@ func (gruo *GithubReleaseUpdateOne) Select(field string, fields ...string) *Gith
 
 // Save executes the query and returns the updated GithubRelease entity.
 func (gruo *GithubReleaseUpdateOne) Save(ctx context.Context) (*GithubRelease, error) {
-	return withHooks[*GithubRelease, GithubReleaseMutation](ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
+	return withHooks(ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

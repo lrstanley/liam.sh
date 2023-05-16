@@ -116,7 +116,7 @@ func (geu *GithubEventUpdate) Mutation() *GithubEventMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (geu *GithubEventUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, GithubEventMutation](ctx, geu.sqlSave, geu.mutation, geu.hooks)
+	return withHooks(ctx, geu.sqlSave, geu.mutation, geu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -317,7 +317,7 @@ func (geuo *GithubEventUpdateOne) Select(field string, fields ...string) *Github
 
 // Save executes the query and returns the updated GithubEvent entity.
 func (geuo *GithubEventUpdateOne) Save(ctx context.Context) (*GithubEvent, error) {
-	return withHooks[*GithubEvent, GithubEventMutation](ctx, geuo.sqlSave, geuo.mutation, geuo.hooks)
+	return withHooks(ctx, geuo.sqlSave, geuo.mutation, geuo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

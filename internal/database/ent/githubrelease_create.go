@@ -130,7 +130,7 @@ func (grc *GithubReleaseCreate) Mutation() *GithubReleaseMutation {
 
 // Save creates the GithubRelease in the database.
 func (grc *GithubReleaseCreate) Save(ctx context.Context) (*GithubRelease, error) {
-	return withHooks[*GithubRelease, GithubReleaseMutation](ctx, grc.sqlSave, grc.mutation, grc.hooks)
+	return withHooks(ctx, grc.sqlSave, grc.mutation, grc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

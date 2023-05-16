@@ -263,7 +263,7 @@ func (grc *GithubRepositoryCreate) Save(ctx context.Context) (*GithubRepository,
 	if err := grc.defaults(); err != nil {
 		return nil, err
 	}
-	return withHooks[*GithubRepository, GithubRepositoryMutation](ctx, grc.sqlSave, grc.mutation, grc.hooks)
+	return withHooks(ctx, grc.sqlSave, grc.mutation, grc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

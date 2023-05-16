@@ -153,7 +153,7 @@ func (ggu *GithubGistUpdate) Mutation() *GithubGistMutation {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (ggu *GithubGistUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, GithubGistMutation](ctx, ggu.sqlSave, ggu.mutation, ggu.hooks)
+	return withHooks(ctx, ggu.sqlSave, ggu.mutation, ggu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -401,7 +401,7 @@ func (gguo *GithubGistUpdateOne) Select(field string, fields ...string) *GithubG
 
 // Save executes the query and returns the updated GithubGist entity.
 func (gguo *GithubGistUpdateOne) Save(ctx context.Context) (*GithubGist, error) {
-	return withHooks[*GithubGist, GithubGistMutation](ctx, gguo.sqlSave, gguo.mutation, gguo.hooks)
+	return withHooks(ctx, gguo.sqlSave, gguo.mutation, gguo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

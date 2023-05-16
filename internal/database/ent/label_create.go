@@ -102,7 +102,7 @@ func (lc *LabelCreate) Save(ctx context.Context) (*Label, error) {
 	if err := lc.defaults(); err != nil {
 		return nil, err
 	}
-	return withHooks[*Label, LabelMutation](ctx, lc.sqlSave, lc.mutation, lc.hooks)
+	return withHooks(ctx, lc.sqlSave, lc.mutation, lc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

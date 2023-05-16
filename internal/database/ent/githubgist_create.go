@@ -128,7 +128,7 @@ func (ggc *GithubGistCreate) Mutation() *GithubGistMutation {
 
 // Save creates the GithubGist in the database.
 func (ggc *GithubGistCreate) Save(ctx context.Context) (*GithubGist, error) {
-	return withHooks[*GithubGist, GithubGistMutation](ctx, ggc.sqlSave, ggc.mutation, ggc.hooks)
+	return withHooks(ctx, ggc.sqlSave, ggc.mutation, ggc.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

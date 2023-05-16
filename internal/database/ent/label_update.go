@@ -128,7 +128,7 @@ func (lu *LabelUpdate) Save(ctx context.Context) (int, error) {
 	if err := lu.defaults(); err != nil {
 		return 0, err
 	}
-	return withHooks[int, LabelMutation](ctx, lu.sqlSave, lu.mutation, lu.hooks)
+	return withHooks(ctx, lu.sqlSave, lu.mutation, lu.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -410,7 +410,7 @@ func (luo *LabelUpdateOne) Save(ctx context.Context) (*Label, error) {
 	if err := luo.defaults(); err != nil {
 		return nil, err
 	}
-	return withHooks[*Label, LabelMutation](ctx, luo.sqlSave, luo.mutation, luo.hooks)
+	return withHooks(ctx, luo.sqlSave, luo.mutation, luo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

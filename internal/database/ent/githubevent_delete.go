@@ -31,7 +31,7 @@ func (ged *GithubEventDelete) Where(ps ...predicate.GithubEvent) *GithubEventDel
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (ged *GithubEventDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks[int, GithubEventMutation](ctx, ged.sqlExec, ged.mutation, ged.hooks)
+	return withHooks(ctx, ged.sqlExec, ged.mutation, ged.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.

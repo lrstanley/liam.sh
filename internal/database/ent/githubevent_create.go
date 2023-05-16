@@ -99,7 +99,7 @@ func (gec *GithubEventCreate) Save(ctx context.Context) (*GithubEvent, error) {
 	if err := gec.defaults(); err != nil {
 		return nil, err
 	}
-	return withHooks[*GithubEvent, GithubEventMutation](ctx, gec.sqlSave, gec.mutation, gec.hooks)
+	return withHooks(ctx, gec.sqlSave, gec.mutation, gec.hooks)
 }
 
 // SaveX calls Save and panics if Save returns an error.

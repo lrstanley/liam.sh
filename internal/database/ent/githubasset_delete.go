@@ -31,7 +31,7 @@ func (gad *GithubAssetDelete) Where(ps ...predicate.GithubAsset) *GithubAssetDel
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (gad *GithubAssetDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks[int, GithubAssetMutation](ctx, gad.sqlExec, gad.mutation, gad.hooks)
+	return withHooks(ctx, gad.sqlExec, gad.mutation, gad.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.

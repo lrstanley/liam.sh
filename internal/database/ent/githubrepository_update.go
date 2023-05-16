@@ -352,7 +352,7 @@ func (gru *GithubRepositoryUpdate) RemoveReleases(g ...*GithubRelease) *GithubRe
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (gru *GithubRepositoryUpdate) Save(ctx context.Context) (int, error) {
-	return withHooks[int, GithubRepositoryMutation](ctx, gru.sqlSave, gru.mutation, gru.hooks)
+	return withHooks(ctx, gru.sqlSave, gru.mutation, gru.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.
@@ -942,7 +942,7 @@ func (gruo *GithubRepositoryUpdateOne) Select(field string, fields ...string) *G
 
 // Save executes the query and returns the updated GithubRepository entity.
 func (gruo *GithubRepositoryUpdateOne) Save(ctx context.Context) (*GithubRepository, error) {
-	return withHooks[*GithubRepository, GithubRepositoryMutation](ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
+	return withHooks(ctx, gruo.sqlSave, gruo.mutation, gruo.hooks)
 }
 
 // SaveX is like Save, but panics if an error occurs.

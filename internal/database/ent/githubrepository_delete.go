@@ -31,7 +31,7 @@ func (grd *GithubRepositoryDelete) Where(ps ...predicate.GithubRepository) *Gith
 
 // Exec executes the deletion query and returns how many vertices were deleted.
 func (grd *GithubRepositoryDelete) Exec(ctx context.Context) (int, error) {
-	return withHooks[int, GithubRepositoryMutation](ctx, grd.sqlExec, grd.mutation, grd.hooks)
+	return withHooks(ctx, grd.sqlExec, grd.mutation, grd.hooks)
 }
 
 // ExecX is like Exec, but panics if an error occurs.
