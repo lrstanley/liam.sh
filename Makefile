@@ -66,7 +66,7 @@ node-fetch:
 		--quiet \
 		--global pnpm
 	cd cmd/httpserver/public && \
-		pnpm install --silent
+		pnpm install
 
 node-upgrade-deps:
 	cd cmd/httpserver/public && \
