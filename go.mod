@@ -31,7 +31,7 @@ require (
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 	golang.org/x/oauth2 v0.8.0
-	golang.org/x/sync v0.2.0
+	golang.org/x/sync v0.3.0
 	mvdan.cc/xurls/v2 v2.5.0
 )
 
