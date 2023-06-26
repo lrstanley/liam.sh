@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.1.0
 	entgo.io/contrib v0.4.5
 	entgo.io/ent v0.12.3
-	github.com/99designs/gqlgen v0.17.31
+	github.com/99designs/gqlgen v0.17.34
 	github.com/agnivade/levenshtein v1.1.1
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
@@ -26,7 +26,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.23
 	github.com/prometheus/client_golang v1.15.1
 	github.com/shurcooL/githubv4 v0.0.0-20230424031643-6cea62ecd5a9
-	github.com/vektah/gqlparser/v2 v2.5.1
+	github.com/vektah/gqlparser/v2 v2.5.4
 	github.com/yuin/goldmark v1.5.4
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
@@ -69,7 +69,7 @@ require (
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
-	github.com/hashicorp/golang-lru/v2 v2.0.2 // indirect
+	github.com/hashicorp/golang-lru/v2 v2.0.3 // indirect
 	github.com/hashicorp/hcl/v2 v2.16.2 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
@@ -82,7 +82,7 @@ require (
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/lrstanley/go-bogon v1.0.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.18 // indirect
+	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.4 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
@@ -102,7 +102,7 @@ require (
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
-	golang.org/x/tools v0.9.1 // indirect
+	golang.org/x/tools v0.9.3 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
