@@ -25,7 +25,6 @@ FROM alpine:3.18
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates
-RUN if [ ! -e /etc/nsswitch.conf ];then echo 'hosts: files dns' > /etc/nsswitch.conf;fi
 COPY --from=build-go /build/httpserver /app/httpserver
 
 VOLUME /app/.gitapicache
