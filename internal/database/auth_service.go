@@ -16,25 +16,25 @@ import (
 )
 
 // Validate authService implements chix.AuthService.
-var _ chix.AuthService[ent.User, int] = (*authService)(nil)
+var _ chix.AuthService[ent.User, int] = (*AuthService)(nil)
 
-func NewAuthService(db *ent.Client, admin int) *authService {
-	return &authService{
+func NewAuthService(db *ent.Client, admin int) *AuthService {
+	return &AuthService{
 		db:    db,
 		admin: admin,
 	}
 }
 
-type authService struct {
+type AuthService struct {
 	db    *ent.Client
 	admin int
 }
 
-func (s *authService) Get(ctx context.Context, id int) (*ent.User, error) {
+func (s *AuthService) Get(ctx context.Context, id int) (*ent.User, error) {
 	return s.db.User.Get(ctx, id)
 }
 
-func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err error) {
+func (s *AuthService) Set(ctx context.Context, guser *goth.User) (id int, err error) {
 	uid, err := strconv.Atoi(guser.UserID)
 	if err != nil {
 		return 0, err
@@ -54,7 +54,7 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 		SetBio(guser.Description)
 
 	if data, ok := guser.RawData["html_url"]; ok {
-		if url, ok := data.(string); ok {
+		if url, uok := data.(string); uok {
 			q = q.SetHTMLURL(url)
 		}
 	}
@@ -62,7 +62,7 @@ func (s *authService) Set(ctx context.Context, guser *goth.User) (id int, err er
 	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(entcache.Evict(ctx))
 }
 
-func (s *authService) Roles(ctx context.Context, id int) ([]string, error) {
+func (s *AuthService) Roles(ctx context.Context, id int) ([]string, error) {
 	if ok, _ := s.db.User.Query().Where(user.IDEQ(id)).Exist(ctx); ok {
 		return []string{"admin"}, nil
 	}

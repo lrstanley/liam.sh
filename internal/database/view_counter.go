@@ -28,7 +28,7 @@ func PostViewCounter(ctx context.Context, post *ent.Post) {
 
 	nctx, cancel := context.WithTimeout(
 		privacy.DecisionContext(context.Background(), privacy.Allow),
-		time.Second*5,
+		time.Second*5, //nolint:gomnd
 	)
 	defer cancel()
 

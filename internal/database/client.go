@@ -16,11 +16,15 @@ import (
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/apex/log"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/jackc/pgx/v5/stdlib" // load postgres driver.
 	"github.com/lrstanley/liam.sh/internal/database/ent"
-	"github.com/lrstanley/liam.sh/internal/database/ent/migrate"
-	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime"
+	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
+)
+
+const (
+	dbCacheTTL        = 120 * time.Second
+	dbCacheMaxEntries = 256
 )
 
 var Ping func(context.Context) error
@@ -71,7 +75,7 @@ func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabas
 		db, err = sql.Open("pgx", uri)
 
 		if err == nil {
-			tctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+			tctx, cancel := context.WithTimeout(ctx, 5*time.Second) // nolint:gomnd
 
 			err = db.PingContext(tctx)
 			cancel()
@@ -80,10 +84,10 @@ func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabas
 		if err != nil {
 			logger.WithError(err).WithField("attempt", attempt).Error("failed to open database connection")
 
-			if attempt > 2 {
+			if attempt > 2 { // nolint:gomnd
 				logger.Fatal("failed to open database connection after 3 attempts")
 			}
-			time.Sleep(time.Second * 5)
+			time.Sleep(time.Second * 5) // nolint:gomnd
 			continue
 		}
 		break
@@ -97,8 +101,8 @@ func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabas
 	return ent.NewClient(ent.Driver(
 		entcache.NewDriver(
 			driver,
-			entcache.TTL(120*time.Second),
-			entcache.Levels(entcache.NewLRU(256)),
+			entcache.TTL(dbCacheTTL),
+			entcache.Levels(entcache.NewLRU(dbCacheMaxEntries)),
 		),
 	))
 }
@@ -114,7 +118,7 @@ func Migrate(ctx context.Context, logger log.Interface) {
 		entcache.Skip(ctx),
 		schema.WithDropColumn(true),
 		schema.WithDropIndex(true),
-		migrate.WithGlobalUniqueID(true),
+		schema.WithGlobalUniqueID(true),
 	); err != nil {
 		logger.WithError(err).Fatal("failed to create schema")
 	}
