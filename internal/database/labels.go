@@ -8,11 +8,11 @@ import (
 	"context"
 	"fmt"
 	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/label"
-	"golang.org/x/exp/slices"
 )
 
 var reLabelSanitize = regexp.MustCompile(`[^a-z\d\-]+`)
