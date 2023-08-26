@@ -11,17 +11,23 @@ import (
 	"net/url"
 	"time"
 
+	atlas "ariga.io/atlas/sql/migrate"
 	"ariga.io/entcache"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/apex/log"
-	_ "github.com/jackc/pgx/v4/stdlib"
+	pgx "github.com/jackc/pgx/v5/stdlib"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/migrate"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime"
 	"github.com/lrstanley/liam.sh/internal/models"
 )
+
+func init() {
+	// TODO: https://github.com/ariga/atlas/issues/1415
+	sql.Register("postgres", pgx.GetDefaultDriver())
+}
 
 var Ping func(context.Context) error
 
@@ -103,20 +109,36 @@ func Open(ctx context.Context, logger log.Interface, config models.ConfigDatabas
 	))
 }
 
-func Migrate(ctx context.Context, logger log.Interface) {
-	logger.Info("initiating database schema migration")
-	db := ent.FromContext(ctx)
-	if db == nil {
-		panic("database client is nil")
+func GenerateMigrations(ctx context.Context, logger log.Interface, config models.ConfigDatabase, migrationPath, name string) {
+	logger.Info("generating schema migrations")
+
+	uri, err := ParseURL(config)
+	if err != nil {
+		logger.WithError(err).Fatal("failed to parse database url")
 	}
 
-	if err := db.Schema.Create(
-		entcache.Skip(ctx),
+	log.Info(uri)
+
+	dir, err := atlas.NewLocalDir(migrationPath)
+	if err != nil {
+		logger.WithError(err).Fatal("failed to initialize migrations directory")
+	}
+
+	// Migrate diff options.
+	opts := []schema.MigrateOption{
+		schema.WithDialect(dialect.Postgres),        // Ent dialect to use
+		schema.WithDir(dir),                         // provide migration directory
+		schema.WithMigrationMode(schema.ModeReplay), // provide migration mode
+		schema.WithFormatter(atlas.DefaultFormatter),
+		schema.WithGlobalUniqueID(true),
 		schema.WithDropColumn(true),
 		schema.WithDropIndex(true),
-		migrate.WithGlobalUniqueID(true),
-	); err != nil {
-		logger.WithError(err).Fatal("failed to create schema")
 	}
-	logger.Info("database schema migration complete")
+
+	err = migrate.NamedDiff(ctx, uri, name, opts...)
+	if err != nil {
+		logger.WithError(err).Fatal("failed to generate migration")
+	}
+
+	logger.Info("schema migration generated")
 }

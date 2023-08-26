@@ -8,8 +8,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/jackc/pgconn"
 	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 )

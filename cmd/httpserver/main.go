@@ -22,7 +22,7 @@ var (
 	db     *ent.Client
 	logger log.Interface
 
-	cli = &clix.CLI[models.Flags]{
+	cli = &clix.CLI[models.FlagsServer]{
 		Links: clix.GithubLinks("github.com/lrstanley/liam.sh", "master", "https://liam.sh"),
 	}
 )
@@ -37,7 +37,7 @@ func main() {
 	ctx := ent.NewContext(log.NewContext(context.Background(), logger), db)
 
 	database.RegisterHooks(ctx)
-	database.Migrate(ctx, logger)
+	// database.Migrate(ctx, logger)
 
 	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
 	gh.NewClient(ctx, cli.Flags.Github.Token)

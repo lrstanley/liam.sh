@@ -4,13 +4,19 @@
 
 package models
 
-type Flags struct {
+type FlagsServer struct {
 	HTTP     ConfigHTTP     `group:"HTTP Server options" namespace:"http"     env-namespace:"HTTP"`
 	Database ConfigDatabase `group:"Database options"    namespace:"database" env-namespace:"DATABASE"`
 	Github   ConfigGithub   `group:"Github options"      namespace:"github"   env-namespace:"GITHUB"`
 	WakAPI   ConfigWakAPI   `group:"WakAPI options"      namespace:"wakapi"   env-namespace:"WAKAPI"`
 
-	ChatLink string `env:"CHAT_LINK" long:"chat-link" required:"true" description:"Link to a chat platform"`
+	ChatLink string `env:"CHAT_LINK" long:"chat-link" required:"true" description:"link to a chat platform"`
+}
+
+type FlagsMigration struct {
+	Database ConfigDatabase `group:"Database options" namespace:"database" env-namespace:"DATABASE"`
+
+	MigrationPath string `env:"MIGRATION_PATH" long:"migration-path" default:"internal/database/migrations" description:"path to the migration directory"`
 }
 
 // ConfigDatabase holds the database configuration.

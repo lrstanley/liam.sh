@@ -56,7 +56,7 @@ func init() {
 	Schema = buf.String()
 }
 
-func New(db *ent.Client, cli *clix.CLI[models.Flags]) *handler.Server {
+func New(db *ent.Client, cli *clix.CLI[models.FlagsServer]) *handler.Server {
 	srv := handler.NewDefaultServer(resolver.NewSchema(db, cli))
 	srv.AroundOperations(requestLogger)
 	srv.SetRecoverFunc(recoverFunc)

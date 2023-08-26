@@ -39,6 +39,7 @@ func main() {
 			Package: "github.com/lrstanley/liam.sh/internal/database/ent",
 			Header:  header,
 			Features: []gen.Feature{
+				gen.FeatureVersionedMigration,
 				gen.FeaturePrivacy,
 				gen.FeatureEntQL,
 				gen.FeatureSnapshot,
