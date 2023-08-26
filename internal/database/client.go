@@ -122,5 +122,6 @@ func Migrate(ctx context.Context, logger log.Interface) {
 	); err != nil {
 		logger.WithError(err).Fatal("failed to create schema")
 	}
+
 	logger.Info("database schema migration complete")
 }

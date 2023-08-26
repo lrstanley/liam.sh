@@ -37,7 +37,10 @@ func main() {
 	ctx := ent.NewContext(log.NewContext(context.Background(), logger), db)
 
 	database.RegisterHooks(ctx)
-	database.Migrate(ctx, logger)
+
+	if cli.Flags.Database.AutoMigrate {
+		database.Migrate(ctx, logger)
+	}
 
 	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
 	gh.NewClient(ctx, cli.Flags.Github.Token)

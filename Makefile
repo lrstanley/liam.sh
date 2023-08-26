@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 .DEFAULT_GOAL := build-all
 
 export PROJECT := "httpserver"
@@ -9,6 +10,7 @@ export DOCKER_BUILDKIT := 1
 export USER := $(shell id -u)
 export GROUP := $(shell id -g)
 export LICENSE_IGNORE := "graphql-tag"
+export AUTO_MIGRATE := true
 
 license:
 	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
@@ -57,6 +59,13 @@ docker-build:
 		--tag ${PROJECT} \
 		--pull \
 		--force-rm .
+
+generate-migrations:
+	@source .env && atlas schema inspect --url "$(shell sed -rn 's:DATABASE_URL="([^"]+)":\1:p' .env)?sslmode=disable" > internal/database/migrations/schema.hcl
+	atlas migrate diff create_users \
+		--dir "file://internal/database/migrations/" \
+		--to "file://internal/database/migrations/schema.hcl" \
+		--dev-url "docker://postgres/15/test?search_path=public"
 
 # frontend
 node-fetch:
