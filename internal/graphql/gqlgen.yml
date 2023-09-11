@@ -1,5 +1,7 @@
 # set to speed up generation time by not performing a final validation pass.
 skip_validation: true
+skip_mod_tidy: true
+omit_gqlgen_version_in_file_notice: true
 
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
@@ -29,9 +31,6 @@ resolver:
 # provided Go package. If they match it will use them, otherwise it will generate new ones.
 autobind:
   - github.com/lrstanley/liam.sh/internal/database/ent
-  - github.com/lrstanley/liam.sh/internal/database/ent/user
-  - github.com/lrstanley/liam.sh/internal/database/ent/post
-  - github.com/lrstanley/liam.sh/internal/database/ent/label
   - github.com/lrstanley/liam.sh/internal/models
 
 # This section declares type mapping between the GraphQL and Go type systems.
