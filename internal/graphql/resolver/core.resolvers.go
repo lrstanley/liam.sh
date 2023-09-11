@@ -8,7 +8,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/lrstanley/liam.sh/internal/database/graphql/gqlhandler"
+	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 )
 
 // Ping is the resolver for the ping field.

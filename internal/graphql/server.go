@@ -17,7 +17,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/lrstanley/clix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
-	"github.com/lrstanley/liam.sh/internal/database/graphql/resolver"
+	"github.com/lrstanley/liam.sh/internal/graphql/resolver"
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 

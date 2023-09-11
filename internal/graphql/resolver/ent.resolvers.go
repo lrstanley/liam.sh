@@ -10,7 +10,7 @@ import (
 	"entgo.io/contrib/entgql"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
-	"github.com/lrstanley/liam.sh/internal/database/graphql/gqlhandler"
+	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 )
 
 // Node is the resolver for the node field.

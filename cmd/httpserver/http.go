@@ -21,7 +21,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
-	"github.com/lrstanley/liam.sh/internal/database/graphql"
+	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/internal/handlers/webhookhandler"
 	"github.com/markbates/goth"

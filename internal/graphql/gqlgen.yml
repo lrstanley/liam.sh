@@ -3,11 +3,11 @@ skip_validation: true
 
 # schema tells gqlgen where the GraphQL schema is located.
 schema:
-  - ./database/graphql/schema/*.gql
+  - ./graphql/schema/*.gql
 
 # Where should the generated server code go?
 exec:
-  filename: ./database/graphql/gqlhandler/gqlhandler.go
+  filename: ./graphql/gqlhandler/gqlhandler.go
   package: gqlhandler
 
 # Where should any generated models go?
@@ -18,7 +18,7 @@ model:
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: ./database/graphql/resolver
+  dir: ./graphql/resolver
   package: resolver
   filename_template: "{name}.resolvers.go"
 

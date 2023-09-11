@@ -32,7 +32,7 @@ export default defineConfig({
       enableWatcher: true,
       config: {
         errorsOnly: true,
-        schema: "./../../../internal/database/graphql/schema/*.gql",
+        schema: "./../../../internal/graphql/schema/*.gql",
         documents: "./src/lib/api/*.gql",
         generates: {
           "./src/lib/api/graphql.ts": {

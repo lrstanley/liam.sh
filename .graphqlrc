@@ -1,2 +1,2 @@
-schema: internal/database/graphql/schema/*.gql
+schema: internal/graphql/schema/*.gql
 documents: cmd/httpserver/public/src/lib/api/*.gql
