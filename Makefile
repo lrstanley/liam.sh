@@ -96,11 +96,8 @@ node-preview: node-build
 		pnpm exec vite preview
 
 # backend
-go-prepare: license go-fetch
+go-prepare: license
 	go generate -x ./...
-
-go-fetch:
-	go mod download
 	go mod tidy
 
 go-upgrade-deps:
@@ -124,7 +121,7 @@ go-debug: go-prepare
 go-debug-fast:
 	go run ${PACKAGE} --debug
 
-go-build: go-prepare go-fetch
+go-build: go-prepare
 	CGO_ENABLED=0 \
 	go build \
 		-ldflags '-d -s -w -extldflags=-static' \
