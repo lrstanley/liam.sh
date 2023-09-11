@@ -53,7 +53,7 @@ meta:
           </div>
 
           <router-link :to="{ name: '/admin/edit-post/[id]', params: { id: post.id } }">
-            <n-button type="success" tertiary size="small"> Edit post </n-button>
+            <n-button type="success" tertiary size="small">Edit post</n-button>
           </router-link>
         </div>
 
@@ -174,7 +174,7 @@ const postRef = ref(null)
 #post-content :deep(h3),
 #post-content :deep(h4),
 #post-content :deep(h5) {
-  @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold;
+  @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold from-10% via-50% to-90%;
   @apply bg-gradient-to-r from-sky-400 to-blue-500 ml-[10px];
 }
 

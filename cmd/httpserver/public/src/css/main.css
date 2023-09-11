@@ -37,7 +37,7 @@ a {
 }
 
 .text-gradient {
-  @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text;
+  @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text from-10% via-50% to-90%;
 }
 
 .icon {
