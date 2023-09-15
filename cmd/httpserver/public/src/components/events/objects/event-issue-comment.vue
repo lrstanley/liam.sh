@@ -1,8 +1,8 @@
 <template>
   <div>
-    <span v-if="action == 'created'"> added </span>
-    <span v-else-if="action == 'edited'"> updated </span>
-    <span v-if="action == 'deleted'"> removed </span>
+    <span v-if="action == 'created'">added</span>
+    <span v-else-if="action == 'edited'">updated</span>
+    <span v-if="action == 'deleted'">removed</span>
 
     a
     <EventLink :href="comment.html_url" class="text-cyan-400 hover:text-cyan-500" value="comment" />
@@ -12,7 +12,8 @@
       {{ issue.title }}
     </EventHoverItem>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ issue.title }}</EventBlame>
   </div>

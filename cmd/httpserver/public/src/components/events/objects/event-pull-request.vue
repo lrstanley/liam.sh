@@ -5,11 +5,11 @@
       {{ action }}
     </span>
     <span v-else-if="action == 'synchronize'">updated</span>
-    <span v-else-if="['assigned', 'unassigned'].includes(action)"> changed assignees on </span>
+    <span v-else-if="['assigned', 'unassigned'].includes(action)">changed assignees on</span>
     <span v-else-if="['review_requested', 'review_request_removed'].includes(action)">
       requested review on
     </span>
-    <span v-else-if="['labeled', 'unlabeled'].includes(action)"> edited labels on </span>
+    <span v-else-if="['labeled', 'unlabeled'].includes(action)">edited labels on</span>
 
     pr
 
@@ -29,7 +29,8 @@
       </EventHoverItem>
     </template>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>

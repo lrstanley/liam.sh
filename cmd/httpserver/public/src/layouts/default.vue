@@ -14,7 +14,7 @@
 
               <template #fallback>
                 <n-spin class="flex flex-auto h-full gap-4 mx-auto place-content-center">
-                  <template #description> Loading... </template>
+                  <template #description>Loading...</template>
                 </n-spin>
               </template>
             </Suspense>
@@ -28,7 +28,8 @@
       <n-icon class="align-middle text-emerald-600">
         <i-mdi-heart />
       </n-icon>
-      by <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>
+      by
+      <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>
     </span>
   </div>
 </template>

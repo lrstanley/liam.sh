@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span v-if="action == 'edited'"> updated collaborator permissions on </span>
+    <span v-if="action == 'edited'">updated collaborator permissions on</span>
     <span v-else>
       {{ action }}
 

@@ -13,7 +13,7 @@ meta:
         <n-icon :size="40"><i-mdi-image-edit-outline /></n-icon>
       </template>
       <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit"> Banner Builder </a>
+        <a href="#" class="no-underline capitalize" style="color: inherit">Banner Builder</a>
       </template>
     </n-page-header>
 
@@ -24,7 +24,7 @@ meta:
         </a>
       </div>
 
-      <n-divider class="!mt-3 !mb-2"> Main Configuration </n-divider>
+      <n-divider class="!mt-3 !mb-2">Main Configuration</n-divider>
 
       <div class="grid grid-cols-3 gap-4">
         <n-form-item label="Repository">
@@ -48,16 +48,16 @@ meta:
         </n-form-item>
       </div>
 
-      <n-divider class="!mt-3 !mb-2"> Dimensions & Layout </n-divider>
+      <n-divider class="!mt-3 !mb-2">Dimensions & Layout</n-divider>
 
       <div class="grid grid-cols-4 gap-4">
         <n-form-item label="Layout">
           <n-radio-group v-model:value="input.layout" name="layout">
             <n-space>
-              <n-radio value=""> default </n-radio>
-              <n-radio value="all"> all (both) </n-radio>
-              <n-radio value="left"> left </n-radio>
-              <n-radio value="right"> right </n-radio>
+              <n-radio value="">default</n-radio>
+              <n-radio value="all">all (both)</n-radio>
+              <n-radio value="left">left</n-radio>
+              <n-radio value="right">right</n-radio>
             </n-space>
           </n-radio-group>
         </n-form-item>
@@ -73,15 +73,15 @@ meta:
         </n-form-item>
       </div>
 
-      <n-divider class="!mt-3 !mb-2"> Background </n-divider>
+      <n-divider class="!mt-3 !mb-2">Background</n-divider>
 
       <div class="grid grid-cols-3 gap-4">
         <n-form-item label="Background">
           <n-radio-group v-model:value="input.bg" name="background">
             <n-space>
-              <n-radio value=""> default </n-radio>
-              <n-radio value="geometric"> geometric </n-radio>
-              <n-radio value="topography"> topography </n-radio>
+              <n-radio value="">default</n-radio>
+              <n-radio value="geometric">geometric</n-radio>
+              <n-radio value="topography">topography</n-radio>
             </n-space>
           </n-radio-group>
         </n-form-item>
@@ -91,7 +91,7 @@ meta:
         </n-form-item>
       </div>
 
-      <n-divider class="!mt-3 !mb-2"> Icon Configuration </n-divider>
+      <n-divider class="!mt-3 !mb-2">Icon Configuration</n-divider>
 
       <div class="grid grid-cols-3 gap-4">
         <n-form-item label="Icon">
@@ -108,9 +108,9 @@ meta:
         <n-form-item label="Icon Flip">
           <n-radio-group v-model:value="input['icon.flip']" name="icon.flip">
             <n-space>
-              <n-radio value=""> default </n-radio>
-              <n-radio value="horizontal"> horizontal </n-radio>
-              <n-radio value="vertical"> vertical </n-radio>
+              <n-radio value="">default</n-radio>
+              <n-radio value="horizontal">horizontal</n-radio>
+              <n-radio value="vertical">vertical</n-radio>
             </n-space>
           </n-radio-group>
         </n-form-item>

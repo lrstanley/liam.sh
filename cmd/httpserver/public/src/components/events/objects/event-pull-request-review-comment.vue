@@ -1,8 +1,8 @@
 <template>
   <div>
-    <span v-if="action == 'created'"> added </span>
-    <span v-else-if="action == 'edited'"> updated </span>
-    <span v-if="action == 'deleted'"> removed </span>
+    <span v-if="action == 'created'">added</span>
+    <span v-else-if="action == 'edited'">updated</span>
+    <span v-if="action == 'deleted'">removed</span>
 
     a
     <EventLink
@@ -16,7 +16,8 @@
       {{ pr.title }}
     </EventHoverItem>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>

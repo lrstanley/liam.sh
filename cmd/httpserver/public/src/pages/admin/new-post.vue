@@ -10,7 +10,7 @@ meta:
         <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
       </template>
       <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit"> Create new post </a>
+        <a href="#" class="no-underline capitalize" style="color: inherit">Create new post</a>
       </template>
     </n-page-header>
 

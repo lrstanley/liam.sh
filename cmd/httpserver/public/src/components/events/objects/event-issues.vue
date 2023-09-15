@@ -4,8 +4,8 @@
       <span v-if="['opened', 'edited', 'closed', 'reopened'].includes(action)">
         {{ action }}
       </span>
-      <span v-else-if="['assigned', 'unassigned'].includes(action)"> changed assignees on </span>
-      <span v-else-if="['labeled', 'unlabeled'].includes(action)"> edited labels on </span>
+      <span v-else-if="['assigned', 'unassigned'].includes(action)">changed assignees on</span>
+      <span v-else-if="['labeled', 'unlabeled'].includes(action)">edited labels on</span>
     </span>
 
     issue
@@ -13,7 +13,8 @@
       {{ issue.title }}
     </EventHoverItem>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ issue.title }}</EventBlame>
   </div>

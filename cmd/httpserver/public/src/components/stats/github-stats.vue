@@ -39,31 +39,46 @@
 
     <div class="mt-4">
       <div class="flex flex-row justify-between flex-auto mt-1">
-        <span><i-mdi-source-commit class="text-zinc-400" /> Total Commits ({{ year }}) </span>
+        <span>
+          <i-mdi-source-commit class="text-zinc-400" />
+          Total Commits ({{ year }})
+        </span>
         <n-tag type="success" :bordered="false" size="small">
           {{ state.base.githubStats.commitsYear.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
-        <span><i-mdi-heart-multiple-outline class="text-zinc-400" /> Contributed To ({{ year }})</span>
+        <span>
+          <i-mdi-heart-multiple-outline class="text-zinc-400" />
+          Contributed To ({{ year }})
+        </span>
         <n-tag type="success" :bordered="false" size="small">
           {{ state.base.githubStats.contributedRepos.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
-        <span><i-mdi-star-check-outline class="text-zinc-400" /> Total Stars Earned</span>
+        <span>
+          <i-mdi-star-check-outline class="text-zinc-400" />
+          Total Stars Earned
+        </span>
         <n-tag type="success" :bordered="false" size="small">
           {{ state.base.githubStats.stars.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
-        <span><i-mdi-source-pull class="text-zinc-400" /> Total PRs</span>
+        <span>
+          <i-mdi-source-pull class="text-zinc-400" />
+          Total PRs
+        </span>
         <n-tag type="success" :bordered="false" size="small">
           {{ state.base.githubStats.pullRequests.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
-        <span><i-mdi-help-circle-outline class="text-zinc-400" /> Total Issues</span>
+        <span>
+          <i-mdi-help-circle-outline class="text-zinc-400" />
+          Total Issues
+        </span>
         <n-tag type="success" :bordered="false" size="small">
           {{ state.base.githubStats.issues.toLocaleString() }}
         </n-tag>

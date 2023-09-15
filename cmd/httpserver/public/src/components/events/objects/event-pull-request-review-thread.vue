@@ -15,7 +15,8 @@
       {{ pr.title }}
     </EventHoverItem>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>

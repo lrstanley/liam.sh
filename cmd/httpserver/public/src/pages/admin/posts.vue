@@ -25,7 +25,8 @@ meta:
         <tr v-for="post in posts" :key="post.id">
           <td>
             <router-link :to="{ name: '/p/[slug]', params: { slug: post.slug } }">
-              {{ post.title }} <span v-if="!post.public" class="text-yellow-500">[draft]</span>
+              {{ post.title }}
+              <span v-if="!post.public" class="text-yellow-500">[draft]</span>
             </router-link>
           </td>
           <td class="hidden md:table-cell">
@@ -55,11 +56,13 @@ meta:
           <td>
             <router-link :to="{ name: '/admin/edit-post/[id]', params: { id: post.id } }">
               <n-button size="small" type="primary" tertiary>
-                <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon> Edit
+                <n-icon class="mr-1"><i-mdi-pencil-outline /></n-icon>
+                Edit
               </n-button>
             </router-link>
             <n-button size="small" type="error" tertiary class="ml-2" @click="deletePost(post)">
-              <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon> Delete
+              <n-icon class="mr-1"><i-mdi-trash-can-outline /></n-icon>
+              Delete
             </n-button>
           </td>
         </tr>

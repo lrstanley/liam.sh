@@ -73,7 +73,12 @@ node-upgrade-deps:
 		pnpm up -i
 
 node-prepare: license node-fetch
-	@echo
+	cd cmd/httpserver/public && \
+		pnpm exec prettier \
+			--cache \
+			--write \
+			--ignore-path src/lib/api/graphql.ts \
+			src/
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
 	cd cmd/httpserver/public && \

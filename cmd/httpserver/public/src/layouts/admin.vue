@@ -31,7 +31,7 @@
 
               <template #fallback>
                 <n-spin class="flex-auto">
-                  <template #description> Loading... </template>
+                  <template #description>Loading...</template>
                 </n-spin>
               </template>
             </Suspense>

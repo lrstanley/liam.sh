@@ -1,8 +1,9 @@
 <template>
   <div>
-    <span v-if="review.state == 'approved'" class="text-lime-500"> approved </span>
+    <span v-if="review.state == 'approved'" class="text-lime-500">approved</span>
     <span v-else-if="review.state == 'changes_requested'">
-      <span class="text-red-400">requested changes</span> on
+      <span class="text-red-400">requested changes</span>
+      on
     </span>
     <span v-else-if="review.state == 'commented'">
       added a
@@ -10,9 +11,9 @@
       to
     </span>
     <span v-else>
-      <span v-if="action == 'created'"> added </span>
-      <span v-else-if="action == 'edited'"> updated </span>
-      <span v-if="action == 'deleted'"> removed </span>
+      <span v-if="action == 'created'">added</span>
+      <span v-else-if="action == 'edited'">updated</span>
+      <span v-if="action == 'deleted'">removed</span>
 
       a
       <EventLink
@@ -28,7 +29,8 @@
       {{ pr.title }}
     </EventHoverItem>
 
-    on <EventLink :href="repo.name" />
+    on
+    <EventLink :href="repo.name" />
 
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>

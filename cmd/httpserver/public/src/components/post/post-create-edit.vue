@@ -41,13 +41,13 @@
       <n-card size="small" class="md:sticky md:top-5 md:left-0">
         <div class="flex flex-col gap-3">
           <div>
-            <span class="text-emerald-400"> Post published date </span>
+            <span class="text-emerald-400">Post published date</span>
             <n-date-picker v-model:value="datetime" type="datetime" />
           </div>
 
           <div>
             <div class="text-emerald-400">Post attributes</div>
-            <n-checkbox v-model:checked="post.public"> Public </n-checkbox>
+            <n-checkbox v-model:checked="post.public">Public</n-checkbox>
           </div>
 
           <LabelInput v-model="labelIDs" :suggest="post.content" />

@@ -87,7 +87,7 @@
             />
           </div>
           <div class="inline-flex flex-wrap flex-auto gap-1 md:hidden">
-            <n-button href="#" @click.prevent="drawerActive = true"> repo labels </n-button>
+            <n-button href="#" @click.prevent="drawerActive = true">repo labels</n-button>
           </div>
 
           <n-tag class="ml-3 text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">

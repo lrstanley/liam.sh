@@ -25,7 +25,8 @@
         {{ commits[0].message.split("\n")[0] }}
       </EventHoverItem>
     </span>
-    to <EventLink :href="repo.name" />
+    to
+    <EventLink :href="repo.name" />
 
     <EventBlame>
       {{ commits[0].message.split("\n")[0] }}

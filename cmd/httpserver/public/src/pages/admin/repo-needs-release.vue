@@ -13,7 +13,7 @@ meta:
         <n-icon :size="40"><i-mdi-history /></n-icon>
       </template>
       <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit"> Repository Releases </a>
+        <a href="#" class="no-underline capitalize" style="color: inherit">Repository Releases</a>
       </template>
     </n-page-header>
 

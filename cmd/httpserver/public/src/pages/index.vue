@@ -16,7 +16,7 @@ meta:
 
       <span class="ml-auto" />
 
-      <span v-if="eventCount > 0" class="bar-item misc"> ln:{{ eventCount }} </span>
+      <span v-if="eventCount > 0" class="bar-item misc">ln:{{ eventCount }}</span>
     </template>
   </ContainerIde>
 </template>

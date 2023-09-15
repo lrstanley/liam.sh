@@ -48,7 +48,7 @@
                   @click="navigate"
                 >
                   <i-mdi-source-branch />
-                  <span> {{ link.name }} </span>
+                  <span>{{ link.name }}</span>
                 </a>
               </router-link>
             </li>
@@ -74,7 +74,7 @@
 
         <n-tooltip trigger="hover">
           <template #trigger>
-            <span class="bar-item misc"> spaces:4 </span>
+            <span class="bar-item misc">spaces:4</span>
           </template>
           ... or just gofmt
         </n-tooltip>

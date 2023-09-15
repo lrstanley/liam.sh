@@ -7,7 +7,7 @@
 
         <template #fallback>
           <n-spin class="flex flex-auto h-full gap-4 mx-auto place-content-center">
-            <template #description> Loading... </template>
+            <template #description>Loading...</template>
           </n-spin>
         </template>
       </Suspense>
