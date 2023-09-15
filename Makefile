@@ -70,7 +70,7 @@ node-fetch:
 
 node-upgrade-deps:
 	cd cmd/httpserver/public && \
-		pnpm up -i
+		pnpm up -iL
 
 node-prepare: license node-fetch
 	cd cmd/httpserver/public && \
