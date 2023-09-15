@@ -1,7 +1,27 @@
-<route lang="yaml">
-meta:
-  layout: admin
-</route>
+<script setup lang="ts">
+import { message } from "@/lib/core/status"
+import { useCreatePostMutation, type CreatePostInput } from "@/lib/api"
+
+definePage({
+  meta: {
+    layout: "admin",
+  },
+})
+
+const router = useRouter()
+const post = useCreatePostMutation()
+
+function createPost(val: CreatePostInput) {
+  post.executeMutation({ input: val }).then((result) => {
+    if (!result.error) {
+      message.success("Post created successfully")
+      router.push({ name: "/admin/posts" })
+    } else {
+      message.error(result.error.toString())
+    }
+  })
+}
+</script>
 
 <template>
   <div>
@@ -19,22 +39,3 @@ meta:
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { message } from "@/lib/core/status"
-import { useCreatePostMutation, type CreatePostInput } from "@/lib/api"
-
-const router = useRouter()
-const post = useCreatePostMutation()
-
-function createPost(val: CreatePostInput) {
-  post.executeMutation({ input: val }).then((result) => {
-    if (!result.error) {
-      message.success("Post created successfully")
-      router.push({ name: "/admin/posts" })
-    } else {
-      message.error(result.error.toString())
-    }
-  })
-}
-</script>

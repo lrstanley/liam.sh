@@ -29,4 +29,7 @@
     "[ignore]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
     },
+    "typescript.preferences.autoImportFileExcludePatterns": [
+        "vue-router"
+    ]
 }

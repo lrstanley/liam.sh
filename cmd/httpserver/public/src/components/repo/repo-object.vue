@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { useTimeAgo } from "@vueuse/core"
+import type { GithubRepository } from "@/lib/api"
+
+const props = defineProps<{
+  value: GithubRepository
+  linkable?: boolean
+}>()
+
+const state = useState()
+const repo = ref(props.value)
+
+const drawerActive = ref(false)
+</script>
+
 <template>
   <a :href="props.linkable ? repo.htmlURL : ''" target="_blank">
     <n-drawer
@@ -99,21 +114,6 @@
     </n-thing>
   </a>
 </template>
-
-<script setup lang="ts">
-import { useTimeAgo } from "@vueuse/core"
-import type { GithubRepository } from "@/lib/api"
-
-const props = defineProps<{
-  value: GithubRepository
-  linkable?: boolean
-}>()
-
-const state = useState()
-const repo = ref(props.value)
-
-const drawerActive = ref(false)
-</script>
 
 <style scoped>
 .repo-name {

@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { useTimeAgo } from "@vueuse/core"
+import type { Post } from "@/lib/api"
+
+const props = defineProps<{
+  value: Post
+  linkable?: boolean
+}>()
+
+const post = ref(props.value)
+</script>
+
 <template>
   <component
     :is="props.linkable ? 'router-link' : 'div'"
@@ -46,18 +58,6 @@
     </n-thing>
   </component>
 </template>
-
-<script setup lang="ts">
-import { useTimeAgo } from "@vueuse/core"
-import type { Post } from "@/lib/api"
-
-const props = defineProps<{
-  value: Post
-  linkable?: boolean
-}>()
-
-const post = ref(props.value)
-</script>
 
 <style scoped>
 .post-title {

@@ -1,3 +1,4 @@
+import Vue from "@vitejs/plugin-vue"
 import path from "path"
 import { visualizer } from "rollup-plugin-visualizer"
 import AutoImport from "unplugin-auto-import/vite"
@@ -10,7 +11,6 @@ import VueRouter from "unplugin-vue-router/vite"
 import { defineConfig } from "vite"
 import codegen from "vite-plugin-graphql-codegen"
 import Layouts from "vite-plugin-vue-layouts"
-import Vue from "@vitejs/plugin-vue"
 
 const icons = IconsResolver({
   componentPrefix: "i",
@@ -50,8 +50,6 @@ export default defineConfig({
     }),
     VueRouter({
       routesFolder: "src/pages",
-      routeBlockLang: "yaml",
-      extensions: ["vue"],
     }),
     Vue({ include: [/\.vue$/] }),
     Layouts({
@@ -101,7 +99,6 @@ export default defineConfig({
     open: false,
   },
   server: {
-    base: "/",
     port: 8081,
     open: false,
     strictPort: true,

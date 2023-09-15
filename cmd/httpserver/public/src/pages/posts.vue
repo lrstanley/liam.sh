@@ -1,8 +1,48 @@
-<route lang="yaml">
-meta:
-  title: Posts
-  layout: default
-</route>
+<script setup lang="ts">
+import { useGetPostsQuery } from "@/lib/api"
+import { resetCursor, usePagination, useSorter } from "@/lib/util"
+import { useRouteQuery } from "@vueuse/router"
+
+definePage({
+  meta: {
+    title: "Posts",
+    layout: "default",
+  },
+})
+
+const cursor = useRouteQuery<string>("cur", null)
+const labels = useRouteQuery<Array<string>>("label", [])
+const search = useRouteQuery<string>("q", "")
+const filterSearch = refDebounced<string>(search, 300)
+const direction = useRouteQuery<string>("dir", "desc")
+const field = useRouteQuery<string>("sort", "date")
+const sorter = useSorter(
+  {
+    date: "date",
+    title: "title",
+    view_count: "popularity",
+  },
+  direction,
+  field
+)
+
+resetCursor(cursor, [labels, search, direction, field])
+
+const { data, error, fetching } = await useGetPostsQuery({
+  variables: {
+    ...usePagination(cursor, 10),
+    ...sorter.filter,
+    where: {
+      or: [{ titleContainsFold: filterSearch }, { summaryContainsFold: filterSearch }],
+      hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
+    },
+  },
+})
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
+</script>
 
 <template>
   <div class="mt-8 grid-sidebar">
@@ -39,42 +79,3 @@ meta:
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouteQuery } from "@vueuse/router"
-import { useGetPostsQuery } from "@/lib/api"
-import { usePagination, resetCursor, useSorter } from "@/lib/util"
-
-const cursor = useRouteQuery<string>("cur", null)
-const labels = useRouteQuery<Array<string>>("label", [])
-const search = useRouteQuery<string>("q", "")
-const filterSearch = refDebounced<string>(search, 300)
-const direction = useRouteQuery<string>("dir", "desc")
-const field = useRouteQuery<string>("sort", "date")
-const sorter = useSorter(
-  {
-    date: "date",
-    title: "title",
-    view_count: "popularity",
-  },
-  direction,
-  field
-)
-
-resetCursor(cursor, [labels, search, direction, field])
-
-const { data, error, fetching } = await useGetPostsQuery({
-  variables: {
-    ...usePagination(cursor, 10),
-    ...sorter.filter,
-    where: {
-      or: [{ titleContainsFold: filterSearch }, { summaryContainsFold: filterSearch }],
-      hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-    },
-  },
-})
-
-watch(error, () => {
-  if (error.value) throw error.value
-})
-</script>

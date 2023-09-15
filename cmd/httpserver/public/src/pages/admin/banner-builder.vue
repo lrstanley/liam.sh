@@ -1,7 +1,58 @@
-<route lang="yaml">
-meta:
-  layout: admin
-</route>
+<script setup lang="ts">
+import { useGetReposSelectQuery } from "@/lib/api"
+import type { GithubRepository } from "@/lib/api"
+
+definePage({
+  meta: {
+    layout: "admin",
+  },
+})
+
+interface Banner {
+  repo?: GithubRepository
+  title?: string
+  description?: string
+  layout?: "all" | "left" | "right"
+  bg?: string
+  bgcolor?: string
+  h?: number
+  w?: number
+  font?: number
+  icon?: string
+  "icon.height"?: number
+  "icon.width"?: number
+  "icon.flip"?: boolean
+  "icon.rotate"?: number
+  "icon.color"?: string
+}
+
+const input = ref<Banner>({})
+const repo = ref<string>("")
+
+const { data: repoData, error } = await useGetReposSelectQuery()
+const repos = computed(
+  () =>
+    repoData.value?.githubRepositories.edges?.map(({ node }) => ({
+      label: node.fullName,
+      value: node.fullName,
+    })) ?? []
+)
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
+
+const url = computed(() => {
+  const params = new URLSearchParams()
+  for (const key in input.value) {
+    if (input.value[key]) {
+      params.set(key, input.value[key])
+    }
+  }
+  return `/-/gh/svg${repo.value ? "/" + repo.value : ""}?${params.toString()}`
+})
+const urlDebounced = refDebounced(url, 250)
+</script>
 
 <template>
   <div class="p-4 sm:container sm:mx-auto">
@@ -126,53 +177,3 @@ meta:
     </n-card>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useGetReposSelectQuery } from "@/lib/api"
-import type { GithubRepository } from "@/lib/api"
-
-interface Banner {
-  repo?: GithubRepository
-  title?: string
-  description?: string
-  layout?: "all" | "left" | "right"
-  bg?: string
-  bgcolor?: string
-  h?: number
-  w?: number
-  font?: number
-  icon?: string
-  "icon.height"?: number
-  "icon.width"?: number
-  "icon.flip"?: boolean
-  "icon.rotate"?: number
-  "icon.color"?: string
-}
-
-const input = ref<Banner>({})
-const repo = ref<string>("")
-
-const { data: repoData, error } = await useGetReposSelectQuery()
-const repos = computed(
-  () =>
-    repoData.value?.githubRepositories.edges?.map(({ node }) => ({
-      label: node.fullName,
-      value: node.fullName,
-    })) ?? []
-)
-
-watch(error, () => {
-  if (error.value) throw error.value
-})
-
-const url = computed(() => {
-  const params = new URLSearchParams()
-  for (const key in input.value) {
-    if (input.value[key]) {
-      params.set(key, input.value[key])
-    }
-  }
-  return `/-/gh/svg${repo.value ? "/" + repo.value : ""}?${params.toString()}`
-})
-const urlDebounced = refDebounced(url, 250)
-</script>

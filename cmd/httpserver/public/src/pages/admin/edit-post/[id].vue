@@ -1,35 +1,13 @@
-<route lang="yaml">
-meta:
-  layout: admin
-</route>
-
-<template>
-  <div class="p-4 sm:container sm:mx-auto lg:p-0">
-    <n-page-header :subtitle="post.title" class="hidden mt-4 mb-8 lg:block">
-      <template #avatar>
-        <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
-      </template>
-      <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit">
-          Editing post #{{ post.id }}
-        </a>
-      </template>
-    </n-page-header>
-
-    <n-spin :show="fetching">
-      <n-alert v-if="error" title="Error fetching post" type="error">
-        {{ error }}
-      </n-alert>
-
-      <PostCreateEdit v-if="post" :post="post" @update:post="updatePost" />
-    </n-spin>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { message } from "@/lib/core/status"
 import { useGetPostQuery, useUpdatePostMutation, type UpdatePostInput } from "@/lib/api"
 import type { Post } from "@/lib/api"
+
+definePage({
+  meta: {
+    layout: "admin",
+  },
+})
 
 const route = useRoute("/admin/edit-post/[id]")
 
@@ -77,3 +55,26 @@ function updatePost(val: UpdatePostInput, labelIDs: string[]) {
     })
 }
 </script>
+
+<template>
+  <div class="p-4 sm:container sm:mx-auto lg:p-0">
+    <n-page-header :subtitle="post.title" class="hidden mt-4 mb-8 lg:block">
+      <template #avatar>
+        <n-icon :size="40"><i-mdi-pencil-outline /></n-icon>
+      </template>
+      <template #title>
+        <a href="#" class="no-underline capitalize" style="color: inherit">
+          Editing post #{{ post.id }}
+        </a>
+      </template>
+    </n-page-header>
+
+    <n-spin :show="fetching">
+      <n-alert v-if="error" title="Error fetching post" type="error">
+        {{ error }}
+      </n-alert>
+
+      <PostCreateEdit v-if="post" :post="post" @update:post="updatePost" />
+    </n-spin>
+  </div>
+</template>

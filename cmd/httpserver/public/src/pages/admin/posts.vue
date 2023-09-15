@@ -3,6 +3,73 @@ meta:
   layout: admin
 </route>
 
+<script setup lang="ts">
+import { message, dialog } from "@/lib/core/status"
+import { useTimeAgo } from "@vueuse/core"
+import { useGetPostsQuery, useDeletePostMutation, useRegeneratePostsMutation } from "@/lib/api"
+
+definePage({
+  meta: {
+    layout: "admin",
+  },
+})
+
+const props = defineProps({
+  cursor: {
+    type: String,
+    default: null,
+  },
+})
+
+const {
+  data,
+  error,
+  executeQuery: refetch,
+} = await useGetPostsQuery({
+  variables: { first: 100, before: props.cursor },
+})
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
+
+const del = useDeletePostMutation()
+
+const posts = computed(() => data?.value?.posts.edges.map((v) => v.node))
+
+function deletePost(row: Record<string, any>) {
+  dialog.warning({
+    title: `Delete post: "${row.title}"`,
+    content: "Are you sure?",
+    positiveText: "Delete",
+    negativeText: "Cancel",
+    onPositiveClick: () => {
+      del.executeMutation({ id: row.id }).then((result) => {
+        if (!result.error) {
+          message.success("Post deleted")
+        } else {
+          message.error(result.error.toString())
+        }
+
+        refetch()
+      })
+    },
+  })
+}
+
+const { executeMutation: regeneratePosts } = useRegeneratePostsMutation()
+function regenerate() {
+  message.info("Regenerating posts...")
+  regeneratePosts({}).then(({ error }) => {
+    if (!error) {
+      message.success("Regenerated posts")
+    } else {
+      message.error(error.toString())
+    }
+  })
+}
+</script>
+
 <template>
   <div class="p-4 sm:container sm:mx-auto">
     <n-table v-motion-slide-top bordered single-line striped size="small">
@@ -76,64 +143,3 @@ meta:
     </router-link>
   </div>
 </template>
-
-<script setup lang="ts">
-import { message, dialog } from "@/lib/core/status"
-import { useTimeAgo } from "@vueuse/core"
-import { useGetPostsQuery, useDeletePostMutation, useRegeneratePostsMutation } from "@/lib/api"
-
-const props = defineProps({
-  cursor: {
-    type: String,
-    default: null,
-  },
-})
-
-const {
-  data,
-  error,
-  executeQuery: refetch,
-} = await useGetPostsQuery({
-  variables: { first: 100, before: props.cursor },
-})
-
-watch(error, () => {
-  if (error.value) throw error.value
-})
-
-const del = useDeletePostMutation()
-
-const posts = computed(() => data?.value?.posts.edges.map((v) => v.node))
-
-function deletePost(row: Record<string, any>) {
-  dialog.warning({
-    title: `Delete post: "${row.title}"`,
-    content: "Are you sure?",
-    positiveText: "Delete",
-    negativeText: "Cancel",
-    onPositiveClick: () => {
-      del.executeMutation({ id: row.id }).then((result) => {
-        if (!result.error) {
-          message.success("Post deleted")
-        } else {
-          message.error(result.error.toString())
-        }
-
-        refetch()
-      })
-    },
-  })
-}
-
-const { executeMutation: regeneratePosts } = useRegeneratePostsMutation()
-function regenerate() {
-  message.info("Regenerating posts...")
-  regeneratePosts({}).then(({ error }) => {
-    if (!error) {
-      message.success("Regenerated posts")
-    } else {
-      message.error(error.toString())
-    }
-  })
-}
-</script>

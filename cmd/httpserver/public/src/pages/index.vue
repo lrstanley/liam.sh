@@ -1,8 +1,13 @@
-<route lang="yaml">
-meta:
-  title: Home
-  layout: terminal
-</route>
+<script setup lang="ts">
+definePage({
+  meta: {
+    title: "Home",
+    layout: "terminal",
+  },
+})
+
+const eventCount = ref<number>()
+</script>
 
 <template>
   <ContainerIde>
@@ -20,7 +25,3 @@ meta:
     </template>
   </ContainerIde>
 </template>
-
-<script setup lang="ts">
-const eventCount = ref<number>()
-</script>

@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { version as vueVersion } from "vue"
+import { branchMenuOptions } from "@/lib/core/navigation"
+
+const state = useState()
+
+const props = defineProps<{
+  prefix?: string
+  command?: string
+}>()
+</script>
+
 <template>
   <n-card
     content-style="padding: 0;display: flex;flex-direction: column;"
@@ -84,18 +96,6 @@
     </n-layout-footer>
   </n-card>
 </template>
-
-<script setup lang="ts">
-import { version as vueVersion } from "vue"
-import { branchMenuOptions } from "@/lib/core/navigation"
-
-const state = useState()
-
-const props = defineProps<{
-  prefix?: string
-  command?: string
-}>()
-</script>
 
 <style>
 .bottom-bar {

@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import type { GithubRepository } from "@/lib/api"
+
+const props = defineProps<{
+  value: GithubRepository
+}>()
+
+const state = useState()
+const repo = ref(props.value)
+</script>
+
 <template>
   <span>
     <n-tag v-if="repo.owner.login != state.base.githubUser.login" type="info" size="small">
@@ -23,14 +34,3 @@
     </n-tag>
   </span>
 </template>
-
-<script setup lang="ts">
-import type { GithubRepository } from "@/lib/api"
-
-const props = defineProps<{
-  value: GithubRepository
-}>()
-
-const state = useState()
-const repo = ref(props.value)
-</script>

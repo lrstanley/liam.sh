@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { adminSidebarOptions } from "@/lib/core/navigation"
+
+const state = useState()
+</script>
+
 <template>
   <n-layout position="absolute" content-style="display: flex;flex: 1 1 auto;flex-direction: column">
     <n-layout has-sider>
@@ -41,9 +47,3 @@
     </n-layout>
   </n-layout>
 </template>
-
-<script setup lang="ts">
-import { adminSidebarOptions } from "@/lib/core/navigation"
-
-const state = useState()
-</script>

@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
+
+const repo = ref(props.event.repo)
+const action = ref<string>(props.event.payload.action)
+const issue = ref<Record<string, any>>(props.event.payload.issue)
+</script>
+
 <template>
   <div>
     <span class="text-cyan-400">
@@ -19,15 +31,3 @@
     <EventBlame>{{ issue.title }}</EventBlame>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
-
-const props = defineProps<{
-  event: GithubEvent
-}>()
-
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action)
-const issue = ref<Record<string, any>>(props.event.payload.issue)
-</script>

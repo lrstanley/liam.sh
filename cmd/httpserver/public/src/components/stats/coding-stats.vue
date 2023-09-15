@@ -1,40 +1,3 @@
-<template>
-  <n-popover
-    :width="250"
-    raw
-    :show-arrow="false"
-    v-bind="$attrs"
-    class="px-2 py-1 rounded border border-solid border-zinc-700 shadow-none !m-0"
-  >
-    <template #trigger>
-      <span class="bar-item misc">
-        <n-icon class="mr-1 align-middle text-violet-400">
-          <i-mdi-history />
-        </n-icon>
-        {{ state.base.codingStats.totalDuration }}
-      </span>
-    </template>
-
-    <p class="text-center text-violet-400">
-      last {{ state.base.codingStats.calculatedDays }} day coding stats
-    </p>
-
-    <div v-for="stat in codingStats" :key="stat.language" class="flex flex-row items-center flex-auto">
-      <div class="text-right shrink-0 mr-[1ch]" :style="{ width: stat.titleLength + 'ch' }">
-        {{ stat.language }}
-      </div>
-
-      <div class="w-full rounded o bg-zinc-900">
-        <div
-          class="h-2 rounded"
-          :style="{ width: stat.percentage + '%', 'background-color': stat.hexColor }"
-        />
-      </div>
-      <div class="shrink-0 ml-[1ch] w-[3ch]">{{ stat.percentage }}%</div>
-    </div>
-  </n-popover>
-</template>
-
 <script setup lang="ts">
 const state = useState()
 
@@ -72,3 +35,40 @@ const codingStats = computed(() => {
   return out
 })
 </script>
+
+<template>
+  <n-popover
+    :width="250"
+    raw
+    :show-arrow="false"
+    v-bind="$attrs"
+    class="px-2 py-1 rounded border border-solid border-zinc-700 shadow-none !m-0"
+  >
+    <template #trigger>
+      <span class="bar-item misc">
+        <n-icon class="mr-1 align-middle text-violet-400">
+          <i-mdi-history />
+        </n-icon>
+        {{ state.base.codingStats.totalDuration }}
+      </span>
+    </template>
+
+    <p class="text-center text-violet-400">
+      last {{ state.base.codingStats.calculatedDays }} day coding stats
+    </p>
+
+    <div v-for="stat in codingStats" :key="stat.language" class="flex flex-row items-center flex-auto">
+      <div class="text-right shrink-0 mr-[1ch]" :style="{ width: stat.titleLength + 'ch' }">
+        {{ stat.language }}
+      </div>
+
+      <div class="w-full rounded o bg-zinc-900">
+        <div
+          class="h-2 rounded"
+          :style="{ width: stat.percentage + '%', 'background-color': stat.hexColor }"
+        />
+      </div>
+      <div class="shrink-0 ml-[1ch] w-[3ch]">{{ stat.percentage }}%</div>
+    </div>
+  </n-popover>
+</template>

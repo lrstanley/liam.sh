@@ -1,3 +1,20 @@
+<script setup lang="ts">
+const route = useRoute()
+const error = ref<Error>(null)
+
+onErrorCaptured((err) => {
+  error.value = err
+  return false
+})
+
+watch(
+  () => route.path,
+  () => {
+    error.value = null
+  }
+)
+</script>
+
 <template>
   <div class="flex items-stretch justify-center flex-auto w-full h-full lg:items-center">
     <div
@@ -28,20 +45,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const route = useRoute()
-const error = ref<Error>(null)
-
-onErrorCaptured((err) => {
-  error.value = err
-  return false
-})
-
-watch(
-  () => route.path,
-  () => {
-    error.value = null
-  }
-)
-</script>

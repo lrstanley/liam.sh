@@ -14,14 +14,22 @@
         "types": [
             "naive-ui/volar",
             "vite/client",
-            "vite-plugin-vue-layouts/client",
+            "vite-plugin-vue-layouts/client.d.ts", // for now: https://github.com/JohnCampionJr/vite-plugin-vue-layouts/issues/111#issuecomment-1576592257
+            "unplugin-icons/types/vue"
         ],
     },
+    "include": [
+        "typed-router.d.ts",
+        "auto-imports.d.ts",
+        "components.d.ts",
+        "vue.d.ts",
+        "src/**/*.ts",
+        "src/**/*.vue",
+    ],
     "exclude": [
         "node_modules",
         "dist",
         ".git",
-        "./src/lib/api/graphql.ts",
         "./src/*.config.js",
         "./src/*.config.ts",
     ],

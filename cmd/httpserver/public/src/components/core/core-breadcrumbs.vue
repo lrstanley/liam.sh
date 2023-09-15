@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const state = useState()
+</script>
+
 <template>
   <n-breadcrumb>
     <n-breadcrumb-item v-for="(item, index) in state.history" :key="item.timestamp">
@@ -13,7 +17,3 @@
     </n-breadcrumb-item>
   </n-breadcrumb>
 </template>
-
-<script setup lang="ts">
-const state = useState()
-</script>

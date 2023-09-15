@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import type { Sorter } from "@/lib/util"
+
+const props = defineProps<{
+  sorter: Sorter
+}>()
+</script>
+
 <template>
   <n-space size="small" inline v-bind="$attrs">
     <n-tag
@@ -18,13 +26,5 @@
     </n-tag>
   </n-space>
 </template>
-
-<script setup lang="ts">
-import type { Sorter } from "@/lib/util"
-
-const props = defineProps<{
-  sorter: Sorter
-}>()
-</script>
 
 <style scoped></style>

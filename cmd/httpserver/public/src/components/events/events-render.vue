@@ -1,35 +1,3 @@
-<template>
-  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
-    <TransitionGroup name="stepped" appear>
-      <div
-        v-for="(e, i) in fetched"
-        :key="e.id"
-        :style="{ '--i': fetched.length - i, '--total': fetched.length }"
-        class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
-      >
-        <a :href="e.actor.login" target="_blank">
-          <n-avatar round :size="15" :src="e.actor.avatarURL + '&s=40'" class="mr-1 align-middle" />
-        </a>
-
-        <component
-          :is="eventMap[e.eventType]"
-          :event="e"
-          class="flex items-center gap-2 truncate grow"
-        />
-        <div class="flex-none">
-          <EventHoverItem placement="left">
-            <template #value>
-              <i-mdi-clock-time-two-outline class="timestamp" />
-            </template>
-
-            {{ useTimeAgo(e.createdAt).value }}
-          </EventHoverItem>
-        </div>
-      </div>
-    </TransitionGroup>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useGetEventsQuery } from "@/lib/api"
 import { useTimeAgo } from "@vueuse/core"
@@ -121,6 +89,38 @@ onMounted(() => {
   fetchEvents()
 })
 </script>
+
+<template>
+  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchEvents, { distance: 40 }]">
+    <TransitionGroup name="stepped" appear>
+      <div
+        v-for="(e, i) in fetched"
+        :key="e.id"
+        :style="{ '--i': fetched.length - i, '--total': fetched.length }"
+        class="flex flex-auto flex-row items-center gap-x-1 px-1 hover:bg-zinc-500/10 text-zinc-400 transition duration-75 ease-out border-b-[1px] border-b-gray-100"
+      >
+        <a :href="e.actor.login" target="_blank">
+          <n-avatar round :size="15" :src="e.actor.avatarURL + '&s=40'" class="mr-1 align-middle" />
+        </a>
+
+        <component
+          :is="eventMap[e.eventType]"
+          :event="e"
+          class="flex items-center gap-2 truncate grow"
+        />
+        <div class="flex-none">
+          <EventHoverItem placement="left">
+            <template #value>
+              <i-mdi-clock-time-two-outline class="timestamp" />
+            </template>
+
+            {{ useTimeAgo(e.createdAt).value }}
+          </EventHoverItem>
+        </div>
+      </div>
+    </TransitionGroup>
+  </div>
+</template>
 
 <style scoped>
 #main {

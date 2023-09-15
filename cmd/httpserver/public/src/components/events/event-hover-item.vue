@@ -1,3 +1,18 @@
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    value?: string
+    href?: string
+    placement?: "top" | "bottom" | "left" | "right"
+  }>(),
+  {
+    value: "",
+    href: "",
+    placement: "right",
+  }
+)
+</script>
+
 <template>
   <n-popover trigger="hover" style="padding: 2px 6px" :to="false" :placement="props.placement">
     <template #trigger>
@@ -16,18 +31,3 @@
     <slot />
   </n-popover>
 </template>
-
-<script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    value?: string
-    href?: string
-    placement?: "top" | "bottom" | "left" | "right"
-  }>(),
-  {
-    value: "",
-    href: "",
-    placement: "right",
-  }
-)
-</script>

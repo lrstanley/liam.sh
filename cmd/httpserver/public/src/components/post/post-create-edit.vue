@@ -1,3 +1,29 @@
+<script setup lang="ts">
+import { EditorView } from "codemirror"
+import { Codemirror } from "vue-codemirror"
+import { markdown } from "@codemirror/lang-markdown"
+import { oneDark } from "@codemirror/theme-one-dark"
+import type { Post } from "@/lib/api"
+
+const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
+
+const props = defineProps<{
+  post?: Post
+  create?: boolean
+}>()
+const emit = defineEmits(["update:post"])
+
+const post = ref<Post>(props.post ?? ({} as Post))
+const labelIDs = ref<string[]>(props.post?.labels?.edges?.map(({ node }) => node.id) ?? [])
+
+const datetime = computed({
+  get: () => Date.parse(post.value.publishedAt ?? new Date()),
+  set: (val) => {
+    post.value.publishedAt = new Date(val).toISOString()
+  },
+})
+</script>
+
 <template>
   <div v-motion-fade class="grid gap-4 mb-20 grid-sidebar">
     <n-card size="small">
@@ -61,32 +87,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { EditorView } from "codemirror"
-import { Codemirror } from "vue-codemirror"
-import { markdown } from "@codemirror/lang-markdown"
-import { oneDark } from "@codemirror/theme-one-dark"
-import type { Post } from "@/lib/api"
-
-const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
-
-const props = defineProps<{
-  post?: Post
-  create?: boolean
-}>()
-const emit = defineEmits(["update:post"])
-
-const post = ref<Post>(props.post ?? ({} as Post))
-const labelIDs = ref<string[]>(props.post?.labels?.edges?.map(({ node }) => node.id) ?? [])
-
-const datetime = computed({
-  get: () => Date.parse(post.value.publishedAt ?? new Date()),
-  set: (val) => {
-    post.value.publishedAt = new Date(val).toISOString()
-  },
-})
-</script>
 
 <style scoped>
 .grid-sidebar {

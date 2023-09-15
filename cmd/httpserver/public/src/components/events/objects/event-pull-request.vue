@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
+
+const repo = ref(props.event.repo)
+const action = ref<string>(props.event.payload.action)
+const pr = ref<Record<string, any>>(props.event.payload.pull_request)
+</script>
+
 <template>
   <div>
     <span v-if="action == 'closed' && pr.merged" class="text-purple-400">merged</span>
@@ -35,15 +47,3 @@
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
-
-const props = defineProps<{
-  event: GithubEvent
-}>()
-
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request)
-</script>

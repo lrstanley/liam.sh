@@ -1,34 +1,12 @@
-<route lang="yaml">
-meta:
-  title: Not Found
-  layout: bare
-</route>
-
-<template>
-  <div class="flex flex-col justify-center flex-auto">
-    <n-result
-      :status="errorCode"
-      :title="'Error code: ' + errorTitle"
-      :description="props.error ? props.error.toString() : 'You know life is always ridiculous.'"
-    >
-      <template #footer>
-        <n-button-group>
-          <n-button @click="$router.back()">
-            <n-icon class="mr-1"><i-mdi-undo-variant /></n-icon>
-            Go back
-          </n-button>
-          <n-button @click="$router.push('/')">
-            <n-icon class="mr-1"><i-mdi-home /></n-icon>
-            Home
-          </n-button>
-        </n-button-group>
-      </template>
-    </n-result>
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { ResultProps } from "naive-ui"
+
+definePage({
+  meta: {
+    title: "Not Found",
+    layout: "bare",
+  },
+})
 
 const route = useRoute("/[...catchall]")
 const source = computed(() => route.params.catchall)
@@ -64,3 +42,26 @@ watch(
   { immediate: true }
 )
 </script>
+
+<template>
+  <div class="flex flex-col justify-center flex-auto">
+    <n-result
+      :status="errorCode"
+      :title="'Error code: ' + errorTitle"
+      :description="props.error ? props.error.toString() : 'You know life is always ridiculous.'"
+    >
+      <template #footer>
+        <n-button-group>
+          <n-button @click="$router.back()">
+            <n-icon class="mr-1"><i-mdi-undo-variant /></n-icon>
+            Go back
+          </n-button>
+          <n-button @click="$router.push('/')">
+            <n-icon class="mr-1"><i-mdi-home /></n-icon>
+            Home
+          </n-button>
+        </n-button-group>
+      </template>
+    </n-result>
+  </div>
+</template>

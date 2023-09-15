@@ -1,22 +1,3 @@
-<template>
-  <div>
-    <span class="text-emerald-500">Update tags</span>
-    <LabelSelect ref="selectRef" v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
-
-    <n-input
-      v-model:value="newLabelInput"
-      placeholder="Create label"
-      :loading="createLabel.fetching?.value"
-      :status="createLabel.error.value ? 'error' : undefined"
-      @keyup.enter="createNewLabel(newLabelInput)"
-    >
-      <template #prefix>
-        <n-icon><i-mdi-tag /></n-icon>
-      </template>
-    </n-input>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { message } from "@/lib/core/status"
 import { useCreateLabelMutation } from "@/lib/api"
@@ -52,3 +33,22 @@ function createNewLabel(val: string) {
   })
 }
 </script>
+
+<template>
+  <div>
+    <span class="text-emerald-500">Update tags</span>
+    <LabelSelect ref="selectRef" v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
+
+    <n-input
+      v-model:value="newLabelInput"
+      placeholder="Create label"
+      :loading="createLabel.fetching?.value"
+      :status="createLabel.error.value ? 'error' : undefined"
+      @keyup.enter="createNewLabel(newLabelInput)"
+    >
+      <template #prefix>
+        <n-icon><i-mdi-tag /></n-icon>
+      </template>
+    </n-input>
+  </div>
+</template>

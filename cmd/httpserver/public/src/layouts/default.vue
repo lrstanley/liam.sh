@@ -1,3 +1,21 @@
+<script setup lang="ts">
+const state = useState()
+const route = useRoute()
+const error = ref<Error>(null)
+
+onErrorCaptured((err: Error) => {
+  error.value = err
+  return false
+})
+
+watch(
+  () => route.path,
+  () => {
+    error.value = null
+  }
+)
+</script>
+
 <template>
   <div class="z-[1] relative flex flex-auto flex-col">
     <div
@@ -33,21 +51,3 @@
     </span>
   </div>
 </template>
-
-<script setup lang="ts">
-const state = useState()
-const route = useRoute()
-const error = ref<Error>(null)
-
-onErrorCaptured((err: Error) => {
-  error.value = err
-  return false
-})
-
-watch(
-  () => route.path,
-  () => {
-    error.value = null
-  }
-)
-</script>

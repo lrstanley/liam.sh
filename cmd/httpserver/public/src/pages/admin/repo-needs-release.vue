@@ -1,31 +1,14 @@
-<route lang="yaml">
-meta:
-  layout: admin
-</route>
-
-<template>
-  <div class="p-4 sm:container sm:mx-auto">
-    <n-page-header
-      subtitle="Find repos that may need a new release published"
-      class="hidden mt-4 mb-8 lg:block"
-    >
-      <template #avatar>
-        <n-icon :size="40"><i-mdi-history /></n-icon>
-      </template>
-      <template #title>
-        <a href="#" class="no-underline capitalize" style="color: inherit">Repository Releases</a>
-      </template>
-    </n-page-header>
-
-    <n-data-table :columns="columns" :data="results" />
-  </div>
-</template>
-
 <script setup lang="ts">
-import { useTimeAgo } from "@vueuse/core"
+import type { GithubRelease, GithubRepository, GithubUser } from "@/lib/api"
 import { useLatestRepoReleasesQuery } from "@/lib/api"
-import type { GithubRepository, GithubRelease, GithubUser } from "@/lib/api"
+import { useTimeAgo } from "@vueuse/core"
 import type { DataTableColumns } from "naive-ui"
+
+definePage({
+  meta: {
+    layout: "admin",
+  },
+})
 
 const { data, error } = await useLatestRepoReleasesQuery()
 
@@ -89,3 +72,21 @@ const results = computed<RowData[]>(() => {
   )
 })
 </script>
+
+<template>
+  <div class="p-4 sm:container sm:mx-auto">
+    <n-page-header
+      subtitle="Find repos that may need a new release published"
+      class="hidden mt-4 mb-8 lg:block"
+    >
+      <template #avatar>
+        <n-icon :size="40"><i-mdi-history /></n-icon>
+      </template>
+      <template #title>
+        <a href="#" class="no-underline capitalize" style="color: inherit">Repository Releases</a>
+      </template>
+    </n-page-header>
+
+    <n-data-table :columns="columns" :data="results" />
+  </div>
+</template>

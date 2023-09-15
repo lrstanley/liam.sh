@@ -1,8 +1,59 @@
-<route lang="yaml">
-meta:
-  title: Repos
-  layout: default
-</route>
+<script setup lang="ts">
+import { useRouteQuery } from "@vueuse/router"
+import { useGetReposQuery } from "@/lib/api"
+import { usePagination, resetCursor, useSorter } from "@/lib/util"
+
+definePage({
+  meta: {
+    title: "Repos",
+    layout: "default",
+  },
+})
+
+const cursor = useRouteQuery<string>("cur", null)
+const labels = useRouteQuery<Array<string>>("label", [])
+const archived = useRouteQuery<string>("archived", "true")
+const forks = useRouteQuery<string>("forks", "false")
+const search = useRouteQuery<string>("q", "")
+const filterSearch = refDebounced<string>(search, 300)
+const direction = useRouteQuery<string>("dir", "desc")
+const field = useRouteQuery<string>("sort", "pushed_at")
+const sorter = useSorter(
+  {
+    pushed_at: "updated",
+    star_count: "stars",
+    created_at: "created",
+    name: "name",
+  },
+  direction,
+  field
+)
+
+resetCursor(cursor, [labels, archived, forks, search, direction, field])
+
+const where = ref({
+  or: [
+    { fullNameContainsFold: filterSearch },
+    { descriptionContainsFold: filterSearch },
+    { homepageContainsFold: filterSearch },
+  ],
+  hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
+  fork: computed(() => (forks.value == "true" ? null : false)),
+  archived: computed(() => (archived.value == "false" ? false : null)),
+})
+
+const { data, error, fetching } = await useGetReposQuery({
+  variables: {
+    ...usePagination(cursor, 10),
+    ...sorter.filter,
+    where: where,
+  },
+})
+
+watch(error, () => {
+  if (error.value) throw error.value
+})
+</script>
 
 <template>
   <div class="mt-8 grid-sidebar">
@@ -66,53 +117,3 @@ meta:
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRouteQuery } from "@vueuse/router"
-import { useGetReposQuery } from "@/lib/api"
-import { usePagination, resetCursor, useSorter } from "@/lib/util"
-
-const cursor = useRouteQuery<string>("cur", null)
-const labels = useRouteQuery<Array<string>>("label", [])
-const archived = useRouteQuery<string>("archived", "true")
-const forks = useRouteQuery<string>("forks", "false")
-const search = useRouteQuery<string>("q", "")
-const filterSearch = refDebounced<string>(search, 300)
-const direction = useRouteQuery<string>("dir", "desc")
-const field = useRouteQuery<string>("sort", "pushed_at")
-const sorter = useSorter(
-  {
-    pushed_at: "updated",
-    star_count: "stars",
-    created_at: "created",
-    name: "name",
-  },
-  direction,
-  field
-)
-
-resetCursor(cursor, [labels, archived, forks, search, direction, field])
-
-const where = ref({
-  or: [
-    { fullNameContainsFold: filterSearch },
-    { descriptionContainsFold: filterSearch },
-    { homepageContainsFold: filterSearch },
-  ],
-  hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-  fork: computed(() => (forks.value == "true" ? null : false)),
-  archived: computed(() => (archived.value == "false" ? false : null)),
-})
-
-const { data, error, fetching } = await useGetReposQuery({
-  variables: {
-    ...usePagination(cursor, 10),
-    ...sorter.filter,
-    where: where,
-  },
-})
-
-watch(error, () => {
-  if (error.value) throw error.value
-})
-</script>

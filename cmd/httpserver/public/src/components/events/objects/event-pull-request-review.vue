@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
+
+const repo = ref(props.event.repo)
+const action = ref<string>(props.event.payload.action)
+const review = ref<Record<string, any>>(props.event.payload.review)
+const pr = ref<Record<string, any>>(props.event.payload.pull_request)
+</script>
+
 <template>
   <div>
     <span v-if="review.state == 'approved'" class="text-lime-500">approved</span>
@@ -35,16 +48,3 @@
     <EventBlame>{{ pr.title }}</EventBlame>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
-
-const props = defineProps<{
-  event: GithubEvent
-}>()
-
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action)
-const review = ref<Record<string, any>>(props.event.payload.review)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request)
-</script>

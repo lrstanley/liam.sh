@@ -1,17 +1,3 @@
-<template>
-  <n-empty v-if="showEmpty && objects.length < 1" description="No items found matching filters" />
-  <TransitionGroup v-else-if="objects.length > 0" appear name="fade">
-    <div
-      v-for="(object, i) in objects"
-      :key="object.object.id"
-      :style="{ '--i': i, '--total': objects.length }"
-    >
-      <component :is="object.component" v-bind="$attrs" />
-      <n-divider v-if="divider && i != objects.length - 1" />
-    </div>
-  </TransitionGroup>
-</template>
-
 <script setup lang="ts">
 import { h } from "vue"
 import PostObject from "@/components/post/post-object.vue"
@@ -69,6 +55,20 @@ function typeMapper(o) {
   }
 }
 </script>
+
+<template>
+  <n-empty v-if="showEmpty && objects.length < 1" description="No items found matching filters" />
+  <TransitionGroup v-else-if="objects.length > 0" appear name="fade">
+    <div
+      v-for="(object, i) in objects"
+      :key="object.object.id"
+      :style="{ '--i': i, '--total': objects.length }"
+    >
+      <component :is="object.component" v-bind="$attrs" />
+      <n-divider v-if="divider && i != objects.length - 1" />
+    </div>
+  </TransitionGroup>
+</template>
 
 <style scoped>
 .fade-move,

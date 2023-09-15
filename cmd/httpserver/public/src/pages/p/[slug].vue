@@ -1,8 +1,27 @@
-<route lang="yaml">
-title: ...
-meta:
-  layout: default
-</route>
+<script setup lang="ts">
+import { useTimeAgo } from "@vueuse/core"
+import { useGetPostContentQuery } from "@/lib/api"
+
+definePage({
+  meta: {
+    // title: "...",
+    layout: "default",
+  },
+})
+
+const route = useRoute("/p/[slug]")
+const state = useState()
+
+const { data, error } = await useGetPostContentQuery({ variables: { slug: route.params.slug } })
+
+if (data.value?.posts?.edges?.length < 1) {
+  throw new Error("Post not found")
+}
+if (error.value) throw error.value
+
+const post = computed(() => data?.value?.posts?.edges[0]?.node)
+const postRef = ref(null)
+</script>
 
 <template>
   <div class="mt-8 grid-sidebar">
@@ -69,24 +88,6 @@ meta:
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useTimeAgo } from "@vueuse/core"
-import { useGetPostContentQuery } from "@/lib/api"
-
-const route = useRoute("/p/[slug]")
-const state = useState()
-
-const { data, error } = await useGetPostContentQuery({ variables: { slug: route.params.slug } })
-
-if (data.value?.posts?.edges?.length < 1) {
-  throw new Error("Post not found")
-}
-if (error.value) throw error.value
-
-const post = computed(() => data?.value?.posts?.edges[0]?.node)
-const postRef = ref(null)
-</script>
 
 <style scoped>
 #post-content {

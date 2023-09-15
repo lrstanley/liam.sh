@@ -1,3 +1,19 @@
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    path?: string
+    prefix?: string
+    value: string
+  }>(),
+  {
+    path: "~",
+    prefix: "#",
+  }
+)
+
+const state = useState()
+</script>
+
 <template>
   <div v-bind="$attrs">
     <span class="inline-flex mr-[10px] text-emerald-600">
@@ -16,22 +32,6 @@
     </span>
   </div>
 </template>
-
-<script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    path?: string
-    prefix?: string
-    value: string
-  }>(),
-  {
-    path: "~",
-    prefix: "#",
-  }
-)
-
-const state = useState()
-</script>
 
 <style scoped>
 .cursor-wrap {

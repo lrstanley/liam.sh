@@ -1,11 +1,3 @@
-<template>
-  <div>
-    made
-    <EventLink :href="repo.name" />
-    public
-  </div>
-</template>
-
 <script setup lang="ts">
 import type { GithubEvent } from "@/lib/api"
 
@@ -15,3 +7,11 @@ const props = defineProps<{
 
 const repo = ref(props.event.repo)
 </script>
+
+<template>
+  <div>
+    made
+    <EventLink :href="repo.name" />
+    public
+  </div>
+</template>

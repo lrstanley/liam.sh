@@ -1,3 +1,12 @@
+<script setup lang="ts">
+const props = defineProps<{
+  href: string
+  value?: string
+}>()
+
+const value = computed(() => (props.value ? props.value : props.href))
+</script>
+
 <template>
   <a
     :href="props.href.includes('://') ? props.href : 'https://github.com/' + props.href"
@@ -9,12 +18,3 @@
     <slot>{{ value }}</slot>
   </a>
 </template>
-
-<script setup lang="ts">
-const props = defineProps<{
-  href: string
-  value?: string
-}>()
-
-const value = computed(() => (props.value ? props.value : props.href))
-</script>

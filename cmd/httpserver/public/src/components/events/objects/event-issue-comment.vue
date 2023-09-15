@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
+
+const repo = ref(props.event.repo)
+const action = ref<string>(props.event.payload.action)
+const comment = ref<Record<string, any>>(props.event.payload.comment)
+const issue = ref<Record<string, any>>(props.event.payload.issue)
+</script>
+
 <template>
   <div>
     <span v-if="action == 'created'">added</span>
@@ -18,16 +31,3 @@
     <EventBlame>{{ issue.title }}</EventBlame>
   </div>
 </template>
-
-<script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
-
-const props = defineProps<{
-  event: GithubEvent
-}>()
-
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action)
-const comment = ref<Record<string, any>>(props.event.payload.comment)
-const issue = ref<Record<string, any>>(props.event.payload.issue)
-</script>

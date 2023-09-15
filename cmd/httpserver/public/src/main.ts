@@ -5,13 +5,13 @@
  */
 
 import "@/css/main.css"
-import { createPinia } from "pinia"
-import { createApp } from "vue"
 import { client } from "@/lib/api"
 import router from "@/lib/core/router"
 import App from "@/main.vue"
 import urql from "@urql/vue"
 import { MotionPlugin } from "@vueuse/motion"
+import { createPinia } from "pinia"
+import { createApp } from "vue"
 
 const app = createApp(App)
 

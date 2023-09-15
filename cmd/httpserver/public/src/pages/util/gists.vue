@@ -1,9 +1,3 @@
-<route lang="yaml">
-meta:
-  title: Gists
-  layout: terminal
-</route>
-
 <template>
   <ContainerIde>
     <div class="relative w-full h-full overflow-x-hidden grow basis-0">
@@ -48,6 +42,13 @@ meta:
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 import { useGetGistsQuery } from "@/lib/api"
+
+definePage({
+  meta: {
+    title: "Gists",
+    layout: "terminal",
+  },
+})
 
 const { data, error } = await useGetGistsQuery()
 

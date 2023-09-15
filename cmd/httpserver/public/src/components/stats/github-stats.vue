@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const state = useState()
+const year = new Date().getFullYear()
+</script>
+
 <template>
   <n-popover
     :width="275"
@@ -86,8 +91,3 @@
     </div>
   </n-popover>
 </template>
-
-<script setup lang="ts">
-const state = useState()
-const year = new Date().getFullYear()
-</script>

@@ -1,31 +1,3 @@
-<template>
-  <n-select
-    v-bind="$attrs"
-    v-model:value="selected"
-    :options="options"
-    :render-label="renderLabel"
-    :loading="labels.fetching?.value"
-    clearable
-    filterable
-    multiple
-    placeholder="Select labels"
-  />
-  <div v-if="suggestions.length > 0" v-motion-fade class="flex flex-col mb-2">
-    <span class="text-emerald-500">Suggestions</span>
-    <div class="inline-flex flex-row flex-wrap gap-1">
-      <n-tag
-        v-for="label in suggestions"
-        :key="label.data.id"
-        class="cursor-pointer hover:bg-emerald-700"
-        @click="addSuggestion(label)"
-      >
-        <n-badge show-zero color="grey" class="mr-0" :value="label.popularity" />
-        {{ label.data.name }}
-      </n-tag>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { h } from "vue"
 import { NBadge } from "naive-ui"
@@ -115,3 +87,31 @@ function addSuggestion(option) {
   makeSuggestions(suggest.value)
 }
 </script>
+
+<template>
+  <n-select
+    v-bind="$attrs"
+    v-model:value="selected"
+    :options="options"
+    :render-label="renderLabel"
+    :loading="labels.fetching?.value"
+    clearable
+    filterable
+    multiple
+    placeholder="Select labels"
+  />
+  <div v-if="suggestions.length > 0" v-motion-fade class="flex flex-col mb-2">
+    <span class="text-emerald-500">Suggestions</span>
+    <div class="inline-flex flex-row flex-wrap gap-1">
+      <n-tag
+        v-for="label in suggestions"
+        :key="label.data.id"
+        class="cursor-pointer hover:bg-emerald-700"
+        @click="addSuggestion(label)"
+      >
+        <n-badge show-zero color="grey" class="mr-0" :value="label.popularity" />
+        {{ label.data.name }}
+      </n-tag>
+    </div>
+  </div>
+</template>

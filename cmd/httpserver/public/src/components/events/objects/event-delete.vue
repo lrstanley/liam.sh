@@ -1,3 +1,11 @@
+<script setup lang="ts">
+import type { GithubEvent } from "@/lib/api"
+
+const props = defineProps<{
+  event: GithubEvent
+}>()
+</script>
+
 <template>
   <div>
     <span class="text-red-400">deleted</span>
@@ -15,11 +23,3 @@
     <EventLink :href="props.event.repo.name" />
   </div>
 </template>
-
-<script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
-
-const props = defineProps<{
-  event: GithubEvent
-}>()
-</script>

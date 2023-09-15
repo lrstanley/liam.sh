@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import { menuOptions } from "@/lib/core/navigation"
+
+const state = useState()
+</script>
+
 <template>
   <ul class="flex flex-wrap justify-center md:justify-start gap-x-2">
     <li v-for="link in menuOptions" :key="link.name">
@@ -12,12 +18,6 @@
     </li>
   </ul>
 </template>
-
-<script setup lang="ts">
-import { menuOptions } from "@/lib/core/navigation"
-
-const state = useState()
-</script>
 
 <style scoped>
 ul :deep(a) {
