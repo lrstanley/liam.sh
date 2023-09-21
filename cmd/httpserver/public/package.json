@@ -29,7 +29,7 @@
     "autoprefixer": "^10.4.15",
     "codemirror": "^6.0.0",
     "core-js": "^3.32.2",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "graphql-tag": "^2.12.6",
     "naive-ui": "^2.34.4",
     "pinia": "^2.1.6",
