@@ -25,7 +25,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.25
 	github.com/prometheus/client_golang v1.16.0
 	github.com/shurcooL/githubv4 v0.0.0-20230704064427-599ae7bbf278
-	github.com/vektah/gqlparser/v2 v2.5.9
+	github.com/vektah/gqlparser/v2 v2.5.10
 	github.com/yuin/goldmark v1.5.6
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.12.0
