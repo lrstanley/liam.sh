@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.1.0
 	entgo.io/contrib v0.4.5
 	entgo.io/ent v0.12.3
-	github.com/99designs/gqlgen v0.17.37
+	github.com/99designs/gqlgen v0.17.39
 	github.com/agnivade/levenshtein v1.1.1
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
@@ -25,7 +25,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.25
 	github.com/prometheus/client_golang v1.16.0
 	github.com/shurcooL/githubv4 v0.0.0-20230704064427-599ae7bbf278
-	github.com/vektah/gqlparser/v2 v2.5.9
+	github.com/vektah/gqlparser/v2 v2.5.10
 	github.com/yuin/goldmark v1.5.6
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.12.0
@@ -88,6 +88,7 @@ require (
 	github.com/prometheus/common v0.44.0 // indirect
 	github.com/prometheus/procfs v0.11.1 // indirect
 	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466 // indirect
+	github.com/sosodev/duration v1.1.0 // indirect
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
