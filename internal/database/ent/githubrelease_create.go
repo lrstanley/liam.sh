@@ -721,12 +721,16 @@ func (u *GithubReleaseUpsertOne) IDX(ctx context.Context) int {
 // GithubReleaseCreateBulk is the builder for creating many GithubRelease entities in bulk.
 type GithubReleaseCreateBulk struct {
 	config
+	err      error
 	builders []*GithubReleaseCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the GithubRelease entities in the database.
 func (grcb *GithubReleaseCreateBulk) Save(ctx context.Context) ([]*GithubRelease, error) {
+	if grcb.err != nil {
+		return nil, grcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(grcb.builders))
 	nodes := make([]*GithubRelease, len(grcb.builders))
 	mutators := make([]Mutator, len(grcb.builders))
@@ -1040,6 +1044,9 @@ func (u *GithubReleaseUpsertBulk) UpdateAuthor() *GithubReleaseUpsertBulk {
 
 // Exec executes the query.
 func (u *GithubReleaseUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the GithubReleaseCreateBulk instead", i)

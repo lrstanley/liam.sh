@@ -785,12 +785,16 @@ func (u *GithubAssetUpsertOne) IDX(ctx context.Context) int {
 // GithubAssetCreateBulk is the builder for creating many GithubAsset entities in bulk.
 type GithubAssetCreateBulk struct {
 	config
+	err      error
 	builders []*GithubAssetCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the GithubAsset entities in the database.
 func (gacb *GithubAssetCreateBulk) Save(ctx context.Context) ([]*GithubAsset, error) {
+	if gacb.err != nil {
+		return nil, gacb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(gacb.builders))
 	nodes := make([]*GithubAsset, len(gacb.builders))
 	mutators := make([]Mutator, len(gacb.builders))
@@ -1146,6 +1150,9 @@ func (u *GithubAssetUpsertBulk) UpdateUploader() *GithubAssetUpsertBulk {
 
 // Exec executes the query.
 func (u *GithubAssetUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the GithubAssetCreateBulk instead", i)

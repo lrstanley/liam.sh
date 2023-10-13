@@ -777,12 +777,16 @@ func (u *GithubGistUpsertOne) IDX(ctx context.Context) int {
 // GithubGistCreateBulk is the builder for creating many GithubGist entities in bulk.
 type GithubGistCreateBulk struct {
 	config
+	err      error
 	builders []*GithubGistCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the GithubGist entities in the database.
 func (ggcb *GithubGistCreateBulk) Save(ctx context.Context) ([]*GithubGist, error) {
+	if ggcb.err != nil {
+		return nil, ggcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(ggcb.builders))
 	nodes := make([]*GithubGist, len(ggcb.builders))
 	mutators := make([]Mutator, len(ggcb.builders))
@@ -1145,6 +1149,9 @@ func (u *GithubGistUpsertBulk) UpdateContent() *GithubGistUpsertBulk {
 
 // Exec executes the query.
 func (u *GithubGistUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the GithubGistCreateBulk instead", i)

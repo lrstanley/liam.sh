@@ -623,12 +623,16 @@ func (u *GithubEventUpsertOne) IDX(ctx context.Context) int {
 // GithubEventCreateBulk is the builder for creating many GithubEvent entities in bulk.
 type GithubEventCreateBulk struct {
 	config
+	err      error
 	builders []*GithubEventCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the GithubEvent entities in the database.
 func (gecb *GithubEventCreateBulk) Save(ctx context.Context) ([]*GithubEvent, error) {
+	if gecb.err != nil {
+		return nil, gecb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(gecb.builders))
 	nodes := make([]*GithubEvent, len(gecb.builders))
 	mutators := make([]Mutator, len(gecb.builders))
@@ -929,6 +933,9 @@ func (u *GithubEventUpsertBulk) UpdatePayload() *GithubEventUpsertBulk {
 
 // Exec executes the query.
 func (u *GithubEventUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the GithubEventCreateBulk instead", i)

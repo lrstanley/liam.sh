@@ -418,12 +418,16 @@ func (u *LabelUpsertOne) IDX(ctx context.Context) int {
 // LabelCreateBulk is the builder for creating many Label entities in bulk.
 type LabelCreateBulk struct {
 	config
+	err      error
 	builders []*LabelCreate
 	conflict []sql.ConflictOption
 }
 
 // Save creates the Label entities in the database.
 func (lcb *LabelCreateBulk) Save(ctx context.Context) ([]*Label, error) {
+	if lcb.err != nil {
+		return nil, lcb.err
+	}
 	specs := make([]*sqlgraph.CreateSpec, len(lcb.builders))
 	nodes := make([]*Label, len(lcb.builders))
 	mutators := make([]Mutator, len(lcb.builders))
@@ -619,6 +623,9 @@ func (u *LabelUpsertBulk) UpdateName() *LabelUpsertBulk {
 
 // Exec executes the query.
 func (u *LabelUpsertBulk) Exec(ctx context.Context) error {
+	if u.create.err != nil {
+		return u.create.err
+	}
 	for i, b := range u.create.builders {
 		if len(b.conflict) != 0 {
 			return fmt.Errorf("ent: OnConflict was set for builder %d. Set it on the LabelCreateBulk instead", i)
