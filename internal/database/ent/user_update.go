@@ -45,6 +45,14 @@ func (uu *UserUpdate) SetLogin(s string) *UserUpdate {
 	return uu
 }
 
+// SetNillableLogin sets the "login" field if the given value is not nil.
+func (uu *UserUpdate) SetNillableLogin(s *string) *UserUpdate {
+	if s != nil {
+		uu.SetLogin(*s)
+	}
+	return uu
+}
+
 // SetName sets the "name" field.
 func (uu *UserUpdate) SetName(s string) *UserUpdate {
 	uu.mutation.SetName(s)
@@ -416,6 +424,14 @@ func (uuo *UserUpdateOne) SetUpdateTime(t time.Time) *UserUpdateOne {
 // SetLogin sets the "login" field.
 func (uuo *UserUpdateOne) SetLogin(s string) *UserUpdateOne {
 	uuo.mutation.SetLogin(s)
+	return uuo
+}
+
+// SetNillableLogin sets the "login" field if the given value is not nil.
+func (uuo *UserUpdateOne) SetNillableLogin(s *string) *UserUpdateOne {
+	if s != nil {
+		uuo.SetLogin(*s)
+	}
 	return uuo
 }
 

@@ -42,6 +42,14 @@ func (gru *GithubRepositoryUpdate) SetRepoID(i int64) *GithubRepositoryUpdate {
 	return gru
 }
 
+// SetNillableRepoID sets the "repo_id" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableRepoID(i *int64) *GithubRepositoryUpdate {
+	if i != nil {
+		gru.SetRepoID(*i)
+	}
+	return gru
+}
+
 // AddRepoID adds i to the "repo_id" field.
 func (gru *GithubRepositoryUpdate) AddRepoID(i int64) *GithubRepositoryUpdate {
 	gru.mutation.AddRepoID(i)
@@ -54,15 +62,39 @@ func (gru *GithubRepositoryUpdate) SetName(s string) *GithubRepositoryUpdate {
 	return gru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableName(s *string) *GithubRepositoryUpdate {
+	if s != nil {
+		gru.SetName(*s)
+	}
+	return gru
+}
+
 // SetFullName sets the "full_name" field.
 func (gru *GithubRepositoryUpdate) SetFullName(s string) *GithubRepositoryUpdate {
 	gru.mutation.SetFullName(s)
 	return gru
 }
 
+// SetNillableFullName sets the "full_name" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableFullName(s *string) *GithubRepositoryUpdate {
+	if s != nil {
+		gru.SetFullName(*s)
+	}
+	return gru
+}
+
 // SetOwnerLogin sets the "owner_login" field.
 func (gru *GithubRepositoryUpdate) SetOwnerLogin(s string) *GithubRepositoryUpdate {
 	gru.mutation.SetOwnerLogin(s)
+	return gru
+}
+
+// SetNillableOwnerLogin sets the "owner_login" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableOwnerLogin(s *string) *GithubRepositoryUpdate {
+	if s != nil {
+		gru.SetOwnerLogin(*s)
+	}
 	return gru
 }
 
@@ -89,6 +121,14 @@ func (gru *GithubRepositoryUpdate) SetNillablePublic(b *bool) *GithubRepositoryU
 // SetHTMLURL sets the "html_url" field.
 func (gru *GithubRepositoryUpdate) SetHTMLURL(s string) *GithubRepositoryUpdate {
 	gru.mutation.SetHTMLURL(s)
+	return gru
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableHTMLURL(s *string) *GithubRepositoryUpdate {
+	if s != nil {
+		gru.SetHTMLURL(*s)
+	}
 	return gru
 }
 
@@ -173,6 +213,14 @@ func (gru *GithubRepositoryUpdate) SetDefaultBranch(s string) *GithubRepositoryU
 	return gru
 }
 
+// SetNillableDefaultBranch sets the "default_branch" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableDefaultBranch(s *string) *GithubRepositoryUpdate {
+	if s != nil {
+		gru.SetDefaultBranch(*s)
+	}
+	return gru
+}
+
 // SetIsTemplate sets the "is_template" field.
 func (gru *GithubRepositoryUpdate) SetIsTemplate(b bool) *GithubRepositoryUpdate {
 	gru.mutation.SetIsTemplate(b)
@@ -238,6 +286,14 @@ func (gru *GithubRepositoryUpdate) ClearPushedAt() *GithubRepositoryUpdate {
 // SetCreatedAt sets the "created_at" field.
 func (gru *GithubRepositoryUpdate) SetCreatedAt(t time.Time) *GithubRepositoryUpdate {
 	gru.mutation.SetCreatedAt(t)
+	return gru
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gru *GithubRepositoryUpdate) SetNillableCreatedAt(t *time.Time) *GithubRepositoryUpdate {
+	if t != nil {
+		gru.SetCreatedAt(*t)
+	}
 	return gru
 }
 
@@ -619,6 +675,14 @@ func (gruo *GithubRepositoryUpdateOne) SetRepoID(i int64) *GithubRepositoryUpdat
 	return gruo
 }
 
+// SetNillableRepoID sets the "repo_id" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableRepoID(i *int64) *GithubRepositoryUpdateOne {
+	if i != nil {
+		gruo.SetRepoID(*i)
+	}
+	return gruo
+}
+
 // AddRepoID adds i to the "repo_id" field.
 func (gruo *GithubRepositoryUpdateOne) AddRepoID(i int64) *GithubRepositoryUpdateOne {
 	gruo.mutation.AddRepoID(i)
@@ -631,15 +695,39 @@ func (gruo *GithubRepositoryUpdateOne) SetName(s string) *GithubRepositoryUpdate
 	return gruo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableName(s *string) *GithubRepositoryUpdateOne {
+	if s != nil {
+		gruo.SetName(*s)
+	}
+	return gruo
+}
+
 // SetFullName sets the "full_name" field.
 func (gruo *GithubRepositoryUpdateOne) SetFullName(s string) *GithubRepositoryUpdateOne {
 	gruo.mutation.SetFullName(s)
 	return gruo
 }
 
+// SetNillableFullName sets the "full_name" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableFullName(s *string) *GithubRepositoryUpdateOne {
+	if s != nil {
+		gruo.SetFullName(*s)
+	}
+	return gruo
+}
+
 // SetOwnerLogin sets the "owner_login" field.
 func (gruo *GithubRepositoryUpdateOne) SetOwnerLogin(s string) *GithubRepositoryUpdateOne {
 	gruo.mutation.SetOwnerLogin(s)
+	return gruo
+}
+
+// SetNillableOwnerLogin sets the "owner_login" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableOwnerLogin(s *string) *GithubRepositoryUpdateOne {
+	if s != nil {
+		gruo.SetOwnerLogin(*s)
+	}
 	return gruo
 }
 
@@ -666,6 +754,14 @@ func (gruo *GithubRepositoryUpdateOne) SetNillablePublic(b *bool) *GithubReposit
 // SetHTMLURL sets the "html_url" field.
 func (gruo *GithubRepositoryUpdateOne) SetHTMLURL(s string) *GithubRepositoryUpdateOne {
 	gruo.mutation.SetHTMLURL(s)
+	return gruo
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableHTMLURL(s *string) *GithubRepositoryUpdateOne {
+	if s != nil {
+		gruo.SetHTMLURL(*s)
+	}
 	return gruo
 }
 
@@ -750,6 +846,14 @@ func (gruo *GithubRepositoryUpdateOne) SetDefaultBranch(s string) *GithubReposit
 	return gruo
 }
 
+// SetNillableDefaultBranch sets the "default_branch" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableDefaultBranch(s *string) *GithubRepositoryUpdateOne {
+	if s != nil {
+		gruo.SetDefaultBranch(*s)
+	}
+	return gruo
+}
+
 // SetIsTemplate sets the "is_template" field.
 func (gruo *GithubRepositoryUpdateOne) SetIsTemplate(b bool) *GithubRepositoryUpdateOne {
 	gruo.mutation.SetIsTemplate(b)
@@ -815,6 +919,14 @@ func (gruo *GithubRepositoryUpdateOne) ClearPushedAt() *GithubRepositoryUpdateOn
 // SetCreatedAt sets the "created_at" field.
 func (gruo *GithubRepositoryUpdateOne) SetCreatedAt(t time.Time) *GithubRepositoryUpdateOne {
 	gruo.mutation.SetCreatedAt(t)
+	return gruo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gruo *GithubRepositoryUpdateOne) SetNillableCreatedAt(t *time.Time) *GithubRepositoryUpdateOne {
+	if t != nil {
+		gruo.SetCreatedAt(*t)
+	}
 	return gruo
 }
 

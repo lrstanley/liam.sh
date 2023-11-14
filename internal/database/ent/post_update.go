@@ -46,9 +46,25 @@ func (pu *PostUpdate) SetSlug(s string) *PostUpdate {
 	return pu
 }
 
+// SetNillableSlug sets the "slug" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableSlug(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetSlug(*s)
+	}
+	return pu
+}
+
 // SetTitle sets the "title" field.
 func (pu *PostUpdate) SetTitle(s string) *PostUpdate {
 	pu.mutation.SetTitle(s)
+	return pu
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableTitle(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetTitle(*s)
+	}
 	return pu
 }
 
@@ -58,15 +74,39 @@ func (pu *PostUpdate) SetContent(s string) *PostUpdate {
 	return pu
 }
 
+// SetNillableContent sets the "content" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableContent(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetContent(*s)
+	}
+	return pu
+}
+
 // SetContentHTML sets the "content_html" field.
 func (pu *PostUpdate) SetContentHTML(s string) *PostUpdate {
 	pu.mutation.SetContentHTML(s)
 	return pu
 }
 
+// SetNillableContentHTML sets the "content_html" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableContentHTML(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetContentHTML(*s)
+	}
+	return pu
+}
+
 // SetSummary sets the "summary" field.
 func (pu *PostUpdate) SetSummary(s string) *PostUpdate {
 	pu.mutation.SetSummary(s)
+	return pu
+}
+
+// SetNillableSummary sets the "summary" field if the given value is not nil.
+func (pu *PostUpdate) SetNillableSummary(s *string) *PostUpdate {
+	if s != nil {
+		pu.SetSummary(*s)
+	}
 	return pu
 }
 
@@ -405,9 +445,25 @@ func (puo *PostUpdateOne) SetSlug(s string) *PostUpdateOne {
 	return puo
 }
 
+// SetNillableSlug sets the "slug" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableSlug(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetSlug(*s)
+	}
+	return puo
+}
+
 // SetTitle sets the "title" field.
 func (puo *PostUpdateOne) SetTitle(s string) *PostUpdateOne {
 	puo.mutation.SetTitle(s)
+	return puo
+}
+
+// SetNillableTitle sets the "title" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableTitle(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetTitle(*s)
+	}
 	return puo
 }
 
@@ -417,15 +473,39 @@ func (puo *PostUpdateOne) SetContent(s string) *PostUpdateOne {
 	return puo
 }
 
+// SetNillableContent sets the "content" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableContent(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetContent(*s)
+	}
+	return puo
+}
+
 // SetContentHTML sets the "content_html" field.
 func (puo *PostUpdateOne) SetContentHTML(s string) *PostUpdateOne {
 	puo.mutation.SetContentHTML(s)
 	return puo
 }
 
+// SetNillableContentHTML sets the "content_html" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableContentHTML(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetContentHTML(*s)
+	}
+	return puo
+}
+
 // SetSummary sets the "summary" field.
 func (puo *PostUpdateOne) SetSummary(s string) *PostUpdateOne {
 	puo.mutation.SetSummary(s)
+	return puo
+}
+
+// SetNillableSummary sets the "summary" field if the given value is not nil.
+func (puo *PostUpdateOne) SetNillableSummary(s *string) *PostUpdateOne {
+	if s != nil {
+		puo.SetSummary(*s)
+	}
 	return puo
 }
 

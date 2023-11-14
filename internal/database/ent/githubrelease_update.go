@@ -42,6 +42,14 @@ func (gru *GithubReleaseUpdate) SetReleaseID(i int64) *GithubReleaseUpdate {
 	return gru
 }
 
+// SetNillableReleaseID sets the "release_id" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableReleaseID(i *int64) *GithubReleaseUpdate {
+	if i != nil {
+		gru.SetReleaseID(*i)
+	}
+	return gru
+}
+
 // AddReleaseID adds i to the "release_id" field.
 func (gru *GithubReleaseUpdate) AddReleaseID(i int64) *GithubReleaseUpdate {
 	gru.mutation.AddReleaseID(i)
@@ -54,15 +62,39 @@ func (gru *GithubReleaseUpdate) SetHTMLURL(s string) *GithubReleaseUpdate {
 	return gru
 }
 
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableHTMLURL(s *string) *GithubReleaseUpdate {
+	if s != nil {
+		gru.SetHTMLURL(*s)
+	}
+	return gru
+}
+
 // SetTagName sets the "tag_name" field.
 func (gru *GithubReleaseUpdate) SetTagName(s string) *GithubReleaseUpdate {
 	gru.mutation.SetTagName(s)
 	return gru
 }
 
+// SetNillableTagName sets the "tag_name" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableTagName(s *string) *GithubReleaseUpdate {
+	if s != nil {
+		gru.SetTagName(*s)
+	}
+	return gru
+}
+
 // SetTargetCommitish sets the "target_commitish" field.
 func (gru *GithubReleaseUpdate) SetTargetCommitish(s string) *GithubReleaseUpdate {
 	gru.mutation.SetTargetCommitish(s)
+	return gru
+}
+
+// SetNillableTargetCommitish sets the "target_commitish" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableTargetCommitish(s *string) *GithubReleaseUpdate {
+	if s != nil {
+		gru.SetTargetCommitish(*s)
+	}
 	return gru
 }
 
@@ -92,9 +124,25 @@ func (gru *GithubReleaseUpdate) SetDraft(b bool) *GithubReleaseUpdate {
 	return gru
 }
 
+// SetNillableDraft sets the "draft" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableDraft(b *bool) *GithubReleaseUpdate {
+	if b != nil {
+		gru.SetDraft(*b)
+	}
+	return gru
+}
+
 // SetPrerelease sets the "prerelease" field.
 func (gru *GithubReleaseUpdate) SetPrerelease(b bool) *GithubReleaseUpdate {
 	gru.mutation.SetPrerelease(b)
+	return gru
+}
+
+// SetNillablePrerelease sets the "prerelease" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillablePrerelease(b *bool) *GithubReleaseUpdate {
+	if b != nil {
+		gru.SetPrerelease(*b)
+	}
 	return gru
 }
 
@@ -104,9 +152,25 @@ func (gru *GithubReleaseUpdate) SetCreatedAt(t time.Time) *GithubReleaseUpdate {
 	return gru
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillableCreatedAt(t *time.Time) *GithubReleaseUpdate {
+	if t != nil {
+		gru.SetCreatedAt(*t)
+	}
+	return gru
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (gru *GithubReleaseUpdate) SetPublishedAt(t time.Time) *GithubReleaseUpdate {
 	gru.mutation.SetPublishedAt(t)
+	return gru
+}
+
+// SetNillablePublishedAt sets the "published_at" field if the given value is not nil.
+func (gru *GithubReleaseUpdate) SetNillablePublishedAt(t *time.Time) *GithubReleaseUpdate {
+	if t != nil {
+		gru.SetPublishedAt(*t)
+	}
 	return gru
 }
 
@@ -378,6 +442,14 @@ func (gruo *GithubReleaseUpdateOne) SetReleaseID(i int64) *GithubReleaseUpdateOn
 	return gruo
 }
 
+// SetNillableReleaseID sets the "release_id" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableReleaseID(i *int64) *GithubReleaseUpdateOne {
+	if i != nil {
+		gruo.SetReleaseID(*i)
+	}
+	return gruo
+}
+
 // AddReleaseID adds i to the "release_id" field.
 func (gruo *GithubReleaseUpdateOne) AddReleaseID(i int64) *GithubReleaseUpdateOne {
 	gruo.mutation.AddReleaseID(i)
@@ -390,15 +462,39 @@ func (gruo *GithubReleaseUpdateOne) SetHTMLURL(s string) *GithubReleaseUpdateOne
 	return gruo
 }
 
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableHTMLURL(s *string) *GithubReleaseUpdateOne {
+	if s != nil {
+		gruo.SetHTMLURL(*s)
+	}
+	return gruo
+}
+
 // SetTagName sets the "tag_name" field.
 func (gruo *GithubReleaseUpdateOne) SetTagName(s string) *GithubReleaseUpdateOne {
 	gruo.mutation.SetTagName(s)
 	return gruo
 }
 
+// SetNillableTagName sets the "tag_name" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableTagName(s *string) *GithubReleaseUpdateOne {
+	if s != nil {
+		gruo.SetTagName(*s)
+	}
+	return gruo
+}
+
 // SetTargetCommitish sets the "target_commitish" field.
 func (gruo *GithubReleaseUpdateOne) SetTargetCommitish(s string) *GithubReleaseUpdateOne {
 	gruo.mutation.SetTargetCommitish(s)
+	return gruo
+}
+
+// SetNillableTargetCommitish sets the "target_commitish" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableTargetCommitish(s *string) *GithubReleaseUpdateOne {
+	if s != nil {
+		gruo.SetTargetCommitish(*s)
+	}
 	return gruo
 }
 
@@ -428,9 +524,25 @@ func (gruo *GithubReleaseUpdateOne) SetDraft(b bool) *GithubReleaseUpdateOne {
 	return gruo
 }
 
+// SetNillableDraft sets the "draft" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableDraft(b *bool) *GithubReleaseUpdateOne {
+	if b != nil {
+		gruo.SetDraft(*b)
+	}
+	return gruo
+}
+
 // SetPrerelease sets the "prerelease" field.
 func (gruo *GithubReleaseUpdateOne) SetPrerelease(b bool) *GithubReleaseUpdateOne {
 	gruo.mutation.SetPrerelease(b)
+	return gruo
+}
+
+// SetNillablePrerelease sets the "prerelease" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillablePrerelease(b *bool) *GithubReleaseUpdateOne {
+	if b != nil {
+		gruo.SetPrerelease(*b)
+	}
 	return gruo
 }
 
@@ -440,9 +552,25 @@ func (gruo *GithubReleaseUpdateOne) SetCreatedAt(t time.Time) *GithubReleaseUpda
 	return gruo
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillableCreatedAt(t *time.Time) *GithubReleaseUpdateOne {
+	if t != nil {
+		gruo.SetCreatedAt(*t)
+	}
+	return gruo
+}
+
 // SetPublishedAt sets the "published_at" field.
 func (gruo *GithubReleaseUpdateOne) SetPublishedAt(t time.Time) *GithubReleaseUpdateOne {
 	gruo.mutation.SetPublishedAt(t)
+	return gruo
+}
+
+// SetNillablePublishedAt sets the "published_at" field if the given value is not nil.
+func (gruo *GithubReleaseUpdateOne) SetNillablePublishedAt(t *time.Time) *GithubReleaseUpdateOne {
+	if t != nil {
+		gruo.SetPublishedAt(*t)
+	}
 	return gruo
 }
 

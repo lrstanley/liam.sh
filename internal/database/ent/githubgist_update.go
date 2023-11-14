@@ -39,9 +39,25 @@ func (ggu *GithubGistUpdate) SetGistID(s string) *GithubGistUpdate {
 	return ggu
 }
 
+// SetNillableGistID sets the "gist_id" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableGistID(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetGistID(*s)
+	}
+	return ggu
+}
+
 // SetHTMLURL sets the "html_url" field.
 func (ggu *GithubGistUpdate) SetHTMLURL(s string) *GithubGistUpdate {
 	ggu.mutation.SetHTMLURL(s)
+	return ggu
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableHTMLURL(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetHTMLURL(*s)
+	}
 	return ggu
 }
 
@@ -51,15 +67,39 @@ func (ggu *GithubGistUpdate) SetPublic(b bool) *GithubGistUpdate {
 	return ggu
 }
 
+// SetNillablePublic sets the "public" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillablePublic(b *bool) *GithubGistUpdate {
+	if b != nil {
+		ggu.SetPublic(*b)
+	}
+	return ggu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (ggu *GithubGistUpdate) SetCreatedAt(t time.Time) *GithubGistUpdate {
 	ggu.mutation.SetCreatedAt(t)
 	return ggu
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableCreatedAt(t *time.Time) *GithubGistUpdate {
+	if t != nil {
+		ggu.SetCreatedAt(*t)
+	}
+	return ggu
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (ggu *GithubGistUpdate) SetUpdatedAt(t time.Time) *GithubGistUpdate {
 	ggu.mutation.SetUpdatedAt(t)
+	return ggu
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableUpdatedAt(t *time.Time) *GithubGistUpdate {
+	if t != nil {
+		ggu.SetUpdatedAt(*t)
+	}
 	return ggu
 }
 
@@ -95,9 +135,25 @@ func (ggu *GithubGistUpdate) SetName(s string) *GithubGistUpdate {
 	return ggu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableName(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetName(*s)
+	}
+	return ggu
+}
+
 // SetType sets the "type" field.
 func (ggu *GithubGistUpdate) SetType(s string) *GithubGistUpdate {
 	ggu.mutation.SetType(s)
+	return ggu
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableType(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetType(*s)
+	}
 	return ggu
 }
 
@@ -128,6 +184,14 @@ func (ggu *GithubGistUpdate) SetSize(i int64) *GithubGistUpdate {
 	return ggu
 }
 
+// SetNillableSize sets the "size" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableSize(i *int64) *GithubGistUpdate {
+	if i != nil {
+		ggu.SetSize(*i)
+	}
+	return ggu
+}
+
 // AddSize adds i to the "size" field.
 func (ggu *GithubGistUpdate) AddSize(i int64) *GithubGistUpdate {
 	ggu.mutation.AddSize(i)
@@ -140,9 +204,25 @@ func (ggu *GithubGistUpdate) SetRawURL(s string) *GithubGistUpdate {
 	return ggu
 }
 
+// SetNillableRawURL sets the "raw_url" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableRawURL(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetRawURL(*s)
+	}
+	return ggu
+}
+
 // SetContent sets the "content" field.
 func (ggu *GithubGistUpdate) SetContent(s string) *GithubGistUpdate {
 	ggu.mutation.SetContent(s)
+	return ggu
+}
+
+// SetNillableContent sets the "content" field if the given value is not nil.
+func (ggu *GithubGistUpdate) SetNillableContent(s *string) *GithubGistUpdate {
+	if s != nil {
+		ggu.SetContent(*s)
+	}
 	return ggu
 }
 
@@ -274,9 +354,25 @@ func (gguo *GithubGistUpdateOne) SetGistID(s string) *GithubGistUpdateOne {
 	return gguo
 }
 
+// SetNillableGistID sets the "gist_id" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableGistID(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetGistID(*s)
+	}
+	return gguo
+}
+
 // SetHTMLURL sets the "html_url" field.
 func (gguo *GithubGistUpdateOne) SetHTMLURL(s string) *GithubGistUpdateOne {
 	gguo.mutation.SetHTMLURL(s)
+	return gguo
+}
+
+// SetNillableHTMLURL sets the "html_url" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableHTMLURL(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetHTMLURL(*s)
+	}
 	return gguo
 }
 
@@ -286,15 +382,39 @@ func (gguo *GithubGistUpdateOne) SetPublic(b bool) *GithubGistUpdateOne {
 	return gguo
 }
 
+// SetNillablePublic sets the "public" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillablePublic(b *bool) *GithubGistUpdateOne {
+	if b != nil {
+		gguo.SetPublic(*b)
+	}
+	return gguo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (gguo *GithubGistUpdateOne) SetCreatedAt(t time.Time) *GithubGistUpdateOne {
 	gguo.mutation.SetCreatedAt(t)
 	return gguo
 }
 
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableCreatedAt(t *time.Time) *GithubGistUpdateOne {
+	if t != nil {
+		gguo.SetCreatedAt(*t)
+	}
+	return gguo
+}
+
 // SetUpdatedAt sets the "updated_at" field.
 func (gguo *GithubGistUpdateOne) SetUpdatedAt(t time.Time) *GithubGistUpdateOne {
 	gguo.mutation.SetUpdatedAt(t)
+	return gguo
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableUpdatedAt(t *time.Time) *GithubGistUpdateOne {
+	if t != nil {
+		gguo.SetUpdatedAt(*t)
+	}
 	return gguo
 }
 
@@ -330,9 +450,25 @@ func (gguo *GithubGistUpdateOne) SetName(s string) *GithubGistUpdateOne {
 	return gguo
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableName(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetName(*s)
+	}
+	return gguo
+}
+
 // SetType sets the "type" field.
 func (gguo *GithubGistUpdateOne) SetType(s string) *GithubGistUpdateOne {
 	gguo.mutation.SetType(s)
+	return gguo
+}
+
+// SetNillableType sets the "type" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableType(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetType(*s)
+	}
 	return gguo
 }
 
@@ -363,6 +499,14 @@ func (gguo *GithubGistUpdateOne) SetSize(i int64) *GithubGistUpdateOne {
 	return gguo
 }
 
+// SetNillableSize sets the "size" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableSize(i *int64) *GithubGistUpdateOne {
+	if i != nil {
+		gguo.SetSize(*i)
+	}
+	return gguo
+}
+
 // AddSize adds i to the "size" field.
 func (gguo *GithubGistUpdateOne) AddSize(i int64) *GithubGistUpdateOne {
 	gguo.mutation.AddSize(i)
@@ -375,9 +519,25 @@ func (gguo *GithubGistUpdateOne) SetRawURL(s string) *GithubGistUpdateOne {
 	return gguo
 }
 
+// SetNillableRawURL sets the "raw_url" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableRawURL(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetRawURL(*s)
+	}
+	return gguo
+}
+
 // SetContent sets the "content" field.
 func (gguo *GithubGistUpdateOne) SetContent(s string) *GithubGistUpdateOne {
 	gguo.mutation.SetContent(s)
+	return gguo
+}
+
+// SetNillableContent sets the "content" field if the given value is not nil.
+func (gguo *GithubGistUpdateOne) SetNillableContent(s *string) *GithubGistUpdateOne {
+	if s != nil {
+		gguo.SetContent(*s)
+	}
 	return gguo
 }
 

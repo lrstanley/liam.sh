@@ -41,6 +41,14 @@ func (gau *GithubAssetUpdate) SetAssetID(i int64) *GithubAssetUpdate {
 	return gau
 }
 
+// SetNillableAssetID sets the "asset_id" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableAssetID(i *int64) *GithubAssetUpdate {
+	if i != nil {
+		gau.SetAssetID(*i)
+	}
+	return gau
+}
+
 // AddAssetID adds i to the "asset_id" field.
 func (gau *GithubAssetUpdate) AddAssetID(i int64) *GithubAssetUpdate {
 	gau.mutation.AddAssetID(i)
@@ -53,9 +61,25 @@ func (gau *GithubAssetUpdate) SetBrowserDownloadURL(s string) *GithubAssetUpdate
 	return gau
 }
 
+// SetNillableBrowserDownloadURL sets the "browser_download_url" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableBrowserDownloadURL(s *string) *GithubAssetUpdate {
+	if s != nil {
+		gau.SetBrowserDownloadURL(*s)
+	}
+	return gau
+}
+
 // SetName sets the "name" field.
 func (gau *GithubAssetUpdate) SetName(s string) *GithubAssetUpdate {
 	gau.mutation.SetName(s)
+	return gau
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableName(s *string) *GithubAssetUpdate {
+	if s != nil {
+		gau.SetName(*s)
+	}
 	return gau
 }
 
@@ -105,10 +129,26 @@ func (gau *GithubAssetUpdate) SetContentType(s string) *GithubAssetUpdate {
 	return gau
 }
 
+// SetNillableContentType sets the "content_type" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableContentType(s *string) *GithubAssetUpdate {
+	if s != nil {
+		gau.SetContentType(*s)
+	}
+	return gau
+}
+
 // SetSize sets the "size" field.
 func (gau *GithubAssetUpdate) SetSize(i int64) *GithubAssetUpdate {
 	gau.mutation.ResetSize()
 	gau.mutation.SetSize(i)
+	return gau
+}
+
+// SetNillableSize sets the "size" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableSize(i *int64) *GithubAssetUpdate {
+	if i != nil {
+		gau.SetSize(*i)
+	}
 	return gau
 }
 
@@ -125,6 +165,14 @@ func (gau *GithubAssetUpdate) SetDownloadCount(i int64) *GithubAssetUpdate {
 	return gau
 }
 
+// SetNillableDownloadCount sets the "download_count" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableDownloadCount(i *int64) *GithubAssetUpdate {
+	if i != nil {
+		gau.SetDownloadCount(*i)
+	}
+	return gau
+}
+
 // AddDownloadCount adds i to the "download_count" field.
 func (gau *GithubAssetUpdate) AddDownloadCount(i int64) *GithubAssetUpdate {
 	gau.mutation.AddDownloadCount(i)
@@ -134,6 +182,14 @@ func (gau *GithubAssetUpdate) AddDownloadCount(i int64) *GithubAssetUpdate {
 // SetCreatedAt sets the "created_at" field.
 func (gau *GithubAssetUpdate) SetCreatedAt(t time.Time) *GithubAssetUpdate {
 	gau.mutation.SetCreatedAt(t)
+	return gau
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gau *GithubAssetUpdate) SetNillableCreatedAt(t *time.Time) *GithubAssetUpdate {
+	if t != nil {
+		gau.SetCreatedAt(*t)
+	}
 	return gau
 }
 
@@ -354,6 +410,14 @@ func (gauo *GithubAssetUpdateOne) SetAssetID(i int64) *GithubAssetUpdateOne {
 	return gauo
 }
 
+// SetNillableAssetID sets the "asset_id" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableAssetID(i *int64) *GithubAssetUpdateOne {
+	if i != nil {
+		gauo.SetAssetID(*i)
+	}
+	return gauo
+}
+
 // AddAssetID adds i to the "asset_id" field.
 func (gauo *GithubAssetUpdateOne) AddAssetID(i int64) *GithubAssetUpdateOne {
 	gauo.mutation.AddAssetID(i)
@@ -366,9 +430,25 @@ func (gauo *GithubAssetUpdateOne) SetBrowserDownloadURL(s string) *GithubAssetUp
 	return gauo
 }
 
+// SetNillableBrowserDownloadURL sets the "browser_download_url" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableBrowserDownloadURL(s *string) *GithubAssetUpdateOne {
+	if s != nil {
+		gauo.SetBrowserDownloadURL(*s)
+	}
+	return gauo
+}
+
 // SetName sets the "name" field.
 func (gauo *GithubAssetUpdateOne) SetName(s string) *GithubAssetUpdateOne {
 	gauo.mutation.SetName(s)
+	return gauo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableName(s *string) *GithubAssetUpdateOne {
+	if s != nil {
+		gauo.SetName(*s)
+	}
 	return gauo
 }
 
@@ -418,10 +498,26 @@ func (gauo *GithubAssetUpdateOne) SetContentType(s string) *GithubAssetUpdateOne
 	return gauo
 }
 
+// SetNillableContentType sets the "content_type" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableContentType(s *string) *GithubAssetUpdateOne {
+	if s != nil {
+		gauo.SetContentType(*s)
+	}
+	return gauo
+}
+
 // SetSize sets the "size" field.
 func (gauo *GithubAssetUpdateOne) SetSize(i int64) *GithubAssetUpdateOne {
 	gauo.mutation.ResetSize()
 	gauo.mutation.SetSize(i)
+	return gauo
+}
+
+// SetNillableSize sets the "size" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableSize(i *int64) *GithubAssetUpdateOne {
+	if i != nil {
+		gauo.SetSize(*i)
+	}
 	return gauo
 }
 
@@ -438,6 +534,14 @@ func (gauo *GithubAssetUpdateOne) SetDownloadCount(i int64) *GithubAssetUpdateOn
 	return gauo
 }
 
+// SetNillableDownloadCount sets the "download_count" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableDownloadCount(i *int64) *GithubAssetUpdateOne {
+	if i != nil {
+		gauo.SetDownloadCount(*i)
+	}
+	return gauo
+}
+
 // AddDownloadCount adds i to the "download_count" field.
 func (gauo *GithubAssetUpdateOne) AddDownloadCount(i int64) *GithubAssetUpdateOne {
 	gauo.mutation.AddDownloadCount(i)
@@ -447,6 +551,14 @@ func (gauo *GithubAssetUpdateOne) AddDownloadCount(i int64) *GithubAssetUpdateOn
 // SetCreatedAt sets the "created_at" field.
 func (gauo *GithubAssetUpdateOne) SetCreatedAt(t time.Time) *GithubAssetUpdateOne {
 	gauo.mutation.SetCreatedAt(t)
+	return gauo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (gauo *GithubAssetUpdateOne) SetNillableCreatedAt(t *time.Time) *GithubAssetUpdateOne {
+	if t != nil {
+		gauo.SetCreatedAt(*t)
+	}
 	return gauo
 }
 

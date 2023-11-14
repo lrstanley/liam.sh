@@ -39,15 +39,39 @@ func (geu *GithubEventUpdate) SetEventID(s string) *GithubEventUpdate {
 	return geu
 }
 
+// SetNillableEventID sets the "event_id" field if the given value is not nil.
+func (geu *GithubEventUpdate) SetNillableEventID(s *string) *GithubEventUpdate {
+	if s != nil {
+		geu.SetEventID(*s)
+	}
+	return geu
+}
+
 // SetEventType sets the "event_type" field.
 func (geu *GithubEventUpdate) SetEventType(s string) *GithubEventUpdate {
 	geu.mutation.SetEventType(s)
 	return geu
 }
 
+// SetNillableEventType sets the "event_type" field if the given value is not nil.
+func (geu *GithubEventUpdate) SetNillableEventType(s *string) *GithubEventUpdate {
+	if s != nil {
+		geu.SetEventType(*s)
+	}
+	return geu
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (geu *GithubEventUpdate) SetCreatedAt(t time.Time) *GithubEventUpdate {
 	geu.mutation.SetCreatedAt(t)
+	return geu
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (geu *GithubEventUpdate) SetNillableCreatedAt(t *time.Time) *GithubEventUpdate {
+	if t != nil {
+		geu.SetCreatedAt(*t)
+	}
 	return geu
 }
 
@@ -72,6 +96,14 @@ func (geu *GithubEventUpdate) SetActorID(i int64) *GithubEventUpdate {
 	return geu
 }
 
+// SetNillableActorID sets the "actor_id" field if the given value is not nil.
+func (geu *GithubEventUpdate) SetNillableActorID(i *int64) *GithubEventUpdate {
+	if i != nil {
+		geu.SetActorID(*i)
+	}
+	return geu
+}
+
 // AddActorID adds i to the "actor_id" field.
 func (geu *GithubEventUpdate) AddActorID(i int64) *GithubEventUpdate {
 	geu.mutation.AddActorID(i)
@@ -88,6 +120,14 @@ func (geu *GithubEventUpdate) SetActor(gi *github.User) *GithubEventUpdate {
 func (geu *GithubEventUpdate) SetRepoID(i int64) *GithubEventUpdate {
 	geu.mutation.ResetRepoID()
 	geu.mutation.SetRepoID(i)
+	return geu
+}
+
+// SetNillableRepoID sets the "repo_id" field if the given value is not nil.
+func (geu *GithubEventUpdate) SetNillableRepoID(i *int64) *GithubEventUpdate {
+	if i != nil {
+		geu.SetRepoID(*i)
+	}
 	return geu
 }
 
@@ -227,15 +267,39 @@ func (geuo *GithubEventUpdateOne) SetEventID(s string) *GithubEventUpdateOne {
 	return geuo
 }
 
+// SetNillableEventID sets the "event_id" field if the given value is not nil.
+func (geuo *GithubEventUpdateOne) SetNillableEventID(s *string) *GithubEventUpdateOne {
+	if s != nil {
+		geuo.SetEventID(*s)
+	}
+	return geuo
+}
+
 // SetEventType sets the "event_type" field.
 func (geuo *GithubEventUpdateOne) SetEventType(s string) *GithubEventUpdateOne {
 	geuo.mutation.SetEventType(s)
 	return geuo
 }
 
+// SetNillableEventType sets the "event_type" field if the given value is not nil.
+func (geuo *GithubEventUpdateOne) SetNillableEventType(s *string) *GithubEventUpdateOne {
+	if s != nil {
+		geuo.SetEventType(*s)
+	}
+	return geuo
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (geuo *GithubEventUpdateOne) SetCreatedAt(t time.Time) *GithubEventUpdateOne {
 	geuo.mutation.SetCreatedAt(t)
+	return geuo
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (geuo *GithubEventUpdateOne) SetNillableCreatedAt(t *time.Time) *GithubEventUpdateOne {
+	if t != nil {
+		geuo.SetCreatedAt(*t)
+	}
 	return geuo
 }
 
@@ -260,6 +324,14 @@ func (geuo *GithubEventUpdateOne) SetActorID(i int64) *GithubEventUpdateOne {
 	return geuo
 }
 
+// SetNillableActorID sets the "actor_id" field if the given value is not nil.
+func (geuo *GithubEventUpdateOne) SetNillableActorID(i *int64) *GithubEventUpdateOne {
+	if i != nil {
+		geuo.SetActorID(*i)
+	}
+	return geuo
+}
+
 // AddActorID adds i to the "actor_id" field.
 func (geuo *GithubEventUpdateOne) AddActorID(i int64) *GithubEventUpdateOne {
 	geuo.mutation.AddActorID(i)
@@ -276,6 +348,14 @@ func (geuo *GithubEventUpdateOne) SetActor(gi *github.User) *GithubEventUpdateOn
 func (geuo *GithubEventUpdateOne) SetRepoID(i int64) *GithubEventUpdateOne {
 	geuo.mutation.ResetRepoID()
 	geuo.mutation.SetRepoID(i)
+	return geuo
+}
+
+// SetNillableRepoID sets the "repo_id" field if the given value is not nil.
+func (geuo *GithubEventUpdateOne) SetNillableRepoID(i *int64) *GithubEventUpdateOne {
+	if i != nil {
+		geuo.SetRepoID(*i)
+	}
 	return geuo
 }
 

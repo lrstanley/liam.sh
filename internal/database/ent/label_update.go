@@ -46,6 +46,14 @@ func (lu *LabelUpdate) SetName(s string) *LabelUpdate {
 	return lu
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (lu *LabelUpdate) SetNillableName(s *string) *LabelUpdate {
+	if s != nil {
+		lu.SetName(*s)
+	}
+	return lu
+}
+
 // AddPostIDs adds the "posts" edge to the Post entity by IDs.
 func (lu *LabelUpdate) AddPostIDs(ids ...int) *LabelUpdate {
 	lu.mutation.AddPostIDs(ids...)
@@ -312,6 +320,14 @@ func (luo *LabelUpdateOne) SetUpdateTime(t time.Time) *LabelUpdateOne {
 // SetName sets the "name" field.
 func (luo *LabelUpdateOne) SetName(s string) *LabelUpdateOne {
 	luo.mutation.SetName(s)
+	return luo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (luo *LabelUpdateOne) SetNillableName(s *string) *LabelUpdateOne {
+	if s != nil {
+		luo.SetName(*s)
+	}
 	return luo
 }
 
