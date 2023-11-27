@@ -19,7 +19,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.5.0
-	github.com/lrstanley/chix v1.0.0
+	github.com/lrstanley/chix v1.0.1
 	github.com/lrstanley/clix v1.0.0
 	github.com/markbates/goth v1.78.0
 	github.com/microcosm-cc/bluemonday v1.0.26
