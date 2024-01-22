@@ -6,7 +6,7 @@ require (
 	ariga.io/entcache v0.1.0
 	entgo.io/contrib v0.4.5
 	entgo.io/ent v0.12.5
-	github.com/99designs/gqlgen v0.17.40
+	github.com/99designs/gqlgen v0.17.43
 	github.com/agnivade/levenshtein v1.1.1
 	github.com/alecthomas/chroma v0.10.0
 	github.com/apex/log v1.9.0
@@ -25,7 +25,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/prometheus/client_golang v1.17.0
 	github.com/shurcooL/githubv4 v0.0.0-20230704064427-599ae7bbf278
-	github.com/vektah/gqlparser/v2 v2.5.10
+	github.com/vektah/gqlparser/v2 v2.5.11
 	github.com/yuin/goldmark v1.6.0
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.14.0
