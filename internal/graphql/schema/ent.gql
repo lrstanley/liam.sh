@@ -45,30 +45,52 @@ type GithubAsset implements Node {
   uploader: GithubUser!
   release: GithubRelease!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type GithubAssetConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [GithubAssetEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type GithubAssetEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: GithubAsset
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for GithubAsset connections"""
+"""
+Ordering options for GithubAsset connections
+"""
 input GithubAssetOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order GithubAssets."""
+  """
+  The field by which to order GithubAssets.
+  """
   field: GithubAssetOrderField!
 }
-"""Properties by which GithubAsset connections can be ordered."""
+"""
+Properties by which GithubAsset connections can be ordered.
+"""
 enum GithubAssetOrderField {
   NAME
   DOWNLOAD_COUNT
@@ -83,7 +105,9 @@ input GithubAssetWhereInput {
   not: GithubAssetWhereInput
   and: [GithubAssetWhereInput!]
   or: [GithubAssetWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -92,7 +116,9 @@ input GithubAssetWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """asset_id field predicates"""
+  """
+  asset_id field predicates
+  """
   assetID: Int
   assetIDNEQ: Int
   assetIDIn: [Int!]
@@ -101,7 +127,9 @@ input GithubAssetWhereInput {
   assetIDGTE: Int
   assetIDLT: Int
   assetIDLTE: Int
-  """browser_download_url field predicates"""
+  """
+  browser_download_url field predicates
+  """
   browserDownloadURL: String
   browserDownloadURLNEQ: String
   browserDownloadURLIn: [String!]
@@ -115,7 +143,9 @@ input GithubAssetWhereInput {
   browserDownloadURLHasSuffix: String
   browserDownloadURLEqualFold: String
   browserDownloadURLContainsFold: String
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -129,7 +159,9 @@ input GithubAssetWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """label field predicates"""
+  """
+  label field predicates
+  """
   label: String
   labelNEQ: String
   labelIn: [String!]
@@ -145,7 +177,9 @@ input GithubAssetWhereInput {
   labelNotNil: Boolean
   labelEqualFold: String
   labelContainsFold: String
-  """state field predicates"""
+  """
+  state field predicates
+  """
   state: String
   stateNEQ: String
   stateIn: [String!]
@@ -161,7 +195,9 @@ input GithubAssetWhereInput {
   stateNotNil: Boolean
   stateEqualFold: String
   stateContainsFold: String
-  """content_type field predicates"""
+  """
+  content_type field predicates
+  """
   contentType: String
   contentTypeNEQ: String
   contentTypeIn: [String!]
@@ -175,7 +211,9 @@ input GithubAssetWhereInput {
   contentTypeHasSuffix: String
   contentTypeEqualFold: String
   contentTypeContainsFold: String
-  """size field predicates"""
+  """
+  size field predicates
+  """
   size: Int
   sizeNEQ: Int
   sizeIn: [Int!]
@@ -184,7 +222,9 @@ input GithubAssetWhereInput {
   sizeGTE: Int
   sizeLT: Int
   sizeLTE: Int
-  """download_count field predicates"""
+  """
+  download_count field predicates
+  """
   downloadCount: Int
   downloadCountNEQ: Int
   downloadCountIn: [Int!]
@@ -193,7 +233,9 @@ input GithubAssetWhereInput {
   downloadCountGTE: Int
   downloadCountLT: Int
   downloadCountLTE: Int
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: Time
   createdAtNEQ: Time
   createdAtIn: [Time!]
@@ -202,7 +244,9 @@ input GithubAssetWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
-  """updated_at field predicates"""
+  """
+  updated_at field predicates
+  """
   updatedAt: Time
   updatedAtNEQ: Time
   updatedAtIn: [Time!]
@@ -213,7 +257,9 @@ input GithubAssetWhereInput {
   updatedAtLTE: Time
   updatedAtIsNil: Boolean
   updatedAtNotNil: Boolean
-  """release edge predicates"""
+  """
+  release edge predicates
+  """
   hasRelease: Boolean
   hasReleaseWith: [GithubReleaseWhereInput!]
 }
@@ -229,30 +275,52 @@ type GithubEvent implements Node {
   repo: GithubEventRepo!
   payload: Map!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type GithubEventConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [GithubEventEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type GithubEventEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: GithubEvent
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for GithubEvent connections"""
+"""
+Ordering options for GithubEvent connections
+"""
 input GithubEventOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order GithubEvents."""
+  """
+  The field by which to order GithubEvents.
+  """
   field: GithubEventOrderField!
 }
-"""Properties by which GithubEvent connections can be ordered."""
+"""
+Properties by which GithubEvent connections can be ordered.
+"""
 enum GithubEventOrderField {
   EVENT_ID
   EVENT_TYPE
@@ -268,7 +336,9 @@ input GithubEventWhereInput {
   not: GithubEventWhereInput
   and: [GithubEventWhereInput!]
   or: [GithubEventWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -277,7 +347,9 @@ input GithubEventWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """event_id field predicates"""
+  """
+  event_id field predicates
+  """
   eventID: String
   eventIDNEQ: String
   eventIDIn: [String!]
@@ -291,7 +363,9 @@ input GithubEventWhereInput {
   eventIDHasSuffix: String
   eventIDEqualFold: String
   eventIDContainsFold: String
-  """event_type field predicates"""
+  """
+  event_type field predicates
+  """
   eventType: String
   eventTypeNEQ: String
   eventTypeIn: [String!]
@@ -305,7 +379,9 @@ input GithubEventWhereInput {
   eventTypeHasSuffix: String
   eventTypeEqualFold: String
   eventTypeContainsFold: String
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: Time
   createdAtNEQ: Time
   createdAtIn: [Time!]
@@ -314,10 +390,14 @@ input GithubEventWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
-  """public field predicates"""
+  """
+  public field predicates
+  """
   public: Boolean
   publicNEQ: Boolean
-  """actor_id field predicates"""
+  """
+  actor_id field predicates
+  """
   actorID: Int
   actorIDNEQ: Int
   actorIDIn: [Int!]
@@ -326,7 +406,9 @@ input GithubEventWhereInput {
   actorIDGTE: Int
   actorIDLT: Int
   actorIDLTE: Int
-  """repo_id field predicates"""
+  """
+  repo_id field predicates
+  """
   repoID: Int
   repoIDNEQ: Int
   repoIDIn: [Int!]
@@ -352,30 +434,52 @@ type GithubGist implements Node {
   rawURL: String!
   content: String!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type GithubGistConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [GithubGistEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type GithubGistEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: GithubGist
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for GithubGist connections"""
+"""
+Ordering options for GithubGist connections
+"""
 input GithubGistOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order GithubGists."""
+  """
+  The field by which to order GithubGists.
+  """
   field: GithubGistOrderField!
 }
-"""Properties by which GithubGist connections can be ordered."""
+"""
+Properties by which GithubGist connections can be ordered.
+"""
 enum GithubGistOrderField {
   CREATED_AT
   UPDATED_AT
@@ -392,7 +496,9 @@ input GithubGistWhereInput {
   not: GithubGistWhereInput
   and: [GithubGistWhereInput!]
   or: [GithubGistWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -401,7 +507,9 @@ input GithubGistWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """gist_id field predicates"""
+  """
+  gist_id field predicates
+  """
   gistID: String
   gistIDNEQ: String
   gistIDIn: [String!]
@@ -415,7 +523,9 @@ input GithubGistWhereInput {
   gistIDHasSuffix: String
   gistIDEqualFold: String
   gistIDContainsFold: String
-  """html_url field predicates"""
+  """
+  html_url field predicates
+  """
   htmlURL: String
   htmlURLNEQ: String
   htmlURLIn: [String!]
@@ -429,10 +539,14 @@ input GithubGistWhereInput {
   htmlURLHasSuffix: String
   htmlURLEqualFold: String
   htmlURLContainsFold: String
-  """public field predicates"""
+  """
+  public field predicates
+  """
   public: Boolean
   publicNEQ: Boolean
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: Time
   createdAtNEQ: Time
   createdAtIn: [Time!]
@@ -441,7 +555,9 @@ input GithubGistWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
-  """updated_at field predicates"""
+  """
+  updated_at field predicates
+  """
   updatedAt: Time
   updatedAtNEQ: Time
   updatedAtIn: [Time!]
@@ -450,7 +566,9 @@ input GithubGistWhereInput {
   updatedAtGTE: Time
   updatedAtLT: Time
   updatedAtLTE: Time
-  """description field predicates"""
+  """
+  description field predicates
+  """
   description: String
   descriptionNEQ: String
   descriptionIn: [String!]
@@ -466,7 +584,9 @@ input GithubGistWhereInput {
   descriptionNotNil: Boolean
   descriptionEqualFold: String
   descriptionContainsFold: String
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -480,7 +600,9 @@ input GithubGistWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """type field predicates"""
+  """
+  type field predicates
+  """
   type: String
   typeNEQ: String
   typeIn: [String!]
@@ -494,7 +616,9 @@ input GithubGistWhereInput {
   typeHasSuffix: String
   typeEqualFold: String
   typeContainsFold: String
-  """language field predicates"""
+  """
+  language field predicates
+  """
   language: String
   languageNEQ: String
   languageIn: [String!]
@@ -510,7 +634,9 @@ input GithubGistWhereInput {
   languageNotNil: Boolean
   languageEqualFold: String
   languageContainsFold: String
-  """size field predicates"""
+  """
+  size field predicates
+  """
   size: Int
   sizeNEQ: Int
   sizeIn: [Int!]
@@ -519,7 +645,9 @@ input GithubGistWhereInput {
   sizeGTE: Int
   sizeLT: Int
   sizeLTE: Int
-  """raw_url field predicates"""
+  """
+  raw_url field predicates
+  """
   rawURL: String
   rawURLNEQ: String
   rawURLIn: [String!]
@@ -533,7 +661,9 @@ input GithubGistWhereInput {
   rawURLHasSuffix: String
   rawURLEqualFold: String
   rawURLContainsFold: String
-  """content field predicates"""
+  """
+  content field predicates
+  """
   content: String
   contentNEQ: String
   contentIn: [String!]
@@ -562,49 +692,83 @@ type GithubRelease implements Node {
   author: GithubUser!
   repository: GithubRepository!
   assets(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubAssets returned from the connection."""
+    """
+    Ordering options for GithubAssets returned from the connection.
+    """
     orderBy: GithubAssetOrder
 
-    """Filtering options for GithubAssets returned from the connection."""
+    """
+    Filtering options for GithubAssets returned from the connection.
+    """
     where: GithubAssetWhereInput
   ): GithubAssetConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type GithubReleaseConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [GithubReleaseEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type GithubReleaseEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: GithubRelease
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for GithubRelease connections"""
+"""
+Ordering options for GithubRelease connections
+"""
 input GithubReleaseOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order GithubReleases."""
+  """
+  The field by which to order GithubReleases.
+  """
   field: GithubReleaseOrderField!
 }
-"""Properties by which GithubRelease connections can be ordered."""
+"""
+Properties by which GithubRelease connections can be ordered.
+"""
 enum GithubReleaseOrderField {
   TAG_NAME
   NAME
@@ -619,7 +783,9 @@ input GithubReleaseWhereInput {
   not: GithubReleaseWhereInput
   and: [GithubReleaseWhereInput!]
   or: [GithubReleaseWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -628,7 +794,9 @@ input GithubReleaseWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """release_id field predicates"""
+  """
+  release_id field predicates
+  """
   releaseID: Int
   releaseIDNEQ: Int
   releaseIDIn: [Int!]
@@ -637,7 +805,9 @@ input GithubReleaseWhereInput {
   releaseIDGTE: Int
   releaseIDLT: Int
   releaseIDLTE: Int
-  """html_url field predicates"""
+  """
+  html_url field predicates
+  """
   htmlURL: String
   htmlURLNEQ: String
   htmlURLIn: [String!]
@@ -651,7 +821,9 @@ input GithubReleaseWhereInput {
   htmlURLHasSuffix: String
   htmlURLEqualFold: String
   htmlURLContainsFold: String
-  """tag_name field predicates"""
+  """
+  tag_name field predicates
+  """
   tagName: String
   tagNameNEQ: String
   tagNameIn: [String!]
@@ -665,7 +837,9 @@ input GithubReleaseWhereInput {
   tagNameHasSuffix: String
   tagNameEqualFold: String
   tagNameContainsFold: String
-  """target_commitish field predicates"""
+  """
+  target_commitish field predicates
+  """
   targetCommitish: String
   targetCommitishNEQ: String
   targetCommitishIn: [String!]
@@ -679,7 +853,9 @@ input GithubReleaseWhereInput {
   targetCommitishHasSuffix: String
   targetCommitishEqualFold: String
   targetCommitishContainsFold: String
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -695,13 +871,19 @@ input GithubReleaseWhereInput {
   nameNotNil: Boolean
   nameEqualFold: String
   nameContainsFold: String
-  """draft field predicates"""
+  """
+  draft field predicates
+  """
   draft: Boolean
   draftNEQ: Boolean
-  """prerelease field predicates"""
+  """
+  prerelease field predicates
+  """
   prerelease: Boolean
   prereleaseNEQ: Boolean
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: Time
   createdAtNEQ: Time
   createdAtIn: [Time!]
@@ -710,7 +892,9 @@ input GithubReleaseWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
-  """published_at field predicates"""
+  """
+  published_at field predicates
+  """
   publishedAt: Time
   publishedAtNEQ: Time
   publishedAtIn: [Time!]
@@ -719,10 +903,14 @@ input GithubReleaseWhereInput {
   publishedAtGTE: Time
   publishedAtLT: Time
   publishedAtLTE: Time
-  """repository edge predicates"""
+  """
+  repository edge predicates
+  """
   hasRepository: Boolean
   hasRepositoryWith: [GithubRepositoryWhereInput!]
-  """assets edge predicates"""
+  """
+  assets edge predicates
+  """
   hasAssets: Boolean
   hasAssetsWith: [GithubAssetWhereInput!]
 }
@@ -748,68 +936,114 @@ type GithubRepository implements Node {
   updatedAt: Time
   license: GithubLicense
   labels(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Labels returned from the connection."""
+    """
+    Ordering options for Labels returned from the connection.
+    """
     orderBy: LabelOrder
 
-    """Filtering options for Labels returned from the connection."""
+    """
+    Filtering options for Labels returned from the connection.
+    """
     where: LabelWhereInput
   ): LabelConnection!
   releases(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubReleases returned from the connection."""
+    """
+    Ordering options for GithubReleases returned from the connection.
+    """
     orderBy: GithubReleaseOrder
 
-    """Filtering options for GithubReleases returned from the connection."""
+    """
+    Filtering options for GithubReleases returned from the connection.
+    """
     where: GithubReleaseWhereInput
   ): GithubReleaseConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type GithubRepositoryConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [GithubRepositoryEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type GithubRepositoryEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: GithubRepository
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for GithubRepository connections"""
+"""
+Ordering options for GithubRepository connections
+"""
 input GithubRepositoryOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order GithubRepositories."""
+  """
+  The field by which to order GithubRepositories.
+  """
   field: GithubRepositoryOrderField!
 }
-"""Properties by which GithubRepository connections can be ordered."""
+"""
+Properties by which GithubRepository connections can be ordered.
+"""
 enum GithubRepositoryOrderField {
   NAME
   FULL_NAME
@@ -827,7 +1061,9 @@ input GithubRepositoryWhereInput {
   not: GithubRepositoryWhereInput
   and: [GithubRepositoryWhereInput!]
   or: [GithubRepositoryWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -836,7 +1072,9 @@ input GithubRepositoryWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """repo_id field predicates"""
+  """
+  repo_id field predicates
+  """
   repoID: Int
   repoIDNEQ: Int
   repoIDIn: [Int!]
@@ -845,7 +1083,9 @@ input GithubRepositoryWhereInput {
   repoIDGTE: Int
   repoIDLT: Int
   repoIDLTE: Int
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -859,7 +1099,9 @@ input GithubRepositoryWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """full_name field predicates"""
+  """
+  full_name field predicates
+  """
   fullName: String
   fullNameNEQ: String
   fullNameIn: [String!]
@@ -873,7 +1115,9 @@ input GithubRepositoryWhereInput {
   fullNameHasSuffix: String
   fullNameEqualFold: String
   fullNameContainsFold: String
-  """owner_login field predicates"""
+  """
+  owner_login field predicates
+  """
   ownerLogin: String
   ownerLoginNEQ: String
   ownerLoginIn: [String!]
@@ -887,10 +1131,14 @@ input GithubRepositoryWhereInput {
   ownerLoginHasSuffix: String
   ownerLoginEqualFold: String
   ownerLoginContainsFold: String
-  """public field predicates"""
+  """
+  public field predicates
+  """
   public: Boolean
   publicNEQ: Boolean
-  """html_url field predicates"""
+  """
+  html_url field predicates
+  """
   htmlURL: String
   htmlURLNEQ: String
   htmlURLIn: [String!]
@@ -904,7 +1152,9 @@ input GithubRepositoryWhereInput {
   htmlURLHasSuffix: String
   htmlURLEqualFold: String
   htmlURLContainsFold: String
-  """description field predicates"""
+  """
+  description field predicates
+  """
   description: String
   descriptionNEQ: String
   descriptionIn: [String!]
@@ -920,10 +1170,14 @@ input GithubRepositoryWhereInput {
   descriptionNotNil: Boolean
   descriptionEqualFold: String
   descriptionContainsFold: String
-  """fork field predicates"""
+  """
+  fork field predicates
+  """
   fork: Boolean
   forkNEQ: Boolean
-  """homepage field predicates"""
+  """
+  homepage field predicates
+  """
   homepage: String
   homepageNEQ: String
   homepageIn: [String!]
@@ -939,7 +1193,9 @@ input GithubRepositoryWhereInput {
   homepageNotNil: Boolean
   homepageEqualFold: String
   homepageContainsFold: String
-  """star_count field predicates"""
+  """
+  star_count field predicates
+  """
   starCount: Int
   starCountNEQ: Int
   starCountIn: [Int!]
@@ -948,7 +1204,9 @@ input GithubRepositoryWhereInput {
   starCountGTE: Int
   starCountLT: Int
   starCountLTE: Int
-  """default_branch field predicates"""
+  """
+  default_branch field predicates
+  """
   defaultBranch: String
   defaultBranchNEQ: String
   defaultBranchIn: [String!]
@@ -962,16 +1220,24 @@ input GithubRepositoryWhereInput {
   defaultBranchHasSuffix: String
   defaultBranchEqualFold: String
   defaultBranchContainsFold: String
-  """is_template field predicates"""
+  """
+  is_template field predicates
+  """
   isTemplate: Boolean
   isTemplateNEQ: Boolean
-  """has_issues field predicates"""
+  """
+  has_issues field predicates
+  """
   hasIssues: Boolean
   hasIssuesNEQ: Boolean
-  """archived field predicates"""
+  """
+  archived field predicates
+  """
   archived: Boolean
   archivedNEQ: Boolean
-  """pushed_at field predicates"""
+  """
+  pushed_at field predicates
+  """
   pushedAt: Time
   pushedAtNEQ: Time
   pushedAtIn: [Time!]
@@ -982,7 +1248,9 @@ input GithubRepositoryWhereInput {
   pushedAtLTE: Time
   pushedAtIsNil: Boolean
   pushedAtNotNil: Boolean
-  """created_at field predicates"""
+  """
+  created_at field predicates
+  """
   createdAt: Time
   createdAtNEQ: Time
   createdAtIn: [Time!]
@@ -991,7 +1259,9 @@ input GithubRepositoryWhereInput {
   createdAtGTE: Time
   createdAtLT: Time
   createdAtLTE: Time
-  """updated_at field predicates"""
+  """
+  updated_at field predicates
+  """
   updatedAt: Time
   updatedAtNEQ: Time
   updatedAtIn: [Time!]
@@ -1002,10 +1272,14 @@ input GithubRepositoryWhereInput {
   updatedAtLTE: Time
   updatedAtIsNil: Boolean
   updatedAtNotNil: Boolean
-  """labels edge predicates"""
+  """
+  labels edge predicates
+  """
   hasLabels: Boolean
   hasLabelsWith: [LabelWhereInput!]
-  """releases edge predicates"""
+  """
+  releases edge predicates
+  """
   hasReleases: Boolean
   hasReleasesWith: [GithubReleaseWhereInput!]
 }
@@ -1015,68 +1289,114 @@ type Label implements Node {
   updateTime: Time!
   name: String!
   posts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Posts returned from the connection."""
+    """
+    Ordering options for Posts returned from the connection.
+    """
     orderBy: PostOrder
 
-    """Filtering options for Posts returned from the connection."""
+    """
+    Filtering options for Posts returned from the connection.
+    """
     where: PostWhereInput
   ): PostConnection!
   githubRepositories(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubRepositories returned from the connection."""
+    """
+    Ordering options for GithubRepositories returned from the connection.
+    """
     orderBy: GithubRepositoryOrder
 
-    """Filtering options for GithubRepositories returned from the connection."""
+    """
+    Filtering options for GithubRepositories returned from the connection.
+    """
     where: GithubRepositoryWhereInput
   ): GithubRepositoryConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type LabelConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [LabelEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type LabelEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Label
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for Label connections"""
+"""
+Ordering options for Label connections
+"""
 input LabelOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Labels."""
+  """
+  The field by which to order Labels.
+  """
   field: LabelOrderField!
 }
-"""Properties by which Label connections can be ordered."""
+"""
+Properties by which Label connections can be ordered.
+"""
 enum LabelOrderField {
   NAME
 }
@@ -1088,7 +1408,9 @@ input LabelWhereInput {
   not: LabelWhereInput
   and: [LabelWhereInput!]
   or: [LabelWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1097,7 +1419,9 @@ input LabelWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """create_time field predicates"""
+  """
+  create_time field predicates
+  """
   createTime: Time
   createTimeNEQ: Time
   createTimeIn: [Time!]
@@ -1106,7 +1430,9 @@ input LabelWhereInput {
   createTimeGTE: Time
   createTimeLT: Time
   createTimeLTE: Time
-  """update_time field predicates"""
+  """
+  update_time field predicates
+  """
   updateTime: Time
   updateTimeNEQ: Time
   updateTimeIn: [Time!]
@@ -1115,7 +1441,9 @@ input LabelWhereInput {
   updateTimeGTE: Time
   updateTimeLT: Time
   updateTimeLTE: Time
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -1129,28 +1457,42 @@ input LabelWhereInput {
   nameHasSuffix: String
   nameEqualFold: String
   nameContainsFold: String
-  """posts edge predicates"""
+  """
+  posts edge predicates
+  """
   hasPosts: Boolean
   hasPostsWith: [PostWhereInput!]
-  """github_repositories edge predicates"""
+  """
+  github_repositories edge predicates
+  """
   hasGithubRepositories: Boolean
   hasGithubRepositoriesWith: [GithubRepositoryWhereInput!]
 }
-"""The builtin Map type"""
+"""
+The builtin Map type
+"""
 scalar Map
 """
 An object with an ID.
 Follows the [Relay Global Object Identification Specification](https://relay.dev/graphql/objectidentification.htm)
 """
 interface Node @goModel(model: "github.com/lrstanley/liam.sh/internal/database/ent.Noder") {
-  """The id of the object."""
+  """
+  The id of the object.
+  """
   id: ID!
 }
-"""Possible directions in which to order a list of items when provided an `orderBy` argument."""
+"""
+Possible directions in which to order a list of items when provided an `orderBy` argument.
+"""
 enum OrderDirection {
-  """Specifies an ascending order for a given `orderBy` argument."""
+  """
+  Specifies an ascending order for a given `orderBy` argument.
+  """
   ASC
-  """Specifies a descending order for a given `orderBy` argument."""
+  """
+  Specifies a descending order for a given `orderBy` argument.
+  """
   DESC
 }
 """
@@ -1158,13 +1500,21 @@ Information about pagination in a connection.
 https://relay.dev/graphql/connections.htm#sec-undefined.PageInfo
 """
 type PageInfo {
-  """When paginating forwards, are there more items?"""
+  """
+  When paginating forwards, are there more items?
+  """
   hasNextPage: Boolean!
-  """When paginating backwards, are there more items?"""
+  """
+  When paginating backwards, are there more items?
+  """
   hasPreviousPage: Boolean!
-  """When paginating backwards, the cursor to continue."""
+  """
+  When paginating backwards, the cursor to continue.
+  """
   startCursor: Cursor
-  """When paginating forwards, the cursor to continue."""
+  """
+  When paginating forwards, the cursor to continue.
+  """
   endCursor: Cursor
 }
 type Post implements Node {
@@ -1181,49 +1531,83 @@ type Post implements Node {
   public: Boolean!
   author: User!
   labels(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Labels returned from the connection."""
+    """
+    Ordering options for Labels returned from the connection.
+    """
     orderBy: LabelOrder
 
-    """Filtering options for Labels returned from the connection."""
+    """
+    Filtering options for Labels returned from the connection.
+    """
     where: LabelWhereInput
   ): LabelConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type PostConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [PostEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type PostEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: Post
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for Post connections"""
+"""
+Ordering options for Post connections
+"""
 input PostOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Posts."""
+  """
+  The field by which to order Posts.
+  """
   field: PostOrderField!
 }
-"""Properties by which Post connections can be ordered."""
+"""
+Properties by which Post connections can be ordered.
+"""
 enum PostOrderField {
   SLUG
   TITLE
@@ -1238,7 +1622,9 @@ input PostWhereInput {
   not: PostWhereInput
   and: [PostWhereInput!]
   or: [PostWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1247,7 +1633,9 @@ input PostWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """create_time field predicates"""
+  """
+  create_time field predicates
+  """
   createTime: Time
   createTimeNEQ: Time
   createTimeIn: [Time!]
@@ -1256,7 +1644,9 @@ input PostWhereInput {
   createTimeGTE: Time
   createTimeLT: Time
   createTimeLTE: Time
-  """update_time field predicates"""
+  """
+  update_time field predicates
+  """
   updateTime: Time
   updateTimeNEQ: Time
   updateTimeIn: [Time!]
@@ -1265,7 +1655,9 @@ input PostWhereInput {
   updateTimeGTE: Time
   updateTimeLT: Time
   updateTimeLTE: Time
-  """slug field predicates"""
+  """
+  slug field predicates
+  """
   slug: String
   slugNEQ: String
   slugIn: [String!]
@@ -1279,7 +1671,9 @@ input PostWhereInput {
   slugHasSuffix: String
   slugEqualFold: String
   slugContainsFold: String
-  """title field predicates"""
+  """
+  title field predicates
+  """
   title: String
   titleNEQ: String
   titleIn: [String!]
@@ -1293,7 +1687,9 @@ input PostWhereInput {
   titleHasSuffix: String
   titleEqualFold: String
   titleContainsFold: String
-  """content field predicates"""
+  """
+  content field predicates
+  """
   content: String
   contentNEQ: String
   contentIn: [String!]
@@ -1307,7 +1703,9 @@ input PostWhereInput {
   contentHasSuffix: String
   contentEqualFold: String
   contentContainsFold: String
-  """content_html field predicates"""
+  """
+  content_html field predicates
+  """
   contentHTML: String
   contentHTMLNEQ: String
   contentHTMLIn: [String!]
@@ -1321,7 +1719,9 @@ input PostWhereInput {
   contentHTMLHasSuffix: String
   contentHTMLEqualFold: String
   contentHTMLContainsFold: String
-  """summary field predicates"""
+  """
+  summary field predicates
+  """
   summary: String
   summaryNEQ: String
   summaryIn: [String!]
@@ -1335,7 +1735,9 @@ input PostWhereInput {
   summaryHasSuffix: String
   summaryEqualFold: String
   summaryContainsFold: String
-  """published_at field predicates"""
+  """
+  published_at field predicates
+  """
   publishedAt: Time
   publishedAtNEQ: Time
   publishedAtIn: [Time!]
@@ -1344,7 +1746,9 @@ input PostWhereInput {
   publishedAtGTE: Time
   publishedAtLT: Time
   publishedAtLTE: Time
-  """view_count field predicates"""
+  """
+  view_count field predicates
+  """
   viewCount: Int
   viewCountNEQ: Int
   viewCountIn: [Int!]
@@ -1353,181 +1757,293 @@ input PostWhereInput {
   viewCountGTE: Int
   viewCountLT: Int
   viewCountLTE: Int
-  """public field predicates"""
+  """
+  public field predicates
+  """
   public: Boolean
   publicNEQ: Boolean
-  """author edge predicates"""
+  """
+  author edge predicates
+  """
   hasAuthor: Boolean
   hasAuthorWith: [UserWhereInput!]
-  """labels edge predicates"""
+  """
+  labels edge predicates
+  """
   hasLabels: Boolean
   hasLabelsWith: [LabelWhereInput!]
 }
 type Query {
-  """Fetches an object given its ID."""
+  """
+  Fetches an object given its ID.
+  """
   node(
-    """ID of the object."""
+    """
+    ID of the object.
+    """
     id: ID!
   ): Node
-  """Lookup nodes by a list of IDs."""
+  """
+  Lookup nodes by a list of IDs.
+  """
   nodes(
-    """The list of node IDs."""
+    """
+    The list of node IDs.
+    """
     ids: [ID!]!
   ): [Node]!
   githubAssets(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubAssets returned from the connection."""
+    """
+    Ordering options for GithubAssets returned from the connection.
+    """
     orderBy: GithubAssetOrder
 
-    """Filtering options for GithubAssets returned from the connection."""
+    """
+    Filtering options for GithubAssets returned from the connection.
+    """
     where: GithubAssetWhereInput
   ): GithubAssetConnection!
   githubEvents(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubEvents returned from the connection."""
+    """
+    Ordering options for GithubEvents returned from the connection.
+    """
     orderBy: GithubEventOrder
 
-    """Filtering options for GithubEvents returned from the connection."""
+    """
+    Filtering options for GithubEvents returned from the connection.
+    """
     where: GithubEventWhereInput
   ): GithubEventConnection!
   githubGists(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubGists returned from the connection."""
+    """
+    Ordering options for GithubGists returned from the connection.
+    """
     orderBy: GithubGistOrder
 
-    """Filtering options for GithubGists returned from the connection."""
+    """
+    Filtering options for GithubGists returned from the connection.
+    """
     where: GithubGistWhereInput
   ): GithubGistConnection!
   githubReleases(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubReleases returned from the connection."""
+    """
+    Ordering options for GithubReleases returned from the connection.
+    """
     orderBy: GithubReleaseOrder
 
-    """Filtering options for GithubReleases returned from the connection."""
+    """
+    Filtering options for GithubReleases returned from the connection.
+    """
     where: GithubReleaseWhereInput
   ): GithubReleaseConnection!
   githubRepositories(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for GithubRepositories returned from the connection."""
+    """
+    Ordering options for GithubRepositories returned from the connection.
+    """
     orderBy: GithubRepositoryOrder
 
-    """Filtering options for GithubRepositories returned from the connection."""
+    """
+    Filtering options for GithubRepositories returned from the connection.
+    """
     where: GithubRepositoryWhereInput
   ): GithubRepositoryConnection!
   labels(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Labels returned from the connection."""
+    """
+    Ordering options for Labels returned from the connection.
+    """
     orderBy: LabelOrder
 
-    """Filtering options for Labels returned from the connection."""
+    """
+    Filtering options for Labels returned from the connection.
+    """
     where: LabelWhereInput
   ): LabelConnection!
   posts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Posts returned from the connection."""
+    """
+    Ordering options for Posts returned from the connection.
+    """
     orderBy: PostOrder
 
-    """Filtering options for Posts returned from the connection."""
+    """
+    Filtering options for Posts returned from the connection.
+    """
     where: PostWhereInput
   ): PostConnection!
   users(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Users returned from the connection."""
+    """
+    Ordering options for Users returned from the connection.
+    """
     orderBy: UserOrder
 
-    """Filtering options for Users returned from the connection."""
+    """
+    Filtering options for Users returned from the connection.
+    """
     where: UserWhereInput
   ): UserConnection!
 }
-"""The builtin Time type"""
+"""
+The builtin Time type
+"""
 scalar Time
 """
 UpdateLabelInput is used for update Label object.
@@ -1571,49 +2087,83 @@ type User implements Node {
   location: String
   bio: String
   posts(
-    """Returns the elements in the list that come after the specified cursor."""
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
     after: Cursor
 
-    """Returns the first _n_ elements from the list."""
+    """
+    Returns the first _n_ elements from the list.
+    """
     first: Int
 
-    """Returns the elements in the list that come before the specified cursor."""
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
     before: Cursor
 
-    """Returns the last _n_ elements from the list."""
+    """
+    Returns the last _n_ elements from the list.
+    """
     last: Int
 
-    """Ordering options for Posts returned from the connection."""
+    """
+    Ordering options for Posts returned from the connection.
+    """
     orderBy: PostOrder
 
-    """Filtering options for Posts returned from the connection."""
+    """
+    Filtering options for Posts returned from the connection.
+    """
     where: PostWhereInput
   ): PostConnection!
 }
-"""A connection to a list of items."""
+"""
+A connection to a list of items.
+"""
 type UserConnection {
-  """A list of edges."""
+  """
+  A list of edges.
+  """
   edges: [UserEdge]
-  """Information to aid in pagination."""
+  """
+  Information to aid in pagination.
+  """
   pageInfo: PageInfo!
-  """Identifies the total count of items in the connection."""
+  """
+  Identifies the total count of items in the connection.
+  """
   totalCount: Int!
 }
-"""An edge in a connection."""
+"""
+An edge in a connection.
+"""
 type UserEdge {
-  """The item at the end of the edge."""
+  """
+  The item at the end of the edge.
+  """
   node: User
-  """A cursor for use in pagination."""
+  """
+  A cursor for use in pagination.
+  """
   cursor: Cursor!
 }
-"""Ordering options for User connections"""
+"""
+Ordering options for User connections
+"""
 input UserOrder {
-  """The ordering direction."""
+  """
+  The ordering direction.
+  """
   direction: OrderDirection! = ASC
-  """The field by which to order Users."""
+  """
+  The field by which to order Users.
+  """
   field: UserOrderField!
 }
-"""Properties by which User connections can be ordered."""
+"""
+Properties by which User connections can be ordered.
+"""
 enum UserOrderField {
   LOGIN
   NAME
@@ -1627,7 +2177,9 @@ input UserWhereInput {
   not: UserWhereInput
   and: [UserWhereInput!]
   or: [UserWhereInput!]
-  """id field predicates"""
+  """
+  id field predicates
+  """
   id: ID
   idNEQ: ID
   idIn: [ID!]
@@ -1636,7 +2188,9 @@ input UserWhereInput {
   idGTE: ID
   idLT: ID
   idLTE: ID
-  """create_time field predicates"""
+  """
+  create_time field predicates
+  """
   createTime: Time
   createTimeNEQ: Time
   createTimeIn: [Time!]
@@ -1645,7 +2199,9 @@ input UserWhereInput {
   createTimeGTE: Time
   createTimeLT: Time
   createTimeLTE: Time
-  """update_time field predicates"""
+  """
+  update_time field predicates
+  """
   updateTime: Time
   updateTimeNEQ: Time
   updateTimeIn: [Time!]
@@ -1654,7 +2210,9 @@ input UserWhereInput {
   updateTimeGTE: Time
   updateTimeLT: Time
   updateTimeLTE: Time
-  """user_id field predicates"""
+  """
+  user_id field predicates
+  """
   userID: Int
   userIDNEQ: Int
   userIDIn: [Int!]
@@ -1663,7 +2221,9 @@ input UserWhereInput {
   userIDGTE: Int
   userIDLT: Int
   userIDLTE: Int
-  """login field predicates"""
+  """
+  login field predicates
+  """
   login: String
   loginNEQ: String
   loginIn: [String!]
@@ -1677,7 +2237,9 @@ input UserWhereInput {
   loginHasSuffix: String
   loginEqualFold: String
   loginContainsFold: String
-  """name field predicates"""
+  """
+  name field predicates
+  """
   name: String
   nameNEQ: String
   nameIn: [String!]
@@ -1693,7 +2255,9 @@ input UserWhereInput {
   nameNotNil: Boolean
   nameEqualFold: String
   nameContainsFold: String
-  """avatar_url field predicates"""
+  """
+  avatar_url field predicates
+  """
   avatarURL: String
   avatarURLNEQ: String
   avatarURLIn: [String!]
@@ -1709,7 +2273,9 @@ input UserWhereInput {
   avatarURLNotNil: Boolean
   avatarURLEqualFold: String
   avatarURLContainsFold: String
-  """html_url field predicates"""
+  """
+  html_url field predicates
+  """
   htmlURL: String
   htmlURLNEQ: String
   htmlURLIn: [String!]
@@ -1725,7 +2291,9 @@ input UserWhereInput {
   htmlURLNotNil: Boolean
   htmlURLEqualFold: String
   htmlURLContainsFold: String
-  """email field predicates"""
+  """
+  email field predicates
+  """
   email: String
   emailNEQ: String
   emailIn: [String!]
@@ -1741,7 +2309,9 @@ input UserWhereInput {
   emailNotNil: Boolean
   emailEqualFold: String
   emailContainsFold: String
-  """location field predicates"""
+  """
+  location field predicates
+  """
   location: String
   locationNEQ: String
   locationIn: [String!]
@@ -1757,7 +2327,9 @@ input UserWhereInput {
   locationNotNil: Boolean
   locationEqualFold: String
   locationContainsFold: String
-  """bio field predicates"""
+  """
+  bio field predicates
+  """
   bio: String
   bioNEQ: String
   bioIn: [String!]
@@ -1773,7 +2345,9 @@ input UserWhereInput {
   bioNotNil: Boolean
   bioEqualFold: String
   bioContainsFold: String
-  """posts edge predicates"""
+  """
+  posts edge predicates
+  """
   hasPosts: Boolean
   hasPostsWith: [PostWhereInput!]
 }

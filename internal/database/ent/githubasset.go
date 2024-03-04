@@ -67,12 +67,10 @@ type GithubAssetEdges struct {
 // ReleaseOrErr returns the Release value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
 func (e GithubAssetEdges) ReleaseOrErr() (*GithubRelease, error) {
-	if e.loadedTypes[0] {
-		if e.Release == nil {
-			// Edge was loaded but was not found.
-			return nil, &NotFoundError{label: githubrelease.Label}
-		}
+	if e.Release != nil {
 		return e.Release, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: githubrelease.Label}
 	}
 	return nil, &NotLoadedError{edge: "release"}
 }
