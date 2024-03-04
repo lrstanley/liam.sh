@@ -1,5 +1,5 @@
-// Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
-// of this source code is governed by the MIT license that can be found in
+// Copyright (c) Liam Stanley <liam@liam.sh>. All rights reserved. Use of
+// this source code is governed by the MIT license that can be found in
 // the LICENSE file.
 
 package gh
@@ -154,7 +154,6 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 			SetRepo(event.GetRepo()).
 			SetPayload(payload).
 			Exec(ctx)
-
 		if err != nil {
 			return err
 		}

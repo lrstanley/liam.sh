@@ -1,6 +1,6 @@
 /**
- * Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
- * of this source code is governed by the MIT license that can be found in
+ * Copyright (c) Liam Stanley <liam@liam.sh>. All rights reserved. Use of
+ * this source code is governed by the MIT license that can be found in
  * the LICENSE file.
  */
 
@@ -18,9 +18,21 @@ html {
   -webkit-text-size-adjust: 100%;
   -moz-tab-size: 4;
   tab-size: 4;
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
 }
 
 body {

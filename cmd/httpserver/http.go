@@ -1,5 +1,5 @@
-// Copyright (c) Liam Stanley <me@liamstanley.io>. All rights reserved. Use
-// of this source code is governed by the MIT license that can be found in
+// Copyright (c) Liam Stanley <liam@liam.sh>. All rights reserved. Use of
+// this source code is governed by the MIT license that can be found in
 // the LICENSE file.
 
 package main
@@ -102,7 +102,7 @@ func httpServer(ctx context.Context) *http.Server {
 		chix.UseSecurityTxt(&chix.SecurityConfig{
 			ExpiresIn: 182 * 24 * time.Hour,
 			Contacts: []string{
-				"mailto:me@liamstanley.io",
+				"mailto:liam@liam.sh",
 				"https://liam.sh/chat",
 				"https://github.com/lrstanley",
 			},
