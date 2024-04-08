@@ -26,7 +26,7 @@ require (
 	github.com/prometheus/client_golang v1.19.0
 	github.com/shurcooL/githubv4 v0.0.0-20240120211514-18a1ae0e79dc
 	github.com/vektah/gqlparser/v2 v2.5.11
-	github.com/yuin/goldmark v1.7.0
+	github.com/yuin/goldmark v1.7.1
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.18.0
 	golang.org/x/sync v0.6.0
