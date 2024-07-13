@@ -50,7 +50,7 @@ func (lc *LabelCreator) Get(input []string) (output []*ent.Label) {
 }
 
 // Populate queries or creates labels based off the provided input.
-func (lc *LabelCreator) Populate(ctx context.Context, db *ent.Tx, input []string) (err error) {
+func (lc *LabelCreator) Populate(ctx context.Context, db *ent.Client, input []string) (err error) {
 	var item *ent.Label
 	var ok bool
 

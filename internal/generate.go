@@ -4,5 +4,10 @@
 
 package internal
 
-//go:generate go run -mod=mod database/generate.go
+//go:generate go run -mod=readonly database/entc.go
 //go:generate go run -mod=mod github.com/99designs/gqlgen generate --config graphql/gqlgen.yml
+
+import (
+	_ "entgo.io/contrib/entgql" // tools.
+	_ "entgo.io/ent/entc/gen"   // tools.
+)

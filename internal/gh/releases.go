@@ -19,7 +19,7 @@ import (
 // Github. It will also iterate through all pages, returning all repository releases
 // in their entirety.
 func fetchReleases(
-	ctx context.Context, logger log.Interface, db *ent.Tx, repo *github.Repository,
+	ctx context.Context, logger log.Interface, db *ent.Client, repo *github.Repository,
 ) (allReleases []*github.RepositoryRelease, err error) {
 	var resp *github.Response
 
@@ -62,7 +62,7 @@ func fetchReleases(
 }
 
 // storeRelease stores a repository release in the database.
-func storeRelease(ctx context.Context, db *ent.Tx, repoId int, release *github.RepositoryRelease) (id int, err error) {
+func storeRelease(ctx context.Context, db *ent.Client, repoId int, release *github.RepositoryRelease) (id int, err error) {
 	// Upsert release.
 	return db.GithubRelease.Create().
 		SetRepositoryID(repoId).
@@ -80,7 +80,7 @@ func storeRelease(ctx context.Context, db *ent.Tx, repoId int, release *github.R
 		UpdateNewValues().ID(ctx)
 }
 
-func storeAsset(ctx context.Context, db *ent.Tx, releaseId int, asset *github.ReleaseAsset) (id int, err error) {
+func storeAsset(ctx context.Context, db *ent.Client, releaseId int, asset *github.ReleaseAsset) (id int, err error) {
 	// Upsert asset.
 	return db.GithubAsset.Create().
 		SetReleaseID(releaseId).

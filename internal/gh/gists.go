@@ -14,7 +14,6 @@ import (
 
 	"github.com/apex/log"
 	"github.com/google/go-github/v52/github"
-	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
@@ -33,7 +32,7 @@ func GistRunner(ctx context.Context) error {
 
 	var err error
 	if SyncOnStart {
-		err = database.RunWithTx(ctx, logger, db, getGists)
+		err = getGists(ctx, logger, db)
 		if err != nil {
 			logger.WithError(err).Error("failed to get gists")
 		}
@@ -44,7 +43,7 @@ func GistRunner(ctx context.Context) error {
 		case <-ctx.Done():
 			return nil
 		case <-time.After(gistInterval):
-			err = database.RunWithTx(ctx, logger, db, getGists)
+			err = getGists(ctx, logger, db)
 			if err != nil {
 				logger.WithError(err).Error("failed to get gists")
 			}
@@ -52,7 +51,7 @@ func GistRunner(ctx context.Context) error {
 	}
 }
 
-func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
+func getGists(ctx context.Context, logger log.Interface, db *ent.Client) error {
 	gists, err := fetchGists(ctx, logger, db)
 	if err != nil {
 		return fmt.Errorf("failed to fetch gists: %w", err)
@@ -104,7 +103,7 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Tx) error {
 
 // fetchGists fetches all gists for the authenticated user from Github. It
 // will also iterate through all pages, returning all gists in their entirety.
-func fetchGists(ctx context.Context, logger log.Interface, db *ent.Tx) (allGists []*github.Gist, err error) {
+func fetchGists(ctx context.Context, logger log.Interface, db *ent.Client) (allGists []*github.Gist, err error) {
 	opts := &github.GistListOptions{
 		ListOptions: github.ListOptions{PerPage: 100, Page: 1},
 	}
@@ -144,7 +143,7 @@ func fetchGists(ctx context.Context, logger log.Interface, db *ent.Tx) (allGists
 var reLatestRawURL = regexp.MustCompile(`/raw/[^/]+/`)
 
 // storeGist fetches the gist from github and stores it in the database.
-func storeGist(ctx context.Context, db *ent.Tx, gist *github.Gist, file github.GistFile) (id int, err error) {
+func storeGist(ctx context.Context, db *ent.Client, gist *github.Gist, file github.GistFile) (id int, err error) {
 	q := db.GithubGist.Create().
 		SetGistID(gist.GetID()).
 		SetHTMLURL(gist.GetHTMLURL()).
@@ -168,7 +167,7 @@ func storeGist(ctx context.Context, db *ent.Tx, gist *github.Gist, file github.G
 
 // removeGists removes all gists that are in the database, but not
 // on github.
-func removeGists(ctx context.Context, db *ent.Tx, gists []*github.Gist) (err error) {
+func removeGists(ctx context.Context, db *ent.Client, gists []*github.Gist) (err error) {
 	var storedGists []string
 	err = db.GithubGist.Query().Select(githubgist.FieldGistID).Scan(ctx, &storedGists)
 	if err != nil {

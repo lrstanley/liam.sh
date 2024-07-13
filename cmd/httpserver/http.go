@@ -127,12 +127,6 @@ func httpServer(ctx context.Context) *http.Server {
 	}
 
 	r.With(middleware.ThrottleBacklog(1, 5, 5*time.Second)).Get("/-/healthy", func(w http.ResponseWriter, r *http.Request) {
-		err := database.Ping(ctx)
-		if err != nil {
-			chix.Error(w, r, err)
-			return
-		}
-
 		chix.JSON(w, r, 200, chix.M{
 			"status": "ok",
 		})

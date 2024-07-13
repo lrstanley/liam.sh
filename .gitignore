@@ -1,6 +1,9 @@
 liam.sh
 *.test
 *.prof
+*.db
+*.db-shm
+*.db-wal
 bin/*
 *.lock
 *.txt

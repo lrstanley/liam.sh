@@ -15,10 +15,7 @@ type Flags struct {
 
 // ConfigDatabase holds the database configuration.
 type ConfigDatabase struct {
-	URL      string `env:"URL"      long:"url" required:"true" description:"database connection url"`
-	Username string `env:"USERNAME" long:"username" description:"database username if not specified via the URL"`
-	Password string `env:"PASSWORD" long:"password" description:"database password if not specified via the URL"`
-	Database string `env:"DATABASE" long:"database" description:"database name if not specified via the URL"`
+	URL string `env:"URL" long:"url" default:"file:local.db?cache=shared&_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=temp_store(2)&_pragma=synchronous(1)&_pragma=mmap_size(30000000000)&_busy_timeout=15" description:"database connection url"`
 }
 
 // ConfigHTTP are configurations specifically utilized by the HTTP service.

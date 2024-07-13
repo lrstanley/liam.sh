@@ -11,7 +11,6 @@ import (
 
 	"github.com/apex/log"
 	"github.com/google/go-github/v52/github"
-	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
@@ -30,7 +29,7 @@ func EventsRunner(ctx context.Context) error {
 
 	var err error
 	if SyncOnStart {
-		err = database.RunWithTx(ctx, logger, db, getEvents)
+		err = getEvents(ctx, logger, db)
 		if err != nil {
 			logger.WithError(err).Error("failed to get events")
 		}
@@ -41,7 +40,7 @@ func EventsRunner(ctx context.Context) error {
 		case <-ctx.Done():
 			return nil
 		case <-time.After(eventsInterval):
-			err = database.RunWithTx(ctx, logger, db, getEvents)
+			err = getEvents(ctx, logger, db)
 			if err != nil {
 				logger.WithError(err).Error("failed to get events")
 			}
@@ -66,7 +65,7 @@ var allowedEvents = []string{
 	"WatchEvent",
 }
 
-func getEvents(ctx context.Context, logger log.Interface, db *ent.Tx) error {
+func getEvents(ctx context.Context, logger log.Interface, db *ent.Client) error {
 	opts := &github.ListOptions{
 		PerPage: 100,
 		Page:    1,

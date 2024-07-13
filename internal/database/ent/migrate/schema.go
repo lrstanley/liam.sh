@@ -64,7 +64,7 @@ var (
 	// GithubGistsColumns holds the columns for the "github_gists" table.
 	GithubGistsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "gist_id", Type: field.TypeString, Unique: true},
+		{Name: "gist_id", Type: field.TypeString},
 		{Name: "html_url", Type: field.TypeString},
 		{Name: "public", Type: field.TypeBool},
 		{Name: "created_at", Type: field.TypeTime},

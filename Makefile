@@ -11,7 +11,9 @@ export GROUP := $(shell id -g)
 export LICENSE_IGNORE := "graphql-tag"
 
 license:
-	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
+	@echo
+	# disable temporarily
+	# curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
 prepare: clean node-prepare node-build go-prepare
 	@echo
@@ -33,24 +35,6 @@ generate-language-colors:
 			--template="internal/wakapi/colorconst.go.j2" \
 			--output="internal/wakapi/colorconst.go"
 	gofmt -l -w internal/wakapi/colorconst.go
-
-docker:
-	docker compose \
-		--project-name ${COMPOSE_PROJECT} \
-		--file docker-compose.yaml \
-		up \
-		--remove-orphans \
-		--build \
-		--timeout 0 ${COMPOSE_ARGS}
-
-docker-clean:
-	docker compose \
-		--project-name ${COMPOSE_PROJECT} \
-		--file docker-compose.yaml \
-		down \
-		--volumes \
-		--remove-orphans \
-		--rmi local --timeout 1
 
 docker-build:
 	docker build \
@@ -107,10 +91,6 @@ go-prepare: license
 
 go-upgrade-deps:
 	go get -u ./...
-	go mod tidy
-
-go-upgrade-deps-patch:
-	go get -u=patch ./...
 	go mod tidy
 
 go-dlv: go-prepare

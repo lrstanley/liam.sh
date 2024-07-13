@@ -31,18 +31,19 @@ func main() {
 	cli.Parse()
 	logger = cli.Logger
 
-	db = database.Open(context.Background(), logger, cli.Flags.Database)
-	defer db.Close()
+	ctx := log.NewContext(context.Background(), logger)
 
-	ctx := ent.NewContext(log.NewContext(context.Background(), logger), db)
+	db = database.Open(ctx, cli.Flags.Database)
+	defer db.Close()
+	ctx = ent.NewContext(ctx, db)
 
 	database.RegisterHooks(ctx)
-	database.Migrate(ctx, logger)
+	database.Migrate(ctx, db)
 
 	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
 	gh.NewClient(ctx, cli.Flags.Github.Token)
 
-	if err := chix.RunCtx(
+	if err := chix.RunContext(
 		ctx, httpServer(ctx),
 		gh.UserRunner,
 		gh.StatsRunner,

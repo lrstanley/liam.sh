@@ -34,7 +34,7 @@ func RepositoryRunner(ctx context.Context) error {
 
 	var err error
 	if SyncOnStart {
-		err = database.RunWithTx(ctx, logger, db, getRepositories)
+		err = getRepositories(ctx, logger, db)
 		if err != nil {
 			logger.WithError(err).Error("failed to get repositories")
 		}
@@ -45,7 +45,7 @@ func RepositoryRunner(ctx context.Context) error {
 		case <-ctx.Done():
 			return nil
 		case <-time.After(repositoryInterval):
-			err = database.RunWithTx(ctx, logger, db, getRepositories)
+			err = getRepositories(ctx, logger, db)
 			if err != nil {
 				logger.WithError(err).Error("failed to get repositories")
 			}
@@ -55,7 +55,7 @@ func RepositoryRunner(ctx context.Context) error {
 
 var ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
 
-func getRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) error {
+func getRepositories(ctx context.Context, logger log.Interface, db *ent.Client) error {
 	repos, err := fetchRepositories(ctx, logger, db)
 	if err != nil {
 		return fmt.Errorf("failed to fetch repositories: %w", err)
@@ -133,7 +133,7 @@ func getRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) erro
 
 // fetchRepositories fetches all repositories for the authenticated user from Github. It
 // will also iterate through all pages, returning all repositories in their entirety.
-func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) (allRepos []*github.Repository, err error) {
+func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Client) (allRepos []*github.Repository, err error) {
 	opts := &github.RepositoryListOptions{
 		Visibility:  "all",
 		Affiliation: "owner,collaborator",
@@ -173,7 +173,7 @@ func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Tx) (a
 }
 
 // storeRepository fetches the repository from github and stores it in the database.
-func storeRepository(ctx context.Context, db *ent.Tx, lc *database.LabelCreator, repo *github.Repository) (id int, err error) {
+func storeRepository(ctx context.Context, db *ent.Client, lc *database.LabelCreator, repo *github.Repository) (id int, err error) {
 	// Languages aren't embedded into the repository struct, so we have to
 	// make a separate request for each repo to get the list of languages.
 	languages, _, err := RestClient.Repositories.ListLanguages(ctx, repo.GetOwner().GetLogin(), repo.GetName())
@@ -240,7 +240,7 @@ func storeRepository(ctx context.Context, db *ent.Tx, lc *database.LabelCreator,
 
 // removeRepositories removes all repositories that are in the database, but not
 // on github.
-func removeRepositories(ctx context.Context, db *ent.Tx, repos []*github.Repository) (err error) {
+func removeRepositories(ctx context.Context, db *ent.Client, repos []*github.Repository) (err error) {
 	var storedRepos []int64
 	err = db.GithubRepository.Query().
 		Select(githubrepository.FieldRepoID).

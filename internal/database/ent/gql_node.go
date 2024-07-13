@@ -34,29 +34,45 @@ type Noder interface {
 	IsNode()
 }
 
-// IsNode implements the Node interface check for GQLGen.
-func (n *GithubAsset) IsNode() {}
+var githubassetImplementors = []string{"GithubAsset", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *GithubEvent) IsNode() {}
+func (*GithubAsset) IsNode() {}
+
+var githubeventImplementors = []string{"GithubEvent", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *GithubGist) IsNode() {}
+func (*GithubEvent) IsNode() {}
+
+var githubgistImplementors = []string{"GithubGist", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *GithubRelease) IsNode() {}
+func (*GithubGist) IsNode() {}
+
+var githubreleaseImplementors = []string{"GithubRelease", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *GithubRepository) IsNode() {}
+func (*GithubRelease) IsNode() {}
+
+var githubrepositoryImplementors = []string{"GithubRepository", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *Label) IsNode() {}
+func (*GithubRepository) IsNode() {}
+
+var labelImplementors = []string{"Label", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *Post) IsNode() {}
+func (*Label) IsNode() {}
+
+var postImplementors = []string{"Post", "Node"}
 
 // IsNode implements the Node interface check for GQLGen.
-func (n *User) IsNode() {}
+func (*Post) IsNode() {}
+
+var userImplementors = []string{"User", "Node"}
+
+// IsNode implements the Node interface check for GQLGen.
+func (*User) IsNode() {}
 
 var errNodeInvalidID = &NotFoundError{"node"}
 
@@ -119,99 +135,75 @@ func (c *Client) noder(ctx context.Context, table string, id int) (Noder, error)
 	case githubasset.Table:
 		query := c.GithubAsset.Query().
 			Where(githubasset.ID(id))
-		query, err := query.CollectFields(ctx, "GithubAsset")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, githubassetImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case githubevent.Table:
 		query := c.GithubEvent.Query().
 			Where(githubevent.ID(id))
-		query, err := query.CollectFields(ctx, "GithubEvent")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, githubeventImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case githubgist.Table:
 		query := c.GithubGist.Query().
 			Where(githubgist.ID(id))
-		query, err := query.CollectFields(ctx, "GithubGist")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, githubgistImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case githubrelease.Table:
 		query := c.GithubRelease.Query().
 			Where(githubrelease.ID(id))
-		query, err := query.CollectFields(ctx, "GithubRelease")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, githubreleaseImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case githubrepository.Table:
 		query := c.GithubRepository.Query().
 			Where(githubrepository.ID(id))
-		query, err := query.CollectFields(ctx, "GithubRepository")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, githubrepositoryImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case label.Table:
 		query := c.Label.Query().
 			Where(label.ID(id))
-		query, err := query.CollectFields(ctx, "Label")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, labelImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case post.Table:
 		query := c.Post.Query().
 			Where(post.ID(id))
-		query, err := query.CollectFields(ctx, "Post")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, postImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	case user.Table:
 		query := c.User.Query().
 			Where(user.ID(id))
-		query, err := query.CollectFields(ctx, "User")
-		if err != nil {
-			return nil, err
+		if fc := graphql.GetFieldContext(ctx); fc != nil {
+			if err := query.collectField(ctx, true, graphql.GetOperationContext(ctx), fc.Field, nil, userImplementors...); err != nil {
+				return nil, err
+			}
 		}
-		n, err := query.Only(ctx)
-		if err != nil {
-			return nil, err
-		}
-		return n, nil
+		return query.Only(ctx)
 	default:
 		return nil, fmt.Errorf("cannot resolve noder from table %q: %w", table, errNodeInvalidID)
 	}
@@ -288,7 +280,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case githubasset.Table:
 		query := c.GithubAsset.Query().
 			Where(githubasset.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "GithubAsset")
+		query, err := query.CollectFields(ctx, githubassetImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -304,7 +296,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case githubevent.Table:
 		query := c.GithubEvent.Query().
 			Where(githubevent.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "GithubEvent")
+		query, err := query.CollectFields(ctx, githubeventImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -320,7 +312,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case githubgist.Table:
 		query := c.GithubGist.Query().
 			Where(githubgist.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "GithubGist")
+		query, err := query.CollectFields(ctx, githubgistImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -336,7 +328,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case githubrelease.Table:
 		query := c.GithubRelease.Query().
 			Where(githubrelease.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "GithubRelease")
+		query, err := query.CollectFields(ctx, githubreleaseImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -352,7 +344,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case githubrepository.Table:
 		query := c.GithubRepository.Query().
 			Where(githubrepository.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "GithubRepository")
+		query, err := query.CollectFields(ctx, githubrepositoryImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -368,7 +360,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case label.Table:
 		query := c.Label.Query().
 			Where(label.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "Label")
+		query, err := query.CollectFields(ctx, labelImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -384,7 +376,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case post.Table:
 		query := c.Post.Query().
 			Where(post.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "Post")
+		query, err := query.CollectFields(ctx, postImplementors...)
 		if err != nil {
 			return nil, err
 		}
@@ -400,7 +392,7 @@ func (c *Client) noders(ctx context.Context, table string, ids []int) ([]Noder, 
 	case user.Table:
 		query := c.User.Query().
 			Where(user.IDIn(ids...))
-		query, err := query.CollectFields(ctx, "User")
+		query, err := query.CollectFields(ctx, userImplementors...)
 		if err != nil {
 			return nil, err
 		}

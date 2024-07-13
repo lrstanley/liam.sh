@@ -20,7 +20,7 @@ type GithubGist struct {
 
 func (GithubGist) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("gist_id").Unique(),
+		field.String("gist_id"),
 		field.String("html_url").NotEmpty(),
 		field.Bool("public"),
 		field.Time("created_at").Annotations(
