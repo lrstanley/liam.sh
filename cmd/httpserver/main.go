@@ -49,7 +49,7 @@ func main() {
 		chix.RunnerInterval("events", gh.EventsRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
 		chix.RunnerInterval("repositories", gh.RepositoryRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
 		chix.RunnerInterval("gists", gh.GistRunner, 120*time.Minute, cli.Flags.Github.SyncOnStart, false),
-		chix.RunnerInterval("wakapi", wakapi.NewRunner(logger, cli.Flags.WakAPI).Run, 30*time.Minute, false, true),
+		chix.RunnerInterval("wakapi", wakapi.NewRunner(logger, cli.Flags.WakAPI).Run, 30*time.Minute, true, true),
 	); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}
