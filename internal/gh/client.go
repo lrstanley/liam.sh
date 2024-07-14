@@ -23,10 +23,10 @@ var (
 	SyncOnStart = false
 )
 
-func NewClient(ctx context.Context, config models.ConfigGithub, token string) {
-	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token}))
+func NewClient(ctx context.Context, config models.ConfigGithub) {
+	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Token}))
 	tc.Transport = &oauth2.Transport{
-		Source: oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token}),
+		Source: oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Token}),
 		Base:   httpcache.NewTransport(diskcache.New(config.CachePath)),
 	}
 

@@ -41,7 +41,7 @@ func main() {
 	database.Migrate(ctx, db)
 
 	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
-	gh.NewClient(ctx, cli.Flags.Github.Token)
+	gh.NewClient(ctx, cli.Flags.Github)
 
 	if err := chix.RunContext(
 		ctx, httpServer(ctx),
