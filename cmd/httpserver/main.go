@@ -6,6 +6,7 @@ package main
 
 import (
 	"context"
+	"time"
 
 	"github.com/apex/log"
 	"github.com/lrstanley/chix"
@@ -39,17 +40,16 @@ func main() {
 
 	database.Migrate(ctx, db)
 
-	gh.SyncOnStart = cli.Flags.Github.SyncOnStart
 	gh.NewClient(ctx, cli.Flags.Github)
 
 	if err := chix.RunContext(
 		ctx, httpServer(ctx),
-		gh.UserRunner,
-		gh.StatsRunner,
-		gh.EventsRunner,
-		gh.RepositoryRunner,
-		gh.GistRunner,
-		wakapi.NewRunner(logger, cli.Flags.WakAPI).Run,
+		chix.RunnerInterval("users", gh.UserRunner, 10*time.Minute, true, false),
+		chix.RunnerInterval("stats", gh.StatsRunner, 4*time.Hour, true, false),
+		chix.RunnerInterval("events", gh.EventsRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
+		chix.RunnerInterval("repositories", gh.RepositoryRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
+		chix.RunnerInterval("gists", gh.GistRunner, 120*time.Minute, cli.Flags.Github.SyncOnStart, false),
+		chix.RunnerInterval("wakapi", wakapi.NewRunner(logger, cli.Flags.WakAPI).Run, 30*time.Minute, false, true),
 	); err != nil {
 		logger.WithError(err).Fatal("shutting down")
 	}

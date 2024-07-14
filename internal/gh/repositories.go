@@ -21,49 +21,24 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
-const repositoryInterval = 30 * time.Minute
+var ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
 
 func RepositoryRunner(ctx context.Context) error {
-	logger := log.FromContext(ctx).WithField("runner", "github_repositories")
+	ctx = privacy.DecisionContext(ctx, privacy.Allow)
+
 	db := ent.FromContext(ctx)
 	if db == nil {
 		panic("database client is nil")
 	}
 
-	ctx = privacy.DecisionContext(ctx, privacy.Allow)
-
-	var err error
-	if SyncOnStart {
-		err = getRepositories(ctx, logger, db)
-		if err != nil {
-			logger.WithError(err).Error("failed to get repositories")
-		}
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		case <-time.After(repositoryInterval):
-			err = getRepositories(ctx, logger, db)
-			if err != nil {
-				logger.WithError(err).Error("failed to get repositories")
-			}
-		}
-	}
-}
-
-var ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
-
-func getRepositories(ctx context.Context, logger log.Interface, db *ent.Client) error {
-	repos, err := fetchRepositories(ctx, logger, db)
+	repos, err := fetchRepositories(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to fetch repositories: %w", err)
 	}
 
 	user, _, err := RestClient.Users.Get(ctx, "")
 	if err != nil {
-		logger.WithError(err).Error("failed to get user")
+		log.FromContext(ctx).WithError(err).Error("failed to get user")
 		return err
 	}
 
@@ -85,7 +60,7 @@ func getRepositories(ctx context.Context, logger log.Interface, db *ent.Client) 
 		}
 
 		if repo.GetFork() || repo.GetDisabled() || !repo.GetHasDownloads() {
-			logger.WithField("repo", repo.GetFullName()).Info("skipping repository release checks (fork/disabled/no-downloads)")
+			log.FromContext(ctx).WithField("repo", repo.GetFullName()).Info("skipping repository release checks (fork/disabled/no-downloads)")
 			continue
 		}
 
@@ -97,12 +72,12 @@ func getRepositories(ctx context.Context, logger log.Interface, db *ent.Client) 
 					githubrepository.RepoID(int64(repoId))),
 				).Exist(ctx)
 			if exists {
-				logger.WithField("repo", repo.GetFullName()).Info("skipping repository release checks (archived)")
+				log.FromContext(ctx).WithField("repo", repo.GetFullName()).Info("skipping repository release checks (archived)")
 				continue
 			}
 		}
 
-		releases, err = fetchReleases(ctx, logger, db, repo)
+		releases, err = fetchReleases(ctx, db, repo)
 		if err != nil {
 			return fmt.Errorf("failed to fetch releases: %w", err)
 		}
@@ -127,13 +102,13 @@ func getRepositories(ctx context.Context, logger log.Interface, db *ent.Client) 
 		return fmt.Errorf("failed to remove repositories: %w", err)
 	}
 
-	logger.WithField("repos", len(repos)).Info("fetched newest repositories")
+	log.FromContext(ctx).WithField("repos", len(repos)).Info("fetched newest repositories")
 	return nil
 }
 
 // fetchRepositories fetches all repositories for the authenticated user from Github. It
 // will also iterate through all pages, returning all repositories in their entirety.
-func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Client) (allRepos []*github.Repository, err error) {
+func fetchRepositories(ctx context.Context) (allRepos []*github.Repository, err error) {
 	opts := &github.RepositoryListOptions{
 		Visibility:  "all",
 		Affiliation: "owner,collaborator",
@@ -153,15 +128,13 @@ func fetchRepositories(ctx context.Context, logger log.Interface, db *ent.Client
 
 		var repos []*github.Repository
 
-		logger.WithField("page", opts.ListOptions.Page).Info("querying repositories")
+		log.FromContext(ctx).WithField("page", opts.ListOptions.Page).Info("querying repositories")
 		repos, resp, err = RestClient.Repositories.List(ctx, "", opts)
 		if err != nil {
 			return nil, err
 		}
 
-		for _, repo := range repos {
-			allRepos = append(allRepos, repo)
-		}
+		allRepos = append(allRepos, repos...)
 
 		if resp.NextPage < 1 {
 			break

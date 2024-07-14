@@ -19,40 +19,15 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
-const gistInterval = 120 * time.Minute
-
 func GistRunner(ctx context.Context) error {
-	logger := log.FromContext(ctx).WithField("runner", "github_gists")
+	ctx = privacy.DecisionContext(ctx, privacy.Allow)
+
 	db := ent.FromContext(ctx)
 	if db == nil {
 		panic("database client is nil")
 	}
 
-	ctx = privacy.DecisionContext(ctx, privacy.Allow)
-
-	var err error
-	if SyncOnStart {
-		err = getGists(ctx, logger, db)
-		if err != nil {
-			logger.WithError(err).Error("failed to get gists")
-		}
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		case <-time.After(gistInterval):
-			err = getGists(ctx, logger, db)
-			if err != nil {
-				logger.WithError(err).Error("failed to get gists")
-			}
-		}
-	}
-}
-
-func getGists(ctx context.Context, logger log.Interface, db *ent.Client) error {
-	gists, err := fetchGists(ctx, logger, db)
+	gists, err := fetchGists(ctx, db)
 	if err != nil {
 		return fmt.Errorf("failed to fetch gists: %w", err)
 	}
@@ -97,13 +72,13 @@ func getGists(ctx context.Context, logger log.Interface, db *ent.Client) error {
 		return fmt.Errorf("failed to remove gists: %w", err)
 	}
 
-	logger.WithField("gists", len(gists)).Info("fetched newest gists")
+	log.FromContext(ctx).WithField("gists", len(gists)).Info("fetched newest gists")
 	return nil
 }
 
 // fetchGists fetches all gists for the authenticated user from Github. It
 // will also iterate through all pages, returning all gists in their entirety.
-func fetchGists(ctx context.Context, logger log.Interface, db *ent.Client) (allGists []*github.Gist, err error) {
+func fetchGists(ctx context.Context, db *ent.Client) (allGists []*github.Gist, err error) {
 	opts := &github.GistListOptions{
 		ListOptions: github.ListOptions{PerPage: 100, Page: 1},
 	}
@@ -121,7 +96,7 @@ func fetchGists(ctx context.Context, logger log.Interface, db *ent.Client) (allG
 
 		var gists []*github.Gist
 
-		logger.WithField("page", opts.ListOptions.Page).Info("querying gists")
+		log.FromContext(ctx).WithField("page", opts.ListOptions.Page).Info("querying gists")
 		gists, resp, err = RestClient.Gists.List(ctx, "", opts)
 		if err != nil {
 			return nil, err

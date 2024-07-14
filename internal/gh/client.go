@@ -20,7 +20,6 @@ var (
 	RestClient  *github.Client
 	GraphClient *ghql.Client
 	clientOnce  sync.Once
-	SyncOnStart = false
 )
 
 func NewClient(ctx context.Context, config models.ConfigGithub) {

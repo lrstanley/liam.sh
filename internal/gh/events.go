@@ -16,38 +16,6 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
-const eventsInterval = 30 * time.Minute
-
-func EventsRunner(ctx context.Context) error {
-	logger := log.FromContext(ctx).WithField("runner", "github_events")
-	db := ent.FromContext(ctx)
-	if db == nil {
-		panic("database client is nil")
-	}
-
-	ctx = privacy.DecisionContext(ctx, privacy.Allow)
-
-	var err error
-	if SyncOnStart {
-		err = getEvents(ctx, logger, db)
-		if err != nil {
-			logger.WithError(err).Error("failed to get events")
-		}
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		case <-time.After(eventsInterval):
-			err = getEvents(ctx, logger, db)
-			if err != nil {
-				logger.WithError(err).Error("failed to get events")
-			}
-		}
-	}
-}
-
 var allowedEvents = []string{
 	"CreateEvent",
 	"DeleteEvent",
@@ -65,7 +33,14 @@ var allowedEvents = []string{
 	"WatchEvent",
 }
 
-func getEvents(ctx context.Context, logger log.Interface, db *ent.Client) error {
+func EventsRunner(ctx context.Context) error {
+	ctx = privacy.DecisionContext(ctx, privacy.Allow)
+
+	db := ent.FromContext(ctx)
+	if db == nil {
+		panic("database client is nil")
+	}
+
 	opts := &github.ListOptions{
 		PerPage: 100,
 		Page:    1,
@@ -78,7 +53,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Client) error 
 
 	user, _, err = RestClient.Users.Get(ctx, "")
 	if err != nil {
-		logger.WithError(err).Error("failed to get user")
+		log.FromContext(ctx).WithError(err).Error("failed to get user")
 		return err
 	}
 
@@ -93,7 +68,7 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Client) error 
 
 		var events []*github.Event
 
-		logger.WithField("page", opts.Page).Info("querying events")
+		log.FromContext(ctx).WithField("page", opts.Page).Info("querying events")
 		events, resp, err = RestClient.Activity.ListEventsPerformedByUser(ctx, user.GetLogin(), false, opts)
 		if err != nil {
 			return err
@@ -158,6 +133,6 @@ func getEvents(ctx context.Context, logger log.Interface, db *ent.Client) error 
 		}
 	}
 
-	logger.WithField("events", count).Info("fetched newest events")
+	log.FromContext(ctx).WithField("events", count).Info("fetched newest events")
 	return nil
 }

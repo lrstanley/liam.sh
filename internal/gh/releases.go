@@ -19,7 +19,7 @@ import (
 // Github. It will also iterate through all pages, returning all repository releases
 // in their entirety.
 func fetchReleases(
-	ctx context.Context, logger log.Interface, db *ent.Client, repo *github.Repository,
+	ctx context.Context, db *ent.Client, repo *github.Repository,
 ) (allReleases []*github.RepositoryRelease, err error) {
 	var resp *github.Response
 
@@ -39,7 +39,7 @@ func fetchReleases(
 
 		var releases []*github.RepositoryRelease
 
-		logger.WithFields(log.Fields{
+		log.FromContext(ctx).WithFields(log.Fields{
 			"page": opts.Page,
 			"repo": repo.GetFullName(),
 		}).Info("querying repository releases")
