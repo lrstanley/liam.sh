@@ -214,6 +214,8 @@ func init() {
 	postHooks := schema.Post{}.Hooks()
 
 	post.Hooks[1] = postHooks[0]
+
+	post.Hooks[2] = postHooks[1]
 	postInters := schema.Post{}.Interceptors()
 	post.Interceptors[0] = postInters[0]
 	postMixinFields0 := postMixin[0].Fields()

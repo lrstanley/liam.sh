@@ -6,6 +6,7 @@ package schema
 
 import (
 	"context"
+	"errors"
 	"regexp"
 	"strings"
 	"sync"
@@ -166,6 +167,16 @@ func (Post) Interceptors() []ent.Interceptor {
 
 func (Post) Hooks() []ent.Hook {
 	return []ent.Hook{
+		hook.On(func(next ent.Mutator) ent.Mutator {
+			return hook.PostFunc(func(ctx context.Context, m *gen.PostMutation) (ent.Value, error) {
+				ident := chix.IdentFromContext[gen.User](ctx)
+				if ident == nil {
+					return nil, errors.New("unauthenticated")
+				}
+				m.SetAuthorID(ident.ID)
+				return next.Mutate(ctx, m)
+			})
+		}, ent.OpCreate),
 		hook.On(
 			hook.If(func(next ent.Mutator) ent.Mutator {
 				return hook.PostFunc(func(ctx context.Context, m *gen.PostMutation) (ent.Value, error) {

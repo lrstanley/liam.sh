@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"github.com/apex/log"
-	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 )
@@ -17,7 +16,6 @@ import (
 func (r *mutationResolver) CreatePost(ctx context.Context, input ent.CreatePostInput) (*ent.Post, error) {
 	return ent.FromContext(ctx).Post.Create().
 		SetInput(input).
-		SetAuthorID(chix.IDFromContext[int](ctx)).
 		Save(ctx)
 }
 
