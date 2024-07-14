@@ -11,23 +11,29 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
+	cache "github.com/Code-Hex/go-generics-cache"
 	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix"
-	"github.com/lrstanley/liam.sh/internal/cache"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/gh"
+)
+
+const (
+	expSuccessDuration = 6 * time.Hour
+	expFailureDuration = 30 * time.Minute
 )
 
 var (
 	//go:embed project.svg
 	rawSVG string
 
-	iconCache = cache.New[string, string](100, 6*time.Hour, nil)
+	iconCache = cache.New[string, string]()
 )
 
 const svgDocs = `# SVG Generator Routes:
@@ -89,11 +95,11 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 	query := make(url.Values)
 
 	if p.IconHeight > 0 {
-		query.Set("height", fmt.Sprintf("%d", p.IconHeight))
+		query.Set("height", strconv.Itoa(p.IconHeight))
 	}
 
 	if p.IconWidth > 0 {
-		query.Set("width", fmt.Sprintf("%d", p.IconWidth))
+		query.Set("width", strconv.Itoa(p.IconWidth))
 	}
 
 	if p.IconFlip != "" {
@@ -101,7 +107,7 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 	}
 
 	if p.IconRotate > 0 {
-		query.Set("rotate", fmt.Sprintf("%d", p.IconRotate))
+		query.Set("rotate", strconv.Itoa(p.IconRotate))
 	}
 
 	if p.IconColor != "" {
@@ -112,16 +118,23 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 		_url += "?" + query.Encode()
 	}
 
-	if icon := iconCache.Get(_url); icon != "" {
+	if icon, ok := iconCache.Get(_url); ok {
 		return icon
 	}
 
 	logger := log.FromContext(ctx)
 
-	resp, err := http.Get(_url)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, _url, http.NoBody) // nolint:gosec
+	if err != nil {
+		logger.WithError(err).WithField("url", _url).Error("failed to create http request")
+		iconCache.Set(_url, "", cache.WithExpiration(expFailureDuration))
+		return ""
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		logger.WithError(err).WithField("url", _url).Error("failed to get iconify svg")
-		iconCache.Set(_url, "")
+		iconCache.Set(_url, "", cache.WithExpiration(expFailureDuration))
 		return ""
 	}
 	defer resp.Body.Close()
@@ -133,7 +146,7 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 	}
 
 	icon := string(b)
-	iconCache.Set(_url, icon)
+	iconCache.Set(_url, icon, cache.WithExpiration(expSuccessDuration))
 	return icon
 }
 
