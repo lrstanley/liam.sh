@@ -19,7 +19,7 @@ import (
 // Github. It will also iterate through all pages, returning all repository releases
 // in their entirety.
 func fetchReleases(
-	ctx context.Context, db *ent.Client, repo *github.Repository,
+	ctx context.Context, repo *github.Repository,
 ) (allReleases []*github.RepositoryRelease, err error) {
 	var resp *github.Response
 
@@ -48,9 +48,7 @@ func fetchReleases(
 			return nil, err
 		}
 
-		for _, release := range releases {
-			allReleases = append(allReleases, release)
-		}
+		allReleases = append(allReleases, releases...)
 
 		if resp.NextPage < 1 {
 			break
@@ -62,10 +60,10 @@ func fetchReleases(
 }
 
 // storeRelease stores a repository release in the database.
-func storeRelease(ctx context.Context, db *ent.Client, repoId int, release *github.RepositoryRelease) (id int, err error) {
+func storeRelease(ctx context.Context, db *ent.Client, repoID int, release *github.RepositoryRelease) (id int, err error) {
 	// Upsert release.
 	return db.GithubRelease.Create().
-		SetRepositoryID(repoId).
+		SetRepositoryID(repoID).
 		SetReleaseID(release.GetID()).
 		SetHTMLURL(release.GetHTMLURL()).
 		SetTagName(release.GetTagName()).
@@ -80,10 +78,10 @@ func storeRelease(ctx context.Context, db *ent.Client, repoId int, release *gith
 		UpdateNewValues().ID(ctx)
 }
 
-func storeAsset(ctx context.Context, db *ent.Client, releaseId int, asset *github.ReleaseAsset) (id int, err error) {
+func storeAsset(ctx context.Context, db *ent.Client, releaseID int, asset *github.ReleaseAsset) (id int, err error) {
 	// Upsert asset.
 	return db.GithubAsset.Create().
-		SetReleaseID(releaseId).
+		SetReleaseID(releaseID).
 		SetAssetID(asset.GetID()).
 		SetBrowserDownloadURL(asset.GetBrowserDownloadURL()).
 		SetName(asset.GetName()).

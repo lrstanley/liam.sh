@@ -18,12 +18,11 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
 	"github.com/lrstanley/chix"
+	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/ghhandler"
+	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/webhookhandler"
 	"github.com/lrstanley/liam.sh/internal/database"
-	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/lrstanley/liam.sh/internal/graphql"
-	"github.com/lrstanley/liam.sh/internal/handlers/ghhandler"
-	"github.com/lrstanley/liam.sh/internal/handlers/webhookhandler"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -45,7 +44,7 @@ func httpServer(ctx context.Context) *http.Server {
 		),
 	)
 
-	auth := chix.NewAuthHandler[ent.User, int](
+	auth := chix.NewAuthHandler(
 		database.NewAuthService(db, cli.Flags.Github.User),
 		cli.Flags.HTTP.ValidationKey,
 		cli.Flags.HTTP.EncryptionKey,
@@ -62,7 +61,7 @@ func httpServer(ctx context.Context) *http.Server {
 		middleware.RequestID,
 		chix.UseStructuredLogger(logger),
 		chix.UsePrometheus,
-		chix.Recoverer,
+		chix.UseRecoverer,
 		middleware.Maybe(middleware.StripSlashes, func(r *http.Request) bool {
 			return !strings.HasPrefix(r.URL.Path, "/debug/")
 		}),
@@ -166,7 +165,7 @@ func sitemap(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, slug := range postSlugs {
-		urls = append(urls, fmt.Sprintf("/p/%s", slug))
+		urls = append(urls, "/p/"+slug)
 	}
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")

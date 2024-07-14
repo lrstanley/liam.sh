@@ -27,7 +27,7 @@ func GistRunner(ctx context.Context) error {
 		panic("database client is nil")
 	}
 
-	gists, err := fetchGists(ctx, db)
+	gists, err := fetchGists(ctx)
 	if err != nil {
 		return fmt.Errorf("failed to fetch gists: %w", err)
 	}
@@ -44,7 +44,7 @@ func GistRunner(ctx context.Context) error {
 			).Limit(1).Select(githubgist.FieldContent).String(ctx)
 
 			if content == "" {
-				req, err = http.NewRequest(http.MethodGet, file.GetRawURL(), http.NoBody)
+				req, err = http.NewRequestWithContext(ctx, http.MethodGet, file.GetRawURL(), http.NoBody)
 				if err != nil {
 					return fmt.Errorf("failed to create raw gist request: %w", err)
 				}
@@ -78,7 +78,7 @@ func GistRunner(ctx context.Context) error {
 
 // fetchGists fetches all gists for the authenticated user from Github. It
 // will also iterate through all pages, returning all gists in their entirety.
-func fetchGists(ctx context.Context, db *ent.Client) (allGists []*github.Gist, err error) {
+func fetchGists(ctx context.Context) (allGists []*github.Gist, err error) {
 	opts := &github.GistListOptions{
 		ListOptions: github.ListOptions{PerPage: 100, Page: 1},
 	}
@@ -102,9 +102,7 @@ func fetchGists(ctx context.Context, db *ent.Client) (allGists []*github.Gist, e
 			return nil, err
 		}
 
-		for _, gist := range gists {
-			allGists = append(allGists, gist)
-		}
+		allGists = append(allGists, gists...)
 
 		if resp.NextPage < 1 {
 			break

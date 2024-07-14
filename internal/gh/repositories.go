@@ -44,12 +44,12 @@ func RepositoryRunner(ctx context.Context) error {
 
 	lc := database.NewLabelCreator()
 
-	var repoId int
-	var releaseId int
+	var repoID int
+	var releaseID int
 	var releases []*github.RepositoryRelease
 
 	for _, repo := range repos {
-		repoId, err = storeRepository(ctx, db, lc, repo)
+		repoID, err = storeRepository(ctx, db, lc, repo)
 		if err != nil {
 			return fmt.Errorf("failed to store repository: %v; %w", repo.GetName(), err)
 		}
@@ -69,7 +69,7 @@ func RepositoryRunner(ctx context.Context) error {
 			var exists bool
 			exists, _ = db.GithubRelease.Query().
 				Where(githubrelease.HasRepositoryWith(
-					githubrepository.RepoID(int64(repoId))),
+					githubrepository.RepoID(int64(repoID))),
 				).Exist(ctx)
 			if exists {
 				log.FromContext(ctx).WithField("repo", repo.GetFullName()).Info("skipping repository release checks (archived)")
@@ -77,19 +77,19 @@ func RepositoryRunner(ctx context.Context) error {
 			}
 		}
 
-		releases, err = fetchReleases(ctx, db, repo)
+		releases, err = fetchReleases(ctx, repo)
 		if err != nil {
 			return fmt.Errorf("failed to fetch releases: %w", err)
 		}
 
 		for _, release := range releases {
-			releaseId, err = storeRelease(ctx, db, repoId, release)
+			releaseID, err = storeRelease(ctx, db, repoID, release)
 			if err != nil {
 				return fmt.Errorf("failed to store release: %w", err)
 			}
 
 			for _, asset := range release.Assets {
-				_, err = storeAsset(ctx, db, releaseId, asset)
+				_, err = storeAsset(ctx, db, releaseID, asset)
 				if err != nil {
 					return fmt.Errorf("failed to store asset: %w", err)
 				}

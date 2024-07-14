@@ -81,7 +81,7 @@ func StatsRunner(ctx context.Context) error {
 
 	for {
 		repoStars := repoStarsQuery{}
-		err := GraphClient.Query(ctx, &repoStars, repoStarVariables)
+		err = GraphClient.Query(ctx, &repoStars, repoStarVariables)
 		if err != nil {
 			log.FromContext(ctx).
 				WithField("cursor", repoStarVariables["after"]).

@@ -52,7 +52,7 @@ var (
 )
 
 // Generate generates markdown from the given input.
-func Generate(ctx context.Context, input string) (string, error) {
+func Generate(_ context.Context, input string) (string, error) {
 	buf := &bytes.Buffer{}
 
 	if err := engine.Convert([]byte(input), buf); err != nil {
