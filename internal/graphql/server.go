@@ -61,7 +61,6 @@ func New(db *ent.Client, cli *clix.CLI[models.Flags]) *handler.Server {
 	srv.AroundOperations(requestLogger)
 	srv.SetRecoverFunc(recoverFunc)
 	srv.AroundOperations(injectClient(db))
-	srv.AroundOperations(cacheEvictAdmin)
 	srv.SetErrorPresenter(errorPresenter)
 
 	srv.AddTransport(transport.Options{})
