@@ -2,13 +2,10 @@
 
 export PROJECT := "httpserver"
 export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
-export COMPOSE_PROJECT := "liamsh"
-export COMPOSE_ARGS := "postgres"
-export COMPOSE_DOCKER_CLI_BUILD := 1
 export DOCKER_BUILDKIT := 1
-export USER := $(shell id -u)
-export GROUP := $(shell id -g)
 export LICENSE_IGNORE := "graphql-tag"
+export KUBERNETES_NAMESPACE := "liam-sh"
+export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
 
 license:
 	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
@@ -24,6 +21,12 @@ up: node-upgrade-deps go-upgrade-deps
 
 clean:
 	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
+
+mirror-prod-db:
+	rm -rfv local.db*
+	kubectl -n ${KUBERNETES_NAMESPACE} get pods -l ${KUBERNETES_SELECTOR} --no-headers \
+		| awk '{print $$1}' | head -1 \
+		| xargs -n1 -I{} kubectl cp -n ${KUBERNETES_NAMESPACE} {}:/data/local.db local.db
 
 generate-language-colors:
 	curl -LsS -o- https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml \
