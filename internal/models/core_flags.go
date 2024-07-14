@@ -15,7 +15,7 @@ type Flags struct {
 
 // ConfigDatabase holds the database configuration.
 type ConfigDatabase struct {
-	URL string `env:"URL" long:"url" default:"file:local.db?cache=shared&_pragma=foreign_keys(1)&_pragma=journal_mode(WAL)&_pragma=temp_store(2)&_pragma=synchronous(1)&_pragma=mmap_size(30000000000)&_busy_timeout=15" description:"database connection url"`
+	URL string `env:"URL" long:"url" default:"file:local.db" description:"database connection url"`
 }
 
 // ConfigHTTP are configurations specifically utilized by the HTTP service.
@@ -35,6 +35,7 @@ type ConfigGithub struct {
 	ClientID     string `env:"CLIENT_ID"     long:"client-id"     required:"true" description:"GitHub client ID"`
 	ClientSecret string `env:"CLIENT_SECRET" long:"client-secret" required:"true" description:"GitHub client secret"`
 	SyncOnStart  bool   `env:"SYNC_ON_START" long:"sync-on-start" description:"sync all data from GitHub on startup"`
+	CachePath    string `env:"CACHE_PATH"    long:"cache-path"    default:".gitapicache" description:"path to cache directory"`
 }
 
 // ConfigWakAPI are configurations specifically utilized for interacting with a

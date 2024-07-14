@@ -11,12 +11,9 @@ import (
 	"github.com/google/go-github/v52/github"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
+	"github.com/lrstanley/liam.sh/internal/models"
 	ghql "github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
-)
-
-const (
-	cacheDir = ".gitapicache"
 )
 
 var (
@@ -26,11 +23,11 @@ var (
 	SyncOnStart = false
 )
 
-func NewClient(ctx context.Context, token string) {
+func NewClient(ctx context.Context, config models.ConfigGithub, token string) {
 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token}))
 	tc.Transport = &oauth2.Transport{
 		Source: oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token}),
-		Base:   httpcache.NewTransport(diskcache.New(cacheDir)),
+		Base:   httpcache.NewTransport(diskcache.New(config.CachePath)),
 	}
 
 	clientOnce.Do(func() {
