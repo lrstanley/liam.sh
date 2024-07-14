@@ -142,7 +142,10 @@ const urlDebounced = refDebounced(url, 250)
         </n-form-item>
       </div>
 
-      <n-divider class="!mt-3 !mb-2">Icon Configuration</n-divider>
+      <n-divider class="!mt-3 !mb-2">
+        Icon Configuration --
+        <a href="https://icones.js.org/" class="ml-[1ch]" target="_blank">icon ref</a>
+      </n-divider>
 
       <div class="grid grid-cols-3 gap-4">
         <n-form-item label="Icon">
