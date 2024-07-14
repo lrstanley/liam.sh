@@ -1333,7 +1333,8 @@ func (c *PostClient) Hooks() []Hook {
 
 // Interceptors returns the client interceptors.
 func (c *PostClient) Interceptors() []Interceptor {
-	return c.inters.Post
+	inters := c.inters.Post
+	return append(inters[:len(inters):len(inters)], post.Interceptors[:]...)
 }
 
 func (c *PostClient) mutate(ctx context.Context, m *PostMutation) (Value, error) {

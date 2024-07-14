@@ -8,7 +8,6 @@ import (
 	"context"
 
 	"entgo.io/contrib/entgql"
-	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/graphql/gqlhandler"
 )
@@ -79,23 +78,11 @@ func (r *queryResolver) Labels(ctx context.Context, after *entgql.Cursor[int], f
 
 // Posts is the resolver for the posts field.
 func (r *queryResolver) Posts(ctx context.Context, after *entgql.Cursor[int], first *int, before *entgql.Cursor[int], last *int, orderBy *ent.PostOrder, where *ent.PostWhereInput) (*ent.PostConnection, error) {
-	conn, err := ent.FromContext(ctx).Post.Query().Paginate(
+	return ent.FromContext(ctx).Post.Query().Paginate(
 		ctx, after, first, before, last,
 		ent.WithPostOrder(orderBy),
 		ent.WithPostFilter(where.Filter),
 	)
-
-	if err == nil && conn.TotalCount == 1 {
-		post := conn.Edges[0].Node
-
-		if post.ContentHTML == "" {
-			return conn, nil
-		}
-
-		go database.PostViewCounter(ctx, post)
-	}
-
-	return conn, err
 }
 
 // Users is the resolver for the users field.

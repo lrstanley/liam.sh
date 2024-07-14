@@ -43,6 +43,7 @@ func main() {
 				gen.FeatureEntQL,
 				gen.FeatureSnapshot,
 				gen.FeatureUpsert,
+				gen.FeatureIntercept,
 			},
 		},
 		entc.Extensions(egq),

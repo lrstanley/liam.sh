@@ -8,6 +8,7 @@ import (
 	"context"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"entgo.io/contrib/entgql"
@@ -16,16 +17,58 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	"github.com/apex/log"
+	"github.com/lrstanley/chix"
 	gen "github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/hook"
+	"github.com/lrstanley/liam.sh/internal/database/ent/intercept"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/lrstanley/liam.sh/internal/markdown"
 )
 
-const summaryLen = 40
+const (
+	summaryLen             = 40
+	postViewCountThreshold = 5 * time.Minute
+)
 
-var rePostSlug = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{4,50}$`)
+var (
+	rePostSlug = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{4,50}$`)
+	postViewMu = &sync.Mutex{}
+	postView   = map[int]map[string]time.Time{}
+)
+
+func postViewCounter(ctx context.Context, p *gen.Post) {
+	ip := chix.GetContextIP(ctx)
+	if ip == nil {
+		return
+	}
+
+	nctx, cancel := context.WithTimeout(
+		privacy.DecisionContext(context.Background(), privacy.Allow),
+		time.Second*5,
+	)
+	defer cancel()
+
+	postViewMu.Lock()
+	if _, ok := postView[p.ID]; !ok {
+		postView[p.ID] = map[string]time.Time{}
+	}
+
+	if t, ok := postView[p.ID][ip.String()]; ok {
+		if time.Since(t) < postViewCountThreshold {
+			postViewMu.Unlock()
+			return
+		}
+	}
+	postView[p.ID][ip.String()] = time.Now()
+	postViewMu.Unlock()
+
+	if _, err := p.Update().AddViewCount(1).Save(nctx); err != nil {
+		log.FromContext(ctx).WithError(err).WithField("post_id", p.ID).
+			Error("failed to update post view count")
+	}
+}
 
 type Post struct {
 	ent.Schema
@@ -94,6 +137,30 @@ func (Post) Annotations() []schema.Annotation {
 			entgql.MutationCreate(),
 			entgql.MutationUpdate(),
 		),
+	}
+}
+
+func (Post) Interceptors() []ent.Interceptor {
+	return []ent.Interceptor{
+		ent.InterceptFunc(func(next ent.Querier) ent.Querier {
+			return intercept.PostFunc(func(ctx context.Context, q *gen.PostQuery) (ent.Value, error) {
+				v, err := next.Query(ctx, q)
+				if err != nil {
+					return nil, err
+				}
+
+				switch v := v.(type) {
+				case []*gen.Post:
+					if len(v) == 1 {
+						go postViewCounter(ctx, v[0])
+					}
+				case *gen.Post:
+					go postViewCounter(ctx, v)
+				}
+
+				return v, nil
+			})
+		}),
 	}
 }
 
