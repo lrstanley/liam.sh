@@ -9,10 +9,8 @@ import (
 	"errors"
 	"strings"
 
-	"ariga.io/entcache"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/apex/log"
-	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/vektah/gqlparser/v2/gqlerror"
@@ -72,12 +70,4 @@ func injectClient(client *ent.Client) graphql.OperationMiddleware {
 		ctx = ent.NewContext(ctx, client)
 		return next(ctx)
 	}
-}
-
-func cacheEvictAdmin(ctx context.Context, next graphql.OperationHandler) graphql.ResponseHandler {
-	if chix.RolesFromContext(ctx).Has("admin") {
-		ctx = entcache.Evict(ctx)
-	}
-
-	return next(ctx)
 }
