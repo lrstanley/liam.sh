@@ -11,9 +11,7 @@ export GROUP := $(shell id -g)
 export LICENSE_IGNORE := "graphql-tag"
 
 license:
-	@echo
-	# disable temporarily
-	# curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
+	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
 prepare: clean node-prepare node-build go-prepare
 	@echo

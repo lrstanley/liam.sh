@@ -27,5 +27,4 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=build-go /build/httpserver /app/httpserver
 
-VOLUME /app/.gitapicache
 CMD ["/app/httpserver"]
