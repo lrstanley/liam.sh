@@ -37,7 +37,6 @@ func main() {
 	defer db.Close()
 	ctx = ent.NewContext(ctx, db)
 
-	database.RegisterHooks(ctx)
 	database.Migrate(ctx, db)
 
 	gh.SyncOnStart = cli.Flags.Github.SyncOnStart

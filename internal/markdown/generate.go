@@ -9,6 +9,7 @@ import (
 	"context"
 
 	chromahtml "github.com/alecthomas/chroma/formatters/html"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
 	"github.com/yuin/goldmark/extension"
@@ -17,34 +18,37 @@ import (
 	"mvdan.cc/xurls/v2"
 )
 
-var engine = goldmark.New(
-	goldmark.WithExtensions(
-		extension.GFM,
-		extension.Footnote,
-		highlighting.NewHighlighting(
-			highlighting.WithStyle("dracula"), // monokai
-			highlighting.WithFormatOptions(
-				chromahtml.WithLineNumbers(true),
-				chromahtml.TabWidth(4),
+var (
+	htmlPolicy = bluemonday.StrictPolicy()
+	engine     = goldmark.New(
+		goldmark.WithExtensions(
+			extension.GFM,
+			extension.Footnote,
+			highlighting.NewHighlighting(
+				highlighting.WithStyle("dracula"), // monokai
+				highlighting.WithFormatOptions(
+					chromahtml.WithLineNumbers(true),
+					chromahtml.TabWidth(4),
+				),
+			),
+			extension.NewLinkify(
+				extension.WithLinkifyAllowedProtocols([][]byte{
+					[]byte("http:"),
+					[]byte("https:"),
+				}),
+				extension.WithLinkifyURLRegexp(
+					xurls.Strict(),
+				),
 			),
 		),
-		extension.NewLinkify(
-			extension.WithLinkifyAllowedProtocols([][]byte{
-				[]byte("http:"),
-				[]byte("https:"),
-			}),
-			extension.WithLinkifyURLRegexp(
-				xurls.Strict(),
-			),
+		goldmark.WithRendererOptions(
+			html.WithUnsafe(),
+			html.WithXHTML(),
 		),
-	),
-	goldmark.WithRendererOptions(
-		html.WithUnsafe(),
-		html.WithXHTML(),
-	),
-	goldmark.WithParserOptions(
-		parser.WithAutoHeadingID(),
-	),
+		goldmark.WithParserOptions(
+			parser.WithAutoHeadingID(),
+		),
+	)
 )
 
 // Generate generates markdown from the given input.
@@ -56,4 +60,8 @@ func Generate(ctx context.Context, input string) (string, error) {
 	}
 
 	return buf.String(), nil
+}
+
+func Sanitize(input string) string {
+	return htmlPolicy.Sanitize(input)
 }

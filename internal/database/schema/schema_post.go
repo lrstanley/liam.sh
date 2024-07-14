@@ -5,7 +5,9 @@
 package schema
 
 import (
+	"context"
 	"regexp"
+	"strings"
 	"time"
 
 	"entgo.io/contrib/entgql"
@@ -14,8 +16,14 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/mixin"
+	gen "github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/hook"
+	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
+	"github.com/lrstanley/liam.sh/internal/markdown"
 )
+
+const summaryLen = 40
 
 var rePostSlug = regexp.MustCompile(`(?i)^[a-z\d][a-z\d-]{4,50}$`)
 
@@ -85,6 +93,38 @@ func (Post) Annotations() []schema.Annotation {
 		entgql.Mutations(
 			entgql.MutationCreate(),
 			entgql.MutationUpdate(),
+		),
+	}
+}
+
+func (Post) Hooks() []ent.Hook {
+	return []ent.Hook{
+		hook.On(
+			hook.If(func(next ent.Mutator) ent.Mutator {
+				return hook.PostFunc(func(ctx context.Context, m *gen.PostMutation) (ent.Value, error) {
+					content, ok := m.Content()
+					if !ok {
+						return next.Mutate(ctx, m)
+					}
+
+					md, err := markdown.Generate(ctx, content)
+					if err != nil {
+						return m, err
+					}
+
+					m.SetContentHTML(md)
+
+					summary := strings.Fields(markdown.Sanitize(md))
+					if len(summary) > summaryLen {
+						m.SetSummary(strings.Join(summary[:summaryLen], " ") + "...")
+					} else {
+						m.SetSummary(strings.Join(summary, " ") + "...")
+					}
+
+					return next.Mutate(ctx, m)
+				})
+			}, hook.HasFields(post.FieldContent)),
+			ent.OpCreate|ent.OpUpdateOne|ent.OpUpdate,
 		),
 	}
 }

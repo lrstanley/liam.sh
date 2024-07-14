@@ -211,6 +211,9 @@ func init() {
 			return next.Mutate(ctx, m)
 		})
 	}
+	postHooks := schema.Post{}.Hooks()
+
+	post.Hooks[1] = postHooks[0]
 	postMixinFields0 := postMixin[0].Fields()
 	_ = postMixinFields0
 	postFields := schema.Post{}.Fields()
