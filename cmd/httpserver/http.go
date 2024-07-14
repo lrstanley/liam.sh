@@ -20,7 +20,7 @@ import (
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/webhookhandler"
-	"github.com/lrstanley/liam.sh/internal/database"
+	"github.com/lrstanley/liam.sh/internal/auth"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/markbates/goth"
@@ -44,11 +44,7 @@ func httpServer(ctx context.Context) *http.Server {
 		),
 	)
 
-	auth := chix.NewAuthHandler(
-		database.NewAuthService(db, cli.Flags.Github.User),
-		cli.Flags.HTTP.ValidationKey,
-		cli.Flags.HTTP.EncryptionKey,
-	)
+	authSvc := auth.NewService(db, cli.Flags.Github.User)
 
 	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
 		r.Use(chix.UseRealIPCLIOpts(cli.Flags.HTTP.TrustedProxies))
@@ -82,7 +78,7 @@ func httpServer(ctx context.Context) *http.Server {
 			"Referrer-Policy":         "no-referrer-when-downgrade",
 			"Permissions-Policy":      "clipboard-write=(self)",
 		}),
-		auth.AddToContext,
+		chix.UseAuthContext(authSvc),
 		httprate.LimitByIP(200, 1*time.Minute),
 	)
 
@@ -116,7 +112,11 @@ func httpServer(ctx context.Context) *http.Server {
 		"Content-Security-Policy",
 		"default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; ",
 	)).Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
-	r.Mount("/-/auth", auth)
+	r.Mount("/-/auth", chix.NewAuthHandler(
+		authSvc,
+		cli.Flags.HTTP.ValidationKey,
+		cli.Flags.HTTP.EncryptionKey,
+	))
 	r.Route("/-/gh", ghhandler.New(db).Route)
 	r.Route("/-/webhook/discord", webhookhandler.New().Route)
 	r.With(chix.UsePrivateIP).Mount("/metrics", promhttp.Handler())

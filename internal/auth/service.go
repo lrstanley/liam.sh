@@ -2,39 +2,38 @@
 // this source code is governed by the MIT license that can be found in
 // the LICENSE file.
 
-package database
+package auth
 
 import (
 	"context"
 	"strconv"
 
-	"ariga.io/entcache"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/user"
 	"github.com/markbates/goth"
 )
 
-// Validate authService implements chix.AuthService.
-var _ chix.AuthService[ent.User, int] = (*AuthService)(nil)
+// Validate authService implements chix.Service.
+var _ chix.AuthService[ent.User, int] = (*Service)(nil)
 
-func NewAuthService(db *ent.Client, admin int) *AuthService {
-	return &AuthService{
+func NewService(db *ent.Client, admin int) *Service {
+	return &Service{
 		db:    db,
 		admin: admin,
 	}
 }
 
-type AuthService struct {
+type Service struct {
 	db    *ent.Client
 	admin int
 }
 
-func (s *AuthService) Get(ctx context.Context, id int) (*ent.User, error) {
+func (s *Service) Get(ctx context.Context, id int) (*ent.User, error) {
 	return s.db.User.Get(ctx, id)
 }
 
-func (s *AuthService) Set(ctx context.Context, guser *goth.User) (id int, err error) {
+func (s *Service) Set(ctx context.Context, guser *goth.User) (id int, err error) {
 	uid, err := strconv.Atoi(guser.UserID)
 	if err != nil {
 		return 0, err
@@ -59,10 +58,10 @@ func (s *AuthService) Set(ctx context.Context, guser *goth.User) (id int, err er
 		}
 	}
 
-	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(entcache.Evict(ctx))
+	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(ctx)
 }
 
-func (s *AuthService) Roles(ctx context.Context, id int) ([]string, error) {
+func (s *Service) Roles(ctx context.Context, id int) ([]string, error) {
 	if ok, _ := s.db.User.Query().Where(user.IDEQ(id)).Exist(ctx); ok {
 		return []string{"admin"}, nil
 	}
