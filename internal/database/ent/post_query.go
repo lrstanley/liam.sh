@@ -25,16 +25,13 @@ import (
 // PostQuery is the builder for querying Post entities.
 type PostQuery struct {
 	config
-	ctx             *QueryContext
-	order           []post.OrderOption
-	inters          []Interceptor
-	predicates      []predicate.Post
-	withAuthor      *UserQuery
-	withLabels      *LabelQuery
-	withFKs         bool
-	modifiers       []func(*sql.Selector)
-	loadTotal       []func(context.Context, []*Post) error
-	withNamedLabels map[string]*LabelQuery
+	ctx        *QueryContext
+	order      []post.OrderOption
+	inters     []Interceptor
+	predicates []predicate.Post
+	withAuthor *UserQuery
+	withLabels *LabelQuery
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -343,7 +340,7 @@ func (pq *PostQuery) WithLabels(opts ...func(*LabelQuery)) *PostQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -366,7 +363,7 @@ func (pq *PostQuery) GroupBy(field string, fields ...string) *PostGroupBy {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //	}
 //
 //	client.Post.Query().
@@ -442,9 +439,6 @@ func (pq *PostQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Post, e
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(pq.modifiers) > 0 {
-		_spec.Modifiers = pq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -464,18 +458,6 @@ func (pq *PostQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Post, e
 		if err := pq.loadLabels(ctx, query, nodes,
 			func(n *Post) { n.Edges.Labels = []*Label{} },
 			func(n *Post, e *Label) { n.Edges.Labels = append(n.Edges.Labels, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range pq.withNamedLabels {
-		if err := pq.loadLabels(ctx, query, nodes,
-			func(n *Post) { n.appendNamedLabels(name) },
-			func(n *Post, e *Label) { n.appendNamedLabels(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range pq.loadTotal {
-		if err := pq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -578,9 +560,6 @@ func (pq *PostQuery) loadLabels(ctx context.Context, query *LabelQuery, nodes []
 
 func (pq *PostQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := pq.querySpec()
-	if len(pq.modifiers) > 0 {
-		_spec.Modifiers = pq.modifiers
-	}
 	_spec.Node.Columns = pq.ctx.Fields
 	if len(pq.ctx.Fields) > 0 {
 		_spec.Unique = pq.ctx.Unique != nil && *pq.ctx.Unique
@@ -658,20 +637,6 @@ func (pq *PostQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
-}
-
-// WithNamedLabels tells the query-builder to eager-load the nodes that are connected to the "labels"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (pq *PostQuery) WithNamedLabels(name string, opts ...func(*LabelQuery)) *PostQuery {
-	query := (&LabelClient{config: pq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if pq.withNamedLabels == nil {
-		pq.withNamedLabels = make(map[string]*LabelQuery)
-	}
-	pq.withNamedLabels[name] = query
-	return pq
 }
 
 // PostGroupBy is the group-by builder for Post entities.

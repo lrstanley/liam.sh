@@ -26,8 +26,6 @@ type GithubGistQuery struct {
 	order      []githubgist.OrderOption
 	inters     []Interceptor
 	predicates []predicate.GithubGist
-	modifiers  []func(*sql.Selector)
-	loadTotal  []func(context.Context, []*GithubGist) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -268,7 +266,7 @@ func (ggq *GithubGistQuery) Clone() *GithubGistQuery {
 // Example:
 //
 //	var v []struct {
-//		GistID string `json:"gist_id,omitempty"`
+//		GistID string `json:"gist_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -291,7 +289,7 @@ func (ggq *GithubGistQuery) GroupBy(field string, fields ...string) *GithubGistG
 // Example:
 //
 //	var v []struct {
-//		GistID string `json:"gist_id,omitempty"`
+//		GistID string `json:"gist_id"`
 //	}
 //
 //	client.GithubGist.Query().
@@ -355,9 +353,6 @@ func (ggq *GithubGistQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
-	if len(ggq.modifiers) > 0 {
-		_spec.Modifiers = ggq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -367,19 +362,11 @@ func (ggq *GithubGistQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	for i := range ggq.loadTotal {
-		if err := ggq.loadTotal[i](ctx, nodes); err != nil {
-			return nil, err
-		}
-	}
 	return nodes, nil
 }
 
 func (ggq *GithubGistQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := ggq.querySpec()
-	if len(ggq.modifiers) > 0 {
-		_spec.Modifiers = ggq.modifiers
-	}
 	_spec.Node.Columns = ggq.ctx.Fields
 	if len(ggq.ctx.Fields) > 0 {
 		_spec.Unique = ggq.ctx.Unique != nil && *ggq.ctx.Unique

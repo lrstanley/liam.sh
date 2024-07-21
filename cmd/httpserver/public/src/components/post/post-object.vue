@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
-import type { Post } from "@/lib/api"
+import type { PostRead } from "@/lib/http/types.gen"
 
 const props = defineProps<{
-  value: Post
+  value: PostRead
   linkable?: boolean
 }>()
 
@@ -21,7 +21,7 @@ const post = ref(props.value)
           class="hidden lg:inline-block"
           round
           size="medium"
-          :src="post.author.avatarURL + '&s=40'"
+          :src="post.edges.author.avatar_url + '&s=40'"
         />
       </template>
       <template #header>
@@ -32,26 +32,21 @@ const post = ref(props.value)
       <template #description>
         <span>
           <i>
-            Published {{ useTimeAgo(post.publishedAt).value }} by
-            <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
+            Published {{ useTimeAgo(post.published_at).value }} by
+            <a :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</a>
           </i>
         </span>
       </template>
 
       <span v-html="post.summary" />
 
-      <template v-if="post.labels" #action>
+      <template v-if="post.edges.labels" #action>
         <div class="flex justify-between flex-auto">
           <div class="inline-flex flex-wrap flex-auto gap-1">
-            <LabelObject
-              v-for="label in post.labels.edges.map(({ node }) => node)"
-              :key="label.id"
-              :value="label"
-              linkable
-            />
+            <LabelObject v-for="label in post.edges.labels" :key="label.id" :value="label" linkable />
           </div>
 
-          <PostViewCount :value="post.viewCount" />
+          <PostViewCount :value="post.view_count" />
           <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
         </div>
       </template>

@@ -1,6 +1,22 @@
 <script setup lang="ts">
-import { useGetReposSelectQuery } from "@/lib/api"
-import type { GithubRepository } from "@/lib/api"
+import { listGithubRepositories } from "@/lib/http/services.gen"
+import type { GetGithubSvgData, GetGithubRepoSvgData, GithubRepository } from "@/lib/http/types.gen"
+import { client } from "@hey-api/client-fetch"
+
+const { data: repositories } = useQuery({
+  queryKey: ["repositories", "banners"],
+  queryFn: () =>
+    unwrapErrors(
+      listGithubRepositories({
+        query: {
+          page: 1,
+          per_page: 1000,
+          "public.eq": true,
+          "archived.eq": false,
+        },
+      })
+    ),
+})
 
 definePage({
   meta: {
@@ -8,48 +24,28 @@ definePage({
   },
 })
 
-interface Banner {
-  repo?: GithubRepository
-  title?: string
-  description?: string
-  layout?: "all" | "left" | "right"
-  bg?: string
-  bgcolor?: string
-  h?: number
-  w?: number
-  font?: number
-  icon?: string
-  "icon.height"?: number
-  "icon.width"?: number
-  "icon.flip"?: boolean
-  "icon.rotate"?: number
-  "icon.color"?: string
-}
+type Banner = GetGithubSvgData["query"] &
+  GetGithubRepoSvgData["query"] & {
+    repo?: GithubRepository
+  }
 
-const input = ref<Banner>({})
+const input = ref<Banner>({} as Banner)
 const repo = ref<string>("")
 
-const { data: repoData, error } = await useGetReposSelectQuery()
 const repos = computed(
   () =>
-    repoData.value?.githubRepositories.edges?.map(({ node }) => ({
-      label: node.fullName,
-      value: node.fullName,
+    repositories.value?.content.map((repo) => ({
+      label: repo.full_name + ": " + repo.description,
+      value: repo.full_name,
     })) ?? []
 )
-
-watch(error, () => {
-  if (error.value) throw error.value
-})
 
 const url = computed(() => {
   const params = new URLSearchParams()
   for (const key in input.value) {
-    if (input.value[key]) {
-      params.set(key, input.value[key])
-    }
+    if (input.value[key]) params.set(key, input.value[key])
   }
-  return `/-/gh/svg${repo.value ? "/" + repo.value : ""}?${params.toString()}`
+  return `${client.getConfig().baseUrl}/gh/svg${repo.value ? "/" + repo.value : ""}?${params.toString()}`
 })
 const urlDebounced = refDebounced(url, 250)
 </script>

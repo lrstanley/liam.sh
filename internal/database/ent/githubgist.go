@@ -14,7 +14,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 )
 
@@ -23,32 +23,32 @@ type GithubGist struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// GistID holds the value of the "gist_id" field.
-	GistID string `json:"gist_id,omitempty"`
-	// HTMLURL holds the value of the "html_url" field.
-	HTMLURL string `json:"html_url,omitempty"`
-	// Public holds the value of the "public" field.
-	Public bool `json:"public,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
-	// Owner holds the value of the "owner" field.
-	Owner *github.User `json:"owner,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// Type holds the value of the "type" field.
-	Type string `json:"type,omitempty"`
-	// Language holds the value of the "language" field.
-	Language string `json:"language,omitempty"`
-	// Size holds the value of the "size" field.
-	Size int64 `json:"size,omitempty"`
-	// RawURL holds the value of the "raw_url" field.
-	RawURL string `json:"raw_url,omitempty"`
-	// Content holds the value of the "content" field.
-	Content      string `json:"content,omitempty"`
+	// The ID of the gist.
+	GistID string `json:"gist_id"`
+	// The URL of the gist.
+	HTMLURL string `json:"html_url"`
+	// Whether the gist is public or not.
+	Public bool `json:"public"`
+	// The date the gist was created.
+	CreatedAt time.Time `json:"created_at"`
+	// The date the gist was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+	// The description of the gist.
+	Description string `json:"description"`
+	// The owner data of the gist.
+	Owner *github.User `json:"owner"`
+	// The name of the file.
+	Name string `json:"name"`
+	// The type of the file.
+	Type string `json:"type"`
+	// The programming language of the file.
+	Language string `json:"language"`
+	// The size of the file in bytes.
+	Size int64 `json:"size"`
+	// The raw URL of the file.
+	RawURL string `json:"raw_url"`
+	// The content of the file.
+	Content      string `json:"content"`
 	selectValues sql.SelectValues
 }
 

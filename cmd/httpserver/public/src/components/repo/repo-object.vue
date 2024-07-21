@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
-import type { GithubRepository } from "@/lib/api"
+import type { GithubRepositoryRead } from "@/lib/http/types.gen"
 
 const props = defineProps<{
-  value: GithubRepository
+  value: GithubRepositoryRead
   linkable?: boolean
 }>()
 
@@ -14,7 +14,7 @@ const drawerActive = ref(false)
 </script>
 
 <template>
-  <a :href="props.linkable ? repo.htmlURL : ''" target="_blank">
+  <a :href="props.linkable ? repo.html_url : ''" target="_blank">
     <n-drawer
       v-model:show="drawerActive"
       :auto-focus="false"
@@ -25,7 +25,7 @@ const drawerActive = ref(false)
       <n-drawer-content title="repo labels">
         <div class="inline-flex flex-wrap flex-auto gap-1">
           <LabelObject
-            v-for="label in repo.labels.edges.map(({ node }) => node)"
+            v-for="label in repo.edges.labels"
             :key="label.id"
             :value="label"
             route="/repos"
@@ -38,11 +38,11 @@ const drawerActive = ref(false)
 
     <n-thing class="mb-7" content-indented v-bind="$attrs">
       <template #avatar>
-        <n-avatar :src="repo.owner.avatarURL + '&s=40'" round />
+        <n-avatar :src="repo.owner.avatar_url + '&s=40'" round />
       </template>
       <template #header>
         <div class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-          {{ repo.owner.login == state.base.githubUser.login ? repo.name : repo.fullName }}
+          {{ repo.owner.login == state.githubUser.login ? repo.name : repo.full_name }}
         </div>
       </template>
       <template #header-extra>
@@ -64,7 +64,7 @@ const drawerActive = ref(false)
                   <i-mdi-update />
                 </n-icon>
                 <i class="text-zinc-400">
-                  {{ useTimeAgo(repo.pushedAt).value }}
+                  {{ useTimeAgo(repo.pushed_at).value }}
                 </i>
               </span>
             </template>
@@ -78,7 +78,7 @@ const drawerActive = ref(false)
                   <i-mdi-rocket-launch-outline />
                 </n-icon>
                 <i class="text-zinc-400">
-                  {{ useTimeAgo(repo.createdAt).value }}
+                  {{ useTimeAgo(repo.created_at).value }}
                 </i>
               </span>
             </template>
@@ -90,11 +90,11 @@ const drawerActive = ref(false)
 
       <span v-html="repo.description || 'No description available'" />
 
-      <template v-if="repo.labels" #action>
+      <template v-if="repo.edges.labels" #action>
         <div class="flex justify-between flex-auto">
           <div class="flex-wrap flex-auto hidden gap-1 md:inline-flex">
             <LabelObject
-              v-for="label in repo.labels.edges.map(({ node }) => node)"
+              v-for="label in repo.edges.labels"
               :key="label.id"
               :value="label"
               route="/repos"
@@ -106,8 +106,8 @@ const drawerActive = ref(false)
           </div>
 
           <n-tag class="ml-3 text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-            {{ repo.starCount.toLocaleString() }}
-            {{ repo.starCount === 1 ? "star" : "stars" }}
+            {{ repo.star_count.toLocaleString() }}
+            {{ repo.star_count === 1 ? "star" : "stars" }}
           </n-tag>
         </div>
       </template>

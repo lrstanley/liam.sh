@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
-import { useGetReposQuery } from "@/lib/api"
-import { usePagination, resetCursor, useSorter } from "@/lib/util"
+import { listGithubRepositories } from "@/lib/http/services.gen"
+import type { GithubRepositorySortableFields } from "@/lib/http/types.gen"
+import CoreIntermediaryCheckbox from "@/components/core/core-intermediary-checkbox.vue"
 
 definePage({
   meta: {
@@ -10,48 +11,44 @@ definePage({
   },
 })
 
-const cursor = useRouteQuery<string>("cur", null)
+const sortOptions = {
+  pushed_at: "updated",
+  star_count: "stars",
+  created_at: "created",
+  name: "name",
+}
+
+const pagination = usePagination<GithubRepositorySortableFields>({ sort: "pushed_at" })
 const labels = useRouteQuery<Array<string>>("label", [])
-const archived = useRouteQuery<string>("archived", "true")
-const forks = useRouteQuery<string>("forks", "false")
+const archived = useRouteQuery<string>("archived", "")
+const forks = useRouteQuery<string>("forks", "")
 const search = useRouteQuery<string>("q", "")
-const filterSearch = refDebounced<string>(search, 300)
-const direction = useRouteQuery<string>("dir", "desc")
-const field = useRouteQuery<string>("sort", "pushed_at")
-const sorter = useSorter(
-  {
-    pushed_at: "updated",
-    star_count: "stars",
-    created_at: "created",
-    name: "name",
-  },
-  direction,
-  field
-)
+const debounceSearch = refDebounced<string>(search, 300)
 
-resetCursor(cursor, [labels, archived, forks, search, direction, field])
+resetPagination(pagination, [labels, archived, forks, debounceSearch])
 
-const where = ref({
-  or: [
-    { fullNameContainsFold: filterSearch },
-    { descriptionContainsFold: filterSearch },
-    { homepageContainsFold: filterSearch },
-  ],
-  hasLabelsWith: computed(() => (labels.value.length ? { nameIn: labels.value } : null)),
-  fork: computed(() => (forks.value == "true" ? null : false)),
-  archived: computed(() => (archived.value == "false" ? false : null)),
-})
-
-const { data, error, fetching } = await useGetReposQuery({
-  variables: {
-    ...usePagination(cursor, 10),
-    ...sorter.filter,
-    where: where,
-  },
-})
-
-watch(error, () => {
-  if (error.value) throw error.value
+const {
+  data: repos,
+  error,
+  isPending,
+} = useQuery({
+  queryKey: ["posts", "admin", pagination, labels, archived, forks, debounceSearch],
+  queryFn: () =>
+    unwrapErrors(
+      listGithubRepositories({
+        query: {
+          page: pagination.page.value,
+          per_page: pagination.perPage.value,
+          sort: pagination.sort.value,
+          order: pagination.order.value,
+          "archived.eq": archived.value == "true" ? true : archived.value == "false" ? false : null,
+          "fork.eq": forks.value == "true" ? true : forks.value == "false" ? false : null,
+          "fullName.ihas": debounceSearch.value,
+          "label.name.in": labels.value.length > 0 ? labels.value : null,
+        },
+      })
+    ),
+  placeholderData: keepPreviousData,
 })
 </script>
 
@@ -61,7 +58,7 @@ watch(error, () => {
       <div class="flex flex-auto gap-2 mt-1 mb-8">
         <n-input
           v-model:value="search"
-          :loading="fetching"
+          :loading="isPending"
           type="text"
           clearable
           placeholder="Search for a repo"
@@ -72,47 +69,50 @@ watch(error, () => {
             </n-icon>
           </template>
         </n-input>
-
-        <CorePagination v-model="cursor" :page-info="data?.githubRepositories?.pageInfo" />
       </div>
 
+      <CoreError v-if="error" :error="error" />
       <CoreObjectRender
-        v-if="data?.githubRepositories"
-        :value="data.githubRepositories"
+        v-else
+        :value="repos?.content"
+        type="repo"
         linkable
         show-empty
         divider
+        :loading="isPending"
       />
+
+      <div class="flex">
+        <n-pagination
+          v-model:page="pagination.page.value"
+          v-model:page-size="pagination.perPage.value"
+          :item-count="repos?.total_count"
+          :page-sizes="pagination.sizes"
+          show-size-picker
+          class="mt-2 ml-auto"
+        />
+      </div>
     </div>
 
     <div>
       <div class="text-center md:text-left">
         <div class="text-emerald-500">Sort repos</div>
-        <CoreSorter :sorter="sorter" class="pb-4" />
+        <CoreSorter
+          v-if="pagination"
+          v-model="pagination.sort.value"
+          v-model:order="pagination.order.value"
+          :sort-options="sortOptions"
+          class="pb-4"
+        />
 
         <div class="text-emerald-500">Filter attributes</div>
         <n-space size="small" class="pb-4" inline>
-          <n-checkbox
-            :checked="archived == 'true'"
-            @update:checked="(v) => (archived = v ? 'true' : 'false')"
-          >
-            include archived
-          </n-checkbox>
-          <n-checkbox :checked="forks == 'true'" @update:checked="(v) => (forks = v ? 'true' : 'false')">
-            include forks
-          </n-checkbox>
+          <CoreIntermediaryCheckbox v-model="archived">archived</CoreIntermediaryCheckbox>
+          <CoreIntermediaryCheckbox v-model="forks">forks</CoreIntermediaryCheckbox>
         </n-space>
 
         <div class="text-emerald-500">Filter by label</div>
-        <LabelSelect
-          v-model="labels"
-          :where="{
-            hasGithubRepositoriesWith: {
-              fork: where.fork,
-              archived: where.archived,
-            },
-          }"
-        />
+        <LabelSelect v-model="labels" />
       </div>
     </div>
   </div>

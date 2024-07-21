@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import type { GithubRelease, GithubRepository, GithubUser } from "@/lib/api"
-import { useLatestRepoReleasesQuery } from "@/lib/api"
-import { useTimeAgo } from "@vueuse/core"
 import type { DataTableColumns } from "naive-ui"
+import { listOutdatedGithubReleases } from "@/lib/http/services.gen"
+import type { OutdatedRepositoryRelease } from "@/lib/http/types.gen"
 
 definePage({
   meta: {
@@ -10,67 +9,65 @@ definePage({
   },
 })
 
-const { data, error } = await useLatestRepoReleasesQuery()
+const {
+  data: results,
+  isFetching,
+  error,
+  suspense,
+} = useQuery({
+  queryKey: ["releases", "outdated"],
+  queryFn: () => unwrapErrors(listOutdatedGithubReleases()),
+})
+await suspense()
 
 watch(error, () => {
   if (error.value) throw error.value
 })
 
-interface RowData {
-  repo: Pick<GithubRepository, "fullName" | "htmlURL">
-  owner: Pick<GithubUser, "avatarURL">
-  release: Pick<GithubRelease, "createdAt">
-}
-
 const now = new Date()
 
-const columns: DataTableColumns<RowData> = [
+const columns: DataTableColumns<OutdatedRepositoryRelease> = [
   {
     title: "Repository",
     key: "repository",
-    render: ({ repo, owner }) =>
-      h("a", { class: "flex flex-row", href: repo.htmlURL, target: "_blank" }, [
-        h("img", { src: owner.avatarURL, class: "w-6 h-6 rounded-full" }),
-        h("span", { class: "ml-2" }, repo.fullName),
+    render: (data: OutdatedRepositoryRelease) =>
+      h(
+        "a",
+        { class: "flex flex-row", href: data.repository.html_url + "/releases", target: "_blank" },
+        [
+          h("img", { src: data.repository.owner.avatar_url, class: "w-6 h-6 rounded-full" }),
+          h("span", { class: "ml-2" }, data.repository.full_name),
+        ]
+      ),
+  },
+  {
+    title: "Last Release",
+    key: "lastRelease",
+    render: (data: OutdatedRepositoryRelease) =>
+      h("a", { class: "flex flex-row", href: data.release.html_url, target: "_blank" }, [
+        h("span", {}, data.release.name || data.release.tag_name),
       ]),
   },
   {
     title: "Last Release Date",
     key: "lastRelease",
-    render: ({ release }) => h("span", {}, release.createdAt),
+    render: (data: OutdatedRepositoryRelease) => h("span", {}, data.release.created_at),
   },
   {
     title: "Last Release Relative",
     key: "lastRelease",
-    render: ({ release }) => {
-      const diffMs = now.getTime() - new Date(release.createdAt).getTime()
+    render: (data: OutdatedRepositoryRelease) => {
+      const diffMs = now.getTime() - new Date(data.release.created_at).getTime()
       const diffDays = Math.round(diffMs / 86400000)
 
       return h(
         "span",
         { class: diffDays > 90 ? "text-red-500" : "" },
-        useTimeAgo(release.createdAt).value
+        useTimeAgo(data.release.created_at).value
       )
     },
   },
 ]
-
-const results = computed<RowData[]>(() => {
-  return (
-    data.value?.githubRepositories.edges
-      ?.map(({ node }) => {
-        const release = node.releases.edges?.[0]?.node
-        return {
-          repo: node,
-          owner: node.owner,
-          release: release,
-        }
-      })
-      .sort((a, b) => {
-        return new Date(a.release.createdAt).getTime() - new Date(b.release.createdAt).getTime()
-      }) ?? []
-  )
-})
 </script>
 
 <template>
@@ -87,6 +84,6 @@ const results = computed<RowData[]>(() => {
       </template>
     </n-page-header>
 
-    <n-data-table :columns="columns" :data="results" />
+    <n-data-table :loading="isFetching" :columns="columns" :data="results" />
   </div>
 </template>

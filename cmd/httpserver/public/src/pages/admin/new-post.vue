@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useCreatePostMutation, type CreatePostInput } from "@/lib/api"
+import { createPost } from "@/lib/http/services.gen"
+import type { PostCreate } from "@/lib/http/types.gen"
 
 definePage({
   meta: {
@@ -9,16 +10,30 @@ definePage({
 })
 
 const router = useRouter()
-const post = useCreatePostMutation()
+const state = useState()
+const queryClient = useQueryClient()
 
-function createPost(val: CreatePostInput) {
-  post.executeMutation({ input: val }).then((result) => {
-    if (!result.error) {
-      message.success("Post created successfully")
-      router.push({ name: "/admin/posts" })
-    } else {
-      message.error(result.error.toString())
-    }
+const { mutate, isPending } = useMutation({
+  mutationFn: (data: PostCreate) => unwrapErrors(createPost({ body: data })),
+  onError: (error) => {
+    message.error("error creating post: " + error.message)
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["posts"] })
+    message.success("post created successfully")
+    router.push({ name: "/admin/posts" })
+  },
+})
+
+function invokeCreate(data: PostCreate, labelIDs: number[]) {
+  mutate({
+    slug: data.slug,
+    title: data.title,
+    content: data.content,
+    published_at: data.published_at,
+    public: data.public,
+    labels: labelIDs,
+    author: state.user.id,
   })
 }
 </script>
@@ -35,7 +50,9 @@ function createPost(val: CreatePostInput) {
     </n-page-header>
 
     <div class="p-4 sm:container sm:mx-auto lg:p-0">
-      <PostCreateEdit create @update:post="createPost" />
+      <n-spin :show="isPending">
+        <PostCreateEdit create @update:post="invokeCreate" />
+      </n-spin>
     </div>
   </div>
 </template>

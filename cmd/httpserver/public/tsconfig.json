@@ -11,10 +11,12 @@
         },
         "removeComments": true,
         "strict": false,
+        "moduleResolution": "Bundler",
         "types": [
             "naive-ui/volar",
             "vite/client",
-            "vite-plugin-vue-layouts/client.d.ts", // for now: https://github.com/JohnCampionJr/vite-plugin-vue-layouts/issues/111#issuecomment-1576592257
+            "unplugin-vue-router/client",
+            "vite-plugin-vue-layouts/client",
             "unplugin-icons/types/vue"
         ],
     },

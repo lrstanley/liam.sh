@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { version as vueVersion } from "vue"
 import { branchMenuOptions } from "@/lib/core/navigation"
+import { getServiceVersion } from "@/lib/http/services.gen"
 
-const state = useState()
-
-const props = defineProps<{
-  prefix?: string
-  command?: string
-}>()
+const { data: version } = useQuery({
+  queryKey: ["version"],
+  queryFn: () => unwrapErrors(getServiceVersion()),
+})
 </script>
 
 <template>
   <n-card
     content-style="padding: 0;display: flex;flex-direction: column;"
-    class="flex flex-auto w-full h-full p-0"
+    class="flex flex-auto p-0 size-full"
   >
     <slot />
 
@@ -27,7 +26,7 @@ const props = defineProps<{
               </n-icon>
             </span>
           </template>
-          build date: {{ state.base.version.date }}
+          build date: {{ version?.build_date }}
         </n-tooltip>
 
         <n-popover
@@ -71,7 +70,7 @@ const props = defineProps<{
           <n-icon class="mr-1 align-middle">
             <i-logos-gopher />
           </n-icon>
-          {{ state.base.version.goVersion.replace(/^go/, "") }}
+          {{ version?.go_version.replace(/^go/, "") }}
         </span>
         <span class="bar-item misc">
           <n-icon class="mr-1 align-middle">

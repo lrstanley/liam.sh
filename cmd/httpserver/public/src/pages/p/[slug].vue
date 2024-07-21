@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
-import { useGetPostContentQuery } from "@/lib/api"
+import { listPosts } from "@/lib/http/services.gen"
 
 definePage({
   meta: {
@@ -12,14 +12,26 @@ definePage({
 const route = useRoute("/p/[slug]")
 const state = useState()
 
-const { data, error } = await useGetPostContentQuery({ variables: { slug: route.params.slug } })
+const {
+  data: result,
+  error,
+  suspense,
+} = useQuery({
+  queryKey: ["posts", route.params.slug],
+  queryFn: () => unwrapErrors(listPosts({ query: { "slug.eq": route.params.slug } })),
+})
+await suspense()
 
-if (data.value?.posts?.edges?.length < 1) {
-  throw new Error("Post not found")
-}
-if (error.value) throw error.value
+const post = computed(() => {
+  if (!result.value) return null
+  if (error.value) throw error.value
 
-const post = computed(() => data?.value?.posts?.edges[0]?.node)
+  if (result.value?.content.length < 1) {
+    throw new Error("Post not found")
+  }
+
+  return result.value?.content[0]
+})
 const postRef = ref(null)
 </script>
 
@@ -47,27 +59,27 @@ const postRef = ref(null)
 
           <div class="flex flex-col flex-auto mt-3 lg:flex-row lg:items-center mb-7 md:mb-12">
             <div class="inline-flex items-center">
-              <n-avatar class="mr-3" round size="medium" :src="post.author.avatarURL + '&s=40'" />
+              <n-avatar class="mr-3" round size="medium" :src="post.edges.author.avatar_url + '&s=40'" />
               <p>
-                <a :href="post.author.htmlURL" target="_blank">{{ post.author.name }}</a>
+                <a :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</a>
                 <br />
-                <i>Published {{ useTimeAgo(post.publishedAt).value }}</i>
+                <i>Published {{ useTimeAgo(post.published_at).value }}</i>
               </p>
             </div>
           </div>
 
-          <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.contentHTML" />
+          <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.content_html" />
         </div>
       </div>
     </div>
 
     <div>
       <div class="flex flex-col gap-4">
-        <div v-if="state.base?.self" class="flex flex-col gap-1">
+        <div v-if="state.user" class="flex flex-col gap-1">
           <div class="text-emerald-500">Admin Options</div>
 
           <div>
-            <PostViewCount :value="post.viewCount" />
+            <PostViewCount :value="post.view_count" />
             <n-tag v-if="!post.public" class="ml-2" type="warning">draft</n-tag>
           </div>
 
@@ -81,7 +93,7 @@ const postRef = ref(null)
         <div>
           <div class="text-emerald-500">Post Labels</div>
           <div class="flex flex-wrap gap-1">
-            <CoreObjectRender :value="post.labels" linkable />
+            <CoreObjectRender :value="post.edges.labels" type="label" linkable />
           </div>
         </div>
       </div>

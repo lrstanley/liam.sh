@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import { getGithubStats } from "@/lib/http/services.gen"
+
+const { data: githubStats } = useQuery({
+  queryKey: ["stats", "github"],
+  queryFn: () => unwrapErrors(getGithubStats()),
+})
+
 const state = useState()
 const year = new Date().getFullYear()
 </script>
 
 <template>
   <n-popover
+    v-if="githubStats && state.githubUser"
     :width="275"
     raw
     :show-arrow="false"
@@ -15,12 +23,12 @@ const year = new Date().getFullYear()
       <a
         class="px-2 transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"
         style="color: white !important"
-        :href="state.base.githubUser.htmlurl"
+        :href="state.githubUser.html_url"
       >
         <n-icon class="align-middle mt-[-3px] mr-[-7px]">
           <i-mdi-github />
         </n-icon>
-        {{ state.base.githubUser.login }}
+        {{ state.githubUser.login }}
       </a>
     </template>
 
@@ -28,18 +36,18 @@ const year = new Date().getFullYear()
       <n-avatar
         round
         :size="45"
-        :src="state.base.githubUser.avatarURL + '&s=80'"
+        :src="state.githubUser.avatar_url + '&s=80'"
         class="mr-2 align-middle"
       />
 
       <div>
-        <h2 class="text-base leading-tight">{{ state.base.githubUser.name }}</h2>
-        <h2 class="text-base leading-tight text-zinc-400">{{ state.base.githubUser.login }}</h2>
+        <h2 class="text-base leading-tight">{{ state.githubUser.name }}</h2>
+        <h2 class="text-base leading-tight text-zinc-400">{{ state.githubUser.login }}</h2>
       </div>
     </div>
 
     <!-- <div class="mt-4 text-sm">
-      {{ state.base.githubUser.bio }}
+      {{ state.githubUser.bio }}
     </div> -->
 
     <div class="mt-4">
@@ -49,7 +57,7 @@ const year = new Date().getFullYear()
           Total Commits ({{ year }})
         </span>
         <n-tag type="success" :bordered="false" size="small">
-          {{ state.base.githubStats.commitsYear.toLocaleString() }}
+          {{ githubStats.commits_year.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
@@ -58,7 +66,7 @@ const year = new Date().getFullYear()
           Contributed To ({{ year }})
         </span>
         <n-tag type="success" :bordered="false" size="small">
-          {{ state.base.githubStats.contributedRepos.toLocaleString() }}
+          {{ githubStats.contributed_repositories.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
@@ -67,7 +75,7 @@ const year = new Date().getFullYear()
           Total Stars Earned
         </span>
         <n-tag type="success" :bordered="false" size="small">
-          {{ state.base.githubStats.stars.toLocaleString() }}
+          {{ githubStats.stars.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
@@ -76,7 +84,7 @@ const year = new Date().getFullYear()
           Total PRs
         </span>
         <n-tag type="success" :bordered="false" size="small">
-          {{ state.base.githubStats.pullRequests.toLocaleString() }}
+          {{ githubStats.pull_requests.toLocaleString() }}
         </n-tag>
       </div>
       <div class="flex flex-row justify-between flex-auto mt-1">
@@ -85,7 +93,7 @@ const year = new Date().getFullYear()
           Total Issues
         </span>
         <n-tag type="success" :bordered="false" size="small">
-          {{ state.base.githubStats.issues.toLocaleString() }}
+          {{ githubStats.all_issues.toLocaleString() }}
         </n-tag>
       </div>
     </div>

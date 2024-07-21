@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 
 	"github.com/apex/log"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 )
 
 var User atomic.Pointer[github.User]

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"

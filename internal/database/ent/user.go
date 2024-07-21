@@ -21,26 +21,26 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime time.Time `json:"update_time,omitempty"`
-	// UserID holds the value of the "user_id" field.
-	UserID int `json:"user_id,omitempty"`
-	// Login holds the value of the "login" field.
-	Login string `json:"login,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// AvatarURL holds the value of the "avatar_url" field.
-	AvatarURL string `json:"avatar_url,omitempty"`
-	// HTMLURL holds the value of the "html_url" field.
-	HTMLURL string `json:"html_url,omitempty"`
-	// Email holds the value of the "email" field.
-	Email string `json:"email,omitempty"`
-	// Location holds the value of the "location" field.
-	Location string `json:"location,omitempty"`
-	// Bio holds the value of the "bio" field.
-	Bio string `json:"bio,omitempty"`
+	// Time the entity was created.
+	CreateTime time.Time `json:"create_time"`
+	// Time the entity was last updated.
+	UpdateTime time.Time `json:"update_time"`
+	// Users GitHub ID.
+	UserID int `json:"user_id"`
+	// Users GitHub login ID (username).
+	Login string `json:"login"`
+	// Users GitHub display name.
+	Name string `json:"name"`
+	// GitHub avatar of the user, provided by GitHub.
+	AvatarURL string `json:"avatar_url"`
+	// Users GitHub profile URL.
+	HTMLURL string `json:"html_url"`
+	// Users GitHub email address.
+	Email string `json:"email"`
+	// Users GitHub location.
+	Location string `json:"location"`
+	// Users GitHub bio.
+	Bio string `json:"bio"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
 	Edges        UserEdges `json:"edges"`
@@ -54,10 +54,6 @@ type UserEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
-	// totalCount holds the count of the edges above.
-	totalCount [1]map[string]int
-
-	namedPosts map[string][]*Post
 }
 
 // PostsOrErr returns the Posts value or an error if the edge
@@ -233,30 +229,6 @@ func (u *User) String() string {
 	builder.WriteString(u.Bio)
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedPosts returns the Posts named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (u *User) NamedPosts(name string) ([]*Post, error) {
-	if u.Edges.namedPosts == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := u.Edges.namedPosts[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (u *User) appendNamedPosts(name string, edges ...*Post) {
-	if u.Edges.namedPosts == nil {
-		u.Edges.namedPosts = make(map[string][]*Post)
-	}
-	if len(edges) == 0 {
-		u.Edges.namedPosts[name] = []*Post{}
-	} else {
-		u.Edges.namedPosts[name] = append(u.Edges.namedPosts[name], edges...)
-	}
 }
 
 // Users is a parsable slice of User.

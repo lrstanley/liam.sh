@@ -17,7 +17,7 @@ const state = useState()
 <template>
   <div v-bind="$attrs">
     <span class="inline-flex mr-[10px] text-emerald-600">
-      {{ state.base.githubUser.name.split(" ")[0].toLowerCase() }}
+      {{ state.githubUser?.name.split(" ")[0].toLowerCase() }}
       <span class="text-zinc-500">:</span>
       {{ props.path }}
       <span class="text-zinc-500">$</span>
@@ -39,7 +39,9 @@ const state = useState()
 }
 .cursor {
   @apply whitespace-nowrap overflow-hidden inline-flex border-r-4 border-r-emerald-500 border-solid;
-  animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 1s steps(40, end),
+    blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {

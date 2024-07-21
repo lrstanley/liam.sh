@@ -23,7 +23,7 @@ watch(
     >
       <CoreNavigation />
 
-      <main class="w-full h-full">
+      <main class="size-full">
         <CoreError v-if="error" :error="error" />
         <router-view v-else v-slot="{ Component, route: r }">
           <transition name="fade" mode="out-in" appear>
@@ -47,7 +47,7 @@ watch(
         <i-mdi-heart />
       </n-icon>
       by
-      <a :href="state.base.githubUser.htmlurl" target="_blank">{{ state.base.githubUser.login }}</a>
+      <a :href="state.githubUser?.html_url" target="_blank">{{ state.githubUser?.login }}</a>
     </span>
   </div>
 </template>

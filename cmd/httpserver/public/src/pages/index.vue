@@ -12,7 +12,7 @@ const eventCount = ref<number>()
 <template>
   <ContainerIde>
     <EventsRender
-      class="relative w-full h-full overflow-x-hidden grow basis-0"
+      class="relative overflow-x-hidden size-full grow basis-0"
       @event-count="(e) => (eventCount = e)"
     />
 

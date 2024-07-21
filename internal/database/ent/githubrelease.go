@@ -14,7 +14,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 )
@@ -24,26 +24,26 @@ type GithubRelease struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// ReleaseID holds the value of the "release_id" field.
-	ReleaseID int64 `json:"release_id,omitempty"`
-	// HTMLURL holds the value of the "html_url" field.
-	HTMLURL string `json:"html_url,omitempty"`
-	// TagName holds the value of the "tag_name" field.
-	TagName string `json:"tag_name,omitempty"`
-	// TargetCommitish holds the value of the "target_commitish" field.
-	TargetCommitish string `json:"target_commitish,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// Draft holds the value of the "draft" field.
-	Draft bool `json:"draft,omitempty"`
-	// Prerelease holds the value of the "prerelease" field.
-	Prerelease bool `json:"prerelease,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// PublishedAt holds the value of the "published_at" field.
-	PublishedAt time.Time `json:"published_at,omitempty"`
+	// The ID of the release.
+	ReleaseID int64 `json:"release_id"`
+	// The URL of the release.
+	HTMLURL string `json:"html_url"`
+	// The tag name of the release.
+	TagName string `json:"tag_name"`
+	// Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch.
+	TargetCommitish string `json:"target_commitish"`
+	// The name of the release.
+	Name string `json:"name"`
+	// Indicates whether the release is a draft.
+	Draft bool `json:"draft"`
+	// Indicates whether the release is a prerelease.
+	Prerelease bool `json:"prerelease"`
+	// The date the release was created.
+	CreatedAt time.Time `json:"created_at"`
+	// The date the release was published.
+	PublishedAt time.Time `json:"published_at"`
 	// Author holds the value of the "author" field.
-	Author *github.User `json:"author,omitempty"`
+	Author *github.User `json:"author"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the GithubReleaseQuery when eager-loading is set.
 	Edges                      GithubReleaseEdges `json:"edges"`
@@ -60,10 +60,6 @@ type GithubReleaseEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
-	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
-
-	namedAssets map[string][]*GithubAsset
 }
 
 // RepositoryOrErr returns the Repository value or an error if the edge
@@ -270,30 +266,6 @@ func (gr *GithubRelease) String() string {
 	builder.WriteString(fmt.Sprintf("%v", gr.Author))
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedAssets returns the Assets named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (gr *GithubRelease) NamedAssets(name string) ([]*GithubAsset, error) {
-	if gr.Edges.namedAssets == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := gr.Edges.namedAssets[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (gr *GithubRelease) appendNamedAssets(name string, edges ...*GithubAsset) {
-	if gr.Edges.namedAssets == nil {
-		gr.Edges.namedAssets = make(map[string][]*GithubAsset)
-	}
-	if len(edges) == 0 {
-		gr.Edges.namedAssets[name] = []*GithubAsset{}
-	} else {
-		gr.Edges.namedAssets[name] = append(gr.Edges.namedAssets[name], edges...)
-	}
 }
 
 // GithubReleases is a parsable slice of GithubRelease.

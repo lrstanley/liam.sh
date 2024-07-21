@@ -25,16 +25,12 @@ import (
 // GithubRepositoryQuery is the builder for querying GithubRepository entities.
 type GithubRepositoryQuery struct {
 	config
-	ctx               *QueryContext
-	order             []githubrepository.OrderOption
-	inters            []Interceptor
-	predicates        []predicate.GithubRepository
-	withLabels        *LabelQuery
-	withReleases      *GithubReleaseQuery
-	modifiers         []func(*sql.Selector)
-	loadTotal         []func(context.Context, []*GithubRepository) error
-	withNamedLabels   map[string]*LabelQuery
-	withNamedReleases map[string]*GithubReleaseQuery
+	ctx          *QueryContext
+	order        []githubrepository.OrderOption
+	inters       []Interceptor
+	predicates   []predicate.GithubRepository
+	withLabels   *LabelQuery
+	withReleases *GithubReleaseQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -343,7 +339,7 @@ func (grq *GithubRepositoryQuery) WithReleases(opts ...func(*GithubReleaseQuery)
 // Example:
 //
 //	var v []struct {
-//		RepoID int64 `json:"repo_id,omitempty"`
+//		RepoID int64 `json:"repo_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -366,7 +362,7 @@ func (grq *GithubRepositoryQuery) GroupBy(field string, fields ...string) *Githu
 // Example:
 //
 //	var v []struct {
-//		RepoID int64 `json:"repo_id,omitempty"`
+//		RepoID int64 `json:"repo_id"`
 //	}
 //
 //	client.GithubRepository.Query().
@@ -435,9 +431,6 @@ func (grq *GithubRepositoryQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(grq.modifiers) > 0 {
-		_spec.Modifiers = grq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -458,25 +451,6 @@ func (grq *GithubRepositoryQuery) sqlAll(ctx context.Context, hooks ...queryHook
 		if err := grq.loadReleases(ctx, query, nodes,
 			func(n *GithubRepository) { n.Edges.Releases = []*GithubRelease{} },
 			func(n *GithubRepository, e *GithubRelease) { n.Edges.Releases = append(n.Edges.Releases, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range grq.withNamedLabels {
-		if err := grq.loadLabels(ctx, query, nodes,
-			func(n *GithubRepository) { n.appendNamedLabels(name) },
-			func(n *GithubRepository, e *Label) { n.appendNamedLabels(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range grq.withNamedReleases {
-		if err := grq.loadReleases(ctx, query, nodes,
-			func(n *GithubRepository) { n.appendNamedReleases(name) },
-			func(n *GithubRepository, e *GithubRelease) { n.appendNamedReleases(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range grq.loadTotal {
-		if err := grq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -578,9 +552,6 @@ func (grq *GithubRepositoryQuery) loadReleases(ctx context.Context, query *Githu
 
 func (grq *GithubRepositoryQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := grq.querySpec()
-	if len(grq.modifiers) > 0 {
-		_spec.Modifiers = grq.modifiers
-	}
 	_spec.Node.Columns = grq.ctx.Fields
 	if len(grq.ctx.Fields) > 0 {
 		_spec.Unique = grq.ctx.Unique != nil && *grq.ctx.Unique
@@ -658,34 +629,6 @@ func (grq *GithubRepositoryQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
-}
-
-// WithNamedLabels tells the query-builder to eager-load the nodes that are connected to the "labels"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (grq *GithubRepositoryQuery) WithNamedLabels(name string, opts ...func(*LabelQuery)) *GithubRepositoryQuery {
-	query := (&LabelClient{config: grq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if grq.withNamedLabels == nil {
-		grq.withNamedLabels = make(map[string]*LabelQuery)
-	}
-	grq.withNamedLabels[name] = query
-	return grq
-}
-
-// WithNamedReleases tells the query-builder to eager-load the nodes that are connected to the "releases"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (grq *GithubRepositoryQuery) WithNamedReleases(name string, opts ...func(*GithubReleaseQuery)) *GithubRepositoryQuery {
-	query := (&GithubReleaseClient{config: grq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if grq.withNamedReleases == nil {
-		grq.withNamedReleases = make(map[string]*GithubReleaseQuery)
-	}
-	grq.withNamedReleases[name] = query
-	return grq
 }
 
 // GithubRepositoryGroupBy is the group-by builder for GithubRepository entities.

@@ -36,35 +36,6 @@ var (
 	iconCache = cache.New[string, string]()
 )
 
-const svgDocs = `# SVG Generator Routes:
-GET /-/svg?options                 :: Dynamic SVG Generator based off title/description params.
-GET /-/svg/<owner>/<repo>?options  :: Must map to a repository in the database.
-
-[parameters]
-
-?title=<string>           :: Title of the project (not required if using owner/repo).
-?description=<string>     :: Description of the project (not required if using owner/repo).
-?h=<int:200>              :: Height of the SVG (in px).
-?w=<int:961>              :: Width of the SVG (in px).
-?font=<float:1.0>         :: Font scale.
-?bg=<string:geometric>    :: Background type.
-  - geometric
-  - topography
-?bgcolor=<string:#000000> :: Background color (hex, rgb, rgba, hsl).
-?layout=<string:all>      :: Layout type.
-  - all
-  - left
-  - right
-?icon=<string:mdi>:<string:github> :: Iconify icon to use. See: https://icones.js.org/
-?icon.height=<int>                 :: Height of the icon (in px).
-?icon.width=<int>                  :: Width of the icon (in px).
-?icon.flip=<string>                :: Flip the icon.
-  - horizontal
-  - vertical
-?icon.rotate=<int>                 :: Rotate the icon (1=90deg, 2=180deg, 3=270deg).
-?icon.color=<string>               :: Color of the icon (hex, rgb, rgba, hsl).
-`
-
 type svgParams struct {
 	Title       string  `form:"title"       validate:"printascii,max=20"`
 	Description string  `form:"description" validate:"printascii,max=100"`
@@ -173,8 +144,7 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 	repoFullName := chi.URLParam(r, "owner") + "/" + chi.URLParam(r, "repo")
 
 	if (params.Title == "" || params.Description == "") && repoFullName == "/" || params.Icon == "" {
-		w.Header().Set("Content-Type", "text/plain")
-		fmt.Fprint(w, svgDocs)
+		chix.ErrorCode(w, r, http.StatusBadRequest, chix.WrapCode(http.StatusBadRequest))
 		return
 	}
 

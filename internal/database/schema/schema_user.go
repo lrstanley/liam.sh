@@ -7,12 +7,11 @@ package schema
 import (
 	"regexp"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/mixin"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
@@ -26,33 +25,79 @@ type User struct {
 // Fields of the User.
 func (User) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("user_id").Unique().Positive().Immutable(),
-		field.String("login").Unique().Match(reUserLogin).Annotations(
-			entgql.OrderField("LOGIN"),
-		),
-		field.String("name").Optional().MaxLen(400).Annotations(
-			entgql.OrderField("NAME"),
-		),
-		field.String("avatar_url").Optional().MaxLen(2048),
-		field.String("html_url").Optional().MaxLen(2048),
-		field.String("email").Optional().MaxLen(320).Annotations(
-			entgql.OrderField("EMAIL"),
-		),
-		field.String("location").Optional().MaxLen(400),
-		field.String("bio").Optional().MaxLen(400),
+		field.Int("user_id").
+			Unique().
+			Positive().
+			Immutable().
+			Annotations(
+				entrest.WithExample(12345),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupArray),
+			).Comment("Users GitHub ID."),
+		field.String("login").
+			Unique().
+			Match(reUserLogin).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("lrstanley"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Users GitHub login ID (username)."),
+		field.String("name").
+			Optional().
+			MaxLen(400).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("Liam Stanley"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Users GitHub display name."),
+		field.String("avatar_url").
+			Optional().
+			MaxLen(2048).
+			Annotations(
+				entrest.WithExample("https://avatars.githubusercontent.com/u/1847365?v=4"),
+			).
+			Comment("GitHub avatar of the user, provided by GitHub."),
+		field.String("html_url").
+			Optional().
+			MaxLen(2048).
+			Annotations(
+				entrest.WithExample("https://github.com/lrstanley"),
+			).
+			Comment("Users GitHub profile URL."),
+		field.String("email").
+			Optional().
+			MaxLen(320).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Users GitHub email address."),
+		field.String("location").
+			Optional().
+			MaxLen(400).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Users GitHub location."),
+		field.String("bio").
+			Optional().
+			MaxLen(400).
+			Comment("Users GitHub bio."),
 	}
 }
 
 func (User) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.Time{},
+		MixinTime{},
 	}
 }
 
 func (User) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			privacy.AlwaysAllowRule(), // Users have to be able to login, which may be done by anyone.
+			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
 			privacy.AlwaysAllowRule(),
@@ -63,15 +108,12 @@ func (User) Policy() ent.Policy {
 // Edges of the User.
 func (User) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("posts", Post.Type).Annotations(
-			entgql.RelayConnection(),
-		),
+		edge.To("posts", Post.Type).Annotations(),
 	}
 }
 
 func (User) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entrest.WithIncludeOperations(entrest.OperationList, entrest.OperationRead),
 	}
 }

@@ -11,8 +11,7 @@ bin/*
 .env
 .gitapicache
 node_modules
-internal/graphql/gqlhandler
-cmd/httpserver/public/src/lib/api/graphql.ts
+cmd/httpserver/public/src/lib/http
 dist
 .eslintrc-auto-import.json
 **/*.d.ts

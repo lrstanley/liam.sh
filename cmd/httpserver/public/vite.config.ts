@@ -9,7 +9,6 @@ import Components from "unplugin-vue-components/vite"
 import { VueRouterAutoImports } from "unplugin-vue-router"
 import VueRouter from "unplugin-vue-router/vite"
 import { defineConfig } from "vite"
-import codegen from "vite-plugin-graphql-codegen"
 import Layouts from "vite-plugin-vue-layouts"
 
 const icons = IconsResolver({
@@ -27,26 +26,6 @@ export default defineConfig({
   plugins: [
     visualizer({
       filename: "./dist/stats.html",
-    }),
-    codegen({
-      enableWatcher: true,
-      config: {
-        errorsOnly: true,
-        schema: "./../../../internal/graphql/schema/*.gql",
-        documents: "./src/lib/api/*.gql",
-        generates: {
-          "./src/lib/api/graphql.ts": {
-            plugins: ["typescript", "typescript-operations", "typescript-vue-urql"],
-            config: {
-              preResolveTypes: true,
-              nonOptionalTypename: true,
-              skipTypeNameForRoot: true,
-              useTypeImports: true,
-              inputMaybeValue: "T | Ref<T> | ComputedRef<T>",
-            },
-          },
-        },
-      },
     }),
     VueRouter({
       routesFolder: "src/pages",
@@ -69,6 +48,8 @@ export default defineConfig({
         "@vueuse/core",
         {
           "@/lib/core/state": ["useState"],
+          "@/lib/util/request": ["usePagination", "resetPagination", "unwrapErrors"],
+          "@tanstack/vue-query": ["useQuery", "useMutation", "useQueryClient", "keepPreviousData"],
         },
         VueRouterAutoImports,
       ],

@@ -15,7 +15,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"

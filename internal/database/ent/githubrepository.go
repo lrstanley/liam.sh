@@ -14,7 +14,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 )
 
@@ -23,44 +23,44 @@ type GithubRepository struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// RepoID holds the value of the "repo_id" field.
-	RepoID int64 `json:"repo_id,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// FullName holds the value of the "full_name" field.
-	FullName string `json:"full_name,omitempty"`
-	// OwnerLogin holds the value of the "owner_login" field.
-	OwnerLogin string `json:"owner_login,omitempty"`
-	// Owner holds the value of the "owner" field.
-	Owner *github.User `json:"owner,omitempty"`
-	// Public holds the value of the "public" field.
-	Public bool `json:"public,omitempty"`
-	// HTMLURL holds the value of the "html_url" field.
-	HTMLURL string `json:"html_url,omitempty"`
-	// Description holds the value of the "description" field.
-	Description string `json:"description,omitempty"`
-	// Fork holds the value of the "fork" field.
-	Fork bool `json:"fork,omitempty"`
-	// Homepage holds the value of the "homepage" field.
-	Homepage string `json:"homepage,omitempty"`
-	// StarCount holds the value of the "star_count" field.
-	StarCount int `json:"star_count,omitempty"`
-	// DefaultBranch holds the value of the "default_branch" field.
-	DefaultBranch string `json:"default_branch,omitempty"`
-	// IsTemplate holds the value of the "is_template" field.
-	IsTemplate bool `json:"is_template,omitempty"`
-	// HasIssues holds the value of the "has_issues" field.
-	HasIssues bool `json:"has_issues,omitempty"`
-	// Archived holds the value of the "archived" field.
-	Archived bool `json:"archived,omitempty"`
-	// PushedAt holds the value of the "pushed_at" field.
-	PushedAt time.Time `json:"pushed_at,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// The ID of the repository.
+	RepoID int64 `json:"repo_id"`
+	// The name of the repository.
+	Name string `json:"name"`
+	// The full name of the repository, which includes the owner.
+	FullName string `json:"full_name"`
+	// The username which owns the repository (user or organization).
+	OwnerLogin string `json:"owner_login"`
+	// The owner data of the repository.
+	Owner *github.User `json:"owner"`
+	// Whether the repository is public or not.
+	Public bool `json:"public"`
+	// The URL of the repository.
+	HTMLURL string `json:"html_url"`
+	// The description of the repository.
+	Description string `json:"description"`
+	// Whether the repository is a fork or not.
+	Fork bool `json:"fork"`
+	// The homepage of the repository.
+	Homepage string `json:"homepage"`
+	// The number of stars the repository has.
+	StarCount int `json:"star_count"`
+	// The default branch of the repository.
+	DefaultBranch string `json:"default_branch"`
+	// Whether the repository is a template repo or not.
+	IsTemplate bool `json:"is_template"`
+	// Whether the repository has issues enabled or not.
+	HasIssues bool `json:"has_issues"`
+	// Whether the repository is archived or not.
+	Archived bool `json:"archived"`
+	// The date the repository was last pushed to.
+	PushedAt time.Time `json:"pushed_at"`
+	// The date the repository was created.
+	CreatedAt time.Time `json:"created_at"`
+	// The date the repository was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
 	// License holds the value of the "license" field.
-	License *github.License `json:"license,omitempty"`
+	License *github.License `json:"license"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the GithubRepositoryQuery when eager-loading is set.
 	Edges        GithubRepositoryEdges `json:"edges"`
@@ -76,11 +76,6 @@ type GithubRepositoryEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
-	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
-
-	namedLabels   map[string][]*Label
-	namedReleases map[string][]*GithubRelease
 }
 
 // LabelsOrErr returns the Labels value or an error if the edge
@@ -359,54 +354,6 @@ func (gr *GithubRepository) String() string {
 	builder.WriteString(fmt.Sprintf("%v", gr.License))
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedLabels returns the Labels named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (gr *GithubRepository) NamedLabels(name string) ([]*Label, error) {
-	if gr.Edges.namedLabels == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := gr.Edges.namedLabels[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (gr *GithubRepository) appendNamedLabels(name string, edges ...*Label) {
-	if gr.Edges.namedLabels == nil {
-		gr.Edges.namedLabels = make(map[string][]*Label)
-	}
-	if len(edges) == 0 {
-		gr.Edges.namedLabels[name] = []*Label{}
-	} else {
-		gr.Edges.namedLabels[name] = append(gr.Edges.namedLabels[name], edges...)
-	}
-}
-
-// NamedReleases returns the Releases named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (gr *GithubRepository) NamedReleases(name string) ([]*GithubRelease, error) {
-	if gr.Edges.namedReleases == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := gr.Edges.namedReleases[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (gr *GithubRepository) appendNamedReleases(name string, edges ...*GithubRelease) {
-	if gr.Edges.namedReleases == nil {
-		gr.Edges.namedReleases = make(map[string][]*GithubRelease)
-	}
-	if len(edges) == 0 {
-		gr.Edges.namedReleases[name] = []*GithubRelease{}
-	} else {
-		gr.Edges.namedReleases[name] = append(gr.Edges.namedReleases[name], edges...)
-	}
 }
 
 // GithubRepositories is a parsable slice of GithubRepository.

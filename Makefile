@@ -3,7 +3,6 @@
 export PROJECT := "httpserver"
 export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
 export DOCKER_BUILDKIT := 1
-export LICENSE_IGNORE := "graphql-tag"
 export KUBERNETES_NAMESPACE := "liam-sh"
 export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
 
@@ -58,11 +57,11 @@ node-upgrade-deps:
 		pnpm up -iL
 
 node-prepare: license node-fetch
+	cd cmd/httpserver/public && pnpm exec openapi-ts
 	cd cmd/httpserver/public && \
 		pnpm exec prettier \
 			--cache \
 			--write \
-			--ignore-path src/lib/api/graphql.ts \
 			src/
 
 node-lint: node-build # needed to generate eslint auto-import ignores.

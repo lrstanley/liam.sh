@@ -5,9 +5,9 @@ package main
 import (
 	"log"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
+	"github.com/lrstanley/entrest"
 )
 
 const header = `// Copyright (c) Liam Stanley <liam@liam.sh>. All rights reserved. Use of
@@ -23,12 +23,14 @@ func checkError(err error) {
 }
 
 func main() {
-	egq, err := entgql.NewExtension(
-		entgql.WithConfigPath("./graphql/gqlgen.yml"),
-		entgql.WithSchemaGenerator(),
-		entgql.WithSchemaPath("./graphql/schema/ent.gql"),
-		entgql.WithWhereInputs(true),
-	)
+	rest, err := entrest.NewExtension(&entrest.Config{
+		SpecFromPath:          "../cmd/httpserver/base-openapi.json",
+		MaxItemsPerPage:       1000,
+		Handler:               entrest.HandlerChi,
+		StrictMutate:          true,
+		GlobalRequestHeaders:  entrest.RequestIDHeader,
+		GlobalResponseHeaders: entrest.RateLimitHeaders,
+	})
 	checkError(err)
 
 	err = entc.Generate(
@@ -46,7 +48,7 @@ func main() {
 				gen.FeatureIntercept,
 			},
 		},
-		entc.Extensions(egq),
+		entc.Extensions(rest),
 	)
 	checkError(err)
 }

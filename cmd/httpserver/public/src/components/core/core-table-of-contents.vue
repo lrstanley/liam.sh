@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { NAnchorLink } from "naive-ui"
-import { createTOC } from "@/lib/util"
+import { createTOC } from "@/lib/util/toc"
 
 const props = defineProps<{
   element: Node

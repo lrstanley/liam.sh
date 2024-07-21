@@ -14,7 +14,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
 )
@@ -24,28 +24,28 @@ type GithubAsset struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// AssetID holds the value of the "asset_id" field.
-	AssetID int64 `json:"asset_id,omitempty"`
-	// BrowserDownloadURL holds the value of the "browser_download_url" field.
-	BrowserDownloadURL string `json:"browser_download_url,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
-	// Label holds the value of the "label" field.
-	Label string `json:"label,omitempty"`
-	// State holds the value of the "state" field.
-	State string `json:"state,omitempty"`
-	// ContentType holds the value of the "content_type" field.
-	ContentType string `json:"content_type,omitempty"`
-	// Size holds the value of the "size" field.
-	Size int64 `json:"size,omitempty"`
+	// The ID of the asset.
+	AssetID int64 `json:"asset_id"`
+	// The URL of the asset.
+	BrowserDownloadURL string `json:"browser_download_url"`
+	// The name of the asset.
+	Name string `json:"name"`
+	// The label of the asset.
+	Label string `json:"label"`
+	// The state of the asset.
+	State string `json:"state"`
+	// The content type of the asset.
+	ContentType string `json:"content_type"`
+	// The size of the asset in bytes.
+	Size int64 `json:"size"`
 	// DownloadCount holds the value of the "download_count" field.
-	DownloadCount int64 `json:"download_count,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt time.Time `json:"updated_at,omitempty"`
-	// Uploader holds the value of the "uploader" field.
-	Uploader *github.User `json:"uploader,omitempty"`
+	DownloadCount int64 `json:"download_count"`
+	// The date the asset was created.
+	CreatedAt time.Time `json:"created_at"`
+	// The date the asset was last updated.
+	UpdatedAt time.Time `json:"updated_at"`
+	// The data of the user that uploaded the asset.
+	Uploader *github.User `json:"uploader"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the GithubAssetQuery when eager-loading is set.
 	Edges                 GithubAssetEdges `json:"edges"`
@@ -60,8 +60,6 @@ type GithubAssetEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [1]bool
-	// totalCount holds the count of the edges above.
-	totalCount [1]map[string]int
 }
 
 // ReleaseOrErr returns the Release value or an error if the edge

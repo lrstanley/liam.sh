@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { GithubRepository } from "@/lib/api"
+import type { GithubRepositoryRead } from "@/lib/http/types.gen"
 
 const props = defineProps<{
-  value: GithubRepository
+  value: GithubRepositoryRead
 }>()
 
 const state = useState()
@@ -11,9 +11,7 @@ const repo = ref(props.value)
 
 <template>
   <span>
-    <n-tag v-if="repo.owner.login != state.base.githubUser.login" type="info" size="small">
-      maintainer
-    </n-tag>
+    <n-tag v-if="repo.owner.login != state.githubUser?.login" type="info" size="small">maintainer</n-tag>
     <n-tag v-if="repo.fork" type="error" size="small">
       <template #icon>
         <n-icon><i-mdi-source-fork /></n-icon>

@@ -11,9 +11,9 @@ const state = useState()
         {{ link.alias }}
       </router-link>
     </li>
-    <li><a :href="state.base.githubUser.htmlurl">github</a></li>
+    <li><a :href="state.githubUser?.html_url">github</a></li>
     <li><a href="/chat" target="_blank">discord</a></li>
-    <li v-if="state.base?.self">
+    <li v-if="state.user">
       <router-link to="/admin/posts">sudo</router-link>
     </li>
   </ul>

@@ -12,17 +12,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
 	"github.com/lrstanley/chix"
+	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/apihandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/webhookhandler"
 	"github.com/lrstanley/liam.sh/internal/auth"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
-	"github.com/lrstanley/liam.sh/internal/graphql"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -106,12 +105,8 @@ func httpServer(ctx context.Context) *http.Server {
 		}),
 	)
 
+	r.Route("/-", apihandler.New(db, cli.VersionInfo, cli.Debug, "/-").Route)
 	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
-	r.Mount("/-/graphql", graphql.New(db, cli))
-	r.With(middleware.SetHeader(
-		"Content-Security-Policy",
-		"default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; ",
-	)).Mount("/-/playground", playground.Handler("GraphQL playground", "/-/graphql"))
 	r.Mount("/-/auth", chix.NewAuthHandler(
 		authSvc,
 		cli.Flags.HTTP.ValidationKey,
@@ -132,6 +127,7 @@ func httpServer(ctx context.Context) *http.Server {
 	})
 
 	r.Get("/sitemap.txt", sitemap)
+
 	r.NotFound(chix.UseStatic(ctx, &chix.Static{
 		FS:         staticFS,
 		CatchAll:   true,

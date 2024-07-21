@@ -25,16 +25,12 @@ import (
 // LabelQuery is the builder for querying Label entities.
 type LabelQuery struct {
 	config
-	ctx                         *QueryContext
-	order                       []label.OrderOption
-	inters                      []Interceptor
-	predicates                  []predicate.Label
-	withPosts                   *PostQuery
-	withGithubRepositories      *GithubRepositoryQuery
-	modifiers                   []func(*sql.Selector)
-	loadTotal                   []func(context.Context, []*Label) error
-	withNamedPosts              map[string]*PostQuery
-	withNamedGithubRepositories map[string]*GithubRepositoryQuery
+	ctx                    *QueryContext
+	order                  []label.OrderOption
+	inters                 []Interceptor
+	predicates             []predicate.Label
+	withPosts              *PostQuery
+	withGithubRepositories *GithubRepositoryQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -343,7 +339,7 @@ func (lq *LabelQuery) WithGithubRepositories(opts ...func(*GithubRepositoryQuery
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -366,7 +362,7 @@ func (lq *LabelQuery) GroupBy(field string, fields ...string) *LabelGroupBy {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //	}
 //
 //	client.Label.Query().
@@ -435,9 +431,6 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(lq.modifiers) > 0 {
-		_spec.Modifiers = lq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -460,25 +453,6 @@ func (lq *LabelQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Label,
 			func(n *Label, e *GithubRepository) {
 				n.Edges.GithubRepositories = append(n.Edges.GithubRepositories, e)
 			}); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range lq.withNamedPosts {
-		if err := lq.loadPosts(ctx, query, nodes,
-			func(n *Label) { n.appendNamedPosts(name) },
-			func(n *Label, e *Post) { n.appendNamedPosts(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range lq.withNamedGithubRepositories {
-		if err := lq.loadGithubRepositories(ctx, query, nodes,
-			func(n *Label) { n.appendNamedGithubRepositories(name) },
-			func(n *Label, e *GithubRepository) { n.appendNamedGithubRepositories(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range lq.loadTotal {
-		if err := lq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -610,9 +584,6 @@ func (lq *LabelQuery) loadGithubRepositories(ctx context.Context, query *GithubR
 
 func (lq *LabelQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := lq.querySpec()
-	if len(lq.modifiers) > 0 {
-		_spec.Modifiers = lq.modifiers
-	}
 	_spec.Node.Columns = lq.ctx.Fields
 	if len(lq.ctx.Fields) > 0 {
 		_spec.Unique = lq.ctx.Unique != nil && *lq.ctx.Unique
@@ -690,34 +661,6 @@ func (lq *LabelQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
-}
-
-// WithNamedPosts tells the query-builder to eager-load the nodes that are connected to the "posts"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (lq *LabelQuery) WithNamedPosts(name string, opts ...func(*PostQuery)) *LabelQuery {
-	query := (&PostClient{config: lq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if lq.withNamedPosts == nil {
-		lq.withNamedPosts = make(map[string]*PostQuery)
-	}
-	lq.withNamedPosts[name] = query
-	return lq
-}
-
-// WithNamedGithubRepositories tells the query-builder to eager-load the nodes that are connected to the "github_repositories"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (lq *LabelQuery) WithNamedGithubRepositories(name string, opts ...func(*GithubRepositoryQuery)) *LabelQuery {
-	query := (&GithubRepositoryClient{config: lq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if lq.withNamedGithubRepositories == nil {
-		lq.withNamedGithubRepositories = make(map[string]*GithubRepositoryQuery)
-	}
-	lq.withNamedGithubRepositories[name] = query
-	return lq
 }
 
 // LabelGroupBy is the group-by builder for Label entities.

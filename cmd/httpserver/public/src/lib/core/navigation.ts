@@ -7,7 +7,7 @@
 import { NIcon } from "naive-ui"
 import { RouterLink } from "vue-router"
 
-import type { RouteNamedMap } from "vue-router/auto/routes"
+import type { RouteNamedMap } from "vue-router/auto-routes"
 import type { RouteLocationNormalized } from "vue-router/auto"
 import type { Component, VNode } from "vue"
 

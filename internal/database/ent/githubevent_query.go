@@ -26,8 +26,6 @@ type GithubEventQuery struct {
 	order      []githubevent.OrderOption
 	inters     []Interceptor
 	predicates []predicate.GithubEvent
-	modifiers  []func(*sql.Selector)
-	loadTotal  []func(context.Context, []*GithubEvent) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -268,7 +266,7 @@ func (geq *GithubEventQuery) Clone() *GithubEventQuery {
 // Example:
 //
 //	var v []struct {
-//		EventID string `json:"event_id,omitempty"`
+//		EventID string `json:"event_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -291,7 +289,7 @@ func (geq *GithubEventQuery) GroupBy(field string, fields ...string) *GithubEven
 // Example:
 //
 //	var v []struct {
-//		EventID string `json:"event_id,omitempty"`
+//		EventID string `json:"event_id"`
 //	}
 //
 //	client.GithubEvent.Query().
@@ -355,9 +353,6 @@ func (geq *GithubEventQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 		nodes = append(nodes, node)
 		return node.assignValues(columns, values)
 	}
-	if len(geq.modifiers) > 0 {
-		_spec.Modifiers = geq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -367,19 +362,11 @@ func (geq *GithubEventQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	for i := range geq.loadTotal {
-		if err := geq.loadTotal[i](ctx, nodes); err != nil {
-			return nil, err
-		}
-	}
 	return nodes, nil
 }
 
 func (geq *GithubEventQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := geq.querySpec()
-	if len(geq.modifiers) > 0 {
-		_spec.Modifiers = geq.modifiers
-	}
 	_spec.Node.Columns = geq.ctx.Fields
 	if len(geq.ctx.Fields) > 0 {
 		_spec.Unique = geq.ctx.Unique != nil && *geq.ctx.Unique

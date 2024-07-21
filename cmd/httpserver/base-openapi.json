@@ -1,0 +1,807 @@
+{
+    "components": {
+        "parameters": {
+            "SVGBackground": {
+                "description": "Background type.",
+                "in": "query",
+                "name": "bg",
+                "required": false,
+                "schema": {
+                    "default": "geometric",
+                    "enum": [
+                        "geometric",
+                        "topography"
+                    ],
+                    "type": "string"
+                }
+            },
+            "SVGBackgroundColor": {
+                "description": "Background color (hex, rgb, rgba, hsl).",
+                "in": "query",
+                "name": "bgcolor",
+                "required": false,
+                "schema": {
+                    "default": "#000000",
+                    "examples": [
+                        "#000000",
+                        "rgb(0, 0, 0)",
+                        "rgba(0, 0, 0, 1)",
+                        "hsl(0, 0%, 0%)"
+                    ],
+                    "type": "string"
+                }
+            },
+            "SVGDescription": {
+                "description": "Description of the project (not required if using owner/repo).",
+                "in": "query",
+                "name": "description",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SVGFontScale": {
+                "description": "Font scale.",
+                "in": "query",
+                "name": "font",
+                "required": false,
+                "schema": {
+                    "default": 1,
+                    "maximum": 3,
+                    "minimum": 0.5,
+                    "type": "number"
+                }
+            },
+            "SVGHeight": {
+                "description": "Height of the SVG (in px).",
+                "in": "query",
+                "name": "h",
+                "required": false,
+                "schema": {
+                    "default": 200,
+                    "maximum": 1000,
+                    "minimum": 200,
+                    "type": "integer"
+                }
+            },
+            "SVGIcon": {
+                "description": "Iconidfy icon to use.",
+                "in": "query",
+                "name": "icon",
+                "required": false,
+                "schema": {
+                    "default": "mdi:github",
+                    "type": "string"
+                }
+            },
+            "SVGIconColor": {
+                "description": "Color of the icon (hex, rgb, rgba, hsl).",
+                "in": "query",
+                "name": "icon.color",
+                "required": false,
+                "schema": {
+                    "examples": [
+                        "#000000",
+                        "rgb(0, 0, 0)",
+                        "rgba(0, 0, 0, 1)",
+                        "hsl(0, 0%, 0%)"
+                    ],
+                    "type": "string"
+                }
+            },
+            "SVGIconFlip": {
+                "description": "Flip the icon.",
+                "in": "query",
+                "name": "icon.flip",
+                "required": false,
+                "schema": {
+                    "enum": [
+                        "horizontal",
+                        "vertical"
+                    ],
+                    "example": "horizontal",
+                    "type": "string"
+                }
+            },
+            "SVGIconHeight": {
+                "description": "Height of the icon (in px).",
+                "in": "query",
+                "name": "icon.height",
+                "required": false,
+                "schema": {
+                    "maximum": 300,
+                    "minimum": 0,
+                    "type": "integer"
+                }
+            },
+            "SVGIconRotate": {
+                "description": "Rotate the icon (1=90deg, 2=180deg, 3=270deg).",
+                "in": "query",
+                "name": "icon.rotate",
+                "required": false,
+                "schema": {
+                    "enum": [
+                        1,
+                        2,
+                        3
+                    ],
+                    "example": 1,
+                    "maximum": 3,
+                    "minimum": 0,
+                    "type": "integer"
+                }
+            },
+            "SVGIconWidth": {
+                "description": "Width of the icon (in px).",
+                "in": "query",
+                "name": "icon.width",
+                "required": false,
+                "schema": {
+                    "maximum": 300,
+                    "minimum": 0,
+                    "type": "integer"
+                }
+            },
+            "SVGLayout": {
+                "description": "Layout of the SVG.",
+                "in": "query",
+                "name": "layout",
+                "required": false,
+                "schema": {
+                    "default": "all",
+                    "enum": [
+                        "all",
+                        "left",
+                        "right"
+                    ],
+                    "type": "string"
+                }
+            },
+            "SVGTitle": {
+                "description": "Title of the project (not required if using owner/repo).",
+                "in": "query",
+                "name": "title",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "SVGWidth": {
+                "description": "Width of the SVG (in px).",
+                "in": "query",
+                "name": "w",
+                "required": false,
+                "schema": {
+                    "default": 961,
+                    "maximum": 2000,
+                    "minimum": 600,
+                    "type": "integer"
+                }
+            }
+        },
+        "schemas": {
+            "CodingStats": {
+                "properties": {
+                    "calculated_days": {
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "languages": {
+                        "items": {
+                            "$ref": "#/components/schemas/LanguageStat"
+                        },
+                        "type": "array"
+                    },
+                    "total_duration": {
+                        "example": "95 hrs 19 mins",
+                        "type": "string"
+                    },
+                    "total_duration_short": {
+                        "example": "95 hrs",
+                        "type": "string"
+                    },
+                    "total_seconds": {
+                        "minimum": 0,
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "calculated_days",
+                    "languages",
+                    "total_duration",
+                    "total_duration_short",
+                    "total_seconds"
+                ]
+            },
+            "GithubStats": {
+                "properties": {
+                    "all_issues": {
+                        "type": "integer"
+                    },
+                    "closed_issues": {
+                        "type": "integer"
+                    },
+                    "commits_year": {
+                        "type": "integer"
+                    },
+                    "contributed_repositories": {
+                        "type": "integer"
+                    },
+                    "open_issues": {
+                        "type": "integer"
+                    },
+                    "pull_requests": {
+                        "type": "integer"
+                    },
+                    "repositories": {
+                        "type": "integer"
+                    },
+                    "stars": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "commits_year",
+                    "pull_requests",
+                    "open_issues",
+                    "closed_issues",
+                    "all_issues",
+                    "repositories",
+                    "contributed_repositories",
+                    "stars"
+                ],
+                "type": "object"
+            },
+            "GithubUser": {
+                "additionalProperties": true,
+                "properties": {
+                    "avatar_url": {
+                        "type": "string"
+                    },
+                    "bio": {
+                        "type": "string"
+                    },
+                    "collaborators": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "followers": {
+                        "type": "integer"
+                    },
+                    "following": {
+                        "type": "integer"
+                    },
+                    "html_url": {
+                        "type": "string"
+                    },
+                    "id": {
+                        "type": "integer"
+                    },
+                    "location": {
+                        "type": "string"
+                    },
+                    "login": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "owned_private_repos": {
+                        "type": "integer"
+                    },
+                    "private_gists": {
+                        "type": "integer"
+                    },
+                    "public_gists": {
+                        "type": "integer"
+                    },
+                    "public_repos": {
+                        "type": "integer"
+                    },
+                    "total_private_repos": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "updated_at": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "login",
+                    "id",
+                    "avatar_url",
+                    "html_url",
+                    "name",
+                    "location",
+                    "email",
+                    "bio",
+                    "public_repos",
+                    "public_gists",
+                    "followers",
+                    "following",
+                    "created_at",
+                    "updated_at",
+                    "type",
+                    "total_private_repos",
+                    "owned_private_repos",
+                    "private_gists",
+                    "collaborators"
+                ],
+                "type": "object"
+            },
+            "LabelCount": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Label"
+                    },
+                    {
+                        "properties": {
+                            "githubrepository_count": {
+                                "type": "integer"
+                            },
+                            "post_count": {
+                                "type": "integer"
+                            },
+                            "total_count": {
+                                "type": "integer"
+                            }
+                        },
+                        "required": [
+                            "githubrepository_count",
+                            "post_count",
+                            "total_count"
+                        ],
+                        "type": "object"
+                    }
+                ]
+            },
+            "LabelCountList": {
+                "items": {
+                    "$ref": "#/components/schemas/LabelCount"
+                },
+                "type": "array"
+            },
+            "LanguageStat": {
+                "properties": {
+                    "hex_color": {
+                        "example": "#00ADD8",
+                        "type": "string"
+                    },
+                    "key": {
+                        "example": "Go",
+                        "type": "string"
+                    },
+                    "total": {
+                        "description": "Total seconds using the language.",
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "total_duration": {
+                        "example": "95 hrs 19 mins",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "hex_color",
+                    "key",
+                    "total_duration",
+                    "total"
+                ]
+            },
+            "OutdatedRepositoryRelease": {
+                "properties": {
+                    "release": {
+                        "$ref": "#/components/schemas/GithubReleaseRead"
+                    },
+                    "repository": {
+                        "$ref": "#/components/schemas/GithubRepositoryRead"
+                    }
+                },
+                "required": [
+                    "repository",
+                    "release"
+                ]
+            },
+            "VersionInfo": {
+                "properties": {
+                    "arch": {
+                        "description": "CPU Architecture for this build.",
+                        "example": "amd64",
+                        "type": "string"
+                    },
+                    "build_commit": {
+                        "description": "VCS commit SHA.",
+                        "type": "string"
+                    },
+                    "build_date": {
+                        "description": "VCS commit date.",
+                        "type": "string"
+                    },
+                    "build_version": {
+                        "description": "Build version.",
+                        "example": "v1.0.0",
+                        "type": "string"
+                    },
+                    "command": {
+                        "description": "Executable name where the command was called from.",
+                        "example": "httpserver",
+                        "type": "string"
+                    },
+                    "go_version": {
+                        "description": "Version of Go that produced this binary.",
+                        "example": "go1.20.3",
+                        "type": "string"
+                    },
+                    "links": {
+                        "description": "Links to other resources.",
+                        "items": {
+                            "$ref": "#/components/schemas/VersionLink"
+                        },
+                        "type": "array"
+                    },
+                    "name": {
+                        "description": "Name of cli tool.",
+                        "example": "github.com/lrstanley/entrest",
+                        "type": "string"
+                    },
+                    "os": {
+                        "description": "Operating system for this build.",
+                        "example": "linux",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "arch",
+                    "build_commit",
+                    "build_date",
+                    "build_version",
+                    "command",
+                    "go_version",
+                    "name",
+                    "os",
+                    "links"
+                ],
+                "type": "object"
+            },
+            "VersionLink": {
+                "properties": {
+                    "name": {
+                        "description": "Name of the link.",
+                        "example": "github",
+                        "type": "string"
+                    },
+                    "url": {
+                        "description": "URL of the link.",
+                        "example": "https://github.com/lrstanley/liam.sh",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "name",
+                    "url"
+                ],
+                "type": "object"
+            }
+        }
+    },
+    "info": {
+        "title": "liam.sh Rest API",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/gh/svg": {
+            "get": {
+                "description": "Dynamic SVG generator based off title/description parameters.",
+                "operationId": "getGithubSVG",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SVGBackground"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGBackgroundColor"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGDescription"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGFontScale"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGHeight"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIcon"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconColor"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconHeight"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconRotate"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconWidth"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGLayout"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGTitle"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGWidth"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconFlip"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "image/svg+xml": {}
+                        }
+                    }
+                },
+                "summary": "Dynamic SVG generator based off title/description parameters.",
+                "tags": [
+                    "GithubSVG"
+                ]
+            }
+        },
+        "/gh/svg/{ownerID}/{repoID}": {
+            "get": {
+                "description": "Dynamic SVG generator based off repo.",
+                "operationId": "getGithubRepoSVG",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/SVGBackground"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGBackgroundColor"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGFontScale"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGHeight"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIcon"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconColor"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconHeight"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconRotate"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconWidth"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGLayout"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGWidth"
+                    },
+                    {
+                        "$ref": "#/components/parameters/SVGIconFlip"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "image/svg+xml": {}
+                        }
+                    }
+                },
+                "summary": "Dynamic SVG generator based off repo.",
+                "tags": [
+                    "GithubSVG"
+                ]
+            },
+            "parameters": [
+                {
+                    "in": "path",
+                    "name": "ownerID",
+                    "required": true,
+                    "schema": {
+                        "description": "GitHub user ID.",
+                        "type": "string"
+                    }
+                },
+                {
+                    "in": "path",
+                    "name": "repoID",
+                    "required": true,
+                    "schema": {
+                        "description": "GitHub repository ID.",
+                        "type": "string"
+                    }
+                }
+            ]
+        },
+        "/github-releases/outdated": {
+            "get": {
+                "description": "List github repositories which have potentially outdated releases.",
+                "operationId": "listOutdatedGithubReleases",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "items": {
+                                        "$ref": "#/components/schemas/OutdatedRepositoryRelease"
+                                    },
+                                    "type": "array"
+                                }
+                            }
+                        }
+                    }
+                },
+                "summary": "Get outdated Github releases",
+                "tags": [
+                    "GithubReleases"
+                ]
+            }
+        },
+        "/github-user": {
+            "get": {
+                "description": "Get the GitHub user.",
+                "operationId": "getGithubUser",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GithubUser"
+                                }
+                            }
+                        },
+                        "description": "Github user was found."
+                    }
+                },
+                "summary": "Get GitHub user",
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+        "/labels/count": {
+            "get": {
+                "description": "Get the edge count for labels.",
+                "operationId": "getLabelsCount",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LabelCountList"
+                                }
+                            }
+                        },
+                        "description": "Labels count was found."
+                    }
+                },
+                "summary": "Get labels count",
+                "tags": [
+                    "Labels"
+                ]
+            }
+        },
+        "/posts/regenerate": {
+            "post": {
+                "description": "Regenerate posts.",
+                "operationId": "regeneratePosts",
+                "responses": {
+                    "200": {
+                        "description": "Posts were regenerated."
+                    }
+                },
+                "summary": "Regenerate posts.",
+                "tags": [
+                    "Posts"
+                ]
+            }
+        },
+        "/self": {
+            "get": {
+                "description": "Get the authenticated user.",
+                "operationId": "getSelf",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserRead"
+                                }
+                            }
+                        },
+                        "description": "The authenticated user."
+                    }
+                },
+                "summary": "Get authenticated user",
+                "tags": [
+                    "Users"
+                ]
+            }
+        },
+        "/stats/coding": {
+            "get": {
+                "description": "Get coding statistics.",
+                "operationId": "getCodingStats",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CodingStats"
+                                }
+                            }
+                        },
+                        "description": "Coding statistics were found."
+                    }
+                },
+                "summary": "Get coding statistics",
+                "tags": [
+                    "Stats"
+                ]
+            }
+        },
+        "/stats/github": {
+            "get": {
+                "description": "Get github statistics.",
+                "operationId": "getGithubStats",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GithubStats"
+                                }
+                            }
+                        },
+                        "description": "Github statistics were found."
+                    }
+                },
+                "summary": "Get github statistics",
+                "tags": [
+                    "Stats"
+                ]
+            }
+        },
+        "/version": {
+            "get": {
+                "description": "Get the version of the service.",
+                "operationId": "getServiceVersion",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VersionInfo"
+                                }
+                            }
+                        },
+                        "description": "Service version information was found."
+                    }
+                },
+                "summary": "Get service version",
+                "tags": [
+                    "Meta"
+                ]
+            }
+        }
+    }
+}

@@ -14,7 +14,7 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
 )
 
@@ -23,24 +23,24 @@ type GithubEvent struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// EventID holds the value of the "event_id" field.
-	EventID string `json:"event_id,omitempty"`
-	// EventType holds the value of the "event_type" field.
-	EventType string `json:"event_type,omitempty"`
-	// CreatedAt holds the value of the "created_at" field.
-	CreatedAt time.Time `json:"created_at,omitempty"`
-	// Public holds the value of the "public" field.
-	Public bool `json:"public,omitempty"`
-	// ActorID holds the value of the "actor_id" field.
-	ActorID int64 `json:"actor_id,omitempty"`
-	// Actor holds the value of the "actor" field.
-	Actor *github.User `json:"actor,omitempty"`
-	// RepoID holds the value of the "repo_id" field.
-	RepoID int64 `json:"repo_id,omitempty"`
-	// Repo holds the value of the "repo" field.
-	Repo *github.Repository `json:"repo,omitempty"`
-	// Payload holds the value of the "payload" field.
-	Payload      map[string]interface{} `json:"payload,omitempty"`
+	// The ID of the event.
+	EventID string `json:"event_id"`
+	// The type of the event.
+	EventType string `json:"event_type"`
+	// The date the event was created.
+	CreatedAt time.Time `json:"created_at"`
+	// Whether the event is public or not.
+	Public bool `json:"public"`
+	// The ID of the actor.
+	ActorID int64 `json:"actor_id"`
+	// The actor data of the event.
+	Actor *github.User `json:"actor"`
+	// The ID of the repository.
+	RepoID int64 `json:"repo_id"`
+	// The repository of the event.
+	Repo *github.Repository `json:"repo"`
+	// The payload of the event.
+	Payload      map[string]interface{} `json:"payload"`
 	selectValues sql.SelectValues
 }
 

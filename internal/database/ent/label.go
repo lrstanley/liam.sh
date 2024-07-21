@@ -21,12 +21,12 @@ type Label struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Name holds the value of the "name" field.
-	Name string `json:"name,omitempty"`
+	// Time the entity was created.
+	CreateTime time.Time `json:"create_time"`
+	// Time the entity was last updated.
+	UpdateTime time.Time `json:"update_time"`
+	// Label name.
+	Name string `json:"name"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the LabelQuery when eager-loading is set.
 	Edges        LabelEdges `json:"edges"`
@@ -42,11 +42,6 @@ type LabelEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
-	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
-
-	namedPosts              map[string][]*Post
-	namedGithubRepositories map[string][]*GithubRepository
 }
 
 // PostsOrErr returns the Posts value or an error if the edge
@@ -173,54 +168,6 @@ func (l *Label) String() string {
 	builder.WriteString(l.Name)
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedPosts returns the Posts named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (l *Label) NamedPosts(name string) ([]*Post, error) {
-	if l.Edges.namedPosts == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := l.Edges.namedPosts[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (l *Label) appendNamedPosts(name string, edges ...*Post) {
-	if l.Edges.namedPosts == nil {
-		l.Edges.namedPosts = make(map[string][]*Post)
-	}
-	if len(edges) == 0 {
-		l.Edges.namedPosts[name] = []*Post{}
-	} else {
-		l.Edges.namedPosts[name] = append(l.Edges.namedPosts[name], edges...)
-	}
-}
-
-// NamedGithubRepositories returns the GithubRepositories named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (l *Label) NamedGithubRepositories(name string) ([]*GithubRepository, error) {
-	if l.Edges.namedGithubRepositories == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := l.Edges.namedGithubRepositories[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (l *Label) appendNamedGithubRepositories(name string, edges ...*GithubRepository) {
-	if l.Edges.namedGithubRepositories == nil {
-		l.Edges.namedGithubRepositories = make(map[string][]*GithubRepository)
-	}
-	if len(edges) == 0 {
-		l.Edges.namedGithubRepositories[name] = []*GithubRepository{}
-	} else {
-		l.Edges.namedGithubRepositories[name] = append(l.Edges.namedGithubRepositories[name], edges...)
-	}
 }
 
 // Labels is a parsable slice of Label.

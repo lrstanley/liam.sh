@@ -25,16 +25,13 @@ import (
 // GithubReleaseQuery is the builder for querying GithubRelease entities.
 type GithubReleaseQuery struct {
 	config
-	ctx             *QueryContext
-	order           []githubrelease.OrderOption
-	inters          []Interceptor
-	predicates      []predicate.GithubRelease
-	withRepository  *GithubRepositoryQuery
-	withAssets      *GithubAssetQuery
-	withFKs         bool
-	modifiers       []func(*sql.Selector)
-	loadTotal       []func(context.Context, []*GithubRelease) error
-	withNamedAssets map[string]*GithubAssetQuery
+	ctx            *QueryContext
+	order          []githubrelease.OrderOption
+	inters         []Interceptor
+	predicates     []predicate.GithubRelease
+	withRepository *GithubRepositoryQuery
+	withAssets     *GithubAssetQuery
+	withFKs        bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -343,7 +340,7 @@ func (grq *GithubReleaseQuery) WithAssets(opts ...func(*GithubAssetQuery)) *Gith
 // Example:
 //
 //	var v []struct {
-//		ReleaseID int64 `json:"release_id,omitempty"`
+//		ReleaseID int64 `json:"release_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -366,7 +363,7 @@ func (grq *GithubReleaseQuery) GroupBy(field string, fields ...string) *GithubRe
 // Example:
 //
 //	var v []struct {
-//		ReleaseID int64 `json:"release_id,omitempty"`
+//		ReleaseID int64 `json:"release_id"`
 //	}
 //
 //	client.GithubRelease.Query().
@@ -442,9 +439,6 @@ func (grq *GithubReleaseQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(grq.modifiers) > 0 {
-		_spec.Modifiers = grq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -464,18 +458,6 @@ func (grq *GithubReleaseQuery) sqlAll(ctx context.Context, hooks ...queryHook) (
 		if err := grq.loadAssets(ctx, query, nodes,
 			func(n *GithubRelease) { n.Edges.Assets = []*GithubAsset{} },
 			func(n *GithubRelease, e *GithubAsset) { n.Edges.Assets = append(n.Edges.Assets, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range grq.withNamedAssets {
-		if err := grq.loadAssets(ctx, query, nodes,
-			func(n *GithubRelease) { n.appendNamedAssets(name) },
-			func(n *GithubRelease, e *GithubAsset) { n.appendNamedAssets(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range grq.loadTotal {
-		if err := grq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -548,9 +530,6 @@ func (grq *GithubReleaseQuery) loadAssets(ctx context.Context, query *GithubAsse
 
 func (grq *GithubReleaseQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := grq.querySpec()
-	if len(grq.modifiers) > 0 {
-		_spec.Modifiers = grq.modifiers
-	}
 	_spec.Node.Columns = grq.ctx.Fields
 	if len(grq.ctx.Fields) > 0 {
 		_spec.Unique = grq.ctx.Unique != nil && *grq.ctx.Unique
@@ -628,20 +607,6 @@ func (grq *GithubReleaseQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
-}
-
-// WithNamedAssets tells the query-builder to eager-load the nodes that are connected to the "assets"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (grq *GithubReleaseQuery) WithNamedAssets(name string, opts ...func(*GithubAssetQuery)) *GithubReleaseQuery {
-	query := (&GithubAssetClient{config: grq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if grq.withNamedAssets == nil {
-		grq.withNamedAssets = make(map[string]*GithubAssetQuery)
-	}
-	grq.withNamedAssets[name] = query
-	return grq
 }
 
 // GithubReleaseGroupBy is the group-by builder for GithubRelease entities.

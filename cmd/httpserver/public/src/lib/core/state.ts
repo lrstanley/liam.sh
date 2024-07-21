@@ -6,8 +6,7 @@
 
 import { defineStore } from "pinia"
 import { useStorage } from "@vueuse/core"
-
-import type { BaseQuery } from "@/lib/api"
+import type { User, GithubUser } from "@/lib/http/types.gen"
 
 export interface History {
   title: string
@@ -16,7 +15,8 @@ export interface History {
 }
 
 export interface State {
-  base: BaseQuery | null
+  user: User | null
+  githubUser: GithubUser | null
   history: History[]
   sidebarCollapsed: boolean
 }
@@ -24,7 +24,8 @@ export interface State {
 export const useState = defineStore("state", {
   state: () => {
     return useStorage("state", {
-      base: null,
+      user: null,
+      githubUser: null,
       history: [],
       sidebarCollapsed: false,
     } as State)

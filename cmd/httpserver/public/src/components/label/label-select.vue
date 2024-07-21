@@ -1,56 +1,58 @@
 <script setup lang="ts">
 import { h } from "vue"
 import { NBadge } from "naive-ui"
-import { useGetLabelsQuery } from "@/lib/api"
-import type { LabelWhereInput, Label } from "@/lib/api"
+import { getLabelsCount } from "@/lib/http/services.gen"
+import type { Label, LabelCount } from "@/lib/http/types.gen"
+import type { ComponentProps } from "@/lib/util/vueprops"
 
 const props = withDefaults(
   defineProps<{
-    modelValue: string | string[] | number | number[]
-    field?: string
-    where?: LabelWhereInput
+    modelValue: Label[keyof Label] | Label[keyof Label][]
+    field?: keyof Label
     suggest?: string
   }>(),
   {
-    modelValue: (): string[] => [],
+    modelValue: () => [],
     field: "name",
-    where: () => null,
     suggest: "",
   }
 )
 
 const emit = defineEmits(["update:modelValue"])
 
-const selected = computed({
+const selected = computed<Label[keyof Label][]>({
   get: () => (Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue]),
   set: (val) => emit("update:modelValue", val),
 })
 
-const labels = useGetLabelsQuery({ variables: { where: props.where } })
-defineExpose({ refetch: labels.executeQuery })
+const {
+  data: labels,
+  isFetching,
+  refetch,
+} = useQuery({
+  queryKey: ["labels", "count"],
+  queryFn: () => unwrapErrors(getLabelsCount()),
+})
 
-type RenderedLabel<T> = {
+defineExpose({ refetch: refetch })
+
+type RenderedLabel = {
   label: string
-  value: T
-  data: Label
+  value: ComponentProps<typeof NBadge>["value"]
+  data: LabelCount
   popularity: number
 }
 
-const options = computed(() =>
-  labels.data?.value?.labels.edges
-    .map(
-      ({ node }) =>
-        ({
-          label: node.name,
-          value: node[props.field],
-          popularity: node.githubRepositories.totalCount + node.posts.totalCount,
-          data: node,
-        } as RenderedLabel<typeof props.field>)
-    )
-    .sort((a, b) => b.popularity - a.popularity)
-)
+const options = computed<RenderedLabel[]>(() => {
+  return labels.value?.map((label) => ({
+    label: label.name,
+    value: label[props.field],
+    popularity: label.total_count,
+    data: label,
+  }))
+})
 
-function renderLabel(option: RenderedLabel<typeof props.field>) {
+function renderLabel(option: RenderedLabel) {
   return [
     h(NBadge, {
       "show-zero": true,
@@ -58,18 +60,18 @@ function renderLabel(option: RenderedLabel<typeof props.field>) {
       style: { "margin-right": "1ch" },
       value: option.popularity,
     }),
-    option.data?.name,
+    option.label,
   ]
 }
 
-const suggestions = ref([])
+const suggestions = ref<RenderedLabel[]>([])
 const suggest = computed(() => props.suggest)
 watchDebounced(suggest, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
 watchDebounced(selected, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
 
 function makeSuggestions(val) {
   if (!val || !options.value) return
-  const newSuggestions = []
+  const newSuggestions: RenderedLabel[] = []
 
   for (const option of options.value) {
     if (selected.value.includes(option.data[props.field])) continue
@@ -82,7 +84,7 @@ function makeSuggestions(val) {
   suggestions.value = newSuggestions
 }
 
-function addSuggestion(option) {
+function addSuggestion(option: RenderedLabel) {
   selected.value.push(option.data[props.field])
   makeSuggestions(suggest.value)
 }
@@ -94,7 +96,7 @@ function addSuggestion(option) {
     v-model:value="selected"
     :options="options"
     :render-label="renderLabel"
-    :loading="labels.fetching?.value"
+    :loading="isFetching"
     clearable
     filterable
     multiple

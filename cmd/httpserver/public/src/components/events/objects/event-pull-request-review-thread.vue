@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
+import type { GithubEvent } from "@/lib/http/types.gen"
 
 const props = defineProps<{
   event: GithubEvent
 }>()
 
 const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action)
+const action = ref<string>(props.event.payload.action as string)
 const thread = ref<Record<string, any>>(props.event.payload.thread)
 const pr = ref<Record<string, any>>(props.event.payload.pull_request)
 </script>

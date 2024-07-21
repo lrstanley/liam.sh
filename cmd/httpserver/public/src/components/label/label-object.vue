@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Label } from "@/lib/api"
+import type { Label } from "@/lib/http/types.gen"
 
 const props = withDefaults(
   defineProps<{

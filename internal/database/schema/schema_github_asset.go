@@ -5,13 +5,14 @@
 package schema
 
 import (
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
+	"github.com/ogen-go/ogen"
 )
 
 type GithubAsset struct {
@@ -20,27 +21,68 @@ type GithubAsset struct {
 
 func (GithubAsset) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("asset_id").Unique().Positive(),
-		field.String("browser_download_url").NotEmpty(),
-		field.String("name").NotEmpty().Annotations(
-			entgql.OrderField("NAME"),
-		),
-		field.String("label").Optional(),
-		field.String("state").Optional(),
-		field.String("content_type"),
-		field.Int64("size"),
-		field.Int64("download_count").Annotations(
-			entgql.OrderField("DOWNLOAD_COUNT"),
-		),
-		field.Time("created_at").Annotations(
-			entgql.OrderField("CREATED_AT"),
-		),
-		field.Time("updated_at").Optional().Annotations(
-			entgql.OrderField("UPDATED_AT"),
-		),
-		field.JSON("uploader", &github.User{}).Annotations(
-			entgql.Type("GithubUser"),
-		),
+		field.Int64("asset_id").
+			Unique().
+			Positive().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the asset."),
+		field.String("browser_download_url").
+			NotEmpty().
+			Annotations(
+				entrest.WithExample("https://github.com/lrstanley/entrest/releases/download/v0.1.0/entrest-v0.1.0-linux-amd64.tar.gz"),
+			).
+			Comment("The URL of the asset."),
+		field.String("name").
+			NotEmpty().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The name of the asset."),
+		field.String("label").
+			Optional().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The label of the asset."),
+		field.String("state").
+			Optional().
+			Comment("The state of the asset."),
+		field.String("content_type").
+			Comment("The content type of the asset."),
+		field.Int64("size").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupLength),
+			).
+			Comment("The size of the asset in bytes."),
+		field.Int64("download_count").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupLength),
+			),
+		field.Time("created_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the asset was created."),
+		field.Time("updated_at").
+			Optional().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the asset was last updated."),
+		field.JSON("uploader", &github.User{}).
+			Annotations(
+				entrest.WithSchema(&ogen.Schema{Ref: "#/components/schemas/GithubUser"}),
+			).
+			Comment("The data of the user that uploaded the asset."),
 	}
 }
 
@@ -57,13 +99,18 @@ func (GithubAsset) Policy() ent.Policy {
 
 func (GithubAsset) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("release", GithubRelease.Type).Ref("assets").Required().Unique(),
+		edge.From("release", GithubRelease.Type).
+			Ref("assets").
+			Required().
+			Unique().
+			Annotations(
+				entrest.WithFilter(entrest.FilterEdge),
+			),
 	}
 }
 
 func (GithubAsset) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entrest.WithIncludeOperations(entrest.OperationList, entrest.OperationRead),
 	}
 }

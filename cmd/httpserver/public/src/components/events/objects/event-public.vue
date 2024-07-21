@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { GithubEvent } from "@/lib/api"
+import type { GithubEvent } from "@/lib/http/types.gen"
 
 const props = defineProps<{
   event: GithubEvent

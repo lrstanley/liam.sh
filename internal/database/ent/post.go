@@ -22,26 +22,26 @@ type Post struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// CreateTime holds the value of the "create_time" field.
-	CreateTime time.Time `json:"create_time,omitempty"`
-	// UpdateTime holds the value of the "update_time" field.
-	UpdateTime time.Time `json:"update_time,omitempty"`
-	// Slug holds the value of the "slug" field.
-	Slug string `json:"slug,omitempty"`
-	// Title holds the value of the "title" field.
-	Title string `json:"title,omitempty"`
-	// Content holds the value of the "content" field.
-	Content string `json:"content,omitempty"`
-	// ContentHTML holds the value of the "content_html" field.
-	ContentHTML string `json:"content_html,omitempty"`
-	// Summary holds the value of the "summary" field.
-	Summary string `json:"summary,omitempty"`
+	// Time the entity was created.
+	CreateTime time.Time `json:"create_time"`
+	// Time the entity was last updated.
+	UpdateTime time.Time `json:"update_time"`
+	// Post slug.
+	Slug string `json:"slug"`
+	// Post title.
+	Title string `json:"title"`
+	// Post content in Markdown.
+	Content string `json:"content"`
+	// Generated HTML content (produced from 'content' field).
+	ContentHTML string `json:"content_html"`
+	// Post summary, which is produced from the first sentence or two of the post content.
+	Summary string `json:"summary"`
 	// PublishedAt holds the value of the "published_at" field.
-	PublishedAt time.Time `json:"published_at,omitempty"`
-	// ViewCount holds the value of the "view_count" field.
-	ViewCount int `json:"view_count,omitempty"`
-	// Public holds the value of the "public" field.
-	Public bool `json:"public,omitempty"`
+	PublishedAt time.Time `json:"published_at"`
+	// Number of times the post has been viewed.
+	ViewCount int `json:"view_count"`
+	// Whether the post is public or not.
+	Public bool `json:"public"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the PostQuery when eager-loading is set.
 	Edges        PostEdges `json:"edges"`
@@ -58,10 +58,6 @@ type PostEdges struct {
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
 	loadedTypes [2]bool
-	// totalCount holds the count of the edges above.
-	totalCount [2]map[string]int
-
-	namedLabels map[string][]*Label
 }
 
 // AuthorOrErr returns the Author value or an error if the edge
@@ -264,30 +260,6 @@ func (po *Post) String() string {
 	builder.WriteString(fmt.Sprintf("%v", po.Public))
 	builder.WriteByte(')')
 	return builder.String()
-}
-
-// NamedLabels returns the Labels named value or an error if the edge was not
-// loaded in eager-loading with this name.
-func (po *Post) NamedLabels(name string) ([]*Label, error) {
-	if po.Edges.namedLabels == nil {
-		return nil, &NotLoadedError{edge: name}
-	}
-	nodes, ok := po.Edges.namedLabels[name]
-	if !ok {
-		return nil, &NotLoadedError{edge: name}
-	}
-	return nodes, nil
-}
-
-func (po *Post) appendNamedLabels(name string, edges ...*Label) {
-	if po.Edges.namedLabels == nil {
-		po.Edges.namedLabels = make(map[string][]*Label)
-	}
-	if len(edges) == 0 {
-		po.Edges.namedLabels[name] = []*Label{}
-	} else {
-		po.Edges.namedLabels[name] = append(po.Edges.namedLabels[name], edges...)
-	}
 }
 
 // Posts is a parsable slice of Post.

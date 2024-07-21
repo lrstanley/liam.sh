@@ -5,13 +5,14 @@
 package schema
 
 import (
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
+	"github.com/ogen-go/ogen"
 )
 
 type GithubGist struct {
@@ -20,34 +21,81 @@ type GithubGist struct {
 
 func (GithubGist) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("gist_id"),
-		field.String("html_url").NotEmpty(),
-		field.Bool("public"),
-		field.Time("created_at").Annotations(
-			entgql.OrderField("CREATED_AT"),
-		),
-		field.Time("updated_at").Annotations(
-			entgql.OrderField("UPDATED_AT"),
-		),
-		field.String("description").Optional(),
-		field.JSON("owner", &github.User{}).Annotations(
-			entgql.Type("GithubUser"),
-		),
+		field.String("gist_id").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the gist."),
+		field.String("html_url").
+			NotEmpty().
+			Annotations(
+				entrest.WithExample("https://gist.github.com/lrstanley/c4f0a3f2b8a2f3a4c2c0"),
+			).
+			Comment("The URL of the gist."),
+		field.Bool("public").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Whether the gist is public or not."),
+		field.Time("created_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the gist was created."),
+		field.Time("updated_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the gist was last updated."),
+		field.String("description").
+			Optional().
+			Annotations(
+				entrest.WithFilter(entrest.FilterGroupContains),
+			).
+			Comment("The description of the gist."),
+		field.JSON("owner", &github.User{}).
+			Annotations(
+				entrest.WithSchema(&ogen.Schema{Ref: "#/components/schemas/GithubUser"}),
+			).
+			Comment("The owner data of the gist."),
 		// Fields specific to each file.
-		field.String("name").Annotations(
-			entgql.OrderField("NAME"),
-		),
-		field.String("type").Annotations(
-			entgql.OrderField("TYPE"),
-		),
-		field.String("language").Optional().Annotations(
-			entgql.OrderField("LANGUAGE"),
-		),
-		field.Int64("size").Annotations(
-			entgql.OrderField("SIZE"),
-		),
-		field.String("raw_url"),
-		field.String("content"),
+		field.String("name").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The name of the file."),
+		field.String("type").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The type of the file."),
+		field.String("language").
+			Optional().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The programming language of the file."),
+		field.Int64("size").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The size of the file in bytes."),
+		field.String("raw_url").
+			Annotations().
+			Comment("The raw URL of the file."),
+		field.String("content").
+			Annotations(
+				entrest.WithFilter(entrest.FilterGroupContains),
+			).
+			Comment("The content of the file."),
 	}
 }
 
@@ -64,19 +112,14 @@ func (GithubGist) Policy() ent.Policy {
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
-			AllowPublicOnly(),
+			FilterPublicOnly(),
 			privacy.AlwaysAllowRule(),
 		},
 	}
 }
 
-func (GithubGist) Edges() []ent.Edge {
-	return nil
-}
-
 func (GithubGist) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entrest.WithIncludeOperations(entrest.OperationList, entrest.OperationRead),
 	}
 }

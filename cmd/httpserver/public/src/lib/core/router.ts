@@ -5,14 +5,15 @@
  */
 
 import { setupLayouts } from "virtual:generated-layouts"
-import { createRouter, createWebHistory } from "vue-router/auto"
-import { BaseDocument, client } from "@/lib/api"
+import { routes } from "vue-router/auto-routes"
+import { createRouter, createWebHistory } from "vue-router"
 import { useState } from "@/lib/core/state"
 import { loadingBar } from "@/lib/core/status"
-import { titleCase } from "@/lib/util"
+import { titleCase } from "@/lib/util/textcase"
+import { getSelf, getGithubUser } from "@/lib/http/services.gen"
+import type { ErrorUnauthorized } from "./../http/types.gen"
 
 import type { RouteRecordRaw } from "vue-router/auto"
-import type { CombinedError } from "@urql/vue"
 
 type RouteCallback = (route: RouteRecordRaw) => RouteRecordRaw
 
@@ -28,60 +29,53 @@ function recurseRoute(route: RouteRecordRaw, cb: RouteCallback): RouteRecordRaw 
 
 const router = createRouter({
   history: createWebHistory("/"),
-  extendRoutes(routes) {
-    return routes.map((r) =>
-      recurseRoute(r, (route) => {
-        if (route.path.startsWith("/admin")) {
-          route = {
-            ...route,
-            meta: {
-              auth: true,
-              admin: true,
-              ...route.meta,
-            },
-          }
+  routes: routes.map((r) =>
+    recurseRoute(r, (route) => {
+      if (route.path.startsWith("/admin")) {
+        route = {
+          ...route,
+          meta: {
+            auth: true,
+            admin: true,
+            ...route.meta,
+          },
         }
+      }
 
-        return route.component ? setupLayouts([route])[0] : route
-      })
-    )
-  },
+      return route.component ? setupLayouts([route])[0] : route
+    })
+  ),
 })
 
 router.beforeEach(async (to, from, next) => {
   const state = useState()
 
+  let error: ErrorUnauthorized
+
   if (from.name != to.name || JSON.stringify(from.params) != JSON.stringify(to.params)) {
     loadingBar.start()
   }
 
-  let error: CombinedError
-
-  if (state.base == null || (from.path == "/" && from.name == undefined)) {
-    await client
-      .query(BaseDocument, {}, { requestPolicy: "network-only" })
-      .toPromise()
+  if (state.user == null || state.githubUser == null || (from.path == "/" && from.name == undefined)) {
+    await getSelf()
       .then((resp) => {
-        state.base = resp.data
-
-        if (resp.error !== null) {
-          error = resp.error
-        }
+        state.user = resp.data
       })
+      .catch((err) => {
+        error = err as ErrorUnauthorized
+      })
+
+    await getGithubUser().then((resp) => (state.githubUser = resp.data))
   }
 
-  if (to.meta.auth == true && state.base.self == null) {
+  if (to.meta.auth == true && state.user == null && error?.code == 401) {
     window.location.href = `/-/auth/providers/github?next=${window.location.origin + to.path}`
     return
   }
 
-  if (
-    error !== undefined &&
-    !error.graphQLErrors?.some((e) => e.path?.includes("self")) &&
-    to.name !== "catchall"
-  ) {
+  if (error !== undefined && to.name !== "/[...catchall]" && error?.code !== 401) {
     console.log(error)
-    next({ name: "catchall", params: { catchall: error.name } })
+    next({ name: "/[...catchall]", params: { catchall: error.error } })
     return
   }
 

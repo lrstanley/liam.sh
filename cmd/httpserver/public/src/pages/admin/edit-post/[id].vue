@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useGetPostQuery, useUpdatePostMutation, type UpdatePostInput } from "@/lib/api"
-import type { Post } from "@/lib/api"
+import { getPost, updatePost } from "@/lib/http/services.gen"
+import type { PostRead, PostUpdate } from "@/lib/http/types.gen"
 
 definePage({
   meta: {
@@ -10,49 +10,40 @@ definePage({
 })
 
 const route = useRoute("/admin/edit-post/[id]")
-
 const router = useRouter()
-const { data, error, fetching } = await useGetPostQuery({
-  variables: { id: route.params.id },
-  requestPolicy: "network-only",
+const queryClient = useQueryClient()
+
+const { data: post, error } = await getPost({ path: { postID: parseInt(route.params.id) } })
+if (error) throw error
+
+const { mutate, isPending } = useMutation({
+  mutationFn: (data: PostUpdate) =>
+    unwrapErrors(updatePost({ path: { postID: parseInt(route.params.id) }, body: data })),
+  onError: (error) => {
+    message.error("error updating post: " + error.message)
+  },
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ["posts"] })
+    message.success("Post updated")
+    router.push({ name: "/admin/posts" })
+  },
 })
 
-watch(error, () => {
-  if (error.value) throw error.value
-})
-
-const post = computed(() => data.value?.node as Post | undefined)
-const update = useUpdatePostMutation()
-
-function updatePost(val: UpdatePostInput, labelIDs: string[]) {
-  const addedLabels = labelIDs.filter(
-    (id) => !post.value.labels?.edges?.map(({ node }) => node.id).includes(id)
-  )
-  const removedLabels = post.value.labels?.edges
-    ?.map(({ node }) => node.id)
+function invokeUpdate(data: PostRead, labelIDs: number[]) {
+  const addedLabels = labelIDs.filter((id) => !post.edges.labels?.map((label) => label.id).includes(id))
+  const removedLabels = post.edges.labels
+    ?.map((label) => label.id)
     .filter((id) => !labelIDs.includes(id))
 
-  update
-    .executeMutation({
-      id: route.params.id,
-      input: {
-        title: val.title,
-        content: val.content,
-        slug: val.slug,
-        addLabelIDs: addedLabels,
-        removeLabelIDs: removedLabels,
-        publishedAt: val.publishedAt,
-        public: val.public,
-      },
-    })
-    .then((result) => {
-      if (!result.error) {
-        message.success("Post updated")
-        router.push({ name: "/admin/posts" })
-      } else {
-        message.error("Error updating post: " + result.error.toString())
-      }
-    })
+  mutate({
+    slug: data.slug,
+    title: data.title,
+    content: data.content,
+    published_at: data.published_at,
+    public: data.public,
+    add_labels: addedLabels,
+    remove_labels: removedLabels,
+  })
 }
 </script>
 
@@ -69,12 +60,10 @@ function updatePost(val: UpdatePostInput, labelIDs: string[]) {
       </template>
     </n-page-header>
 
-    <n-spin :show="fetching">
-      <n-alert v-if="error" title="Error fetching post" type="error">
-        {{ error }}
-      </n-alert>
+    <n-spin :show="isPending">
+      <CoreError v-if="error" :error="error" />
 
-      <PostCreateEdit v-if="post" :post="post" @update:post="updatePost" />
+      <PostCreateEdit v-if="post" :post="post" @update:post="invokeUpdate" />
     </n-spin>
   </div>
 </template>

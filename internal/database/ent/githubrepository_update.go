@@ -15,7 +15,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/database/ent/label"

@@ -5,12 +5,13 @@
 package schema
 
 import (
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
+	"github.com/ogen-go/ogen"
 )
 
 type GithubEvent struct {
@@ -19,25 +20,61 @@ type GithubEvent struct {
 
 func (GithubEvent) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("event_id").Unique().Annotations(
-			entgql.OrderField("EVENT_ID"),
-		),
-		field.String("event_type").NotEmpty().Annotations(
-			entgql.OrderField("EVENT_TYPE"),
-		),
-		field.Time("created_at").Annotations(
-			entgql.OrderField("CREATED_AT"),
-		),
-		field.Bool("public").Default(false),
-		field.Int64("actor_id").Annotations(
-			entgql.OrderField("ACTOR_ID"),
-		),
-		field.JSON("actor", &github.User{}).Annotations(entgql.Type("GithubUser")),
-		field.Int64("repo_id").Positive().Annotations(
-			entgql.OrderField("REPO_ID"),
-		),
-		field.JSON("repo", &github.Repository{}).Annotations(entgql.Type("GithubEventRepo")),
-		field.JSON("payload", map[string]any{}).Annotations(entgql.Type("Map")),
+		field.String("event_id").
+			Unique().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the event."),
+		field.String("event_type").
+			NotEmpty().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The type of the event."),
+		field.Time("created_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the event was created."),
+		field.Bool("public").
+			Default(false).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Whether the event is public or not."),
+		field.Int64("actor_id").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the actor."),
+		field.JSON("actor", &github.User{}).
+			Annotations(
+				entrest.WithSchema(&ogen.Schema{Ref: "#/components/schemas/GithubUser"}),
+			).
+			Comment("The actor data of the event."),
+		field.Int64("repo_id").
+			Positive().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the repository."),
+		field.JSON("repo", &github.Repository{}).
+			Annotations(
+				entrest.WithSchema(entrest.SchemaObjectAny),
+			).
+			Comment("The repository of the event."),
+		field.JSON("payload", map[string]any{}).
+			Annotations(
+				entrest.WithSchema(entrest.SchemaObjectAny),
+			).
+			Comment("The payload of the event."),
 	}
 }
 
@@ -47,7 +84,7 @@ func (GithubEvent) Policy() ent.Policy {
 			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
-			AllowPublicOnly(),
+			FilterPublicOnly(),
 			privacy.AlwaysAllowRule(),
 		},
 	}
@@ -55,7 +92,6 @@ func (GithubEvent) Policy() ent.Policy {
 
 func (GithubEvent) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entrest.WithIncludeOperations(entrest.OperationList, entrest.OperationRead),
 	}
 }

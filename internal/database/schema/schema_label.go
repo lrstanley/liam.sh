@@ -7,12 +7,11 @@ package schema
 import (
 	"regexp"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/mixin"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
@@ -24,15 +23,21 @@ type Label struct {
 
 func (Label) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("name").Unique().Match(reLabel).Annotations(
-			entgql.OrderField("NAME"),
-		),
+		field.String("name").
+			Unique().
+			Match(reLabel).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("golang"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Label name."),
 	}
 }
 
 func (Label) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.Time{},
+		MixinTime{},
 	}
 }
 
@@ -50,21 +55,14 @@ func (Label) Policy() ent.Policy {
 func (Label) Edges() []ent.Edge {
 	return []ent.Edge{
 		edge.To("posts", Post.Type).Annotations(
-			entgql.RelayConnection(),
+			entrest.WithFilter(entrest.FilterEdge),
 		),
 		edge.To("github_repositories", GithubRepository.Type).Annotations(
-			entgql.RelayConnection(),
+			entrest.WithFilter(entrest.FilterEdge),
 		),
 	}
 }
 
 func (Label) Annotations() []schema.Annotation {
-	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
-		entgql.Mutations(
-			entgql.MutationCreate(),
-			entgql.MutationUpdate(),
-		),
-	}
+	return []schema.Annotation{}
 }

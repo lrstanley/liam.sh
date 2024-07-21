@@ -5,14 +5,15 @@
 package schema
 
 import (
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"github.com/google/go-github/v52/github"
+	"github.com/google/go-github/v63/github"
+	"github.com/lrstanley/entrest"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
+	"github.com/ogen-go/ogen"
 )
 
 type GithubRelease struct {
@@ -21,26 +22,70 @@ type GithubRelease struct {
 
 func (GithubRelease) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int64("release_id").Unique().Positive(),
-		field.String("html_url").NotEmpty(),
-		field.String("tag_name").NotEmpty().Annotations(
-			entgql.OrderField("TAG_NAME"),
-		),
-		field.String("target_commitish").NotEmpty(),
-		field.String("name").Optional().Annotations(
-			entgql.OrderField("NAME"),
-		),
-		field.Bool("draft"),
-		field.Bool("prerelease"),
-		field.Time("created_at").Annotations(
-			entgql.OrderField("CREATED_AT"),
-		),
-		field.Time("published_at").Annotations(
-			entgql.OrderField("PUBLISHED_AT"),
-		),
-		field.JSON("author", &github.User{}).Annotations(
-			entgql.Type("GithubUser"),
-		),
+		field.Int64("release_id").
+			Unique().
+			Positive().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("The ID of the release."),
+		field.String("html_url").
+			NotEmpty().
+			Annotations(
+				entrest.WithExample("https://github.com/lrstanley/entrest/releases/tag/v0.1.0"),
+			).
+			Comment("The URL of the release."),
+		field.String("tag_name").
+			NotEmpty().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("v0.1.0"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The tag name of the release."),
+		field.String("target_commitish").
+			NotEmpty().
+			Annotations(
+				entrest.WithExample("master"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Specifies the commitish value that determines where the Git tag is created from. Can be any branch or commit SHA. Unused if the Git tag already exists. Default: the repository's default branch."),
+		field.String("name").
+			Optional().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("The name of the release."),
+		field.Bool("draft").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Indicates whether the release is a draft."),
+		field.Bool("prerelease").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Indicates whether the release is a prerelease."),
+		field.Time("created_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the release was created."),
+		field.Time("published_at").
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("The date the release was published."),
+		field.JSON("author", &github.User{}).
+			Annotations(
+				entrest.WithSchema(&ogen.Schema{Ref: "#/components/schemas/GithubUser"}),
+			),
 	}
 }
 
@@ -57,19 +102,27 @@ func (GithubRelease) Policy() ent.Policy {
 
 func (GithubRelease) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("repository", GithubRepository.Type).Ref("releases").Required().Unique(),
-		edge.To("assets", GithubAsset.Type).Annotations(
-			entgql.RelayConnection(),
-			entsql.Annotation{
-				OnDelete: entsql.Cascade,
-			},
-		),
+		edge.From("repository", GithubRepository.Type).
+			Ref("releases").
+			Required().
+			Unique().
+			Annotations(
+				entrest.WithEagerLoad(true),
+				entrest.WithFilter(entrest.FilterEdge),
+			),
+		edge.To("assets", GithubAsset.Type).
+			Annotations(
+				entsql.Annotation{
+					OnDelete: entsql.Cascade,
+				},
+				entrest.WithEagerLoad(true),
+				entrest.WithFilter(entrest.FilterEdge),
+			),
 	}
 }
 
 func (GithubRelease) Annotations() []schema.Annotation {
 	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
+		entrest.WithIncludeOperations(entrest.OperationList, entrest.OperationRead),
 	}
 }

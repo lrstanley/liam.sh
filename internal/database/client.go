@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"sync"
 
+	"entgo.io/ent/dialect"
+	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
 	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
@@ -19,7 +21,6 @@ import (
 )
 
 var defaultConnectionValues = url.Values{
-	"cache": {"shared"},
 	"_pragma": {
 		"foreign_keys(1)",
 		"journal_mode(WAL)",
@@ -52,14 +53,14 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 	}
 	uri.RawQuery = values.Encode()
 
-	db, err := ent.Open("sqlite3", uri.String())
+	db, err := sql.Open("sqlite3", uri.String())
 	if err != nil {
 		log.FromContext(ctx).WithError(err).Fatal("failed to open database connection")
 		return nil
 	}
+	db.SetMaxOpenConns(1)
 
-	log.FromContext(ctx).Info("connected to database")
-	return db
+	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.SQLite, db)))
 }
 
 func Migrate(ctx context.Context, db *ent.Client) {

@@ -3,23 +3,23 @@ import { EditorView } from "codemirror"
 import { Codemirror } from "vue-codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
-import type { Post } from "@/lib/api"
+import type { PostRead } from "@/lib/http/types.gen"
 
 const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
 
 const props = defineProps<{
-  post?: Post
+  post?: PostRead
   create?: boolean
 }>()
 const emit = defineEmits(["update:post"])
 
-const post = ref<Post>(props.post ?? ({} as Post))
-const labelIDs = ref<string[]>(props.post?.labels?.edges?.map(({ node }) => node.id) ?? [])
+const post = ref<PostRead>(props.post ?? ({} as PostRead))
+const labelIDs = ref<number[]>(props.post?.edges.labels?.map(({ id }) => id) ?? [])
 
 const datetime = computed({
-  get: () => Date.parse(post.value.publishedAt ?? new Date()),
+  get: () => (post.value.published_at ? Date.parse(post.value.published_at) : new Date().getTime()),
   set: (val) => {
-    post.value.publishedAt = new Date(val).toISOString()
+    post.value.published_at = new Date(val).toISOString()
   },
 })
 </script>

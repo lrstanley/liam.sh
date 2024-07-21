@@ -12,14 +12,13 @@ import (
 	"sync"
 	"time"
 
-	"entgo.io/contrib/entgql"
 	"entgo.io/ent"
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/mixin"
 	"github.com/apex/log"
 	"github.com/lrstanley/chix"
+	"github.com/lrstanley/entrest"
 	gen "github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/hook"
 	"github.com/lrstanley/liam.sh/internal/database/ent/intercept"
@@ -77,33 +76,73 @@ type Post struct {
 
 func (Post) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("slug").Match(rePostSlug).Unique().Annotations(
-			entgql.OrderField("SLUG"),
-		),
-		field.String("title").MaxLen(100).Annotations(
-			entgql.OrderField("TITLE"),
-		),
-		field.String("content").NotEmpty(),
-		field.String("content_html").NotEmpty().Annotations(
-			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
-		),
-		field.String("summary").NotEmpty().Annotations(
-			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
-		),
-		field.Time("published_at").Default(time.Now).Annotations(
-			entgql.OrderField("DATE"),
-		),
-		field.Int("view_count").Default(0).NonNegative().Annotations(
-			entgql.OrderField("VIEW_COUNT"),
-			entgql.Skip(entgql.SkipMutationCreateInput|entgql.SkipMutationUpdateInput),
-		),
-		field.Bool("public").Default(false),
+		field.String("slug").
+			Match(rePostSlug).
+			Unique().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("hello-world"),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Post slug."),
+		field.String("title").
+			MaxLen(100).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithExample("Hello World"),
+				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+			).
+			Comment("Post title."),
+		field.String("content").
+			NotEmpty().
+			Annotations(
+				entrest.WithExample("## Title\n\nHello World"),
+				entrest.WithFilter(entrest.FilterGroupContains),
+			).
+			Comment("Post content in Markdown."),
+		field.String("content_html").
+			NotEmpty().
+			Annotations(
+				entrest.WithReadOnly(true),
+				entrest.WithExample("<h1>Title</h1>\n\n<p>Hello World</p>"),
+				entrest.WithFilter(entrest.FilterGroupContains),
+			).
+			Comment("Generated HTML content (produced from 'content' field)."),
+		field.String("summary").
+			NotEmpty().
+			Annotations(
+				entrest.WithReadOnly(true),
+				entrest.WithExample("Some example content here..."),
+			).
+			Comment("Post summary, which is produced from the first sentence or two of the post content."),
+		field.Time("published_at").
+			Default(time.Now).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			),
+		field.Int("view_count").
+			Default(0).
+			NonNegative().
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithReadOnly(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact|entrest.FilterGroupLength),
+			).
+			Comment("Number of times the post has been viewed."),
+		field.Bool("public").
+			Default(false).
+			Annotations(
+				entrest.WithSortable(true),
+				entrest.WithFilter(entrest.FilterGroupEqualExact),
+			).
+			Comment("Whether the post is public or not."),
 	}
 }
 
 func (Post) Mixin() []ent.Mixin {
 	return []ent.Mixin{
-		mixin.Time{},
+		MixinTime{},
 	}
 }
 
@@ -121,24 +160,25 @@ func (Post) Policy() ent.Policy {
 
 func (Post) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.From("author", User.Type).Ref("posts").Unique().Required().Annotations(
-			entgql.Skip(entgql.SkipMutationCreateInput | entgql.SkipMutationUpdateInput),
-		),
-		edge.From("labels", Label.Type).Ref("posts").Annotations(
-			entgql.RelayConnection(),
-		),
+		edge.From("author", User.Type).
+			Ref("posts").
+			Unique().
+			Required().
+			Annotations(
+				entrest.WithEagerLoad(true),
+				entrest.WithFilter(entrest.FilterEdge),
+			),
+		edge.From("labels", Label.Type).
+			Ref("posts").
+			Annotations(
+				entrest.WithEagerLoad(true),
+				entrest.WithFilter(entrest.FilterEdge),
+			),
 	}
 }
 
 func (Post) Annotations() []schema.Annotation {
-	return []schema.Annotation{
-		entgql.RelayConnection(),
-		entgql.QueryField(),
-		entgql.Mutations(
-			entgql.MutationCreate(),
-			entgql.MutationUpdate(),
-		),
-	}
+	return []schema.Annotation{}
 }
 
 func (Post) Interceptors() []ent.Interceptor {

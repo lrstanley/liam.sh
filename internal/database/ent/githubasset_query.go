@@ -29,8 +29,6 @@ type GithubAssetQuery struct {
 	predicates  []predicate.GithubAsset
 	withRelease *GithubReleaseQuery
 	withFKs     bool
-	modifiers   []func(*sql.Selector)
-	loadTotal   []func(context.Context, []*GithubAsset) error
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -305,7 +303,7 @@ func (gaq *GithubAssetQuery) WithRelease(opts ...func(*GithubReleaseQuery)) *Git
 // Example:
 //
 //	var v []struct {
-//		AssetID int64 `json:"asset_id,omitempty"`
+//		AssetID int64 `json:"asset_id"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -328,7 +326,7 @@ func (gaq *GithubAssetQuery) GroupBy(field string, fields ...string) *GithubAsse
 // Example:
 //
 //	var v []struct {
-//		AssetID int64 `json:"asset_id,omitempty"`
+//		AssetID int64 `json:"asset_id"`
 //	}
 //
 //	client.GithubAsset.Query().
@@ -403,9 +401,6 @@ func (gaq *GithubAssetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(gaq.modifiers) > 0 {
-		_spec.Modifiers = gaq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -418,11 +413,6 @@ func (gaq *GithubAssetQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]
 	if query := gaq.withRelease; query != nil {
 		if err := gaq.loadRelease(ctx, query, nodes, nil,
 			func(n *GithubAsset, e *GithubRelease) { n.Edges.Release = e }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range gaq.loadTotal {
-		if err := gaq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -464,9 +454,6 @@ func (gaq *GithubAssetQuery) loadRelease(ctx context.Context, query *GithubRelea
 
 func (gaq *GithubAssetQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := gaq.querySpec()
-	if len(gaq.modifiers) > 0 {
-		_spec.Modifiers = gaq.modifiers
-	}
 	_spec.Node.Columns = gaq.ctx.Fields
 	if len(gaq.ctx.Fields) > 0 {
 		_spec.Unique = gaq.ctx.Unique != nil && *gaq.ctx.Unique

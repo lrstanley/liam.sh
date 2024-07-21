@@ -10,6 +10,7 @@ import (
 
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/lrstanley/liam.sh/internal/database/ent/user"
 	"github.com/markbates/goth"
 )
@@ -34,6 +35,8 @@ func (s *Service) Get(ctx context.Context, id int) (*ent.User, error) {
 }
 
 func (s *Service) Set(ctx context.Context, guser *goth.User) (id int, err error) {
+	ctx = privacy.DecisionContext(ctx, privacy.Allow)
+
 	uid, err := strconv.Atoi(guser.UserID)
 	if err != nil {
 		return 0, err

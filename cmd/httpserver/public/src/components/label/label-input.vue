@@ -1,37 +1,29 @@
 <script setup lang="ts">
 import { message } from "@/lib/core/status"
-import { useCreateLabelMutation } from "@/lib/api"
+import { createLabel } from "@/lib/http/services.gen"
+import type { LabelCreate } from "@/lib/http/types.gen"
 
 const props = defineProps<{
-  modelValue: string[]
   suggest?: string
 }>()
 
-const emit = defineEmits(["update:modelValue"])
-
+const selected = defineModel<number[]>()
 const selectRef = ref(null)
-
-const selected = computed({
-  get: () => props.modelValue,
-  set: (val) => emit("update:modelValue", val),
-})
-
 const newLabelInput = ref("")
-const createLabel = useCreateLabelMutation()
 
-function createNewLabel(val: string) {
-  createLabel.executeMutation({ input: { name: val } }).then((result) => {
-    if (!result.error) {
-      selectRef.value.refetch().then(() => {
-        selected.value = [...(selected.value ?? []), result.data.createLabel.id]
-      })
-      newLabelInput.value = ""
-      message.success("Created label")
-    } else {
-      message.error(result.error.toString())
-    }
-  })
-}
+const { mutate, isPending, error } = useMutation({
+  mutationFn: (data: LabelCreate) => unwrapErrors(createLabel({ body: data })),
+  onError: (error) => {
+    message.error("error creating label: " + error.message)
+  },
+  onSuccess: (resp) => {
+    message.success(`created label ${resp.name}`)
+    newLabelInput.value = ""
+    selectRef.value.refetch().then(() => {
+      selected.value = [...(selected.value ?? []), resp.id]
+    })
+  },
+})
 </script>
 
 <template>
@@ -42,9 +34,9 @@ function createNewLabel(val: string) {
     <n-input
       v-model:value="newLabelInput"
       placeholder="Create label"
-      :loading="createLabel.fetching?.value"
-      :status="createLabel.error.value ? 'error' : undefined"
-      @keyup.enter="createNewLabel(newLabelInput)"
+      :loading="isPending"
+      :status="error ? 'error' : undefined"
+      @keyup.enter="mutate({ name: newLabelInput })"
     >
       <template #prefix>
         <n-icon><i-mdi-tag /></n-icon>

@@ -43,7 +43,7 @@ func AllowRoles(allowed []string, deny bool) privacy.QueryMutationRule {
 	})
 }
 
-func AllowPublicOnly() privacy.QueryRule {
+func FilterPublicOnly() privacy.QueryRule {
 	type PublicFilter interface {
 		WherePublic(p entql.BoolP)
 	}

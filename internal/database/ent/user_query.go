@@ -24,14 +24,11 @@ import (
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx            *QueryContext
-	order          []user.OrderOption
-	inters         []Interceptor
-	predicates     []predicate.User
-	withPosts      *PostQuery
-	modifiers      []func(*sql.Selector)
-	loadTotal      []func(context.Context, []*User) error
-	withNamedPosts map[string]*PostQuery
+	ctx        *QueryContext
+	order      []user.OrderOption
+	inters     []Interceptor
+	predicates []predicate.User
+	withPosts  *PostQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -306,7 +303,7 @@ func (uq *UserQuery) WithPosts(opts ...func(*PostQuery)) *UserQuery {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -329,7 +326,7 @@ func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 // Example:
 //
 //	var v []struct {
-//		CreateTime time.Time `json:"create_time,omitempty"`
+//		CreateTime time.Time `json:"create_time"`
 //	}
 //
 //	client.User.Query().
@@ -397,9 +394,6 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
-	if len(uq.modifiers) > 0 {
-		_spec.Modifiers = uq.modifiers
-	}
 	for i := range hooks {
 		hooks[i](ctx, _spec)
 	}
@@ -413,18 +407,6 @@ func (uq *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 		if err := uq.loadPosts(ctx, query, nodes,
 			func(n *User) { n.Edges.Posts = []*Post{} },
 			func(n *User, e *Post) { n.Edges.Posts = append(n.Edges.Posts, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for name, query := range uq.withNamedPosts {
-		if err := uq.loadPosts(ctx, query, nodes,
-			func(n *User) { n.appendNamedPosts(name) },
-			func(n *User, e *Post) { n.appendNamedPosts(name, e) }); err != nil {
-			return nil, err
-		}
-	}
-	for i := range uq.loadTotal {
-		if err := uq.loadTotal[i](ctx, nodes); err != nil {
 			return nil, err
 		}
 	}
@@ -465,9 +447,6 @@ func (uq *UserQuery) loadPosts(ctx context.Context, query *PostQuery, nodes []*U
 
 func (uq *UserQuery) sqlCount(ctx context.Context) (int, error) {
 	_spec := uq.querySpec()
-	if len(uq.modifiers) > 0 {
-		_spec.Modifiers = uq.modifiers
-	}
 	_spec.Node.Columns = uq.ctx.Fields
 	if len(uq.ctx.Fields) > 0 {
 		_spec.Unique = uq.ctx.Unique != nil && *uq.ctx.Unique
@@ -545,20 +524,6 @@ func (uq *UserQuery) sqlQuery(ctx context.Context) *sql.Selector {
 		selector.Limit(*limit)
 	}
 	return selector
-}
-
-// WithNamedPosts tells the query-builder to eager-load the nodes that are connected to the "posts"
-// edge with the given name. The optional arguments are used to configure the query builder of the edge.
-func (uq *UserQuery) WithNamedPosts(name string, opts ...func(*PostQuery)) *UserQuery {
-	query := (&PostClient{config: uq.config}).Query()
-	for _, opt := range opts {
-		opt(query)
-	}
-	if uq.withNamedPosts == nil {
-		uq.withNamedPosts = make(map[string]*PostQuery)
-	}
-	uq.withNamedPosts[name] = query
-	return uq
 }
 
 // UserGroupBy is the group-by builder for User entities.
