@@ -25,7 +25,7 @@ require (
 	github.com/yuin/goldmark v1.7.4
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.21.0
-	modernc.org/sqlite v1.30.2
+	modernc.org/sqlite v1.31.1
 	mvdan.cc/xurls/v2 v2.5.0
 )
 
