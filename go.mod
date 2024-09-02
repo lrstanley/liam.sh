@@ -10,7 +10,7 @@ require (
 	github.com/apex/log v1.9.0
 	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/cors v1.2.1
-	github.com/go-chi/httprate v0.9.0
+	github.com/go-chi/httprate v0.14.1
 	github.com/go-playground/form/v4 v4.2.1
 	github.com/google/go-github/v63 v63.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
