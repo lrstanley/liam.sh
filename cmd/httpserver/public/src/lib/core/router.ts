@@ -68,7 +68,7 @@ router.beforeEach(async (to, from, next) => {
     await getGithubUser().then((resp) => (state.githubUser = resp.data))
   }
 
-  if (to.meta.auth == true && state.user == null && error?.code == 401) {
+  if (to.meta.auth == true && state.user == null) {
     window.location.href = `/-/auth/providers/github?next=${window.location.origin + to.path}`
     return
   }
