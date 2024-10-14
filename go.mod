@@ -22,7 +22,7 @@ require (
 	github.com/ogen-go/ogen v1.2.2
 	github.com/prometheus/client_golang v1.19.1
 	github.com/shurcooL/githubv4 v0.0.0-20240429030203-be2daab69064
-	github.com/yuin/goldmark v1.7.4
+	github.com/yuin/goldmark v1.7.6
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.21.0
 	modernc.org/sqlite v1.30.2
