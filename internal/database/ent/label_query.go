@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -114,7 +115,7 @@ func (lq *LabelQuery) QueryGithubRepositories() *GithubRepositoryQuery {
 // First returns the first Label entity from the query.
 // Returns a *NotFoundError when no Label was found.
 func (lq *LabelQuery) First(ctx context.Context) (*Label, error) {
-	nodes, err := lq.Limit(1).All(setContextOp(ctx, lq.ctx, "First"))
+	nodes, err := lq.Limit(1).All(setContextOp(ctx, lq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func (lq *LabelQuery) FirstX(ctx context.Context) *Label {
 // Returns a *NotFoundError when no Label ID was found.
 func (lq *LabelQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = lq.Limit(1).IDs(setContextOp(ctx, lq.ctx, "FirstID")); err != nil {
+	if ids, err = lq.Limit(1).IDs(setContextOp(ctx, lq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -160,7 +161,7 @@ func (lq *LabelQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one Label entity is found.
 // Returns a *NotFoundError when no Label entities are found.
 func (lq *LabelQuery) Only(ctx context.Context) (*Label, error) {
-	nodes, err := lq.Limit(2).All(setContextOp(ctx, lq.ctx, "Only"))
+	nodes, err := lq.Limit(2).All(setContextOp(ctx, lq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +189,7 @@ func (lq *LabelQuery) OnlyX(ctx context.Context) *Label {
 // Returns a *NotFoundError when no entities are found.
 func (lq *LabelQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = lq.Limit(2).IDs(setContextOp(ctx, lq.ctx, "OnlyID")); err != nil {
+	if ids, err = lq.Limit(2).IDs(setContextOp(ctx, lq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -213,7 +214,7 @@ func (lq *LabelQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of Labels.
 func (lq *LabelQuery) All(ctx context.Context) ([]*Label, error) {
-	ctx = setContextOp(ctx, lq.ctx, "All")
+	ctx = setContextOp(ctx, lq.ctx, ent.OpQueryAll)
 	if err := lq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -235,7 +236,7 @@ func (lq *LabelQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if lq.ctx.Unique == nil && lq.path != nil {
 		lq.Unique(true)
 	}
-	ctx = setContextOp(ctx, lq.ctx, "IDs")
+	ctx = setContextOp(ctx, lq.ctx, ent.OpQueryIDs)
 	if err = lq.Select(label.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -253,7 +254,7 @@ func (lq *LabelQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (lq *LabelQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, lq.ctx, "Count")
+	ctx = setContextOp(ctx, lq.ctx, ent.OpQueryCount)
 	if err := lq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -271,7 +272,7 @@ func (lq *LabelQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (lq *LabelQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, lq.ctx, "Exist")
+	ctx = setContextOp(ctx, lq.ctx, ent.OpQueryExist)
 	switch _, err := lq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -677,7 +678,7 @@ func (lgb *LabelGroupBy) Aggregate(fns ...AggregateFunc) *LabelGroupBy {
 
 // Scan applies the selector query and scans the result into the given value.
 func (lgb *LabelGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, lgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, lgb.build.ctx, ent.OpQueryGroupBy)
 	if err := lgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -725,7 +726,7 @@ func (ls *LabelSelect) Aggregate(fns ...AggregateFunc) *LabelSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ls *LabelSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ls.ctx, "Select")
+	ctx = setContextOp(ctx, ls.ctx, ent.OpQuerySelect)
 	if err := ls.prepareQuery(ctx); err != nil {
 		return err
 	}

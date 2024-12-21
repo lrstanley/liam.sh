@@ -31,13 +31,27 @@ func EagerLoadGithubGist(query *ent.GithubGistQuery) *ent.GithubGistQuery {
 // EagerLoadGithubRelease eager-loads the edges of a GithubRelease entity, if any edges
 // were requested to be eager-loaded, based off associated annotations.
 func EagerLoadGithubRelease(query *ent.GithubReleaseQuery) *ent.GithubReleaseQuery {
-	return query.WithRepository().WithAssets()
+	return query.WithRepository(
+		func(e *ent.GithubRepositoryQuery) {
+			applySortingGithubRepository(e, "id", "asc")
+		},
+	).WithAssets(
+		func(e *ent.GithubAssetQuery) {
+			applySortingGithubAsset(e, "id", "asc")
+			e.Limit(1000)
+		},
+	)
 }
 
 // EagerLoadGithubRepository eager-loads the edges of a GithubRepository entity, if any edges
 // were requested to be eager-loaded, based off associated annotations.
 func EagerLoadGithubRepository(query *ent.GithubRepositoryQuery) *ent.GithubRepositoryQuery {
-	return query.WithLabels()
+	return query.WithLabels(
+		func(e *ent.LabelQuery) {
+			applySortingLabel(e, "id", "asc")
+			e.Limit(1000)
+		},
+	)
 }
 
 // EagerLoadLabel eager-loads the edges of a Label entity, if any edges
@@ -49,7 +63,16 @@ func EagerLoadLabel(query *ent.LabelQuery) *ent.LabelQuery {
 // EagerLoadPost eager-loads the edges of a Post entity, if any edges
 // were requested to be eager-loaded, based off associated annotations.
 func EagerLoadPost(query *ent.PostQuery) *ent.PostQuery {
-	return query.WithAuthor().WithLabels()
+	return query.WithAuthor(
+		func(e *ent.UserQuery) {
+			applySortingUser(e, "id", "asc")
+		},
+	).WithLabels(
+		func(e *ent.LabelQuery) {
+			applySortingLabel(e, "id", "asc")
+			e.Limit(1000)
+		},
+	)
 }
 
 // EagerLoadUser eager-loads the edges of a User entity, if any edges

@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -90,7 +91,7 @@ func (gaq *GithubAssetQuery) QueryRelease() *GithubReleaseQuery {
 // First returns the first GithubAsset entity from the query.
 // Returns a *NotFoundError when no GithubAsset was found.
 func (gaq *GithubAssetQuery) First(ctx context.Context) (*GithubAsset, error) {
-	nodes, err := gaq.Limit(1).All(setContextOp(ctx, gaq.ctx, "First"))
+	nodes, err := gaq.Limit(1).All(setContextOp(ctx, gaq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -113,7 +114,7 @@ func (gaq *GithubAssetQuery) FirstX(ctx context.Context) *GithubAsset {
 // Returns a *NotFoundError when no GithubAsset ID was found.
 func (gaq *GithubAssetQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = gaq.Limit(1).IDs(setContextOp(ctx, gaq.ctx, "FirstID")); err != nil {
+	if ids, err = gaq.Limit(1).IDs(setContextOp(ctx, gaq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -136,7 +137,7 @@ func (gaq *GithubAssetQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubAsset entity is found.
 // Returns a *NotFoundError when no GithubAsset entities are found.
 func (gaq *GithubAssetQuery) Only(ctx context.Context) (*GithubAsset, error) {
-	nodes, err := gaq.Limit(2).All(setContextOp(ctx, gaq.ctx, "Only"))
+	nodes, err := gaq.Limit(2).All(setContextOp(ctx, gaq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +165,7 @@ func (gaq *GithubAssetQuery) OnlyX(ctx context.Context) *GithubAsset {
 // Returns a *NotFoundError when no entities are found.
 func (gaq *GithubAssetQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = gaq.Limit(2).IDs(setContextOp(ctx, gaq.ctx, "OnlyID")); err != nil {
+	if ids, err = gaq.Limit(2).IDs(setContextOp(ctx, gaq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -189,7 +190,7 @@ func (gaq *GithubAssetQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubAssets.
 func (gaq *GithubAssetQuery) All(ctx context.Context) ([]*GithubAsset, error) {
-	ctx = setContextOp(ctx, gaq.ctx, "All")
+	ctx = setContextOp(ctx, gaq.ctx, ent.OpQueryAll)
 	if err := gaq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -211,7 +212,7 @@ func (gaq *GithubAssetQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if gaq.ctx.Unique == nil && gaq.path != nil {
 		gaq.Unique(true)
 	}
-	ctx = setContextOp(ctx, gaq.ctx, "IDs")
+	ctx = setContextOp(ctx, gaq.ctx, ent.OpQueryIDs)
 	if err = gaq.Select(githubasset.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -229,7 +230,7 @@ func (gaq *GithubAssetQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (gaq *GithubAssetQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, gaq.ctx, "Count")
+	ctx = setContextOp(ctx, gaq.ctx, ent.OpQueryCount)
 	if err := gaq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -247,7 +248,7 @@ func (gaq *GithubAssetQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (gaq *GithubAssetQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, gaq.ctx, "Exist")
+	ctx = setContextOp(ctx, gaq.ctx, ent.OpQueryExist)
 	switch _, err := gaq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -547,7 +548,7 @@ func (gagb *GithubAssetGroupBy) Aggregate(fns ...AggregateFunc) *GithubAssetGrou
 
 // Scan applies the selector query and scans the result into the given value.
 func (gagb *GithubAssetGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, gagb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, gagb.build.ctx, ent.OpQueryGroupBy)
 	if err := gagb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -595,7 +596,7 @@ func (gas *GithubAssetSelect) Aggregate(fns ...AggregateFunc) *GithubAssetSelect
 
 // Scan applies the selector query and scans the result into the given value.
 func (gas *GithubAssetSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, gas.ctx, "Select")
+	ctx = setContextOp(ctx, gas.ctx, ent.OpQuerySelect)
 	if err := gas.prepareQuery(ctx); err != nil {
 		return err
 	}

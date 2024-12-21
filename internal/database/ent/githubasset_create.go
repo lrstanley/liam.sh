@@ -202,7 +202,7 @@ func (gac *GithubAssetCreate) check() error {
 	if _, ok := gac.mutation.Uploader(); !ok {
 		return &ValidationError{Name: "uploader", err: errors.New(`ent: missing required field "GithubAsset.uploader"`)}
 	}
-	if _, ok := gac.mutation.ReleaseID(); !ok {
+	if len(gac.mutation.ReleaseIDs()) == 0 {
 		return &ValidationError{Name: "release", err: errors.New(`ent: missing required edge "GithubAsset.release"`)}
 	}
 	return nil

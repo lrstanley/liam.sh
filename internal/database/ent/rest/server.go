@@ -116,6 +116,9 @@ func JSON(w http.ResponseWriter, r *http.Request, status int, v any) {
 	}
 }
 
+// M is an alias for map[string]any, which makes it easier to respond with generic JSON data structures.
+type M map[string]any
+
 var (
 	// DefaultDecoder is the default decoder used by Bind. You can either override
 	// this, or provide your own. Make sure it is set before Bind is called.
@@ -246,6 +249,23 @@ type linkablePagedResource interface {
 // Spec returns the OpenAPI spec for the server implementation.
 func (s *Server) Spec(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	if !s.config.DisableSpecInjectServer && s.config.BaseURL != "" {
+		spec := map[string]any{}
+		err := json.Unmarshal(OpenAPI, &spec)
+		if err != nil {
+			panic(fmt.Sprintf("failed to unmarshal spec: %v", err))
+		}
+
+		type Server struct {
+			URL string `json:"url"`
+		}
+
+		if _, ok := spec["servers"]; !ok {
+			spec["servers"] = []Server{{URL: s.config.BaseURL}}
+			JSON(w, r, http.StatusOK, spec)
+			return
+		}
+	}
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write(OpenAPI)
 }
@@ -265,20 +285,22 @@ var scalarTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
     <script>
       document.getElementById("api-reference").dataset.configuration = JSON.stringify({
         spec: {
-          url: "{{ . }}",
+          url: "{{ $.SpecPath }}",
         },
+        {{- if $.DisableSpecInjectServer }}
         servers: [
             {url: window.location.origin + window.location.pathname.replace(/\/docs$/g, "")}
         ],
+        {{- end }}
         theme: "kepler",
         isEditable: false,
         hideDownloadButton: true,
-        customCss: ".darklight-reference-promo { visibility: hidden !important; height: 0 !important; }",
+        customCss: ".darklight-reference-promo { visibility: hidden !important; height: 0 !important; } .open-api-client-button { display: none !important; }",
       });
     </script>
     <script
-      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.24.27"
-      integrity="sha256-PkPtL+Xq87aeKc1J/6VbkP6WBkMjdgnNmwGwYZj+r+4="
+      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.25.90"
+      integrity="sha256-++YJpNWmH8Qh3qcTB07t45rwT6wywwfvfBpMayejvbo="
       crossorigin="anonymous"
     ></script>
   </body>
@@ -286,7 +308,11 @@ var scalarTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
 
 func (s *Server) Docs(w http.ResponseWriter, r *http.Request) {
 	var buf bytes.Buffer
-	if err := scalarTemplate.Execute(&buf, s.config.BasePath+"/openapi.json"); err != nil {
+	err := scalarTemplate.Execute(&buf, map[string]any{
+		"SpecPath":                s.config.BasePath + "/openapi.json",
+		"DisableSpecInjectServer": s.config.DisableSpecInjectServer,
+	})
+	if err != nil {
 		handleResponse[struct{}](s, w, r, "", nil, err)
 		return
 	}
@@ -313,6 +339,10 @@ type ServerConfig struct {
 	// disable the embedded API reference documentation, see [ServerConfig.DisableDocs] for more
 	// information.
 	DisableSpecHandler bool
+
+	// DisableSpecInjectServer if set to true, will disable the automatic injection of the
+	// server URL into the spec. This only applies if [ServerConfig.BaseURL] is provided.
+	DisableSpecInjectServer bool
 
 	// DisableDocsHandler if set to true, will disable the embedded API reference documentation
 	// endpoint at /docs. Use this if you want to provide your own documentation functionality.
@@ -362,6 +392,9 @@ func NewServer(db *ent.Client, config *ServerConfig) (*Server, error) {
 			return nil, fmt.Errorf("failed to parse BaseURL: %w", err)
 		}
 		s.config.BasePath = uri.Path
+	}
+	if s.config.BaseURL == "" {
+		s.config.DisableSpecInjectServer = true
 	}
 	if s.config.BasePath != "" {
 		if !strings.HasPrefix(s.config.BasePath, "/") {
@@ -465,10 +498,6 @@ func handleResponse[Resp any](s *Server, w http.ResponseWriter, r *http.Request,
 		type pagedResp interface {
 			GetTotalCount() int
 		}
-		if v, ok := any(resp).(pagedResp); ok && v.GetTotalCount() == 0 && r.Method == http.MethodGet {
-			JSON(w, r, http.StatusNotFound, resp)
-			return
-		}
 		if r.Method == http.MethodPost {
 			JSON(w, r, http.StatusCreated, resp)
 			return
@@ -479,8 +508,21 @@ func handleResponse[Resp any](s *Server, w http.ResponseWriter, r *http.Request,
 	w.WriteHeader(http.StatusNoContent)
 }
 
+// UseEntContext can be used to inject an [ent.Client] into the context for use
+// by other middleware, or ent privacy layers. Note that the server will do this
+// by default, so you don't need to do this manually, unless it's a context that's
+// not being passed to the server and is being consumed elsewhere.
+func UseEntContext(db *ent.Client) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			next.ServeHTTP(w, r.WithContext(ent.NewContext(r.Context(), db)))
+		})
+	}
+}
+
 // Handler mounts all of the necessary endpoints onto the provided chi.Router.
 func (s *Server) Handler(r chi.Router) {
+	r.Use(UseEntContext(s.db))
 	r.Get("/github-assets", ReqParam(s, OperationList, s.ListGithubAssets))
 	r.Get("/github-assets/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubAsset))
 	r.Get("/github-assets/{id:^[0-9]{1,50}$}/release", ReqID(s, OperationRead, s.GetGithubAssetRelease))
@@ -521,7 +563,7 @@ func (s *Server) Handler(r chi.Router) {
 	if !s.config.DisableSpecHandler && !s.config.DisableDocsHandler {
 		// If specs are enabled, it's safe to provide documentation, and if they don't override the
 		// root endpoint, we can redirect to the docs.
-		r.Get("/", http.RedirectHandler("/docs", http.StatusTemporaryRedirect).ServeHTTP)
+		r.Get("/", http.RedirectHandler(s.config.BasePath+"/docs", http.StatusTemporaryRedirect).ServeHTTP)
 		r.Get("/docs", s.Docs)
 	}
 

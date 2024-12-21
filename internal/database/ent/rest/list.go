@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"math"
 	"slices"
-	"strings"
 	"time"
 
 	"entgo.io/ent/dialect/sql"
@@ -42,49 +41,57 @@ var (
 		MinItemsPerPage: 1,
 		ItemsPerPage:    10,
 		MaxItemsPerPage: 1000,
-	} // GithubAssetPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// GithubAssetPageConfig defines the page configuration for LIST-related endpoints
 	// for GithubAsset.
 	GithubAssetPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // GithubEventPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// GithubEventPageConfig defines the page configuration for LIST-related endpoints
 	// for GithubEvent.
 	GithubEventPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // GithubGistPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// GithubGistPageConfig defines the page configuration for LIST-related endpoints
 	// for GithubGist.
 	GithubGistPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // GithubReleasePageConfig defines the page configuration for LIST-related endpoints
+	}
+	// GithubReleasePageConfig defines the page configuration for LIST-related endpoints
 	// for GithubRelease.
 	GithubReleasePageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // GithubRepositoryPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// GithubRepositoryPageConfig defines the page configuration for LIST-related endpoints
 	// for GithubRepository.
 	GithubRepositoryPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // LabelPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// LabelPageConfig defines the page configuration for LIST-related endpoints
 	// for Label.
 	LabelPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // PostPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// PostPageConfig defines the page configuration for LIST-related endpoints
 	// for Post.
 	PostPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
 		ItemsPerPage:    DefaultPageConfig.ItemsPerPage,
 		MaxItemsPerPage: DefaultPageConfig.MaxItemsPerPage,
-	} // UserPageConfig defines the page configuration for LIST-related endpoints
+	}
+	// UserPageConfig defines the page configuration for LIST-related endpoints
 	// for User.
 	UserPageConfig = &PageConfig{
 		MinItemsPerPage: DefaultPageConfig.MinItemsPerPage,
@@ -213,204 +220,6 @@ func (p *Paginated[P, T]) ExecutePaginated(ctx context.Context, query P, pageCon
 	}, nil
 }
 
-type Sorted struct {
-	Sort  *string `json:"sort"  form:"sort,omitempty"`
-	Order *string `json:"order" form:"order,omitempty"`
-}
-
-// Validate validates the sorting fields and applies any necessary defaults.
-func (s *Sorted) Validate(fields SortableFields) error {
-	if s.Sort == nil {
-		return nil
-	}
-
-	if !slices.Contains(fields, *s.Sort) {
-		return &ErrBadRequest{Err: fmt.Errorf("invalid sort field: %s", *s.Sort)}
-	}
-
-	if s.Order == nil {
-		order := "asc"
-		s.Order = &order
-	}
-
-	if !slices.Contains(OrderDirections, *s.Order) {
-		return &ErrBadRequest{Err: fmt.Errorf("invalid order: %s", *s.Order)}
-	}
-
-	return nil
-}
-
-// SortOrderTerm returns the OrderTermOption (Asc/Desc) based on the Order field.
-func (s *Sorted) SortOrderTerm() sql.OrderTermOption {
-	if *s.Order == "asc" {
-		return sql.OrderAsc()
-	}
-	return sql.OrderDesc()
-}
-
-func (s *Sorted) SortFieldSelector() func(*sql.Selector) {
-	if s.Order == nil || s.Sort == nil {
-		panic("calling FieldSelector with nil sorting params")
-	}
-
-	if *s.Order == "asc" {
-		return ent.Asc(*s.Sort)
-	}
-
-	return ent.Desc(*s.Sort)
-}
-
-// SortableFields is a list of sortable fields for the given entity.
-type SortableFields []string
-
-var (
-	// OrderDirections are the allowed order directions that can be provided.
-	OrderDirections = []string{"asc", "desc"}
-	// GithubAssetSortFields is a list of sortable fields for the "GithubAsset" entity.
-	GithubAssetSortFields = SortableFields{
-		"asset_id",
-		"created_at",
-		"download_count",
-		"id",
-		"label",
-		"name",
-		"random",
-		"release.created_at",
-		"release.draft",
-		"release.id",
-		"release.name",
-		"release.prerelease",
-		"release.published_at",
-		"release.release_id",
-		"release.tag_name",
-		"size",
-		"updated_at",
-	}
-	// GithubEventSortFields is a list of sortable fields for the "GithubEvent" entity.
-	GithubEventSortFields = SortableFields{
-		"actor_id",
-		"created_at",
-		"event_id",
-		"event_type",
-		"id",
-		"public",
-		"random",
-		"repo_id",
-	}
-	// GithubGistSortFields is a list of sortable fields for the "GithubGist" entity.
-	GithubGistSortFields = SortableFields{
-		"created_at",
-		"gist_id",
-		"id",
-		"language",
-		"name",
-		"public",
-		"random",
-		"size",
-		"type",
-		"updated_at",
-	}
-	// GithubReleaseSortFields is a list of sortable fields for the "GithubRelease" entity.
-	GithubReleaseSortFields = SortableFields{
-		"assets.asset_id.sum",
-		"assets.count",
-		"assets.download_count.sum",
-		"assets.size.sum",
-		"created_at",
-		"draft",
-		"id",
-		"name",
-		"prerelease",
-		"published_at",
-		"random",
-		"release_id",
-		"repository.archived",
-		"repository.created_at",
-		"repository.default_branch",
-		"repository.fork",
-		"repository.full_name",
-		"repository.has_issues",
-		"repository.id",
-		"repository.is_template",
-		"repository.name",
-		"repository.owner_login",
-		"repository.public",
-		"repository.pushed_at",
-		"repository.repo_id",
-		"repository.star_count",
-		"repository.updated_at",
-		"tag_name",
-	}
-	// GithubRepositorySortFields is a list of sortable fields for the "GithubRepository" entity.
-	GithubRepositorySortFields = SortableFields{
-		"archived",
-		"created_at",
-		"default_branch",
-		"fork",
-		"full_name",
-		"has_issues",
-		"id",
-		"is_template",
-		"labels.count",
-		"name",
-		"owner_login",
-		"public",
-		"pushed_at",
-		"random",
-		"releases.count",
-		"releases.release_id.sum",
-		"repo_id",
-		"star_count",
-		"updated_at",
-	}
-	// LabelSortFields is a list of sortable fields for the "Label" entity.
-	LabelSortFields = SortableFields{
-		"create_time",
-		"github_repositories.count",
-		"github_repositories.repo_id.sum",
-		"github_repositories.star_count.sum",
-		"id",
-		"name",
-		"posts.count",
-		"posts.view_count.sum",
-		"random",
-		"update_time",
-	}
-	// PostSortFields is a list of sortable fields for the "Post" entity.
-	PostSortFields = SortableFields{
-		"author.create_time",
-		"author.email",
-		"author.id",
-		"author.location",
-		"author.login",
-		"author.name",
-		"author.update_time",
-		"create_time",
-		"id",
-		"labels.count",
-		"public",
-		"published_at",
-		"random",
-		"slug",
-		"title",
-		"update_time",
-		"view_count",
-	}
-	// UserSortFields is a list of sortable fields for the "User" entity.
-	UserSortFields = SortableFields{
-		"create_time",
-		"email",
-		"id",
-		"location",
-		"login",
-		"name",
-		"posts.count",
-		"posts.view_count.sum",
-		"random",
-		"update_time",
-	}
-)
-
 // FilterOperation represents if all or any (one or more) filters should be applied.
 type FilterOperation string
 
@@ -460,36 +269,36 @@ type ListGithubAssetParams struct {
 	GithubAssetNameIn []string `form:"name.in,omitempty" json:"github_asset_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	GithubAssetNameNotIn []string `form:"name.notIn,omitempty" json:"github_asset_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	GithubAssetNameEqualFold *string `form:"name.ieq,omitempty" json:"github_asset_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	GithubAssetNameContains *string `form:"name.has,omitempty" json:"github_asset_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	GithubAssetNameContainsFold *string `form:"name.ihas,omitempty" json:"github_asset_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	GithubAssetNameHasPrefix *string `form:"name.prefix,omitempty" json:"github_asset_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	GithubAssetNameHasSuffix *string `form:"name.suffix,omitempty" json:"github_asset_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	GithubAssetNameEqualFold *string `form:"name.ieq,omitempty" json:"github_asset_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	GithubAssetNameContainsFold *string `form:"name.ihas,omitempty" json:"github_asset_name_contains_fold,omitempty"`
 	// Filters field "label" to be equal to the provided value.
 	GithubAssetLabelEQ *string `form:"label.eq,omitempty" json:"github_asset_label_eq,omitempty"`
 	// Filters field "label" to be not equal to the provided value.
 	GithubAssetLabelNEQ *string `form:"label.neq,omitempty" json:"github_asset_label_neq,omitempty"`
+	// Filters field "label" to be null/nil.
+	GithubAssetLabelIsNil *bool `form:"label.null,omitempty" json:"github_asset_label_is_nil,omitempty"`
 	// Filters field "label" to be within the provided values.
 	GithubAssetLabelIn []string `form:"label.in,omitempty" json:"github_asset_label_in,omitempty"`
 	// Filters field "label" to be not within the provided values.
 	GithubAssetLabelNotIn []string `form:"label.notIn,omitempty" json:"github_asset_label_not_in,omitempty"`
+	// Filters field "label" to be equal to the provided value, case-insensitive.
+	GithubAssetLabelEqualFold *string `form:"label.ieq,omitempty" json:"github_asset_label_equal_fold,omitempty"`
 	// Filters field "label" to contain the provided value.
 	GithubAssetLabelContains *string `form:"label.has,omitempty" json:"github_asset_label_contains,omitempty"`
+	// Filters field "label" to contain the provided value, case-insensitive.
+	GithubAssetLabelContainsFold *string `form:"label.ihas,omitempty" json:"github_asset_label_contains_fold,omitempty"`
 	// Filters field "label" to start with the provided value.
 	GithubAssetLabelHasPrefix *string `form:"label.prefix,omitempty" json:"github_asset_label_has_prefix,omitempty"`
 	// Filters field "label" to end with the provided value.
 	GithubAssetLabelHasSuffix *string `form:"label.suffix,omitempty" json:"github_asset_label_has_suffix,omitempty"`
-	// Filters field "label" to be null/nil.
-	GithubAssetLabelIsNil *bool `form:"label.null,omitempty" json:"github_asset_label_is_nil,omitempty"`
-	// Filters field "label" to be equal to the provided value, case-insensitive.
-	GithubAssetLabelEqualFold *string `form:"label.ieq,omitempty" json:"github_asset_label_equal_fold,omitempty"`
-	// Filters field "label" to contain the provided value, case-insensitive.
-	GithubAssetLabelContainsFold *string `form:"label.ihas,omitempty" json:"github_asset_label_contains_fold,omitempty"`
 	// Filters field "size" to be greater than the provided value.
 	GithubAssetSizeGT *int64 `form:"size.gt,omitempty" json:"github_asset_size_gt,omitempty"`
 	// Filters field "size" to be less than the provided value.
@@ -530,16 +339,16 @@ type ListGithubAssetParams struct {
 	EdgeReleaseTagNameIn []string `form:"release.tagName.in,omitempty" json:"edge_release_tag_name_in,omitempty"`
 	// Filters field "tag_name" to be not within the provided values.
 	EdgeReleaseTagNameNotIn []string `form:"release.tagName.notIn,omitempty" json:"edge_release_tag_name_not_in,omitempty"`
+	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
+	EdgeReleaseTagNameEqualFold *string `form:"release.tagName.ieq,omitempty" json:"edge_release_tag_name_equal_fold,omitempty"`
 	// Filters field "tag_name" to contain the provided value.
 	EdgeReleaseTagNameContains *string `form:"release.tagName.has,omitempty" json:"edge_release_tag_name_contains,omitempty"`
+	// Filters field "tag_name" to contain the provided value, case-insensitive.
+	EdgeReleaseTagNameContainsFold *string `form:"release.tagName.ihas,omitempty" json:"edge_release_tag_name_contains_fold,omitempty"`
 	// Filters field "tag_name" to start with the provided value.
 	EdgeReleaseTagNameHasPrefix *string `form:"release.tagName.prefix,omitempty" json:"edge_release_tag_name_has_prefix,omitempty"`
 	// Filters field "tag_name" to end with the provided value.
 	EdgeReleaseTagNameHasSuffix *string `form:"release.tagName.suffix,omitempty" json:"edge_release_tag_name_has_suffix,omitempty"`
-	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
-	EdgeReleaseTagNameEqualFold *string `form:"release.tagName.ieq,omitempty" json:"edge_release_tag_name_equal_fold,omitempty"`
-	// Filters field "tag_name" to contain the provided value, case-insensitive.
-	EdgeReleaseTagNameContainsFold *string `form:"release.tagName.ihas,omitempty" json:"edge_release_tag_name_contains_fold,omitempty"`
 	// Filters field "target_commitish" to be equal to the provided value.
 	EdgeReleaseTargetCommitishEQ *string `form:"release.targetCommitish.eq,omitempty" json:"edge_release_target_commitish_eq,omitempty"`
 	// Filters field "target_commitish" to be not equal to the provided value.
@@ -548,36 +357,36 @@ type ListGithubAssetParams struct {
 	EdgeReleaseTargetCommitishIn []string `form:"release.targetCommitish.in,omitempty" json:"edge_release_target_commitish_in,omitempty"`
 	// Filters field "target_commitish" to be not within the provided values.
 	EdgeReleaseTargetCommitishNotIn []string `form:"release.targetCommitish.notIn,omitempty" json:"edge_release_target_commitish_not_in,omitempty"`
+	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
+	EdgeReleaseTargetCommitishEqualFold *string `form:"release.targetCommitish.ieq,omitempty" json:"edge_release_target_commitish_equal_fold,omitempty"`
 	// Filters field "target_commitish" to contain the provided value.
 	EdgeReleaseTargetCommitishContains *string `form:"release.targetCommitish.has,omitempty" json:"edge_release_target_commitish_contains,omitempty"`
+	// Filters field "target_commitish" to contain the provided value, case-insensitive.
+	EdgeReleaseTargetCommitishContainsFold *string `form:"release.targetCommitish.ihas,omitempty" json:"edge_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "target_commitish" to start with the provided value.
 	EdgeReleaseTargetCommitishHasPrefix *string `form:"release.targetCommitish.prefix,omitempty" json:"edge_release_target_commitish_has_prefix,omitempty"`
 	// Filters field "target_commitish" to end with the provided value.
 	EdgeReleaseTargetCommitishHasSuffix *string `form:"release.targetCommitish.suffix,omitempty" json:"edge_release_target_commitish_has_suffix,omitempty"`
-	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
-	EdgeReleaseTargetCommitishEqualFold *string `form:"release.targetCommitish.ieq,omitempty" json:"edge_release_target_commitish_equal_fold,omitempty"`
-	// Filters field "target_commitish" to contain the provided value, case-insensitive.
-	EdgeReleaseTargetCommitishContainsFold *string `form:"release.targetCommitish.ihas,omitempty" json:"edge_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
 	EdgeReleaseNameEQ *string `form:"release.name.eq,omitempty" json:"edge_release_name_eq,omitempty"`
 	// Filters field "name" to be not equal to the provided value.
 	EdgeReleaseNameNEQ *string `form:"release.name.neq,omitempty" json:"edge_release_name_neq,omitempty"`
+	// Filters field "name" to be null/nil.
+	EdgeReleaseNameIsNil *bool `form:"release.name.null,omitempty" json:"edge_release_name_is_nil,omitempty"`
 	// Filters field "name" to be within the provided values.
 	EdgeReleaseNameIn []string `form:"release.name.in,omitempty" json:"edge_release_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeReleaseNameNotIn []string `form:"release.name.notIn,omitempty" json:"edge_release_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeReleaseNameEqualFold *string `form:"release.name.ieq,omitempty" json:"edge_release_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeReleaseNameContains *string `form:"release.name.has,omitempty" json:"edge_release_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeReleaseNameContainsFold *string `form:"release.name.ihas,omitempty" json:"edge_release_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeReleaseNameHasPrefix *string `form:"release.name.prefix,omitempty" json:"edge_release_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeReleaseNameHasSuffix *string `form:"release.name.suffix,omitempty" json:"edge_release_name_has_suffix,omitempty"`
-	// Filters field "name" to be null/nil.
-	EdgeReleaseNameIsNil *bool `form:"release.name.null,omitempty" json:"edge_release_name_is_nil,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeReleaseNameEqualFold *string `form:"release.name.ieq,omitempty" json:"edge_release_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeReleaseNameContainsFold *string `form:"release.name.ihas,omitempty" json:"edge_release_name_contains_fold,omitempty"`
 	// Filters field "draft" to be equal to the provided value.
 	EdgeReleaseDraftEQ *bool `form:"release.draft.eq,omitempty" json:"edge_release_draft_eq,omitempty"`
 	// Filters field "prerelease" to be equal to the provided value.
@@ -622,8 +431,14 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.GithubAssetNameNotIn != nil {
 		predicates = append(predicates, githubasset.NameNotIn(l.GithubAssetNameNotIn...))
 	}
+	if l.GithubAssetNameEqualFold != nil {
+		predicates = append(predicates, githubasset.NameEqualFold(*l.GithubAssetNameEqualFold))
+	}
 	if l.GithubAssetNameContains != nil {
 		predicates = append(predicates, githubasset.NameContains(*l.GithubAssetNameContains))
+	}
+	if l.GithubAssetNameContainsFold != nil {
+		predicates = append(predicates, githubasset.NameContainsFold(*l.GithubAssetNameContainsFold))
 	}
 	if l.GithubAssetNameHasPrefix != nil {
 		predicates = append(predicates, githubasset.NameHasPrefix(*l.GithubAssetNameHasPrefix))
@@ -631,32 +446,11 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.GithubAssetNameHasSuffix != nil {
 		predicates = append(predicates, githubasset.NameHasSuffix(*l.GithubAssetNameHasSuffix))
 	}
-	if l.GithubAssetNameEqualFold != nil {
-		predicates = append(predicates, githubasset.NameEqualFold(*l.GithubAssetNameEqualFold))
-	}
-	if l.GithubAssetNameContainsFold != nil {
-		predicates = append(predicates, githubasset.NameContainsFold(*l.GithubAssetNameContainsFold))
-	}
 	if l.GithubAssetLabelEQ != nil {
 		predicates = append(predicates, githubasset.LabelEQ(*l.GithubAssetLabelEQ))
 	}
 	if l.GithubAssetLabelNEQ != nil {
 		predicates = append(predicates, githubasset.LabelNEQ(*l.GithubAssetLabelNEQ))
-	}
-	if l.GithubAssetLabelIn != nil {
-		predicates = append(predicates, githubasset.LabelIn(l.GithubAssetLabelIn...))
-	}
-	if l.GithubAssetLabelNotIn != nil {
-		predicates = append(predicates, githubasset.LabelNotIn(l.GithubAssetLabelNotIn...))
-	}
-	if l.GithubAssetLabelContains != nil {
-		predicates = append(predicates, githubasset.LabelContains(*l.GithubAssetLabelContains))
-	}
-	if l.GithubAssetLabelHasPrefix != nil {
-		predicates = append(predicates, githubasset.LabelHasPrefix(*l.GithubAssetLabelHasPrefix))
-	}
-	if l.GithubAssetLabelHasSuffix != nil {
-		predicates = append(predicates, githubasset.LabelHasSuffix(*l.GithubAssetLabelHasSuffix))
 	}
 	if l.GithubAssetLabelIsNil != nil {
 		if *l.GithubAssetLabelIsNil {
@@ -665,11 +459,26 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 			predicates = append(predicates, githubasset.Not(githubasset.LabelIsNil()))
 		}
 	}
+	if l.GithubAssetLabelIn != nil {
+		predicates = append(predicates, githubasset.LabelIn(l.GithubAssetLabelIn...))
+	}
+	if l.GithubAssetLabelNotIn != nil {
+		predicates = append(predicates, githubasset.LabelNotIn(l.GithubAssetLabelNotIn...))
+	}
 	if l.GithubAssetLabelEqualFold != nil {
 		predicates = append(predicates, githubasset.LabelEqualFold(*l.GithubAssetLabelEqualFold))
 	}
+	if l.GithubAssetLabelContains != nil {
+		predicates = append(predicates, githubasset.LabelContains(*l.GithubAssetLabelContains))
+	}
 	if l.GithubAssetLabelContainsFold != nil {
 		predicates = append(predicates, githubasset.LabelContainsFold(*l.GithubAssetLabelContainsFold))
+	}
+	if l.GithubAssetLabelHasPrefix != nil {
+		predicates = append(predicates, githubasset.LabelHasPrefix(*l.GithubAssetLabelHasPrefix))
+	}
+	if l.GithubAssetLabelHasSuffix != nil {
+		predicates = append(predicates, githubasset.LabelHasSuffix(*l.GithubAssetLabelHasSuffix))
 	}
 	if l.GithubAssetSizeGT != nil {
 		predicates = append(predicates, githubasset.SizeGT(*l.GithubAssetSizeGT))
@@ -739,20 +548,20 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.EdgeReleaseTagNameNotIn != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameNotIn(l.EdgeReleaseTagNameNotIn...)))
 	}
+	if l.EdgeReleaseTagNameEqualFold != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameEqualFold(*l.EdgeReleaseTagNameEqualFold)))
+	}
 	if l.EdgeReleaseTagNameContains != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameContains(*l.EdgeReleaseTagNameContains)))
+	}
+	if l.EdgeReleaseTagNameContainsFold != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameContainsFold(*l.EdgeReleaseTagNameContainsFold)))
 	}
 	if l.EdgeReleaseTagNameHasPrefix != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameHasPrefix(*l.EdgeReleaseTagNameHasPrefix)))
 	}
 	if l.EdgeReleaseTagNameHasSuffix != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameHasSuffix(*l.EdgeReleaseTagNameHasSuffix)))
-	}
-	if l.EdgeReleaseTagNameEqualFold != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameEqualFold(*l.EdgeReleaseTagNameEqualFold)))
-	}
-	if l.EdgeReleaseTagNameContainsFold != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TagNameContainsFold(*l.EdgeReleaseTagNameContainsFold)))
 	}
 	if l.EdgeReleaseTargetCommitishEQ != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishEQ(*l.EdgeReleaseTargetCommitishEQ)))
@@ -766,8 +575,14 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.EdgeReleaseTargetCommitishNotIn != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishNotIn(l.EdgeReleaseTargetCommitishNotIn...)))
 	}
+	if l.EdgeReleaseTargetCommitishEqualFold != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishEqualFold(*l.EdgeReleaseTargetCommitishEqualFold)))
+	}
 	if l.EdgeReleaseTargetCommitishContains != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishContains(*l.EdgeReleaseTargetCommitishContains)))
+	}
+	if l.EdgeReleaseTargetCommitishContainsFold != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishContainsFold(*l.EdgeReleaseTargetCommitishContainsFold)))
 	}
 	if l.EdgeReleaseTargetCommitishHasPrefix != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishHasPrefix(*l.EdgeReleaseTargetCommitishHasPrefix)))
@@ -775,32 +590,11 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.EdgeReleaseTargetCommitishHasSuffix != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishHasSuffix(*l.EdgeReleaseTargetCommitishHasSuffix)))
 	}
-	if l.EdgeReleaseTargetCommitishEqualFold != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishEqualFold(*l.EdgeReleaseTargetCommitishEqualFold)))
-	}
-	if l.EdgeReleaseTargetCommitishContainsFold != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.TargetCommitishContainsFold(*l.EdgeReleaseTargetCommitishContainsFold)))
-	}
 	if l.EdgeReleaseNameEQ != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameEQ(*l.EdgeReleaseNameEQ)))
 	}
 	if l.EdgeReleaseNameNEQ != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameNEQ(*l.EdgeReleaseNameNEQ)))
-	}
-	if l.EdgeReleaseNameIn != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameIn(l.EdgeReleaseNameIn...)))
-	}
-	if l.EdgeReleaseNameNotIn != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameNotIn(l.EdgeReleaseNameNotIn...)))
-	}
-	if l.EdgeReleaseNameContains != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameContains(*l.EdgeReleaseNameContains)))
-	}
-	if l.EdgeReleaseNameHasPrefix != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameHasPrefix(*l.EdgeReleaseNameHasPrefix)))
-	}
-	if l.EdgeReleaseNameHasSuffix != nil {
-		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameHasSuffix(*l.EdgeReleaseNameHasSuffix)))
 	}
 	if l.EdgeReleaseNameIsNil != nil {
 		if *l.EdgeReleaseNameIsNil {
@@ -809,11 +603,26 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 			predicates = append(predicates, githubasset.Not(githubasset.HasReleaseWith(githubrelease.NameIsNil())))
 		}
 	}
+	if l.EdgeReleaseNameIn != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameIn(l.EdgeReleaseNameIn...)))
+	}
+	if l.EdgeReleaseNameNotIn != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameNotIn(l.EdgeReleaseNameNotIn...)))
+	}
 	if l.EdgeReleaseNameEqualFold != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameEqualFold(*l.EdgeReleaseNameEqualFold)))
 	}
+	if l.EdgeReleaseNameContains != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameContains(*l.EdgeReleaseNameContains)))
+	}
 	if l.EdgeReleaseNameContainsFold != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameContainsFold(*l.EdgeReleaseNameContainsFold)))
+	}
+	if l.EdgeReleaseNameHasPrefix != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameHasPrefix(*l.EdgeReleaseNameHasPrefix)))
+	}
+	if l.EdgeReleaseNameHasSuffix != nil {
+		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.NameHasSuffix(*l.EdgeReleaseNameHasSuffix)))
 	}
 	if l.EdgeReleaseDraftEQ != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.DraftEQ(*l.EdgeReleaseDraftEQ)))
@@ -845,29 +654,20 @@ func (l *ListGithubAssetParams) FilterPredicates() (predicate.GithubAsset, error
 	if l.EdgeReleasePublishedAtLT != nil {
 		predicates = append(predicates, githubasset.HasReleaseWith(githubrelease.PublishedAtLT(*l.EdgeReleasePublishedAtLT)))
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListGithubAssetParams) ApplySorting(query *ent.GithubAssetQuery) (*ent.GithubAssetQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListGithubAssetParams) ApplySorting(query *ent.GithubAssetQuery) error {
+	if err := l.Sorted.Validate(GithubAssetSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(GithubAssetSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		switch parts[0] {
-		case githubasset.EdgeRelease:
-			return query.Order(githubasset.ByReleaseField(parts[1], dir)), nil
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingGithubAsset(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -877,8 +677,8 @@ func (l *ListGithubAssetParams) Exec(ctx context.Context, query *ent.GithubAsset
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadGithubAsset(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadGithubAsset(query))
 	if err != nil {
 		return nil, err
 	}
@@ -905,16 +705,16 @@ type ListGithubEventParams struct {
 	GithubEventEventTypeIn []string `form:"eventType.in,omitempty" json:"github_event_event_type_in,omitempty"`
 	// Filters field "event_type" to be not within the provided values.
 	GithubEventEventTypeNotIn []string `form:"eventType.notIn,omitempty" json:"github_event_event_type_not_in,omitempty"`
+	// Filters field "event_type" to be equal to the provided value, case-insensitive.
+	GithubEventEventTypeEqualFold *string `form:"eventType.ieq,omitempty" json:"github_event_event_type_equal_fold,omitempty"`
 	// Filters field "event_type" to contain the provided value.
 	GithubEventEventTypeContains *string `form:"eventType.has,omitempty" json:"github_event_event_type_contains,omitempty"`
+	// Filters field "event_type" to contain the provided value, case-insensitive.
+	GithubEventEventTypeContainsFold *string `form:"eventType.ihas,omitempty" json:"github_event_event_type_contains_fold,omitempty"`
 	// Filters field "event_type" to start with the provided value.
 	GithubEventEventTypeHasPrefix *string `form:"eventType.prefix,omitempty" json:"github_event_event_type_has_prefix,omitempty"`
 	// Filters field "event_type" to end with the provided value.
 	GithubEventEventTypeHasSuffix *string `form:"eventType.suffix,omitempty" json:"github_event_event_type_has_suffix,omitempty"`
-	// Filters field "event_type" to be equal to the provided value, case-insensitive.
-	GithubEventEventTypeEqualFold *string `form:"eventType.ieq,omitempty" json:"github_event_event_type_equal_fold,omitempty"`
-	// Filters field "event_type" to contain the provided value, case-insensitive.
-	GithubEventEventTypeContainsFold *string `form:"eventType.ihas,omitempty" json:"github_event_event_type_contains_fold,omitempty"`
 	// Filters field "created_at" to be equal to the provided value.
 	GithubEventCreatedAtEQ *time.Time `form:"createdAt.eq,omitempty" json:"github_event_created_at_eq,omitempty"`
 	// Filters field "created_at" to be not equal to the provided value.
@@ -960,20 +760,20 @@ func (l *ListGithubEventParams) FilterPredicates() (predicate.GithubEvent, error
 	if l.GithubEventEventTypeNotIn != nil {
 		predicates = append(predicates, githubevent.EventTypeNotIn(l.GithubEventEventTypeNotIn...))
 	}
+	if l.GithubEventEventTypeEqualFold != nil {
+		predicates = append(predicates, githubevent.EventTypeEqualFold(*l.GithubEventEventTypeEqualFold))
+	}
 	if l.GithubEventEventTypeContains != nil {
 		predicates = append(predicates, githubevent.EventTypeContains(*l.GithubEventEventTypeContains))
+	}
+	if l.GithubEventEventTypeContainsFold != nil {
+		predicates = append(predicates, githubevent.EventTypeContainsFold(*l.GithubEventEventTypeContainsFold))
 	}
 	if l.GithubEventEventTypeHasPrefix != nil {
 		predicates = append(predicates, githubevent.EventTypeHasPrefix(*l.GithubEventEventTypeHasPrefix))
 	}
 	if l.GithubEventEventTypeHasSuffix != nil {
 		predicates = append(predicates, githubevent.EventTypeHasSuffix(*l.GithubEventEventTypeHasSuffix))
-	}
-	if l.GithubEventEventTypeEqualFold != nil {
-		predicates = append(predicates, githubevent.EventTypeEqualFold(*l.GithubEventEventTypeEqualFold))
-	}
-	if l.GithubEventEventTypeContainsFold != nil {
-		predicates = append(predicates, githubevent.EventTypeContainsFold(*l.GithubEventEventTypeContainsFold))
 	}
 	if l.GithubEventCreatedAtEQ != nil {
 		predicates = append(predicates, githubevent.CreatedAtEQ(*l.GithubEventCreatedAtEQ))
@@ -1002,21 +802,20 @@ func (l *ListGithubEventParams) FilterPredicates() (predicate.GithubEvent, error
 	if l.GithubEventRepoIDNEQ != nil {
 		predicates = append(predicates, githubevent.RepoIDNEQ(*l.GithubEventRepoIDNEQ))
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListGithubEventParams) ApplySorting(query *ent.GithubEventQuery) (*ent.GithubEventQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListGithubEventParams) ApplySorting(query *ent.GithubEventQuery) error {
+	if err := l.Sorted.Validate(GithubEventSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(GithubEventSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingGithubEvent(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -1026,8 +825,8 @@ func (l *ListGithubEventParams) Exec(ctx context.Context, query *ent.GithubEvent
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadGithubEvent(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadGithubEvent(query))
 	if err != nil {
 		return nil, err
 	}
@@ -1064,10 +863,10 @@ type ListGithubGistParams struct {
 	GithubGistUpdatedAtGT *time.Time `form:"updatedAt.gt,omitempty" json:"github_gist_updated_at_gt,omitempty"`
 	// Filters field "updated_at" to be less than the provided value.
 	GithubGistUpdatedAtLT *time.Time `form:"updatedAt.lt,omitempty" json:"github_gist_updated_at_lt,omitempty"`
-	// Filters field "description" to contain the provided value.
-	GithubGistDescriptionContains *string `form:"description.has,omitempty" json:"github_gist_description_contains,omitempty"`
 	// Filters field "description" to be null/nil.
 	GithubGistDescriptionIsNil *bool `form:"description.null,omitempty" json:"github_gist_description_is_nil,omitempty"`
+	// Filters field "description" to contain the provided value.
+	GithubGistDescriptionContains *string `form:"description.has,omitempty" json:"github_gist_description_contains,omitempty"`
 	// Filters field "description" to contain the provided value, case-insensitive.
 	GithubGistDescriptionContainsFold *string `form:"description.ihas,omitempty" json:"github_gist_description_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
@@ -1078,16 +877,16 @@ type ListGithubGistParams struct {
 	GithubGistNameIn []string `form:"name.in,omitempty" json:"github_gist_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	GithubGistNameNotIn []string `form:"name.notIn,omitempty" json:"github_gist_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	GithubGistNameEqualFold *string `form:"name.ieq,omitempty" json:"github_gist_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	GithubGistNameContains *string `form:"name.has,omitempty" json:"github_gist_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	GithubGistNameContainsFold *string `form:"name.ihas,omitempty" json:"github_gist_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	GithubGistNameHasPrefix *string `form:"name.prefix,omitempty" json:"github_gist_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	GithubGistNameHasSuffix *string `form:"name.suffix,omitempty" json:"github_gist_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	GithubGistNameEqualFold *string `form:"name.ieq,omitempty" json:"github_gist_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	GithubGistNameContainsFold *string `form:"name.ihas,omitempty" json:"github_gist_name_contains_fold,omitempty"`
 	// Filters field "type" to be equal to the provided value.
 	GithubGistTypeEQ *string `form:"type.eq,omitempty" json:"github_gist_type_eq,omitempty"`
 	// Filters field "type" to be not equal to the provided value.
@@ -1096,36 +895,36 @@ type ListGithubGistParams struct {
 	GithubGistTypeIn []string `form:"type.in,omitempty" json:"github_gist_type_in,omitempty"`
 	// Filters field "type" to be not within the provided values.
 	GithubGistTypeNotIn []string `form:"type.notIn,omitempty" json:"github_gist_type_not_in,omitempty"`
+	// Filters field "type" to be equal to the provided value, case-insensitive.
+	GithubGistTypeEqualFold *string `form:"type.ieq,omitempty" json:"github_gist_type_equal_fold,omitempty"`
 	// Filters field "type" to contain the provided value.
 	GithubGistTypeContains *string `form:"type.has,omitempty" json:"github_gist_type_contains,omitempty"`
+	// Filters field "type" to contain the provided value, case-insensitive.
+	GithubGistTypeContainsFold *string `form:"type.ihas,omitempty" json:"github_gist_type_contains_fold,omitempty"`
 	// Filters field "type" to start with the provided value.
 	GithubGistTypeHasPrefix *string `form:"type.prefix,omitempty" json:"github_gist_type_has_prefix,omitempty"`
 	// Filters field "type" to end with the provided value.
 	GithubGistTypeHasSuffix *string `form:"type.suffix,omitempty" json:"github_gist_type_has_suffix,omitempty"`
-	// Filters field "type" to be equal to the provided value, case-insensitive.
-	GithubGistTypeEqualFold *string `form:"type.ieq,omitempty" json:"github_gist_type_equal_fold,omitempty"`
-	// Filters field "type" to contain the provided value, case-insensitive.
-	GithubGistTypeContainsFold *string `form:"type.ihas,omitempty" json:"github_gist_type_contains_fold,omitempty"`
 	// Filters field "language" to be equal to the provided value.
 	GithubGistLanguageEQ *string `form:"language.eq,omitempty" json:"github_gist_language_eq,omitempty"`
 	// Filters field "language" to be not equal to the provided value.
 	GithubGistLanguageNEQ *string `form:"language.neq,omitempty" json:"github_gist_language_neq,omitempty"`
+	// Filters field "language" to be null/nil.
+	GithubGistLanguageIsNil *bool `form:"language.null,omitempty" json:"github_gist_language_is_nil,omitempty"`
 	// Filters field "language" to be within the provided values.
 	GithubGistLanguageIn []string `form:"language.in,omitempty" json:"github_gist_language_in,omitempty"`
 	// Filters field "language" to be not within the provided values.
 	GithubGistLanguageNotIn []string `form:"language.notIn,omitempty" json:"github_gist_language_not_in,omitempty"`
+	// Filters field "language" to be equal to the provided value, case-insensitive.
+	GithubGistLanguageEqualFold *string `form:"language.ieq,omitempty" json:"github_gist_language_equal_fold,omitempty"`
 	// Filters field "language" to contain the provided value.
 	GithubGistLanguageContains *string `form:"language.has,omitempty" json:"github_gist_language_contains,omitempty"`
+	// Filters field "language" to contain the provided value, case-insensitive.
+	GithubGistLanguageContainsFold *string `form:"language.ihas,omitempty" json:"github_gist_language_contains_fold,omitempty"`
 	// Filters field "language" to start with the provided value.
 	GithubGistLanguageHasPrefix *string `form:"language.prefix,omitempty" json:"github_gist_language_has_prefix,omitempty"`
 	// Filters field "language" to end with the provided value.
 	GithubGistLanguageHasSuffix *string `form:"language.suffix,omitempty" json:"github_gist_language_has_suffix,omitempty"`
-	// Filters field "language" to be null/nil.
-	GithubGistLanguageIsNil *bool `form:"language.null,omitempty" json:"github_gist_language_is_nil,omitempty"`
-	// Filters field "language" to be equal to the provided value, case-insensitive.
-	GithubGistLanguageEqualFold *string `form:"language.ieq,omitempty" json:"github_gist_language_equal_fold,omitempty"`
-	// Filters field "language" to contain the provided value, case-insensitive.
-	GithubGistLanguageContainsFold *string `form:"language.ihas,omitempty" json:"github_gist_language_contains_fold,omitempty"`
 	// Filters field "size" to be equal to the provided value.
 	GithubGistSizeEQ *int64 `form:"size.eq,omitempty" json:"github_gist_size_eq,omitempty"`
 	// Filters field "size" to be not equal to the provided value.
@@ -1176,15 +975,15 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 	if l.GithubGistUpdatedAtLT != nil {
 		predicates = append(predicates, githubgist.UpdatedAtLT(*l.GithubGistUpdatedAtLT))
 	}
-	if l.GithubGistDescriptionContains != nil {
-		predicates = append(predicates, githubgist.DescriptionContains(*l.GithubGistDescriptionContains))
-	}
 	if l.GithubGistDescriptionIsNil != nil {
 		if *l.GithubGistDescriptionIsNil {
 			predicates = append(predicates, githubgist.DescriptionIsNil())
 		} else {
 			predicates = append(predicates, githubgist.Not(githubgist.DescriptionIsNil()))
 		}
+	}
+	if l.GithubGistDescriptionContains != nil {
+		predicates = append(predicates, githubgist.DescriptionContains(*l.GithubGistDescriptionContains))
 	}
 	if l.GithubGistDescriptionContainsFold != nil {
 		predicates = append(predicates, githubgist.DescriptionContainsFold(*l.GithubGistDescriptionContainsFold))
@@ -1201,20 +1000,20 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 	if l.GithubGistNameNotIn != nil {
 		predicates = append(predicates, githubgist.NameNotIn(l.GithubGistNameNotIn...))
 	}
+	if l.GithubGistNameEqualFold != nil {
+		predicates = append(predicates, githubgist.NameEqualFold(*l.GithubGistNameEqualFold))
+	}
 	if l.GithubGistNameContains != nil {
 		predicates = append(predicates, githubgist.NameContains(*l.GithubGistNameContains))
+	}
+	if l.GithubGistNameContainsFold != nil {
+		predicates = append(predicates, githubgist.NameContainsFold(*l.GithubGistNameContainsFold))
 	}
 	if l.GithubGistNameHasPrefix != nil {
 		predicates = append(predicates, githubgist.NameHasPrefix(*l.GithubGistNameHasPrefix))
 	}
 	if l.GithubGistNameHasSuffix != nil {
 		predicates = append(predicates, githubgist.NameHasSuffix(*l.GithubGistNameHasSuffix))
-	}
-	if l.GithubGistNameEqualFold != nil {
-		predicates = append(predicates, githubgist.NameEqualFold(*l.GithubGistNameEqualFold))
-	}
-	if l.GithubGistNameContainsFold != nil {
-		predicates = append(predicates, githubgist.NameContainsFold(*l.GithubGistNameContainsFold))
 	}
 	if l.GithubGistTypeEQ != nil {
 		predicates = append(predicates, githubgist.TypeEQ(*l.GithubGistTypeEQ))
@@ -1228,8 +1027,14 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 	if l.GithubGistTypeNotIn != nil {
 		predicates = append(predicates, githubgist.TypeNotIn(l.GithubGistTypeNotIn...))
 	}
+	if l.GithubGistTypeEqualFold != nil {
+		predicates = append(predicates, githubgist.TypeEqualFold(*l.GithubGistTypeEqualFold))
+	}
 	if l.GithubGistTypeContains != nil {
 		predicates = append(predicates, githubgist.TypeContains(*l.GithubGistTypeContains))
+	}
+	if l.GithubGistTypeContainsFold != nil {
+		predicates = append(predicates, githubgist.TypeContainsFold(*l.GithubGistTypeContainsFold))
 	}
 	if l.GithubGistTypeHasPrefix != nil {
 		predicates = append(predicates, githubgist.TypeHasPrefix(*l.GithubGistTypeHasPrefix))
@@ -1237,32 +1042,11 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 	if l.GithubGistTypeHasSuffix != nil {
 		predicates = append(predicates, githubgist.TypeHasSuffix(*l.GithubGistTypeHasSuffix))
 	}
-	if l.GithubGistTypeEqualFold != nil {
-		predicates = append(predicates, githubgist.TypeEqualFold(*l.GithubGistTypeEqualFold))
-	}
-	if l.GithubGistTypeContainsFold != nil {
-		predicates = append(predicates, githubgist.TypeContainsFold(*l.GithubGistTypeContainsFold))
-	}
 	if l.GithubGistLanguageEQ != nil {
 		predicates = append(predicates, githubgist.LanguageEQ(*l.GithubGistLanguageEQ))
 	}
 	if l.GithubGistLanguageNEQ != nil {
 		predicates = append(predicates, githubgist.LanguageNEQ(*l.GithubGistLanguageNEQ))
-	}
-	if l.GithubGistLanguageIn != nil {
-		predicates = append(predicates, githubgist.LanguageIn(l.GithubGistLanguageIn...))
-	}
-	if l.GithubGistLanguageNotIn != nil {
-		predicates = append(predicates, githubgist.LanguageNotIn(l.GithubGistLanguageNotIn...))
-	}
-	if l.GithubGistLanguageContains != nil {
-		predicates = append(predicates, githubgist.LanguageContains(*l.GithubGistLanguageContains))
-	}
-	if l.GithubGistLanguageHasPrefix != nil {
-		predicates = append(predicates, githubgist.LanguageHasPrefix(*l.GithubGistLanguageHasPrefix))
-	}
-	if l.GithubGistLanguageHasSuffix != nil {
-		predicates = append(predicates, githubgist.LanguageHasSuffix(*l.GithubGistLanguageHasSuffix))
 	}
 	if l.GithubGistLanguageIsNil != nil {
 		if *l.GithubGistLanguageIsNil {
@@ -1271,11 +1055,26 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 			predicates = append(predicates, githubgist.Not(githubgist.LanguageIsNil()))
 		}
 	}
+	if l.GithubGistLanguageIn != nil {
+		predicates = append(predicates, githubgist.LanguageIn(l.GithubGistLanguageIn...))
+	}
+	if l.GithubGistLanguageNotIn != nil {
+		predicates = append(predicates, githubgist.LanguageNotIn(l.GithubGistLanguageNotIn...))
+	}
 	if l.GithubGistLanguageEqualFold != nil {
 		predicates = append(predicates, githubgist.LanguageEqualFold(*l.GithubGistLanguageEqualFold))
 	}
+	if l.GithubGistLanguageContains != nil {
+		predicates = append(predicates, githubgist.LanguageContains(*l.GithubGistLanguageContains))
+	}
 	if l.GithubGistLanguageContainsFold != nil {
 		predicates = append(predicates, githubgist.LanguageContainsFold(*l.GithubGistLanguageContainsFold))
+	}
+	if l.GithubGistLanguageHasPrefix != nil {
+		predicates = append(predicates, githubgist.LanguageHasPrefix(*l.GithubGistLanguageHasPrefix))
+	}
+	if l.GithubGistLanguageHasSuffix != nil {
+		predicates = append(predicates, githubgist.LanguageHasSuffix(*l.GithubGistLanguageHasSuffix))
 	}
 	if l.GithubGistSizeEQ != nil {
 		predicates = append(predicates, githubgist.SizeEQ(*l.GithubGistSizeEQ))
@@ -1289,21 +1088,20 @@ func (l *ListGithubGistParams) FilterPredicates() (predicate.GithubGist, error) 
 	if l.GithubGistContentContainsFold != nil {
 		predicates = append(predicates, githubgist.ContentContainsFold(*l.GithubGistContentContainsFold))
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListGithubGistParams) ApplySorting(query *ent.GithubGistQuery) (*ent.GithubGistQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListGithubGistParams) ApplySorting(query *ent.GithubGistQuery) error {
+	if err := l.Sorted.Validate(GithubGistSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(GithubGistSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingGithubGist(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -1313,8 +1111,8 @@ func (l *ListGithubGistParams) Exec(ctx context.Context, query *ent.GithubGistQu
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadGithubGist(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadGithubGist(query))
 	if err != nil {
 		return nil, err
 	}
@@ -1339,16 +1137,16 @@ type ListGithubReleaseParams struct {
 	GithubReleaseTagNameIn []string `form:"tagName.in,omitempty" json:"github_release_tag_name_in,omitempty"`
 	// Filters field "tag_name" to be not within the provided values.
 	GithubReleaseTagNameNotIn []string `form:"tagName.notIn,omitempty" json:"github_release_tag_name_not_in,omitempty"`
+	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
+	GithubReleaseTagNameEqualFold *string `form:"tagName.ieq,omitempty" json:"github_release_tag_name_equal_fold,omitempty"`
 	// Filters field "tag_name" to contain the provided value.
 	GithubReleaseTagNameContains *string `form:"tagName.has,omitempty" json:"github_release_tag_name_contains,omitempty"`
+	// Filters field "tag_name" to contain the provided value, case-insensitive.
+	GithubReleaseTagNameContainsFold *string `form:"tagName.ihas,omitempty" json:"github_release_tag_name_contains_fold,omitempty"`
 	// Filters field "tag_name" to start with the provided value.
 	GithubReleaseTagNameHasPrefix *string `form:"tagName.prefix,omitempty" json:"github_release_tag_name_has_prefix,omitempty"`
 	// Filters field "tag_name" to end with the provided value.
 	GithubReleaseTagNameHasSuffix *string `form:"tagName.suffix,omitempty" json:"github_release_tag_name_has_suffix,omitempty"`
-	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
-	GithubReleaseTagNameEqualFold *string `form:"tagName.ieq,omitempty" json:"github_release_tag_name_equal_fold,omitempty"`
-	// Filters field "tag_name" to contain the provided value, case-insensitive.
-	GithubReleaseTagNameContainsFold *string `form:"tagName.ihas,omitempty" json:"github_release_tag_name_contains_fold,omitempty"`
 	// Filters field "target_commitish" to be equal to the provided value.
 	GithubReleaseTargetCommitishEQ *string `form:"targetCommitish.eq,omitempty" json:"github_release_target_commitish_eq,omitempty"`
 	// Filters field "target_commitish" to be not equal to the provided value.
@@ -1357,36 +1155,36 @@ type ListGithubReleaseParams struct {
 	GithubReleaseTargetCommitishIn []string `form:"targetCommitish.in,omitempty" json:"github_release_target_commitish_in,omitempty"`
 	// Filters field "target_commitish" to be not within the provided values.
 	GithubReleaseTargetCommitishNotIn []string `form:"targetCommitish.notIn,omitempty" json:"github_release_target_commitish_not_in,omitempty"`
+	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
+	GithubReleaseTargetCommitishEqualFold *string `form:"targetCommitish.ieq,omitempty" json:"github_release_target_commitish_equal_fold,omitempty"`
 	// Filters field "target_commitish" to contain the provided value.
 	GithubReleaseTargetCommitishContains *string `form:"targetCommitish.has,omitempty" json:"github_release_target_commitish_contains,omitempty"`
+	// Filters field "target_commitish" to contain the provided value, case-insensitive.
+	GithubReleaseTargetCommitishContainsFold *string `form:"targetCommitish.ihas,omitempty" json:"github_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "target_commitish" to start with the provided value.
 	GithubReleaseTargetCommitishHasPrefix *string `form:"targetCommitish.prefix,omitempty" json:"github_release_target_commitish_has_prefix,omitempty"`
 	// Filters field "target_commitish" to end with the provided value.
 	GithubReleaseTargetCommitishHasSuffix *string `form:"targetCommitish.suffix,omitempty" json:"github_release_target_commitish_has_suffix,omitempty"`
-	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
-	GithubReleaseTargetCommitishEqualFold *string `form:"targetCommitish.ieq,omitempty" json:"github_release_target_commitish_equal_fold,omitempty"`
-	// Filters field "target_commitish" to contain the provided value, case-insensitive.
-	GithubReleaseTargetCommitishContainsFold *string `form:"targetCommitish.ihas,omitempty" json:"github_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
 	GithubReleaseNameEQ *string `form:"name.eq,omitempty" json:"github_release_name_eq,omitempty"`
 	// Filters field "name" to be not equal to the provided value.
 	GithubReleaseNameNEQ *string `form:"name.neq,omitempty" json:"github_release_name_neq,omitempty"`
+	// Filters field "name" to be null/nil.
+	GithubReleaseNameIsNil *bool `form:"name.null,omitempty" json:"github_release_name_is_nil,omitempty"`
 	// Filters field "name" to be within the provided values.
 	GithubReleaseNameIn []string `form:"name.in,omitempty" json:"github_release_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	GithubReleaseNameNotIn []string `form:"name.notIn,omitempty" json:"github_release_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	GithubReleaseNameEqualFold *string `form:"name.ieq,omitempty" json:"github_release_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	GithubReleaseNameContains *string `form:"name.has,omitempty" json:"github_release_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	GithubReleaseNameContainsFold *string `form:"name.ihas,omitempty" json:"github_release_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	GithubReleaseNameHasPrefix *string `form:"name.prefix,omitempty" json:"github_release_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	GithubReleaseNameHasSuffix *string `form:"name.suffix,omitempty" json:"github_release_name_has_suffix,omitempty"`
-	// Filters field "name" to be null/nil.
-	GithubReleaseNameIsNil *bool `form:"name.null,omitempty" json:"github_release_name_is_nil,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	GithubReleaseNameEqualFold *string `form:"name.ieq,omitempty" json:"github_release_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	GithubReleaseNameContainsFold *string `form:"name.ihas,omitempty" json:"github_release_name_contains_fold,omitempty"`
 	// Filters field "draft" to be equal to the provided value.
 	GithubReleaseDraftEQ *bool `form:"draft.eq,omitempty" json:"github_release_draft_eq,omitempty"`
 	// Filters field "prerelease" to be equal to the provided value.
@@ -1421,16 +1219,16 @@ type ListGithubReleaseParams struct {
 	EdgeRepositoryNameIn []string `form:"repository.name.in,omitempty" json:"edge_repository_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeRepositoryNameNotIn []string `form:"repository.name.notIn,omitempty" json:"edge_repository_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeRepositoryNameEqualFold *string `form:"repository.name.ieq,omitempty" json:"edge_repository_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeRepositoryNameContains *string `form:"repository.name.has,omitempty" json:"edge_repository_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeRepositoryNameContainsFold *string `form:"repository.name.ihas,omitempty" json:"edge_repository_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeRepositoryNameHasPrefix *string `form:"repository.name.prefix,omitempty" json:"edge_repository_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeRepositoryNameHasSuffix *string `form:"repository.name.suffix,omitempty" json:"edge_repository_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeRepositoryNameEqualFold *string `form:"repository.name.ieq,omitempty" json:"edge_repository_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeRepositoryNameContainsFold *string `form:"repository.name.ihas,omitempty" json:"edge_repository_name_contains_fold,omitempty"`
 	// Filters field "full_name" to be equal to the provided value.
 	EdgeRepositoryFullNameEQ *string `form:"repository.fullName.eq,omitempty" json:"edge_repository_full_name_eq,omitempty"`
 	// Filters field "full_name" to be not equal to the provided value.
@@ -1439,16 +1237,16 @@ type ListGithubReleaseParams struct {
 	EdgeRepositoryFullNameIn []string `form:"repository.fullName.in,omitempty" json:"edge_repository_full_name_in,omitempty"`
 	// Filters field "full_name" to be not within the provided values.
 	EdgeRepositoryFullNameNotIn []string `form:"repository.fullName.notIn,omitempty" json:"edge_repository_full_name_not_in,omitempty"`
+	// Filters field "full_name" to be equal to the provided value, case-insensitive.
+	EdgeRepositoryFullNameEqualFold *string `form:"repository.fullName.ieq,omitempty" json:"edge_repository_full_name_equal_fold,omitempty"`
 	// Filters field "full_name" to contain the provided value.
 	EdgeRepositoryFullNameContains *string `form:"repository.fullName.has,omitempty" json:"edge_repository_full_name_contains,omitempty"`
+	// Filters field "full_name" to contain the provided value, case-insensitive.
+	EdgeRepositoryFullNameContainsFold *string `form:"repository.fullName.ihas,omitempty" json:"edge_repository_full_name_contains_fold,omitempty"`
 	// Filters field "full_name" to start with the provided value.
 	EdgeRepositoryFullNameHasPrefix *string `form:"repository.fullName.prefix,omitempty" json:"edge_repository_full_name_has_prefix,omitempty"`
 	// Filters field "full_name" to end with the provided value.
 	EdgeRepositoryFullNameHasSuffix *string `form:"repository.fullName.suffix,omitempty" json:"edge_repository_full_name_has_suffix,omitempty"`
-	// Filters field "full_name" to be equal to the provided value, case-insensitive.
-	EdgeRepositoryFullNameEqualFold *string `form:"repository.fullName.ieq,omitempty" json:"edge_repository_full_name_equal_fold,omitempty"`
-	// Filters field "full_name" to contain the provided value, case-insensitive.
-	EdgeRepositoryFullNameContainsFold *string `form:"repository.fullName.ihas,omitempty" json:"edge_repository_full_name_contains_fold,omitempty"`
 	// Filters field "owner_login" to be equal to the provided value.
 	EdgeRepositoryOwnerLoginEQ *string `form:"repository.ownerLogin.eq,omitempty" json:"edge_repository_owner_login_eq,omitempty"`
 	// Filters field "owner_login" to be not equal to the provided value.
@@ -1457,22 +1255,22 @@ type ListGithubReleaseParams struct {
 	EdgeRepositoryOwnerLoginIn []string `form:"repository.ownerLogin.in,omitempty" json:"edge_repository_owner_login_in,omitempty"`
 	// Filters field "owner_login" to be not within the provided values.
 	EdgeRepositoryOwnerLoginNotIn []string `form:"repository.ownerLogin.notIn,omitempty" json:"edge_repository_owner_login_not_in,omitempty"`
+	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
+	EdgeRepositoryOwnerLoginEqualFold *string `form:"repository.ownerLogin.ieq,omitempty" json:"edge_repository_owner_login_equal_fold,omitempty"`
 	// Filters field "owner_login" to contain the provided value.
 	EdgeRepositoryOwnerLoginContains *string `form:"repository.ownerLogin.has,omitempty" json:"edge_repository_owner_login_contains,omitempty"`
+	// Filters field "owner_login" to contain the provided value, case-insensitive.
+	EdgeRepositoryOwnerLoginContainsFold *string `form:"repository.ownerLogin.ihas,omitempty" json:"edge_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "owner_login" to start with the provided value.
 	EdgeRepositoryOwnerLoginHasPrefix *string `form:"repository.ownerLogin.prefix,omitempty" json:"edge_repository_owner_login_has_prefix,omitempty"`
 	// Filters field "owner_login" to end with the provided value.
 	EdgeRepositoryOwnerLoginHasSuffix *string `form:"repository.ownerLogin.suffix,omitempty" json:"edge_repository_owner_login_has_suffix,omitempty"`
-	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
-	EdgeRepositoryOwnerLoginEqualFold *string `form:"repository.ownerLogin.ieq,omitempty" json:"edge_repository_owner_login_equal_fold,omitempty"`
-	// Filters field "owner_login" to contain the provided value, case-insensitive.
-	EdgeRepositoryOwnerLoginContainsFold *string `form:"repository.ownerLogin.ihas,omitempty" json:"edge_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "public" to be equal to the provided value.
 	EdgeRepositoryPublicEQ *bool `form:"repository.public.eq,omitempty" json:"edge_repository_public_eq,omitempty"`
-	// Filters field "description" to contain the provided value.
-	EdgeRepositoryDescriptionContains *string `form:"repository.description.has,omitempty" json:"edge_repository_description_contains,omitempty"`
 	// Filters field "description" to be null/nil.
 	EdgeRepositoryDescriptionIsNil *bool `form:"repository.description.null,omitempty" json:"edge_repository_description_is_nil,omitempty"`
+	// Filters field "description" to contain the provided value.
+	EdgeRepositoryDescriptionContains *string `form:"repository.description.has,omitempty" json:"edge_repository_description_contains,omitempty"`
 	// Filters field "description" to contain the provided value, case-insensitive.
 	EdgeRepositoryDescriptionContainsFold *string `form:"repository.description.ihas,omitempty" json:"edge_repository_description_contains_fold,omitempty"`
 	// Filters field "fork" to be equal to the provided value.
@@ -1489,16 +1287,16 @@ type ListGithubReleaseParams struct {
 	EdgeRepositoryDefaultBranchIn []string `form:"repository.defaultBranch.in,omitempty" json:"edge_repository_default_branch_in,omitempty"`
 	// Filters field "default_branch" to be not within the provided values.
 	EdgeRepositoryDefaultBranchNotIn []string `form:"repository.defaultBranch.notIn,omitempty" json:"edge_repository_default_branch_not_in,omitempty"`
+	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
+	EdgeRepositoryDefaultBranchEqualFold *string `form:"repository.defaultBranch.ieq,omitempty" json:"edge_repository_default_branch_equal_fold,omitempty"`
 	// Filters field "default_branch" to contain the provided value.
 	EdgeRepositoryDefaultBranchContains *string `form:"repository.defaultBranch.has,omitempty" json:"edge_repository_default_branch_contains,omitempty"`
+	// Filters field "default_branch" to contain the provided value, case-insensitive.
+	EdgeRepositoryDefaultBranchContainsFold *string `form:"repository.defaultBranch.ihas,omitempty" json:"edge_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "default_branch" to start with the provided value.
 	EdgeRepositoryDefaultBranchHasPrefix *string `form:"repository.defaultBranch.prefix,omitempty" json:"edge_repository_default_branch_has_prefix,omitempty"`
 	// Filters field "default_branch" to end with the provided value.
 	EdgeRepositoryDefaultBranchHasSuffix *string `form:"repository.defaultBranch.suffix,omitempty" json:"edge_repository_default_branch_has_suffix,omitempty"`
-	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
-	EdgeRepositoryDefaultBranchEqualFold *string `form:"repository.defaultBranch.ieq,omitempty" json:"edge_repository_default_branch_equal_fold,omitempty"`
-	// Filters field "default_branch" to contain the provided value, case-insensitive.
-	EdgeRepositoryDefaultBranchContainsFold *string `form:"repository.defaultBranch.ihas,omitempty" json:"edge_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "is_template" to be equal to the provided value.
 	EdgeRepositoryIsTemplateEQ *bool `form:"repository.isTemplate.eq,omitempty" json:"edge_repository_is_template_eq,omitempty"`
 	// Filters field "has_issues" to be equal to the provided value.
@@ -1541,36 +1339,36 @@ type ListGithubReleaseParams struct {
 	EdgeAssetNameIn []string `form:"asset.name.in,omitempty" json:"edge_asset_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeAssetNameNotIn []string `form:"asset.name.notIn,omitempty" json:"edge_asset_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeAssetNameEqualFold *string `form:"asset.name.ieq,omitempty" json:"edge_asset_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeAssetNameContains *string `form:"asset.name.has,omitempty" json:"edge_asset_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeAssetNameContainsFold *string `form:"asset.name.ihas,omitempty" json:"edge_asset_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeAssetNameHasPrefix *string `form:"asset.name.prefix,omitempty" json:"edge_asset_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeAssetNameHasSuffix *string `form:"asset.name.suffix,omitempty" json:"edge_asset_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeAssetNameEqualFold *string `form:"asset.name.ieq,omitempty" json:"edge_asset_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeAssetNameContainsFold *string `form:"asset.name.ihas,omitempty" json:"edge_asset_name_contains_fold,omitempty"`
 	// Filters field "label" to be equal to the provided value.
 	EdgeAssetLabelEQ *string `form:"asset.label.eq,omitempty" json:"edge_asset_label_eq,omitempty"`
 	// Filters field "label" to be not equal to the provided value.
 	EdgeAssetLabelNEQ *string `form:"asset.label.neq,omitempty" json:"edge_asset_label_neq,omitempty"`
+	// Filters field "label" to be null/nil.
+	EdgeAssetLabelIsNil *bool `form:"asset.label.null,omitempty" json:"edge_asset_label_is_nil,omitempty"`
 	// Filters field "label" to be within the provided values.
 	EdgeAssetLabelIn []string `form:"asset.label.in,omitempty" json:"edge_asset_label_in,omitempty"`
 	// Filters field "label" to be not within the provided values.
 	EdgeAssetLabelNotIn []string `form:"asset.label.notIn,omitempty" json:"edge_asset_label_not_in,omitempty"`
+	// Filters field "label" to be equal to the provided value, case-insensitive.
+	EdgeAssetLabelEqualFold *string `form:"asset.label.ieq,omitempty" json:"edge_asset_label_equal_fold,omitempty"`
 	// Filters field "label" to contain the provided value.
 	EdgeAssetLabelContains *string `form:"asset.label.has,omitempty" json:"edge_asset_label_contains,omitempty"`
+	// Filters field "label" to contain the provided value, case-insensitive.
+	EdgeAssetLabelContainsFold *string `form:"asset.label.ihas,omitempty" json:"edge_asset_label_contains_fold,omitempty"`
 	// Filters field "label" to start with the provided value.
 	EdgeAssetLabelHasPrefix *string `form:"asset.label.prefix,omitempty" json:"edge_asset_label_has_prefix,omitempty"`
 	// Filters field "label" to end with the provided value.
 	EdgeAssetLabelHasSuffix *string `form:"asset.label.suffix,omitempty" json:"edge_asset_label_has_suffix,omitempty"`
-	// Filters field "label" to be null/nil.
-	EdgeAssetLabelIsNil *bool `form:"asset.label.null,omitempty" json:"edge_asset_label_is_nil,omitempty"`
-	// Filters field "label" to be equal to the provided value, case-insensitive.
-	EdgeAssetLabelEqualFold *string `form:"asset.label.ieq,omitempty" json:"edge_asset_label_equal_fold,omitempty"`
-	// Filters field "label" to contain the provided value, case-insensitive.
-	EdgeAssetLabelContainsFold *string `form:"asset.label.ihas,omitempty" json:"edge_asset_label_contains_fold,omitempty"`
 	// Filters field "size" to be greater than the provided value.
 	EdgeAssetSizeGT *int64 `form:"asset.size.gt,omitempty" json:"edge_asset_size_gt,omitempty"`
 	// Filters field "size" to be less than the provided value.
@@ -1621,20 +1419,20 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.GithubReleaseTagNameNotIn != nil {
 		predicates = append(predicates, githubrelease.TagNameNotIn(l.GithubReleaseTagNameNotIn...))
 	}
+	if l.GithubReleaseTagNameEqualFold != nil {
+		predicates = append(predicates, githubrelease.TagNameEqualFold(*l.GithubReleaseTagNameEqualFold))
+	}
 	if l.GithubReleaseTagNameContains != nil {
 		predicates = append(predicates, githubrelease.TagNameContains(*l.GithubReleaseTagNameContains))
+	}
+	if l.GithubReleaseTagNameContainsFold != nil {
+		predicates = append(predicates, githubrelease.TagNameContainsFold(*l.GithubReleaseTagNameContainsFold))
 	}
 	if l.GithubReleaseTagNameHasPrefix != nil {
 		predicates = append(predicates, githubrelease.TagNameHasPrefix(*l.GithubReleaseTagNameHasPrefix))
 	}
 	if l.GithubReleaseTagNameHasSuffix != nil {
 		predicates = append(predicates, githubrelease.TagNameHasSuffix(*l.GithubReleaseTagNameHasSuffix))
-	}
-	if l.GithubReleaseTagNameEqualFold != nil {
-		predicates = append(predicates, githubrelease.TagNameEqualFold(*l.GithubReleaseTagNameEqualFold))
-	}
-	if l.GithubReleaseTagNameContainsFold != nil {
-		predicates = append(predicates, githubrelease.TagNameContainsFold(*l.GithubReleaseTagNameContainsFold))
 	}
 	if l.GithubReleaseTargetCommitishEQ != nil {
 		predicates = append(predicates, githubrelease.TargetCommitishEQ(*l.GithubReleaseTargetCommitishEQ))
@@ -1648,8 +1446,14 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.GithubReleaseTargetCommitishNotIn != nil {
 		predicates = append(predicates, githubrelease.TargetCommitishNotIn(l.GithubReleaseTargetCommitishNotIn...))
 	}
+	if l.GithubReleaseTargetCommitishEqualFold != nil {
+		predicates = append(predicates, githubrelease.TargetCommitishEqualFold(*l.GithubReleaseTargetCommitishEqualFold))
+	}
 	if l.GithubReleaseTargetCommitishContains != nil {
 		predicates = append(predicates, githubrelease.TargetCommitishContains(*l.GithubReleaseTargetCommitishContains))
+	}
+	if l.GithubReleaseTargetCommitishContainsFold != nil {
+		predicates = append(predicates, githubrelease.TargetCommitishContainsFold(*l.GithubReleaseTargetCommitishContainsFold))
 	}
 	if l.GithubReleaseTargetCommitishHasPrefix != nil {
 		predicates = append(predicates, githubrelease.TargetCommitishHasPrefix(*l.GithubReleaseTargetCommitishHasPrefix))
@@ -1657,32 +1461,11 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.GithubReleaseTargetCommitishHasSuffix != nil {
 		predicates = append(predicates, githubrelease.TargetCommitishHasSuffix(*l.GithubReleaseTargetCommitishHasSuffix))
 	}
-	if l.GithubReleaseTargetCommitishEqualFold != nil {
-		predicates = append(predicates, githubrelease.TargetCommitishEqualFold(*l.GithubReleaseTargetCommitishEqualFold))
-	}
-	if l.GithubReleaseTargetCommitishContainsFold != nil {
-		predicates = append(predicates, githubrelease.TargetCommitishContainsFold(*l.GithubReleaseTargetCommitishContainsFold))
-	}
 	if l.GithubReleaseNameEQ != nil {
 		predicates = append(predicates, githubrelease.NameEQ(*l.GithubReleaseNameEQ))
 	}
 	if l.GithubReleaseNameNEQ != nil {
 		predicates = append(predicates, githubrelease.NameNEQ(*l.GithubReleaseNameNEQ))
-	}
-	if l.GithubReleaseNameIn != nil {
-		predicates = append(predicates, githubrelease.NameIn(l.GithubReleaseNameIn...))
-	}
-	if l.GithubReleaseNameNotIn != nil {
-		predicates = append(predicates, githubrelease.NameNotIn(l.GithubReleaseNameNotIn...))
-	}
-	if l.GithubReleaseNameContains != nil {
-		predicates = append(predicates, githubrelease.NameContains(*l.GithubReleaseNameContains))
-	}
-	if l.GithubReleaseNameHasPrefix != nil {
-		predicates = append(predicates, githubrelease.NameHasPrefix(*l.GithubReleaseNameHasPrefix))
-	}
-	if l.GithubReleaseNameHasSuffix != nil {
-		predicates = append(predicates, githubrelease.NameHasSuffix(*l.GithubReleaseNameHasSuffix))
 	}
 	if l.GithubReleaseNameIsNil != nil {
 		if *l.GithubReleaseNameIsNil {
@@ -1691,11 +1474,26 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 			predicates = append(predicates, githubrelease.Not(githubrelease.NameIsNil()))
 		}
 	}
+	if l.GithubReleaseNameIn != nil {
+		predicates = append(predicates, githubrelease.NameIn(l.GithubReleaseNameIn...))
+	}
+	if l.GithubReleaseNameNotIn != nil {
+		predicates = append(predicates, githubrelease.NameNotIn(l.GithubReleaseNameNotIn...))
+	}
 	if l.GithubReleaseNameEqualFold != nil {
 		predicates = append(predicates, githubrelease.NameEqualFold(*l.GithubReleaseNameEqualFold))
 	}
+	if l.GithubReleaseNameContains != nil {
+		predicates = append(predicates, githubrelease.NameContains(*l.GithubReleaseNameContains))
+	}
 	if l.GithubReleaseNameContainsFold != nil {
 		predicates = append(predicates, githubrelease.NameContainsFold(*l.GithubReleaseNameContainsFold))
+	}
+	if l.GithubReleaseNameHasPrefix != nil {
+		predicates = append(predicates, githubrelease.NameHasPrefix(*l.GithubReleaseNameHasPrefix))
+	}
+	if l.GithubReleaseNameHasSuffix != nil {
+		predicates = append(predicates, githubrelease.NameHasSuffix(*l.GithubReleaseNameHasSuffix))
 	}
 	if l.GithubReleaseDraftEQ != nil {
 		predicates = append(predicates, githubrelease.DraftEQ(*l.GithubReleaseDraftEQ))
@@ -1752,20 +1550,20 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeRepositoryNameNotIn != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameNotIn(l.EdgeRepositoryNameNotIn...)))
 	}
+	if l.EdgeRepositoryNameEqualFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameEqualFold(*l.EdgeRepositoryNameEqualFold)))
+	}
 	if l.EdgeRepositoryNameContains != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameContains(*l.EdgeRepositoryNameContains)))
+	}
+	if l.EdgeRepositoryNameContainsFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameContainsFold(*l.EdgeRepositoryNameContainsFold)))
 	}
 	if l.EdgeRepositoryNameHasPrefix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameHasPrefix(*l.EdgeRepositoryNameHasPrefix)))
 	}
 	if l.EdgeRepositoryNameHasSuffix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameHasSuffix(*l.EdgeRepositoryNameHasSuffix)))
-	}
-	if l.EdgeRepositoryNameEqualFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameEqualFold(*l.EdgeRepositoryNameEqualFold)))
-	}
-	if l.EdgeRepositoryNameContainsFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.NameContainsFold(*l.EdgeRepositoryNameContainsFold)))
 	}
 	if l.EdgeRepositoryFullNameEQ != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameEQ(*l.EdgeRepositoryFullNameEQ)))
@@ -1779,20 +1577,20 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeRepositoryFullNameNotIn != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameNotIn(l.EdgeRepositoryFullNameNotIn...)))
 	}
+	if l.EdgeRepositoryFullNameEqualFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameEqualFold(*l.EdgeRepositoryFullNameEqualFold)))
+	}
 	if l.EdgeRepositoryFullNameContains != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameContains(*l.EdgeRepositoryFullNameContains)))
+	}
+	if l.EdgeRepositoryFullNameContainsFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameContainsFold(*l.EdgeRepositoryFullNameContainsFold)))
 	}
 	if l.EdgeRepositoryFullNameHasPrefix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameHasPrefix(*l.EdgeRepositoryFullNameHasPrefix)))
 	}
 	if l.EdgeRepositoryFullNameHasSuffix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameHasSuffix(*l.EdgeRepositoryFullNameHasSuffix)))
-	}
-	if l.EdgeRepositoryFullNameEqualFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameEqualFold(*l.EdgeRepositoryFullNameEqualFold)))
-	}
-	if l.EdgeRepositoryFullNameContainsFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.FullNameContainsFold(*l.EdgeRepositoryFullNameContainsFold)))
 	}
 	if l.EdgeRepositoryOwnerLoginEQ != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginEQ(*l.EdgeRepositoryOwnerLoginEQ)))
@@ -1806,8 +1604,14 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeRepositoryOwnerLoginNotIn != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginNotIn(l.EdgeRepositoryOwnerLoginNotIn...)))
 	}
+	if l.EdgeRepositoryOwnerLoginEqualFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginEqualFold(*l.EdgeRepositoryOwnerLoginEqualFold)))
+	}
 	if l.EdgeRepositoryOwnerLoginContains != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginContains(*l.EdgeRepositoryOwnerLoginContains)))
+	}
+	if l.EdgeRepositoryOwnerLoginContainsFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginContainsFold(*l.EdgeRepositoryOwnerLoginContainsFold)))
 	}
 	if l.EdgeRepositoryOwnerLoginHasPrefix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginHasPrefix(*l.EdgeRepositoryOwnerLoginHasPrefix)))
@@ -1815,17 +1619,8 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeRepositoryOwnerLoginHasSuffix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginHasSuffix(*l.EdgeRepositoryOwnerLoginHasSuffix)))
 	}
-	if l.EdgeRepositoryOwnerLoginEqualFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginEqualFold(*l.EdgeRepositoryOwnerLoginEqualFold)))
-	}
-	if l.EdgeRepositoryOwnerLoginContainsFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.OwnerLoginContainsFold(*l.EdgeRepositoryOwnerLoginContainsFold)))
-	}
 	if l.EdgeRepositoryPublicEQ != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.PublicEQ(*l.EdgeRepositoryPublicEQ)))
-	}
-	if l.EdgeRepositoryDescriptionContains != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DescriptionContains(*l.EdgeRepositoryDescriptionContains)))
 	}
 	if l.EdgeRepositoryDescriptionIsNil != nil {
 		if *l.EdgeRepositoryDescriptionIsNil {
@@ -1833,6 +1628,9 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 		} else {
 			predicates = append(predicates, githubrelease.Not(githubrelease.HasRepositoryWith(githubrepository.DescriptionIsNil())))
 		}
+	}
+	if l.EdgeRepositoryDescriptionContains != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DescriptionContains(*l.EdgeRepositoryDescriptionContains)))
 	}
 	if l.EdgeRepositoryDescriptionContainsFold != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DescriptionContainsFold(*l.EdgeRepositoryDescriptionContainsFold)))
@@ -1858,20 +1656,20 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeRepositoryDefaultBranchNotIn != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchNotIn(l.EdgeRepositoryDefaultBranchNotIn...)))
 	}
+	if l.EdgeRepositoryDefaultBranchEqualFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchEqualFold(*l.EdgeRepositoryDefaultBranchEqualFold)))
+	}
 	if l.EdgeRepositoryDefaultBranchContains != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchContains(*l.EdgeRepositoryDefaultBranchContains)))
+	}
+	if l.EdgeRepositoryDefaultBranchContainsFold != nil {
+		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchContainsFold(*l.EdgeRepositoryDefaultBranchContainsFold)))
 	}
 	if l.EdgeRepositoryDefaultBranchHasPrefix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchHasPrefix(*l.EdgeRepositoryDefaultBranchHasPrefix)))
 	}
 	if l.EdgeRepositoryDefaultBranchHasSuffix != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchHasSuffix(*l.EdgeRepositoryDefaultBranchHasSuffix)))
-	}
-	if l.EdgeRepositoryDefaultBranchEqualFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchEqualFold(*l.EdgeRepositoryDefaultBranchEqualFold)))
-	}
-	if l.EdgeRepositoryDefaultBranchContainsFold != nil {
-		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.DefaultBranchContainsFold(*l.EdgeRepositoryDefaultBranchContainsFold)))
 	}
 	if l.EdgeRepositoryIsTemplateEQ != nil {
 		predicates = append(predicates, githubrelease.HasRepositoryWith(githubrepository.IsTemplateEQ(*l.EdgeRepositoryIsTemplateEQ)))
@@ -1944,8 +1742,14 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeAssetNameNotIn != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameNotIn(l.EdgeAssetNameNotIn...)))
 	}
+	if l.EdgeAssetNameEqualFold != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameEqualFold(*l.EdgeAssetNameEqualFold)))
+	}
 	if l.EdgeAssetNameContains != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameContains(*l.EdgeAssetNameContains)))
+	}
+	if l.EdgeAssetNameContainsFold != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameContainsFold(*l.EdgeAssetNameContainsFold)))
 	}
 	if l.EdgeAssetNameHasPrefix != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameHasPrefix(*l.EdgeAssetNameHasPrefix)))
@@ -1953,32 +1757,11 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 	if l.EdgeAssetNameHasSuffix != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameHasSuffix(*l.EdgeAssetNameHasSuffix)))
 	}
-	if l.EdgeAssetNameEqualFold != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameEqualFold(*l.EdgeAssetNameEqualFold)))
-	}
-	if l.EdgeAssetNameContainsFold != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.NameContainsFold(*l.EdgeAssetNameContainsFold)))
-	}
 	if l.EdgeAssetLabelEQ != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelEQ(*l.EdgeAssetLabelEQ)))
 	}
 	if l.EdgeAssetLabelNEQ != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelNEQ(*l.EdgeAssetLabelNEQ)))
-	}
-	if l.EdgeAssetLabelIn != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelIn(l.EdgeAssetLabelIn...)))
-	}
-	if l.EdgeAssetLabelNotIn != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelNotIn(l.EdgeAssetLabelNotIn...)))
-	}
-	if l.EdgeAssetLabelContains != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelContains(*l.EdgeAssetLabelContains)))
-	}
-	if l.EdgeAssetLabelHasPrefix != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelHasPrefix(*l.EdgeAssetLabelHasPrefix)))
-	}
-	if l.EdgeAssetLabelHasSuffix != nil {
-		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelHasSuffix(*l.EdgeAssetLabelHasSuffix)))
 	}
 	if l.EdgeAssetLabelIsNil != nil {
 		if *l.EdgeAssetLabelIsNil {
@@ -1987,11 +1770,26 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 			predicates = append(predicates, githubrelease.Not(githubrelease.HasAssetsWith(githubasset.LabelIsNil())))
 		}
 	}
+	if l.EdgeAssetLabelIn != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelIn(l.EdgeAssetLabelIn...)))
+	}
+	if l.EdgeAssetLabelNotIn != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelNotIn(l.EdgeAssetLabelNotIn...)))
+	}
 	if l.EdgeAssetLabelEqualFold != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelEqualFold(*l.EdgeAssetLabelEqualFold)))
 	}
+	if l.EdgeAssetLabelContains != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelContains(*l.EdgeAssetLabelContains)))
+	}
 	if l.EdgeAssetLabelContainsFold != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelContainsFold(*l.EdgeAssetLabelContainsFold)))
+	}
+	if l.EdgeAssetLabelHasPrefix != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelHasPrefix(*l.EdgeAssetLabelHasPrefix)))
+	}
+	if l.EdgeAssetLabelHasSuffix != nil {
+		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.LabelHasSuffix(*l.EdgeAssetLabelHasSuffix)))
 	}
 	if l.EdgeAssetSizeGT != nil {
 		predicates = append(predicates, githubrelease.HasAssetsWith(githubasset.SizeGT(*l.EdgeAssetSizeGT)))
@@ -2036,48 +1834,20 @@ func (l *ListGithubReleaseParams) FilterPredicates() (predicate.GithubRelease, e
 			predicates = append(predicates, githubrelease.Not(githubrelease.HasAssetsWith(githubasset.UpdatedAtIsNil())))
 		}
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListGithubReleaseParams) ApplySorting(query *ent.GithubReleaseQuery) (*ent.GithubReleaseQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListGithubReleaseParams) ApplySorting(query *ent.GithubReleaseQuery) error {
+	if err := l.Sorted.Validate(GithubReleaseSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(GithubReleaseSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
-
-		switch parts[0] {
-		case githubrelease.EdgeRepository:
-			return query.Order(githubrelease.ByRepositoryField(parts[1], dir)), nil
-		case githubrelease.EdgeAssets:
-			switch {
-			case isCount:
-				return query.Order(githubrelease.ByAssetsCount(dir)), nil
-			case isSum:
-				return query.Order(githubrelease.ByAssets(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(githubrelease.ByAssets(sql.OrderByField(parts[1], dir))), nil
-			}
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingGithubRelease(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -2087,8 +1857,8 @@ func (l *ListGithubReleaseParams) Exec(ctx context.Context, query *ent.GithubRel
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadGithubRelease(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadGithubRelease(query))
 	if err != nil {
 		return nil, err
 	}
@@ -2113,16 +1883,16 @@ type ListGithubRepositoryParams struct {
 	GithubRepositoryNameIn []string `form:"name.in,omitempty" json:"github_repository_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	GithubRepositoryNameNotIn []string `form:"name.notIn,omitempty" json:"github_repository_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	GithubRepositoryNameEqualFold *string `form:"name.ieq,omitempty" json:"github_repository_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	GithubRepositoryNameContains *string `form:"name.has,omitempty" json:"github_repository_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	GithubRepositoryNameContainsFold *string `form:"name.ihas,omitempty" json:"github_repository_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	GithubRepositoryNameHasPrefix *string `form:"name.prefix,omitempty" json:"github_repository_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	GithubRepositoryNameHasSuffix *string `form:"name.suffix,omitempty" json:"github_repository_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	GithubRepositoryNameEqualFold *string `form:"name.ieq,omitempty" json:"github_repository_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	GithubRepositoryNameContainsFold *string `form:"name.ihas,omitempty" json:"github_repository_name_contains_fold,omitempty"`
 	// Filters field "full_name" to be equal to the provided value.
 	GithubRepositoryFullNameEQ *string `form:"fullName.eq,omitempty" json:"github_repository_full_name_eq,omitempty"`
 	// Filters field "full_name" to be not equal to the provided value.
@@ -2131,16 +1901,16 @@ type ListGithubRepositoryParams struct {
 	GithubRepositoryFullNameIn []string `form:"fullName.in,omitempty" json:"github_repository_full_name_in,omitempty"`
 	// Filters field "full_name" to be not within the provided values.
 	GithubRepositoryFullNameNotIn []string `form:"fullName.notIn,omitempty" json:"github_repository_full_name_not_in,omitempty"`
+	// Filters field "full_name" to be equal to the provided value, case-insensitive.
+	GithubRepositoryFullNameEqualFold *string `form:"fullName.ieq,omitempty" json:"github_repository_full_name_equal_fold,omitempty"`
 	// Filters field "full_name" to contain the provided value.
 	GithubRepositoryFullNameContains *string `form:"fullName.has,omitempty" json:"github_repository_full_name_contains,omitempty"`
+	// Filters field "full_name" to contain the provided value, case-insensitive.
+	GithubRepositoryFullNameContainsFold *string `form:"fullName.ihas,omitempty" json:"github_repository_full_name_contains_fold,omitempty"`
 	// Filters field "full_name" to start with the provided value.
 	GithubRepositoryFullNameHasPrefix *string `form:"fullName.prefix,omitempty" json:"github_repository_full_name_has_prefix,omitempty"`
 	// Filters field "full_name" to end with the provided value.
 	GithubRepositoryFullNameHasSuffix *string `form:"fullName.suffix,omitempty" json:"github_repository_full_name_has_suffix,omitempty"`
-	// Filters field "full_name" to be equal to the provided value, case-insensitive.
-	GithubRepositoryFullNameEqualFold *string `form:"fullName.ieq,omitempty" json:"github_repository_full_name_equal_fold,omitempty"`
-	// Filters field "full_name" to contain the provided value, case-insensitive.
-	GithubRepositoryFullNameContainsFold *string `form:"fullName.ihas,omitempty" json:"github_repository_full_name_contains_fold,omitempty"`
 	// Filters field "owner_login" to be equal to the provided value.
 	GithubRepositoryOwnerLoginEQ *string `form:"ownerLogin.eq,omitempty" json:"github_repository_owner_login_eq,omitempty"`
 	// Filters field "owner_login" to be not equal to the provided value.
@@ -2149,22 +1919,22 @@ type ListGithubRepositoryParams struct {
 	GithubRepositoryOwnerLoginIn []string `form:"ownerLogin.in,omitempty" json:"github_repository_owner_login_in,omitempty"`
 	// Filters field "owner_login" to be not within the provided values.
 	GithubRepositoryOwnerLoginNotIn []string `form:"ownerLogin.notIn,omitempty" json:"github_repository_owner_login_not_in,omitempty"`
+	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
+	GithubRepositoryOwnerLoginEqualFold *string `form:"ownerLogin.ieq,omitempty" json:"github_repository_owner_login_equal_fold,omitempty"`
 	// Filters field "owner_login" to contain the provided value.
 	GithubRepositoryOwnerLoginContains *string `form:"ownerLogin.has,omitempty" json:"github_repository_owner_login_contains,omitempty"`
+	// Filters field "owner_login" to contain the provided value, case-insensitive.
+	GithubRepositoryOwnerLoginContainsFold *string `form:"ownerLogin.ihas,omitempty" json:"github_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "owner_login" to start with the provided value.
 	GithubRepositoryOwnerLoginHasPrefix *string `form:"ownerLogin.prefix,omitempty" json:"github_repository_owner_login_has_prefix,omitempty"`
 	// Filters field "owner_login" to end with the provided value.
 	GithubRepositoryOwnerLoginHasSuffix *string `form:"ownerLogin.suffix,omitempty" json:"github_repository_owner_login_has_suffix,omitempty"`
-	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
-	GithubRepositoryOwnerLoginEqualFold *string `form:"ownerLogin.ieq,omitempty" json:"github_repository_owner_login_equal_fold,omitempty"`
-	// Filters field "owner_login" to contain the provided value, case-insensitive.
-	GithubRepositoryOwnerLoginContainsFold *string `form:"ownerLogin.ihas,omitempty" json:"github_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "public" to be equal to the provided value.
 	GithubRepositoryPublicEQ *bool `form:"public.eq,omitempty" json:"github_repository_public_eq,omitempty"`
-	// Filters field "description" to contain the provided value.
-	GithubRepositoryDescriptionContains *string `form:"description.has,omitempty" json:"github_repository_description_contains,omitempty"`
 	// Filters field "description" to be null/nil.
 	GithubRepositoryDescriptionIsNil *bool `form:"description.null,omitempty" json:"github_repository_description_is_nil,omitempty"`
+	// Filters field "description" to contain the provided value.
+	GithubRepositoryDescriptionContains *string `form:"description.has,omitempty" json:"github_repository_description_contains,omitempty"`
 	// Filters field "description" to contain the provided value, case-insensitive.
 	GithubRepositoryDescriptionContainsFold *string `form:"description.ihas,omitempty" json:"github_repository_description_contains_fold,omitempty"`
 	// Filters field "fork" to be equal to the provided value.
@@ -2181,16 +1951,16 @@ type ListGithubRepositoryParams struct {
 	GithubRepositoryDefaultBranchIn []string `form:"defaultBranch.in,omitempty" json:"github_repository_default_branch_in,omitempty"`
 	// Filters field "default_branch" to be not within the provided values.
 	GithubRepositoryDefaultBranchNotIn []string `form:"defaultBranch.notIn,omitempty" json:"github_repository_default_branch_not_in,omitempty"`
+	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
+	GithubRepositoryDefaultBranchEqualFold *string `form:"defaultBranch.ieq,omitempty" json:"github_repository_default_branch_equal_fold,omitempty"`
 	// Filters field "default_branch" to contain the provided value.
 	GithubRepositoryDefaultBranchContains *string `form:"defaultBranch.has,omitempty" json:"github_repository_default_branch_contains,omitempty"`
+	// Filters field "default_branch" to contain the provided value, case-insensitive.
+	GithubRepositoryDefaultBranchContainsFold *string `form:"defaultBranch.ihas,omitempty" json:"github_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "default_branch" to start with the provided value.
 	GithubRepositoryDefaultBranchHasPrefix *string `form:"defaultBranch.prefix,omitempty" json:"github_repository_default_branch_has_prefix,omitempty"`
 	// Filters field "default_branch" to end with the provided value.
 	GithubRepositoryDefaultBranchHasSuffix *string `form:"defaultBranch.suffix,omitempty" json:"github_repository_default_branch_has_suffix,omitempty"`
-	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
-	GithubRepositoryDefaultBranchEqualFold *string `form:"defaultBranch.ieq,omitempty" json:"github_repository_default_branch_equal_fold,omitempty"`
-	// Filters field "default_branch" to contain the provided value, case-insensitive.
-	GithubRepositoryDefaultBranchContainsFold *string `form:"defaultBranch.ihas,omitempty" json:"github_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "is_template" to be equal to the provided value.
 	GithubRepositoryIsTemplateEQ *bool `form:"isTemplate.eq,omitempty" json:"github_repository_is_template_eq,omitempty"`
 	// Filters field "has_issues" to be equal to the provided value.
@@ -2245,16 +2015,16 @@ type ListGithubRepositoryParams struct {
 	EdgeLabelNameIn []string `form:"label.name.in,omitempty" json:"edge_label_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeLabelNameNotIn []string `form:"label.name.notIn,omitempty" json:"edge_label_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeLabelNameEqualFold *string `form:"label.name.ieq,omitempty" json:"edge_label_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeLabelNameContains *string `form:"label.name.has,omitempty" json:"edge_label_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeLabelNameContainsFold *string `form:"label.name.ihas,omitempty" json:"edge_label_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeLabelNameHasPrefix *string `form:"label.name.prefix,omitempty" json:"edge_label_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeLabelNameHasSuffix *string `form:"label.name.suffix,omitempty" json:"edge_label_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeLabelNameEqualFold *string `form:"label.name.ieq,omitempty" json:"edge_label_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeLabelNameContainsFold *string `form:"label.name.ihas,omitempty" json:"edge_label_name_contains_fold,omitempty"`
 	// If true, only return entities that have a release edge.
 	EdgeHasRelease *bool `form:"has.release,omitempty" json:"edge_has_release,omitempty"`
 	// Filters field "release_id" to be equal to the provided value.
@@ -2269,16 +2039,16 @@ type ListGithubRepositoryParams struct {
 	EdgeReleaseTagNameIn []string `form:"release.tagName.in,omitempty" json:"edge_release_tag_name_in,omitempty"`
 	// Filters field "tag_name" to be not within the provided values.
 	EdgeReleaseTagNameNotIn []string `form:"release.tagName.notIn,omitempty" json:"edge_release_tag_name_not_in,omitempty"`
+	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
+	EdgeReleaseTagNameEqualFold *string `form:"release.tagName.ieq,omitempty" json:"edge_release_tag_name_equal_fold,omitempty"`
 	// Filters field "tag_name" to contain the provided value.
 	EdgeReleaseTagNameContains *string `form:"release.tagName.has,omitempty" json:"edge_release_tag_name_contains,omitempty"`
+	// Filters field "tag_name" to contain the provided value, case-insensitive.
+	EdgeReleaseTagNameContainsFold *string `form:"release.tagName.ihas,omitempty" json:"edge_release_tag_name_contains_fold,omitempty"`
 	// Filters field "tag_name" to start with the provided value.
 	EdgeReleaseTagNameHasPrefix *string `form:"release.tagName.prefix,omitempty" json:"edge_release_tag_name_has_prefix,omitempty"`
 	// Filters field "tag_name" to end with the provided value.
 	EdgeReleaseTagNameHasSuffix *string `form:"release.tagName.suffix,omitempty" json:"edge_release_tag_name_has_suffix,omitempty"`
-	// Filters field "tag_name" to be equal to the provided value, case-insensitive.
-	EdgeReleaseTagNameEqualFold *string `form:"release.tagName.ieq,omitempty" json:"edge_release_tag_name_equal_fold,omitempty"`
-	// Filters field "tag_name" to contain the provided value, case-insensitive.
-	EdgeReleaseTagNameContainsFold *string `form:"release.tagName.ihas,omitempty" json:"edge_release_tag_name_contains_fold,omitempty"`
 	// Filters field "target_commitish" to be equal to the provided value.
 	EdgeReleaseTargetCommitishEQ *string `form:"release.targetCommitish.eq,omitempty" json:"edge_release_target_commitish_eq,omitempty"`
 	// Filters field "target_commitish" to be not equal to the provided value.
@@ -2287,36 +2057,36 @@ type ListGithubRepositoryParams struct {
 	EdgeReleaseTargetCommitishIn []string `form:"release.targetCommitish.in,omitempty" json:"edge_release_target_commitish_in,omitempty"`
 	// Filters field "target_commitish" to be not within the provided values.
 	EdgeReleaseTargetCommitishNotIn []string `form:"release.targetCommitish.notIn,omitempty" json:"edge_release_target_commitish_not_in,omitempty"`
+	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
+	EdgeReleaseTargetCommitishEqualFold *string `form:"release.targetCommitish.ieq,omitempty" json:"edge_release_target_commitish_equal_fold,omitempty"`
 	// Filters field "target_commitish" to contain the provided value.
 	EdgeReleaseTargetCommitishContains *string `form:"release.targetCommitish.has,omitempty" json:"edge_release_target_commitish_contains,omitempty"`
+	// Filters field "target_commitish" to contain the provided value, case-insensitive.
+	EdgeReleaseTargetCommitishContainsFold *string `form:"release.targetCommitish.ihas,omitempty" json:"edge_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "target_commitish" to start with the provided value.
 	EdgeReleaseTargetCommitishHasPrefix *string `form:"release.targetCommitish.prefix,omitempty" json:"edge_release_target_commitish_has_prefix,omitempty"`
 	// Filters field "target_commitish" to end with the provided value.
 	EdgeReleaseTargetCommitishHasSuffix *string `form:"release.targetCommitish.suffix,omitempty" json:"edge_release_target_commitish_has_suffix,omitempty"`
-	// Filters field "target_commitish" to be equal to the provided value, case-insensitive.
-	EdgeReleaseTargetCommitishEqualFold *string `form:"release.targetCommitish.ieq,omitempty" json:"edge_release_target_commitish_equal_fold,omitempty"`
-	// Filters field "target_commitish" to contain the provided value, case-insensitive.
-	EdgeReleaseTargetCommitishContainsFold *string `form:"release.targetCommitish.ihas,omitempty" json:"edge_release_target_commitish_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
 	EdgeReleaseNameEQ *string `form:"release.name.eq,omitempty" json:"edge_release_name_eq,omitempty"`
 	// Filters field "name" to be not equal to the provided value.
 	EdgeReleaseNameNEQ *string `form:"release.name.neq,omitempty" json:"edge_release_name_neq,omitempty"`
+	// Filters field "name" to be null/nil.
+	EdgeReleaseNameIsNil *bool `form:"release.name.null,omitempty" json:"edge_release_name_is_nil,omitempty"`
 	// Filters field "name" to be within the provided values.
 	EdgeReleaseNameIn []string `form:"release.name.in,omitempty" json:"edge_release_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeReleaseNameNotIn []string `form:"release.name.notIn,omitempty" json:"edge_release_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeReleaseNameEqualFold *string `form:"release.name.ieq,omitempty" json:"edge_release_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeReleaseNameContains *string `form:"release.name.has,omitempty" json:"edge_release_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeReleaseNameContainsFold *string `form:"release.name.ihas,omitempty" json:"edge_release_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeReleaseNameHasPrefix *string `form:"release.name.prefix,omitempty" json:"edge_release_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeReleaseNameHasSuffix *string `form:"release.name.suffix,omitempty" json:"edge_release_name_has_suffix,omitempty"`
-	// Filters field "name" to be null/nil.
-	EdgeReleaseNameIsNil *bool `form:"release.name.null,omitempty" json:"edge_release_name_is_nil,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeReleaseNameEqualFold *string `form:"release.name.ieq,omitempty" json:"edge_release_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeReleaseNameContainsFold *string `form:"release.name.ihas,omitempty" json:"edge_release_name_contains_fold,omitempty"`
 	// Filters field "draft" to be equal to the provided value.
 	EdgeReleaseDraftEQ *bool `form:"release.draft.eq,omitempty" json:"edge_release_draft_eq,omitempty"`
 	// Filters field "prerelease" to be equal to the provided value.
@@ -2361,20 +2131,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.GithubRepositoryNameNotIn != nil {
 		predicates = append(predicates, githubrepository.NameNotIn(l.GithubRepositoryNameNotIn...))
 	}
+	if l.GithubRepositoryNameEqualFold != nil {
+		predicates = append(predicates, githubrepository.NameEqualFold(*l.GithubRepositoryNameEqualFold))
+	}
 	if l.GithubRepositoryNameContains != nil {
 		predicates = append(predicates, githubrepository.NameContains(*l.GithubRepositoryNameContains))
+	}
+	if l.GithubRepositoryNameContainsFold != nil {
+		predicates = append(predicates, githubrepository.NameContainsFold(*l.GithubRepositoryNameContainsFold))
 	}
 	if l.GithubRepositoryNameHasPrefix != nil {
 		predicates = append(predicates, githubrepository.NameHasPrefix(*l.GithubRepositoryNameHasPrefix))
 	}
 	if l.GithubRepositoryNameHasSuffix != nil {
 		predicates = append(predicates, githubrepository.NameHasSuffix(*l.GithubRepositoryNameHasSuffix))
-	}
-	if l.GithubRepositoryNameEqualFold != nil {
-		predicates = append(predicates, githubrepository.NameEqualFold(*l.GithubRepositoryNameEqualFold))
-	}
-	if l.GithubRepositoryNameContainsFold != nil {
-		predicates = append(predicates, githubrepository.NameContainsFold(*l.GithubRepositoryNameContainsFold))
 	}
 	if l.GithubRepositoryFullNameEQ != nil {
 		predicates = append(predicates, githubrepository.FullNameEQ(*l.GithubRepositoryFullNameEQ))
@@ -2388,20 +2158,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.GithubRepositoryFullNameNotIn != nil {
 		predicates = append(predicates, githubrepository.FullNameNotIn(l.GithubRepositoryFullNameNotIn...))
 	}
+	if l.GithubRepositoryFullNameEqualFold != nil {
+		predicates = append(predicates, githubrepository.FullNameEqualFold(*l.GithubRepositoryFullNameEqualFold))
+	}
 	if l.GithubRepositoryFullNameContains != nil {
 		predicates = append(predicates, githubrepository.FullNameContains(*l.GithubRepositoryFullNameContains))
+	}
+	if l.GithubRepositoryFullNameContainsFold != nil {
+		predicates = append(predicates, githubrepository.FullNameContainsFold(*l.GithubRepositoryFullNameContainsFold))
 	}
 	if l.GithubRepositoryFullNameHasPrefix != nil {
 		predicates = append(predicates, githubrepository.FullNameHasPrefix(*l.GithubRepositoryFullNameHasPrefix))
 	}
 	if l.GithubRepositoryFullNameHasSuffix != nil {
 		predicates = append(predicates, githubrepository.FullNameHasSuffix(*l.GithubRepositoryFullNameHasSuffix))
-	}
-	if l.GithubRepositoryFullNameEqualFold != nil {
-		predicates = append(predicates, githubrepository.FullNameEqualFold(*l.GithubRepositoryFullNameEqualFold))
-	}
-	if l.GithubRepositoryFullNameContainsFold != nil {
-		predicates = append(predicates, githubrepository.FullNameContainsFold(*l.GithubRepositoryFullNameContainsFold))
 	}
 	if l.GithubRepositoryOwnerLoginEQ != nil {
 		predicates = append(predicates, githubrepository.OwnerLoginEQ(*l.GithubRepositoryOwnerLoginEQ))
@@ -2415,8 +2185,14 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.GithubRepositoryOwnerLoginNotIn != nil {
 		predicates = append(predicates, githubrepository.OwnerLoginNotIn(l.GithubRepositoryOwnerLoginNotIn...))
 	}
+	if l.GithubRepositoryOwnerLoginEqualFold != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginEqualFold(*l.GithubRepositoryOwnerLoginEqualFold))
+	}
 	if l.GithubRepositoryOwnerLoginContains != nil {
 		predicates = append(predicates, githubrepository.OwnerLoginContains(*l.GithubRepositoryOwnerLoginContains))
+	}
+	if l.GithubRepositoryOwnerLoginContainsFold != nil {
+		predicates = append(predicates, githubrepository.OwnerLoginContainsFold(*l.GithubRepositoryOwnerLoginContainsFold))
 	}
 	if l.GithubRepositoryOwnerLoginHasPrefix != nil {
 		predicates = append(predicates, githubrepository.OwnerLoginHasPrefix(*l.GithubRepositoryOwnerLoginHasPrefix))
@@ -2424,17 +2200,8 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.GithubRepositoryOwnerLoginHasSuffix != nil {
 		predicates = append(predicates, githubrepository.OwnerLoginHasSuffix(*l.GithubRepositoryOwnerLoginHasSuffix))
 	}
-	if l.GithubRepositoryOwnerLoginEqualFold != nil {
-		predicates = append(predicates, githubrepository.OwnerLoginEqualFold(*l.GithubRepositoryOwnerLoginEqualFold))
-	}
-	if l.GithubRepositoryOwnerLoginContainsFold != nil {
-		predicates = append(predicates, githubrepository.OwnerLoginContainsFold(*l.GithubRepositoryOwnerLoginContainsFold))
-	}
 	if l.GithubRepositoryPublicEQ != nil {
 		predicates = append(predicates, githubrepository.PublicEQ(*l.GithubRepositoryPublicEQ))
-	}
-	if l.GithubRepositoryDescriptionContains != nil {
-		predicates = append(predicates, githubrepository.DescriptionContains(*l.GithubRepositoryDescriptionContains))
 	}
 	if l.GithubRepositoryDescriptionIsNil != nil {
 		if *l.GithubRepositoryDescriptionIsNil {
@@ -2442,6 +2209,9 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 		} else {
 			predicates = append(predicates, githubrepository.Not(githubrepository.DescriptionIsNil()))
 		}
+	}
+	if l.GithubRepositoryDescriptionContains != nil {
+		predicates = append(predicates, githubrepository.DescriptionContains(*l.GithubRepositoryDescriptionContains))
 	}
 	if l.GithubRepositoryDescriptionContainsFold != nil {
 		predicates = append(predicates, githubrepository.DescriptionContainsFold(*l.GithubRepositoryDescriptionContainsFold))
@@ -2467,20 +2237,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.GithubRepositoryDefaultBranchNotIn != nil {
 		predicates = append(predicates, githubrepository.DefaultBranchNotIn(l.GithubRepositoryDefaultBranchNotIn...))
 	}
+	if l.GithubRepositoryDefaultBranchEqualFold != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchEqualFold(*l.GithubRepositoryDefaultBranchEqualFold))
+	}
 	if l.GithubRepositoryDefaultBranchContains != nil {
 		predicates = append(predicates, githubrepository.DefaultBranchContains(*l.GithubRepositoryDefaultBranchContains))
+	}
+	if l.GithubRepositoryDefaultBranchContainsFold != nil {
+		predicates = append(predicates, githubrepository.DefaultBranchContainsFold(*l.GithubRepositoryDefaultBranchContainsFold))
 	}
 	if l.GithubRepositoryDefaultBranchHasPrefix != nil {
 		predicates = append(predicates, githubrepository.DefaultBranchHasPrefix(*l.GithubRepositoryDefaultBranchHasPrefix))
 	}
 	if l.GithubRepositoryDefaultBranchHasSuffix != nil {
 		predicates = append(predicates, githubrepository.DefaultBranchHasSuffix(*l.GithubRepositoryDefaultBranchHasSuffix))
-	}
-	if l.GithubRepositoryDefaultBranchEqualFold != nil {
-		predicates = append(predicates, githubrepository.DefaultBranchEqualFold(*l.GithubRepositoryDefaultBranchEqualFold))
-	}
-	if l.GithubRepositoryDefaultBranchContainsFold != nil {
-		predicates = append(predicates, githubrepository.DefaultBranchContainsFold(*l.GithubRepositoryDefaultBranchContainsFold))
 	}
 	if l.GithubRepositoryIsTemplateEQ != nil {
 		predicates = append(predicates, githubrepository.IsTemplateEQ(*l.GithubRepositoryIsTemplateEQ))
@@ -2571,20 +2341,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.EdgeLabelNameNotIn != nil {
 		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameNotIn(l.EdgeLabelNameNotIn...)))
 	}
+	if l.EdgeLabelNameEqualFold != nil {
+		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameEqualFold(*l.EdgeLabelNameEqualFold)))
+	}
 	if l.EdgeLabelNameContains != nil {
 		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameContains(*l.EdgeLabelNameContains)))
+	}
+	if l.EdgeLabelNameContainsFold != nil {
+		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameContainsFold(*l.EdgeLabelNameContainsFold)))
 	}
 	if l.EdgeLabelNameHasPrefix != nil {
 		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameHasPrefix(*l.EdgeLabelNameHasPrefix)))
 	}
 	if l.EdgeLabelNameHasSuffix != nil {
 		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameHasSuffix(*l.EdgeLabelNameHasSuffix)))
-	}
-	if l.EdgeLabelNameEqualFold != nil {
-		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameEqualFold(*l.EdgeLabelNameEqualFold)))
-	}
-	if l.EdgeLabelNameContainsFold != nil {
-		predicates = append(predicates, githubrepository.HasLabelsWith(label.NameContainsFold(*l.EdgeLabelNameContainsFold)))
 	}
 	if l.EdgeHasRelease != nil {
 		if *l.EdgeHasRelease {
@@ -2611,20 +2381,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.EdgeReleaseTagNameNotIn != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameNotIn(l.EdgeReleaseTagNameNotIn...)))
 	}
+	if l.EdgeReleaseTagNameEqualFold != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameEqualFold(*l.EdgeReleaseTagNameEqualFold)))
+	}
 	if l.EdgeReleaseTagNameContains != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameContains(*l.EdgeReleaseTagNameContains)))
+	}
+	if l.EdgeReleaseTagNameContainsFold != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameContainsFold(*l.EdgeReleaseTagNameContainsFold)))
 	}
 	if l.EdgeReleaseTagNameHasPrefix != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameHasPrefix(*l.EdgeReleaseTagNameHasPrefix)))
 	}
 	if l.EdgeReleaseTagNameHasSuffix != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameHasSuffix(*l.EdgeReleaseTagNameHasSuffix)))
-	}
-	if l.EdgeReleaseTagNameEqualFold != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameEqualFold(*l.EdgeReleaseTagNameEqualFold)))
-	}
-	if l.EdgeReleaseTagNameContainsFold != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TagNameContainsFold(*l.EdgeReleaseTagNameContainsFold)))
 	}
 	if l.EdgeReleaseTargetCommitishEQ != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishEQ(*l.EdgeReleaseTargetCommitishEQ)))
@@ -2638,8 +2408,14 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.EdgeReleaseTargetCommitishNotIn != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishNotIn(l.EdgeReleaseTargetCommitishNotIn...)))
 	}
+	if l.EdgeReleaseTargetCommitishEqualFold != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishEqualFold(*l.EdgeReleaseTargetCommitishEqualFold)))
+	}
 	if l.EdgeReleaseTargetCommitishContains != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishContains(*l.EdgeReleaseTargetCommitishContains)))
+	}
+	if l.EdgeReleaseTargetCommitishContainsFold != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishContainsFold(*l.EdgeReleaseTargetCommitishContainsFold)))
 	}
 	if l.EdgeReleaseTargetCommitishHasPrefix != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishHasPrefix(*l.EdgeReleaseTargetCommitishHasPrefix)))
@@ -2647,32 +2423,11 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.EdgeReleaseTargetCommitishHasSuffix != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishHasSuffix(*l.EdgeReleaseTargetCommitishHasSuffix)))
 	}
-	if l.EdgeReleaseTargetCommitishEqualFold != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishEqualFold(*l.EdgeReleaseTargetCommitishEqualFold)))
-	}
-	if l.EdgeReleaseTargetCommitishContainsFold != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.TargetCommitishContainsFold(*l.EdgeReleaseTargetCommitishContainsFold)))
-	}
 	if l.EdgeReleaseNameEQ != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameEQ(*l.EdgeReleaseNameEQ)))
 	}
 	if l.EdgeReleaseNameNEQ != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameNEQ(*l.EdgeReleaseNameNEQ)))
-	}
-	if l.EdgeReleaseNameIn != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameIn(l.EdgeReleaseNameIn...)))
-	}
-	if l.EdgeReleaseNameNotIn != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameNotIn(l.EdgeReleaseNameNotIn...)))
-	}
-	if l.EdgeReleaseNameContains != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameContains(*l.EdgeReleaseNameContains)))
-	}
-	if l.EdgeReleaseNameHasPrefix != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameHasPrefix(*l.EdgeReleaseNameHasPrefix)))
-	}
-	if l.EdgeReleaseNameHasSuffix != nil {
-		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameHasSuffix(*l.EdgeReleaseNameHasSuffix)))
 	}
 	if l.EdgeReleaseNameIsNil != nil {
 		if *l.EdgeReleaseNameIsNil {
@@ -2681,11 +2436,26 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 			predicates = append(predicates, githubrepository.Not(githubrepository.HasReleasesWith(githubrelease.NameIsNil())))
 		}
 	}
+	if l.EdgeReleaseNameIn != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameIn(l.EdgeReleaseNameIn...)))
+	}
+	if l.EdgeReleaseNameNotIn != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameNotIn(l.EdgeReleaseNameNotIn...)))
+	}
 	if l.EdgeReleaseNameEqualFold != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameEqualFold(*l.EdgeReleaseNameEqualFold)))
 	}
+	if l.EdgeReleaseNameContains != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameContains(*l.EdgeReleaseNameContains)))
+	}
 	if l.EdgeReleaseNameContainsFold != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameContainsFold(*l.EdgeReleaseNameContainsFold)))
+	}
+	if l.EdgeReleaseNameHasPrefix != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameHasPrefix(*l.EdgeReleaseNameHasPrefix)))
+	}
+	if l.EdgeReleaseNameHasSuffix != nil {
+		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.NameHasSuffix(*l.EdgeReleaseNameHasSuffix)))
 	}
 	if l.EdgeReleaseDraftEQ != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.DraftEQ(*l.EdgeReleaseDraftEQ)))
@@ -2717,55 +2487,20 @@ func (l *ListGithubRepositoryParams) FilterPredicates() (predicate.GithubReposit
 	if l.EdgeReleasePublishedAtLT != nil {
 		predicates = append(predicates, githubrepository.HasReleasesWith(githubrelease.PublishedAtLT(*l.EdgeReleasePublishedAtLT)))
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListGithubRepositoryParams) ApplySorting(query *ent.GithubRepositoryQuery) (*ent.GithubRepositoryQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListGithubRepositoryParams) ApplySorting(query *ent.GithubRepositoryQuery) error {
+	if err := l.Sorted.Validate(GithubRepositorySortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(GithubRepositorySortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
-
-		switch parts[0] {
-		case githubrepository.EdgeLabels:
-			switch {
-			case isCount:
-				return query.Order(githubrepository.ByLabelsCount(dir)), nil
-			case isSum:
-				return query.Order(githubrepository.ByLabels(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(githubrepository.ByLabels(sql.OrderByField(parts[1], dir))), nil
-			}
-		case githubrepository.EdgeReleases:
-			switch {
-			case isCount:
-				return query.Order(githubrepository.ByReleasesCount(dir)), nil
-			case isSum:
-				return query.Order(githubrepository.ByReleases(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(githubrepository.ByReleases(sql.OrderByField(parts[1], dir))), nil
-			}
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingGithubRepository(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -2775,8 +2510,8 @@ func (l *ListGithubRepositoryParams) Exec(ctx context.Context, query *ent.Github
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadGithubRepository(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadGithubRepository(query))
 	if err != nil {
 		return nil, err
 	}
@@ -2813,16 +2548,16 @@ type ListLabelParams struct {
 	LabelNameIn []string `form:"name.in,omitempty" json:"label_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	LabelNameNotIn []string `form:"name.notIn,omitempty" json:"label_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	LabelNameEqualFold *string `form:"name.ieq,omitempty" json:"label_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	LabelNameContains *string `form:"name.has,omitempty" json:"label_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	LabelNameContainsFold *string `form:"name.ihas,omitempty" json:"label_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	LabelNameHasPrefix *string `form:"name.prefix,omitempty" json:"label_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	LabelNameHasSuffix *string `form:"name.suffix,omitempty" json:"label_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	LabelNameEqualFold *string `form:"name.ieq,omitempty" json:"label_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	LabelNameContainsFold *string `form:"name.ihas,omitempty" json:"label_name_contains_fold,omitempty"`
 	// If true, only return entities that have a post edge.
 	EdgeHasPost *bool `form:"has.post,omitempty" json:"edge_has_post,omitempty"`
 	// Filters field "create_time" to be equal to the provided value.
@@ -2855,16 +2590,16 @@ type ListLabelParams struct {
 	EdgePostTitleIn []string `form:"post.title.in,omitempty" json:"edge_post_title_in,omitempty"`
 	// Filters field "title" to be not within the provided values.
 	EdgePostTitleNotIn []string `form:"post.title.notIn,omitempty" json:"edge_post_title_not_in,omitempty"`
+	// Filters field "title" to be equal to the provided value, case-insensitive.
+	EdgePostTitleEqualFold *string `form:"post.title.ieq,omitempty" json:"edge_post_title_equal_fold,omitempty"`
 	// Filters field "title" to contain the provided value.
 	EdgePostTitleContains *string `form:"post.title.has,omitempty" json:"edge_post_title_contains,omitempty"`
+	// Filters field "title" to contain the provided value, case-insensitive.
+	EdgePostTitleContainsFold *string `form:"post.title.ihas,omitempty" json:"edge_post_title_contains_fold,omitempty"`
 	// Filters field "title" to start with the provided value.
 	EdgePostTitleHasPrefix *string `form:"post.title.prefix,omitempty" json:"edge_post_title_has_prefix,omitempty"`
 	// Filters field "title" to end with the provided value.
 	EdgePostTitleHasSuffix *string `form:"post.title.suffix,omitempty" json:"edge_post_title_has_suffix,omitempty"`
-	// Filters field "title" to be equal to the provided value, case-insensitive.
-	EdgePostTitleEqualFold *string `form:"post.title.ieq,omitempty" json:"edge_post_title_equal_fold,omitempty"`
-	// Filters field "title" to contain the provided value, case-insensitive.
-	EdgePostTitleContainsFold *string `form:"post.title.ihas,omitempty" json:"edge_post_title_contains_fold,omitempty"`
 	// Filters field "content" to contain the provided value.
 	EdgePostContentContains *string `form:"post.content.has,omitempty" json:"edge_post_content_contains,omitempty"`
 	// Filters field "content" to contain the provided value, case-insensitive.
@@ -2905,16 +2640,16 @@ type ListLabelParams struct {
 	EdgeGithubRepositoryNameIn []string `form:"githubRepository.name.in,omitempty" json:"edge_github_repository_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeGithubRepositoryNameNotIn []string `form:"githubRepository.name.notIn,omitempty" json:"edge_github_repository_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeGithubRepositoryNameEqualFold *string `form:"githubRepository.name.ieq,omitempty" json:"edge_github_repository_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeGithubRepositoryNameContains *string `form:"githubRepository.name.has,omitempty" json:"edge_github_repository_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeGithubRepositoryNameContainsFold *string `form:"githubRepository.name.ihas,omitempty" json:"edge_github_repository_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeGithubRepositoryNameHasPrefix *string `form:"githubRepository.name.prefix,omitempty" json:"edge_github_repository_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeGithubRepositoryNameHasSuffix *string `form:"githubRepository.name.suffix,omitempty" json:"edge_github_repository_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeGithubRepositoryNameEqualFold *string `form:"githubRepository.name.ieq,omitempty" json:"edge_github_repository_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeGithubRepositoryNameContainsFold *string `form:"githubRepository.name.ihas,omitempty" json:"edge_github_repository_name_contains_fold,omitempty"`
 	// Filters field "full_name" to be equal to the provided value.
 	EdgeGithubRepositoryFullNameEQ *string `form:"githubRepository.fullName.eq,omitempty" json:"edge_github_repository_full_name_eq,omitempty"`
 	// Filters field "full_name" to be not equal to the provided value.
@@ -2923,16 +2658,16 @@ type ListLabelParams struct {
 	EdgeGithubRepositoryFullNameIn []string `form:"githubRepository.fullName.in,omitempty" json:"edge_github_repository_full_name_in,omitempty"`
 	// Filters field "full_name" to be not within the provided values.
 	EdgeGithubRepositoryFullNameNotIn []string `form:"githubRepository.fullName.notIn,omitempty" json:"edge_github_repository_full_name_not_in,omitempty"`
+	// Filters field "full_name" to be equal to the provided value, case-insensitive.
+	EdgeGithubRepositoryFullNameEqualFold *string `form:"githubRepository.fullName.ieq,omitempty" json:"edge_github_repository_full_name_equal_fold,omitempty"`
 	// Filters field "full_name" to contain the provided value.
 	EdgeGithubRepositoryFullNameContains *string `form:"githubRepository.fullName.has,omitempty" json:"edge_github_repository_full_name_contains,omitempty"`
+	// Filters field "full_name" to contain the provided value, case-insensitive.
+	EdgeGithubRepositoryFullNameContainsFold *string `form:"githubRepository.fullName.ihas,omitempty" json:"edge_github_repository_full_name_contains_fold,omitempty"`
 	// Filters field "full_name" to start with the provided value.
 	EdgeGithubRepositoryFullNameHasPrefix *string `form:"githubRepository.fullName.prefix,omitempty" json:"edge_github_repository_full_name_has_prefix,omitempty"`
 	// Filters field "full_name" to end with the provided value.
 	EdgeGithubRepositoryFullNameHasSuffix *string `form:"githubRepository.fullName.suffix,omitempty" json:"edge_github_repository_full_name_has_suffix,omitempty"`
-	// Filters field "full_name" to be equal to the provided value, case-insensitive.
-	EdgeGithubRepositoryFullNameEqualFold *string `form:"githubRepository.fullName.ieq,omitempty" json:"edge_github_repository_full_name_equal_fold,omitempty"`
-	// Filters field "full_name" to contain the provided value, case-insensitive.
-	EdgeGithubRepositoryFullNameContainsFold *string `form:"githubRepository.fullName.ihas,omitempty" json:"edge_github_repository_full_name_contains_fold,omitempty"`
 	// Filters field "owner_login" to be equal to the provided value.
 	EdgeGithubRepositoryOwnerLoginEQ *string `form:"githubRepository.ownerLogin.eq,omitempty" json:"edge_github_repository_owner_login_eq,omitempty"`
 	// Filters field "owner_login" to be not equal to the provided value.
@@ -2941,22 +2676,22 @@ type ListLabelParams struct {
 	EdgeGithubRepositoryOwnerLoginIn []string `form:"githubRepository.ownerLogin.in,omitempty" json:"edge_github_repository_owner_login_in,omitempty"`
 	// Filters field "owner_login" to be not within the provided values.
 	EdgeGithubRepositoryOwnerLoginNotIn []string `form:"githubRepository.ownerLogin.notIn,omitempty" json:"edge_github_repository_owner_login_not_in,omitempty"`
+	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
+	EdgeGithubRepositoryOwnerLoginEqualFold *string `form:"githubRepository.ownerLogin.ieq,omitempty" json:"edge_github_repository_owner_login_equal_fold,omitempty"`
 	// Filters field "owner_login" to contain the provided value.
 	EdgeGithubRepositoryOwnerLoginContains *string `form:"githubRepository.ownerLogin.has,omitempty" json:"edge_github_repository_owner_login_contains,omitempty"`
+	// Filters field "owner_login" to contain the provided value, case-insensitive.
+	EdgeGithubRepositoryOwnerLoginContainsFold *string `form:"githubRepository.ownerLogin.ihas,omitempty" json:"edge_github_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "owner_login" to start with the provided value.
 	EdgeGithubRepositoryOwnerLoginHasPrefix *string `form:"githubRepository.ownerLogin.prefix,omitempty" json:"edge_github_repository_owner_login_has_prefix,omitempty"`
 	// Filters field "owner_login" to end with the provided value.
 	EdgeGithubRepositoryOwnerLoginHasSuffix *string `form:"githubRepository.ownerLogin.suffix,omitempty" json:"edge_github_repository_owner_login_has_suffix,omitempty"`
-	// Filters field "owner_login" to be equal to the provided value, case-insensitive.
-	EdgeGithubRepositoryOwnerLoginEqualFold *string `form:"githubRepository.ownerLogin.ieq,omitempty" json:"edge_github_repository_owner_login_equal_fold,omitempty"`
-	// Filters field "owner_login" to contain the provided value, case-insensitive.
-	EdgeGithubRepositoryOwnerLoginContainsFold *string `form:"githubRepository.ownerLogin.ihas,omitempty" json:"edge_github_repository_owner_login_contains_fold,omitempty"`
 	// Filters field "public" to be equal to the provided value.
 	EdgeGithubRepositoryPublicEQ *bool `form:"githubRepository.public.eq,omitempty" json:"edge_github_repository_public_eq,omitempty"`
-	// Filters field "description" to contain the provided value.
-	EdgeGithubRepositoryDescriptionContains *string `form:"githubRepository.description.has,omitempty" json:"edge_github_repository_description_contains,omitempty"`
 	// Filters field "description" to be null/nil.
 	EdgeGithubRepositoryDescriptionIsNil *bool `form:"githubRepository.description.null,omitempty" json:"edge_github_repository_description_is_nil,omitempty"`
+	// Filters field "description" to contain the provided value.
+	EdgeGithubRepositoryDescriptionContains *string `form:"githubRepository.description.has,omitempty" json:"edge_github_repository_description_contains,omitempty"`
 	// Filters field "description" to contain the provided value, case-insensitive.
 	EdgeGithubRepositoryDescriptionContainsFold *string `form:"githubRepository.description.ihas,omitempty" json:"edge_github_repository_description_contains_fold,omitempty"`
 	// Filters field "fork" to be equal to the provided value.
@@ -2973,16 +2708,16 @@ type ListLabelParams struct {
 	EdgeGithubRepositoryDefaultBranchIn []string `form:"githubRepository.defaultBranch.in,omitempty" json:"edge_github_repository_default_branch_in,omitempty"`
 	// Filters field "default_branch" to be not within the provided values.
 	EdgeGithubRepositoryDefaultBranchNotIn []string `form:"githubRepository.defaultBranch.notIn,omitempty" json:"edge_github_repository_default_branch_not_in,omitempty"`
+	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
+	EdgeGithubRepositoryDefaultBranchEqualFold *string `form:"githubRepository.defaultBranch.ieq,omitempty" json:"edge_github_repository_default_branch_equal_fold,omitempty"`
 	// Filters field "default_branch" to contain the provided value.
 	EdgeGithubRepositoryDefaultBranchContains *string `form:"githubRepository.defaultBranch.has,omitempty" json:"edge_github_repository_default_branch_contains,omitempty"`
+	// Filters field "default_branch" to contain the provided value, case-insensitive.
+	EdgeGithubRepositoryDefaultBranchContainsFold *string `form:"githubRepository.defaultBranch.ihas,omitempty" json:"edge_github_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "default_branch" to start with the provided value.
 	EdgeGithubRepositoryDefaultBranchHasPrefix *string `form:"githubRepository.defaultBranch.prefix,omitempty" json:"edge_github_repository_default_branch_has_prefix,omitempty"`
 	// Filters field "default_branch" to end with the provided value.
 	EdgeGithubRepositoryDefaultBranchHasSuffix *string `form:"githubRepository.defaultBranch.suffix,omitempty" json:"edge_github_repository_default_branch_has_suffix,omitempty"`
-	// Filters field "default_branch" to be equal to the provided value, case-insensitive.
-	EdgeGithubRepositoryDefaultBranchEqualFold *string `form:"githubRepository.defaultBranch.ieq,omitempty" json:"edge_github_repository_default_branch_equal_fold,omitempty"`
-	// Filters field "default_branch" to contain the provided value, case-insensitive.
-	EdgeGithubRepositoryDefaultBranchContainsFold *string `form:"githubRepository.defaultBranch.ihas,omitempty" json:"edge_github_repository_default_branch_contains_fold,omitempty"`
 	// Filters field "is_template" to be equal to the provided value.
 	EdgeGithubRepositoryIsTemplateEQ *bool `form:"githubRepository.isTemplate.eq,omitempty" json:"edge_github_repository_is_template_eq,omitempty"`
 	// Filters field "has_issues" to be equal to the provided value.
@@ -3053,20 +2788,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.LabelNameNotIn != nil {
 		predicates = append(predicates, label.NameNotIn(l.LabelNameNotIn...))
 	}
+	if l.LabelNameEqualFold != nil {
+		predicates = append(predicates, label.NameEqualFold(*l.LabelNameEqualFold))
+	}
 	if l.LabelNameContains != nil {
 		predicates = append(predicates, label.NameContains(*l.LabelNameContains))
+	}
+	if l.LabelNameContainsFold != nil {
+		predicates = append(predicates, label.NameContainsFold(*l.LabelNameContainsFold))
 	}
 	if l.LabelNameHasPrefix != nil {
 		predicates = append(predicates, label.NameHasPrefix(*l.LabelNameHasPrefix))
 	}
 	if l.LabelNameHasSuffix != nil {
 		predicates = append(predicates, label.NameHasSuffix(*l.LabelNameHasSuffix))
-	}
-	if l.LabelNameEqualFold != nil {
-		predicates = append(predicates, label.NameEqualFold(*l.LabelNameEqualFold))
-	}
-	if l.LabelNameContainsFold != nil {
-		predicates = append(predicates, label.NameContainsFold(*l.LabelNameContainsFold))
 	}
 	if l.EdgeHasPost != nil {
 		if *l.EdgeHasPost {
@@ -3120,20 +2855,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgePostTitleNotIn != nil {
 		predicates = append(predicates, label.HasPostsWith(post.TitleNotIn(l.EdgePostTitleNotIn...)))
 	}
+	if l.EdgePostTitleEqualFold != nil {
+		predicates = append(predicates, label.HasPostsWith(post.TitleEqualFold(*l.EdgePostTitleEqualFold)))
+	}
 	if l.EdgePostTitleContains != nil {
 		predicates = append(predicates, label.HasPostsWith(post.TitleContains(*l.EdgePostTitleContains)))
+	}
+	if l.EdgePostTitleContainsFold != nil {
+		predicates = append(predicates, label.HasPostsWith(post.TitleContainsFold(*l.EdgePostTitleContainsFold)))
 	}
 	if l.EdgePostTitleHasPrefix != nil {
 		predicates = append(predicates, label.HasPostsWith(post.TitleHasPrefix(*l.EdgePostTitleHasPrefix)))
 	}
 	if l.EdgePostTitleHasSuffix != nil {
 		predicates = append(predicates, label.HasPostsWith(post.TitleHasSuffix(*l.EdgePostTitleHasSuffix)))
-	}
-	if l.EdgePostTitleEqualFold != nil {
-		predicates = append(predicates, label.HasPostsWith(post.TitleEqualFold(*l.EdgePostTitleEqualFold)))
-	}
-	if l.EdgePostTitleContainsFold != nil {
-		predicates = append(predicates, label.HasPostsWith(post.TitleContainsFold(*l.EdgePostTitleContainsFold)))
 	}
 	if l.EdgePostContentContains != nil {
 		predicates = append(predicates, label.HasPostsWith(post.ContentContains(*l.EdgePostContentContains)))
@@ -3199,20 +2934,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgeGithubRepositoryNameNotIn != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameNotIn(l.EdgeGithubRepositoryNameNotIn...)))
 	}
+	if l.EdgeGithubRepositoryNameEqualFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameEqualFold(*l.EdgeGithubRepositoryNameEqualFold)))
+	}
 	if l.EdgeGithubRepositoryNameContains != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameContains(*l.EdgeGithubRepositoryNameContains)))
+	}
+	if l.EdgeGithubRepositoryNameContainsFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameContainsFold(*l.EdgeGithubRepositoryNameContainsFold)))
 	}
 	if l.EdgeGithubRepositoryNameHasPrefix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameHasPrefix(*l.EdgeGithubRepositoryNameHasPrefix)))
 	}
 	if l.EdgeGithubRepositoryNameHasSuffix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameHasSuffix(*l.EdgeGithubRepositoryNameHasSuffix)))
-	}
-	if l.EdgeGithubRepositoryNameEqualFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameEqualFold(*l.EdgeGithubRepositoryNameEqualFold)))
-	}
-	if l.EdgeGithubRepositoryNameContainsFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.NameContainsFold(*l.EdgeGithubRepositoryNameContainsFold)))
 	}
 	if l.EdgeGithubRepositoryFullNameEQ != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameEQ(*l.EdgeGithubRepositoryFullNameEQ)))
@@ -3226,20 +2961,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgeGithubRepositoryFullNameNotIn != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameNotIn(l.EdgeGithubRepositoryFullNameNotIn...)))
 	}
+	if l.EdgeGithubRepositoryFullNameEqualFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameEqualFold(*l.EdgeGithubRepositoryFullNameEqualFold)))
+	}
 	if l.EdgeGithubRepositoryFullNameContains != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameContains(*l.EdgeGithubRepositoryFullNameContains)))
+	}
+	if l.EdgeGithubRepositoryFullNameContainsFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameContainsFold(*l.EdgeGithubRepositoryFullNameContainsFold)))
 	}
 	if l.EdgeGithubRepositoryFullNameHasPrefix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameHasPrefix(*l.EdgeGithubRepositoryFullNameHasPrefix)))
 	}
 	if l.EdgeGithubRepositoryFullNameHasSuffix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameHasSuffix(*l.EdgeGithubRepositoryFullNameHasSuffix)))
-	}
-	if l.EdgeGithubRepositoryFullNameEqualFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameEqualFold(*l.EdgeGithubRepositoryFullNameEqualFold)))
-	}
-	if l.EdgeGithubRepositoryFullNameContainsFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.FullNameContainsFold(*l.EdgeGithubRepositoryFullNameContainsFold)))
 	}
 	if l.EdgeGithubRepositoryOwnerLoginEQ != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginEQ(*l.EdgeGithubRepositoryOwnerLoginEQ)))
@@ -3253,8 +2988,14 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgeGithubRepositoryOwnerLoginNotIn != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginNotIn(l.EdgeGithubRepositoryOwnerLoginNotIn...)))
 	}
+	if l.EdgeGithubRepositoryOwnerLoginEqualFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginEqualFold(*l.EdgeGithubRepositoryOwnerLoginEqualFold)))
+	}
 	if l.EdgeGithubRepositoryOwnerLoginContains != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginContains(*l.EdgeGithubRepositoryOwnerLoginContains)))
+	}
+	if l.EdgeGithubRepositoryOwnerLoginContainsFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginContainsFold(*l.EdgeGithubRepositoryOwnerLoginContainsFold)))
 	}
 	if l.EdgeGithubRepositoryOwnerLoginHasPrefix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginHasPrefix(*l.EdgeGithubRepositoryOwnerLoginHasPrefix)))
@@ -3262,17 +3003,8 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgeGithubRepositoryOwnerLoginHasSuffix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginHasSuffix(*l.EdgeGithubRepositoryOwnerLoginHasSuffix)))
 	}
-	if l.EdgeGithubRepositoryOwnerLoginEqualFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginEqualFold(*l.EdgeGithubRepositoryOwnerLoginEqualFold)))
-	}
-	if l.EdgeGithubRepositoryOwnerLoginContainsFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.OwnerLoginContainsFold(*l.EdgeGithubRepositoryOwnerLoginContainsFold)))
-	}
 	if l.EdgeGithubRepositoryPublicEQ != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.PublicEQ(*l.EdgeGithubRepositoryPublicEQ)))
-	}
-	if l.EdgeGithubRepositoryDescriptionContains != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DescriptionContains(*l.EdgeGithubRepositoryDescriptionContains)))
 	}
 	if l.EdgeGithubRepositoryDescriptionIsNil != nil {
 		if *l.EdgeGithubRepositoryDescriptionIsNil {
@@ -3280,6 +3012,9 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 		} else {
 			predicates = append(predicates, label.Not(label.HasGithubRepositoriesWith(githubrepository.DescriptionIsNil())))
 		}
+	}
+	if l.EdgeGithubRepositoryDescriptionContains != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DescriptionContains(*l.EdgeGithubRepositoryDescriptionContains)))
 	}
 	if l.EdgeGithubRepositoryDescriptionContainsFold != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DescriptionContainsFold(*l.EdgeGithubRepositoryDescriptionContainsFold)))
@@ -3305,20 +3040,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	if l.EdgeGithubRepositoryDefaultBranchNotIn != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchNotIn(l.EdgeGithubRepositoryDefaultBranchNotIn...)))
 	}
+	if l.EdgeGithubRepositoryDefaultBranchEqualFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchEqualFold(*l.EdgeGithubRepositoryDefaultBranchEqualFold)))
+	}
 	if l.EdgeGithubRepositoryDefaultBranchContains != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchContains(*l.EdgeGithubRepositoryDefaultBranchContains)))
+	}
+	if l.EdgeGithubRepositoryDefaultBranchContainsFold != nil {
+		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchContainsFold(*l.EdgeGithubRepositoryDefaultBranchContainsFold)))
 	}
 	if l.EdgeGithubRepositoryDefaultBranchHasPrefix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchHasPrefix(*l.EdgeGithubRepositoryDefaultBranchHasPrefix)))
 	}
 	if l.EdgeGithubRepositoryDefaultBranchHasSuffix != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchHasSuffix(*l.EdgeGithubRepositoryDefaultBranchHasSuffix)))
-	}
-	if l.EdgeGithubRepositoryDefaultBranchEqualFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchEqualFold(*l.EdgeGithubRepositoryDefaultBranchEqualFold)))
-	}
-	if l.EdgeGithubRepositoryDefaultBranchContainsFold != nil {
-		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.DefaultBranchContainsFold(*l.EdgeGithubRepositoryDefaultBranchContainsFold)))
 	}
 	if l.EdgeGithubRepositoryIsTemplateEQ != nil {
 		predicates = append(predicates, label.HasGithubRepositoriesWith(githubrepository.IsTemplateEQ(*l.EdgeGithubRepositoryIsTemplateEQ)))
@@ -3366,55 +3101,20 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 			predicates = append(predicates, label.Not(label.HasGithubRepositoriesWith(githubrepository.UpdatedAtIsNil())))
 		}
 	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListLabelParams) ApplySorting(query *ent.LabelQuery) (*ent.LabelQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListLabelParams) ApplySorting(query *ent.LabelQuery) error {
+	if err := l.Sorted.Validate(LabelSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(LabelSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
-
-		switch parts[0] {
-		case label.EdgePosts:
-			switch {
-			case isCount:
-				return query.Order(label.ByPostsCount(dir)), nil
-			case isSum:
-				return query.Order(label.ByPosts(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(label.ByPosts(sql.OrderByField(parts[1], dir))), nil
-			}
-		case label.EdgeGithubRepositories:
-			switch {
-			case isCount:
-				return query.Order(label.ByGithubRepositoriesCount(dir)), nil
-			case isSum:
-				return query.Order(label.ByGithubRepositories(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(label.ByGithubRepositories(sql.OrderByField(parts[1], dir))), nil
-			}
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingLabel(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -3424,8 +3124,8 @@ func (l *ListLabelParams) Exec(ctx context.Context, query *ent.LabelQuery) (resu
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadLabel(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadLabel(query))
 	if err != nil {
 		return nil, err
 	}
@@ -3468,16 +3168,16 @@ type ListPostParams struct {
 	PostTitleIn []string `form:"title.in,omitempty" json:"post_title_in,omitempty"`
 	// Filters field "title" to be not within the provided values.
 	PostTitleNotIn []string `form:"title.notIn,omitempty" json:"post_title_not_in,omitempty"`
+	// Filters field "title" to be equal to the provided value, case-insensitive.
+	PostTitleEqualFold *string `form:"title.ieq,omitempty" json:"post_title_equal_fold,omitempty"`
 	// Filters field "title" to contain the provided value.
 	PostTitleContains *string `form:"title.has,omitempty" json:"post_title_contains,omitempty"`
+	// Filters field "title" to contain the provided value, case-insensitive.
+	PostTitleContainsFold *string `form:"title.ihas,omitempty" json:"post_title_contains_fold,omitempty"`
 	// Filters field "title" to start with the provided value.
 	PostTitleHasPrefix *string `form:"title.prefix,omitempty" json:"post_title_has_prefix,omitempty"`
 	// Filters field "title" to end with the provided value.
 	PostTitleHasSuffix *string `form:"title.suffix,omitempty" json:"post_title_has_suffix,omitempty"`
-	// Filters field "title" to be equal to the provided value, case-insensitive.
-	PostTitleEqualFold *string `form:"title.ieq,omitempty" json:"post_title_equal_fold,omitempty"`
-	// Filters field "title" to contain the provided value, case-insensitive.
-	PostTitleContainsFold *string `form:"title.ihas,omitempty" json:"post_title_contains_fold,omitempty"`
 	// Filters field "content" to contain the provided value.
 	PostContentContains *string `form:"content.has,omitempty" json:"post_content_contains,omitempty"`
 	// Filters field "content" to contain the provided value, case-insensitive.
@@ -3538,76 +3238,76 @@ type ListPostParams struct {
 	EdgeAuthorLoginIn []string `form:"author.login.in,omitempty" json:"edge_author_login_in,omitempty"`
 	// Filters field "login" to be not within the provided values.
 	EdgeAuthorLoginNotIn []string `form:"author.login.notIn,omitempty" json:"edge_author_login_not_in,omitempty"`
+	// Filters field "login" to be equal to the provided value, case-insensitive.
+	EdgeAuthorLoginEqualFold *string `form:"author.login.ieq,omitempty" json:"edge_author_login_equal_fold,omitempty"`
 	// Filters field "login" to contain the provided value.
 	EdgeAuthorLoginContains *string `form:"author.login.has,omitempty" json:"edge_author_login_contains,omitempty"`
+	// Filters field "login" to contain the provided value, case-insensitive.
+	EdgeAuthorLoginContainsFold *string `form:"author.login.ihas,omitempty" json:"edge_author_login_contains_fold,omitempty"`
 	// Filters field "login" to start with the provided value.
 	EdgeAuthorLoginHasPrefix *string `form:"author.login.prefix,omitempty" json:"edge_author_login_has_prefix,omitempty"`
 	// Filters field "login" to end with the provided value.
 	EdgeAuthorLoginHasSuffix *string `form:"author.login.suffix,omitempty" json:"edge_author_login_has_suffix,omitempty"`
-	// Filters field "login" to be equal to the provided value, case-insensitive.
-	EdgeAuthorLoginEqualFold *string `form:"author.login.ieq,omitempty" json:"edge_author_login_equal_fold,omitempty"`
-	// Filters field "login" to contain the provided value, case-insensitive.
-	EdgeAuthorLoginContainsFold *string `form:"author.login.ihas,omitempty" json:"edge_author_login_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
 	EdgeAuthorNameEQ *string `form:"author.name.eq,omitempty" json:"edge_author_name_eq,omitempty"`
 	// Filters field "name" to be not equal to the provided value.
 	EdgeAuthorNameNEQ *string `form:"author.name.neq,omitempty" json:"edge_author_name_neq,omitempty"`
+	// Filters field "name" to be null/nil.
+	EdgeAuthorNameIsNil *bool `form:"author.name.null,omitempty" json:"edge_author_name_is_nil,omitempty"`
 	// Filters field "name" to be within the provided values.
 	EdgeAuthorNameIn []string `form:"author.name.in,omitempty" json:"edge_author_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeAuthorNameNotIn []string `form:"author.name.notIn,omitempty" json:"edge_author_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeAuthorNameEqualFold *string `form:"author.name.ieq,omitempty" json:"edge_author_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeAuthorNameContains *string `form:"author.name.has,omitempty" json:"edge_author_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeAuthorNameContainsFold *string `form:"author.name.ihas,omitempty" json:"edge_author_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeAuthorNameHasPrefix *string `form:"author.name.prefix,omitempty" json:"edge_author_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeAuthorNameHasSuffix *string `form:"author.name.suffix,omitempty" json:"edge_author_name_has_suffix,omitempty"`
-	// Filters field "name" to be null/nil.
-	EdgeAuthorNameIsNil *bool `form:"author.name.null,omitempty" json:"edge_author_name_is_nil,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeAuthorNameEqualFold *string `form:"author.name.ieq,omitempty" json:"edge_author_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeAuthorNameContainsFold *string `form:"author.name.ihas,omitempty" json:"edge_author_name_contains_fold,omitempty"`
 	// Filters field "email" to be equal to the provided value.
 	EdgeAuthorEmailEQ *string `form:"author.email.eq,omitempty" json:"edge_author_email_eq,omitempty"`
 	// Filters field "email" to be not equal to the provided value.
 	EdgeAuthorEmailNEQ *string `form:"author.email.neq,omitempty" json:"edge_author_email_neq,omitempty"`
+	// Filters field "email" to be null/nil.
+	EdgeAuthorEmailIsNil *bool `form:"author.email.null,omitempty" json:"edge_author_email_is_nil,omitempty"`
 	// Filters field "email" to be within the provided values.
 	EdgeAuthorEmailIn []string `form:"author.email.in,omitempty" json:"edge_author_email_in,omitempty"`
 	// Filters field "email" to be not within the provided values.
 	EdgeAuthorEmailNotIn []string `form:"author.email.notIn,omitempty" json:"edge_author_email_not_in,omitempty"`
+	// Filters field "email" to be equal to the provided value, case-insensitive.
+	EdgeAuthorEmailEqualFold *string `form:"author.email.ieq,omitempty" json:"edge_author_email_equal_fold,omitempty"`
 	// Filters field "email" to contain the provided value.
 	EdgeAuthorEmailContains *string `form:"author.email.has,omitempty" json:"edge_author_email_contains,omitempty"`
+	// Filters field "email" to contain the provided value, case-insensitive.
+	EdgeAuthorEmailContainsFold *string `form:"author.email.ihas,omitempty" json:"edge_author_email_contains_fold,omitempty"`
 	// Filters field "email" to start with the provided value.
 	EdgeAuthorEmailHasPrefix *string `form:"author.email.prefix,omitempty" json:"edge_author_email_has_prefix,omitempty"`
 	// Filters field "email" to end with the provided value.
 	EdgeAuthorEmailHasSuffix *string `form:"author.email.suffix,omitempty" json:"edge_author_email_has_suffix,omitempty"`
-	// Filters field "email" to be null/nil.
-	EdgeAuthorEmailIsNil *bool `form:"author.email.null,omitempty" json:"edge_author_email_is_nil,omitempty"`
-	// Filters field "email" to be equal to the provided value, case-insensitive.
-	EdgeAuthorEmailEqualFold *string `form:"author.email.ieq,omitempty" json:"edge_author_email_equal_fold,omitempty"`
-	// Filters field "email" to contain the provided value, case-insensitive.
-	EdgeAuthorEmailContainsFold *string `form:"author.email.ihas,omitempty" json:"edge_author_email_contains_fold,omitempty"`
 	// Filters field "location" to be equal to the provided value.
 	EdgeAuthorLocationEQ *string `form:"author.location.eq,omitempty" json:"edge_author_location_eq,omitempty"`
 	// Filters field "location" to be not equal to the provided value.
 	EdgeAuthorLocationNEQ *string `form:"author.location.neq,omitempty" json:"edge_author_location_neq,omitempty"`
+	// Filters field "location" to be null/nil.
+	EdgeAuthorLocationIsNil *bool `form:"author.location.null,omitempty" json:"edge_author_location_is_nil,omitempty"`
 	// Filters field "location" to be within the provided values.
 	EdgeAuthorLocationIn []string `form:"author.location.in,omitempty" json:"edge_author_location_in,omitempty"`
 	// Filters field "location" to be not within the provided values.
 	EdgeAuthorLocationNotIn []string `form:"author.location.notIn,omitempty" json:"edge_author_location_not_in,omitempty"`
+	// Filters field "location" to be equal to the provided value, case-insensitive.
+	EdgeAuthorLocationEqualFold *string `form:"author.location.ieq,omitempty" json:"edge_author_location_equal_fold,omitempty"`
 	// Filters field "location" to contain the provided value.
 	EdgeAuthorLocationContains *string `form:"author.location.has,omitempty" json:"edge_author_location_contains,omitempty"`
+	// Filters field "location" to contain the provided value, case-insensitive.
+	EdgeAuthorLocationContainsFold *string `form:"author.location.ihas,omitempty" json:"edge_author_location_contains_fold,omitempty"`
 	// Filters field "location" to start with the provided value.
 	EdgeAuthorLocationHasPrefix *string `form:"author.location.prefix,omitempty" json:"edge_author_location_has_prefix,omitempty"`
 	// Filters field "location" to end with the provided value.
 	EdgeAuthorLocationHasSuffix *string `form:"author.location.suffix,omitempty" json:"edge_author_location_has_suffix,omitempty"`
-	// Filters field "location" to be null/nil.
-	EdgeAuthorLocationIsNil *bool `form:"author.location.null,omitempty" json:"edge_author_location_is_nil,omitempty"`
-	// Filters field "location" to be equal to the provided value, case-insensitive.
-	EdgeAuthorLocationEqualFold *string `form:"author.location.ieq,omitempty" json:"edge_author_location_equal_fold,omitempty"`
-	// Filters field "location" to contain the provided value, case-insensitive.
-	EdgeAuthorLocationContainsFold *string `form:"author.location.ihas,omitempty" json:"edge_author_location_contains_fold,omitempty"`
 	// If true, only return entities that have a label edge.
 	EdgeHasLabel *bool `form:"has.label,omitempty" json:"edge_has_label,omitempty"`
 	// Filters field "create_time" to be equal to the provided value.
@@ -3634,16 +3334,16 @@ type ListPostParams struct {
 	EdgeLabelNameIn []string `form:"label.name.in,omitempty" json:"edge_label_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	EdgeLabelNameNotIn []string `form:"label.name.notIn,omitempty" json:"edge_label_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	EdgeLabelNameEqualFold *string `form:"label.name.ieq,omitempty" json:"edge_label_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	EdgeLabelNameContains *string `form:"label.name.has,omitempty" json:"edge_label_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	EdgeLabelNameContainsFold *string `form:"label.name.ihas,omitempty" json:"edge_label_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	EdgeLabelNameHasPrefix *string `form:"label.name.prefix,omitempty" json:"edge_label_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeLabelNameHasSuffix *string `form:"label.name.suffix,omitempty" json:"edge_label_name_has_suffix,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	EdgeLabelNameEqualFold *string `form:"label.name.ieq,omitempty" json:"edge_label_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	EdgeLabelNameContainsFold *string `form:"label.name.ihas,omitempty" json:"edge_label_name_contains_fold,omitempty"`
 }
 
 // FilterPredicates returns the predicates for filter-related parameters in Post.
@@ -3695,20 +3395,20 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	if l.PostTitleNotIn != nil {
 		predicates = append(predicates, post.TitleNotIn(l.PostTitleNotIn...))
 	}
+	if l.PostTitleEqualFold != nil {
+		predicates = append(predicates, post.TitleEqualFold(*l.PostTitleEqualFold))
+	}
 	if l.PostTitleContains != nil {
 		predicates = append(predicates, post.TitleContains(*l.PostTitleContains))
+	}
+	if l.PostTitleContainsFold != nil {
+		predicates = append(predicates, post.TitleContainsFold(*l.PostTitleContainsFold))
 	}
 	if l.PostTitleHasPrefix != nil {
 		predicates = append(predicates, post.TitleHasPrefix(*l.PostTitleHasPrefix))
 	}
 	if l.PostTitleHasSuffix != nil {
 		predicates = append(predicates, post.TitleHasSuffix(*l.PostTitleHasSuffix))
-	}
-	if l.PostTitleEqualFold != nil {
-		predicates = append(predicates, post.TitleEqualFold(*l.PostTitleEqualFold))
-	}
-	if l.PostTitleContainsFold != nil {
-		predicates = append(predicates, post.TitleContainsFold(*l.PostTitleContainsFold))
 	}
 	if l.PostContentContains != nil {
 		predicates = append(predicates, post.ContentContains(*l.PostContentContains))
@@ -3804,8 +3504,14 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	if l.EdgeAuthorLoginNotIn != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LoginNotIn(l.EdgeAuthorLoginNotIn...)))
 	}
+	if l.EdgeAuthorLoginEqualFold != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LoginEqualFold(*l.EdgeAuthorLoginEqualFold)))
+	}
 	if l.EdgeAuthorLoginContains != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LoginContains(*l.EdgeAuthorLoginContains)))
+	}
+	if l.EdgeAuthorLoginContainsFold != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LoginContainsFold(*l.EdgeAuthorLoginContainsFold)))
 	}
 	if l.EdgeAuthorLoginHasPrefix != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LoginHasPrefix(*l.EdgeAuthorLoginHasPrefix)))
@@ -3813,32 +3519,11 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	if l.EdgeAuthorLoginHasSuffix != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LoginHasSuffix(*l.EdgeAuthorLoginHasSuffix)))
 	}
-	if l.EdgeAuthorLoginEqualFold != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LoginEqualFold(*l.EdgeAuthorLoginEqualFold)))
-	}
-	if l.EdgeAuthorLoginContainsFold != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LoginContainsFold(*l.EdgeAuthorLoginContainsFold)))
-	}
 	if l.EdgeAuthorNameEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.NameEQ(*l.EdgeAuthorNameEQ)))
 	}
 	if l.EdgeAuthorNameNEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.NameNEQ(*l.EdgeAuthorNameNEQ)))
-	}
-	if l.EdgeAuthorNameIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.NameIn(l.EdgeAuthorNameIn...)))
-	}
-	if l.EdgeAuthorNameNotIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.NameNotIn(l.EdgeAuthorNameNotIn...)))
-	}
-	if l.EdgeAuthorNameContains != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.NameContains(*l.EdgeAuthorNameContains)))
-	}
-	if l.EdgeAuthorNameHasPrefix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.NameHasPrefix(*l.EdgeAuthorNameHasPrefix)))
-	}
-	if l.EdgeAuthorNameHasSuffix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.NameHasSuffix(*l.EdgeAuthorNameHasSuffix)))
 	}
 	if l.EdgeAuthorNameIsNil != nil {
 		if *l.EdgeAuthorNameIsNil {
@@ -3847,32 +3532,32 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 			predicates = append(predicates, post.Not(post.HasAuthorWith(user.NameIsNil())))
 		}
 	}
+	if l.EdgeAuthorNameIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.NameIn(l.EdgeAuthorNameIn...)))
+	}
+	if l.EdgeAuthorNameNotIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.NameNotIn(l.EdgeAuthorNameNotIn...)))
+	}
 	if l.EdgeAuthorNameEqualFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.NameEqualFold(*l.EdgeAuthorNameEqualFold)))
 	}
+	if l.EdgeAuthorNameContains != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.NameContains(*l.EdgeAuthorNameContains)))
+	}
 	if l.EdgeAuthorNameContainsFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.NameContainsFold(*l.EdgeAuthorNameContainsFold)))
+	}
+	if l.EdgeAuthorNameHasPrefix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.NameHasPrefix(*l.EdgeAuthorNameHasPrefix)))
+	}
+	if l.EdgeAuthorNameHasSuffix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.NameHasSuffix(*l.EdgeAuthorNameHasSuffix)))
 	}
 	if l.EdgeAuthorEmailEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.EmailEQ(*l.EdgeAuthorEmailEQ)))
 	}
 	if l.EdgeAuthorEmailNEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.EmailNEQ(*l.EdgeAuthorEmailNEQ)))
-	}
-	if l.EdgeAuthorEmailIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.EmailIn(l.EdgeAuthorEmailIn...)))
-	}
-	if l.EdgeAuthorEmailNotIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.EmailNotIn(l.EdgeAuthorEmailNotIn...)))
-	}
-	if l.EdgeAuthorEmailContains != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.EmailContains(*l.EdgeAuthorEmailContains)))
-	}
-	if l.EdgeAuthorEmailHasPrefix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.EmailHasPrefix(*l.EdgeAuthorEmailHasPrefix)))
-	}
-	if l.EdgeAuthorEmailHasSuffix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.EmailHasSuffix(*l.EdgeAuthorEmailHasSuffix)))
 	}
 	if l.EdgeAuthorEmailIsNil != nil {
 		if *l.EdgeAuthorEmailIsNil {
@@ -3881,32 +3566,32 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 			predicates = append(predicates, post.Not(post.HasAuthorWith(user.EmailIsNil())))
 		}
 	}
+	if l.EdgeAuthorEmailIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.EmailIn(l.EdgeAuthorEmailIn...)))
+	}
+	if l.EdgeAuthorEmailNotIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.EmailNotIn(l.EdgeAuthorEmailNotIn...)))
+	}
 	if l.EdgeAuthorEmailEqualFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.EmailEqualFold(*l.EdgeAuthorEmailEqualFold)))
 	}
+	if l.EdgeAuthorEmailContains != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.EmailContains(*l.EdgeAuthorEmailContains)))
+	}
 	if l.EdgeAuthorEmailContainsFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.EmailContainsFold(*l.EdgeAuthorEmailContainsFold)))
+	}
+	if l.EdgeAuthorEmailHasPrefix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.EmailHasPrefix(*l.EdgeAuthorEmailHasPrefix)))
+	}
+	if l.EdgeAuthorEmailHasSuffix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.EmailHasSuffix(*l.EdgeAuthorEmailHasSuffix)))
 	}
 	if l.EdgeAuthorLocationEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LocationEQ(*l.EdgeAuthorLocationEQ)))
 	}
 	if l.EdgeAuthorLocationNEQ != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LocationNEQ(*l.EdgeAuthorLocationNEQ)))
-	}
-	if l.EdgeAuthorLocationIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LocationIn(l.EdgeAuthorLocationIn...)))
-	}
-	if l.EdgeAuthorLocationNotIn != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LocationNotIn(l.EdgeAuthorLocationNotIn...)))
-	}
-	if l.EdgeAuthorLocationContains != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LocationContains(*l.EdgeAuthorLocationContains)))
-	}
-	if l.EdgeAuthorLocationHasPrefix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LocationHasPrefix(*l.EdgeAuthorLocationHasPrefix)))
-	}
-	if l.EdgeAuthorLocationHasSuffix != nil {
-		predicates = append(predicates, post.HasAuthorWith(user.LocationHasSuffix(*l.EdgeAuthorLocationHasSuffix)))
 	}
 	if l.EdgeAuthorLocationIsNil != nil {
 		if *l.EdgeAuthorLocationIsNil {
@@ -3915,11 +3600,26 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 			predicates = append(predicates, post.Not(post.HasAuthorWith(user.LocationIsNil())))
 		}
 	}
+	if l.EdgeAuthorLocationIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LocationIn(l.EdgeAuthorLocationIn...)))
+	}
+	if l.EdgeAuthorLocationNotIn != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LocationNotIn(l.EdgeAuthorLocationNotIn...)))
+	}
 	if l.EdgeAuthorLocationEqualFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LocationEqualFold(*l.EdgeAuthorLocationEqualFold)))
 	}
+	if l.EdgeAuthorLocationContains != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LocationContains(*l.EdgeAuthorLocationContains)))
+	}
 	if l.EdgeAuthorLocationContainsFold != nil {
 		predicates = append(predicates, post.HasAuthorWith(user.LocationContainsFold(*l.EdgeAuthorLocationContainsFold)))
+	}
+	if l.EdgeAuthorLocationHasPrefix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LocationHasPrefix(*l.EdgeAuthorLocationHasPrefix)))
+	}
+	if l.EdgeAuthorLocationHasSuffix != nil {
+		predicates = append(predicates, post.HasAuthorWith(user.LocationHasSuffix(*l.EdgeAuthorLocationHasSuffix)))
 	}
 	if l.EdgeHasLabel != nil {
 		if *l.EdgeHasLabel {
@@ -3964,8 +3664,14 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	if l.EdgeLabelNameNotIn != nil {
 		predicates = append(predicates, post.HasLabelsWith(label.NameNotIn(l.EdgeLabelNameNotIn...)))
 	}
+	if l.EdgeLabelNameEqualFold != nil {
+		predicates = append(predicates, post.HasLabelsWith(label.NameEqualFold(*l.EdgeLabelNameEqualFold)))
+	}
 	if l.EdgeLabelNameContains != nil {
 		predicates = append(predicates, post.HasLabelsWith(label.NameContains(*l.EdgeLabelNameContains)))
+	}
+	if l.EdgeLabelNameContainsFold != nil {
+		predicates = append(predicates, post.HasLabelsWith(label.NameContainsFold(*l.EdgeLabelNameContainsFold)))
 	}
 	if l.EdgeLabelNameHasPrefix != nil {
 		predicates = append(predicates, post.HasLabelsWith(label.NameHasPrefix(*l.EdgeLabelNameHasPrefix)))
@@ -3973,54 +3679,20 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	if l.EdgeLabelNameHasSuffix != nil {
 		predicates = append(predicates, post.HasLabelsWith(label.NameHasSuffix(*l.EdgeLabelNameHasSuffix)))
 	}
-	if l.EdgeLabelNameEqualFold != nil {
-		predicates = append(predicates, post.HasLabelsWith(label.NameEqualFold(*l.EdgeLabelNameEqualFold)))
-	}
-	if l.EdgeLabelNameContainsFold != nil {
-		predicates = append(predicates, post.HasLabelsWith(label.NameContainsFold(*l.EdgeLabelNameContainsFold)))
-	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListPostParams) ApplySorting(query *ent.PostQuery) (*ent.PostQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListPostParams) ApplySorting(query *ent.PostQuery) error {
+	if err := l.Sorted.Validate(PostSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(PostSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
-
-		switch parts[0] {
-		case post.EdgeAuthor:
-			return query.Order(post.ByAuthorField(parts[1], dir)), nil
-		case post.EdgeLabels:
-			switch {
-			case isCount:
-				return query.Order(post.ByLabelsCount(dir)), nil
-			case isSum:
-				return query.Order(post.ByLabels(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(post.ByLabels(sql.OrderByField(parts[1], dir))), nil
-			}
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingPost(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -4030,8 +3702,8 @@ func (l *ListPostParams) Exec(ctx context.Context, query *ent.PostQuery) (result
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadPost(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadPost(query))
 	if err != nil {
 		return nil, err
 	}
@@ -4076,76 +3748,76 @@ type ListUserParams struct {
 	UserLoginIn []string `form:"login.in,omitempty" json:"user_login_in,omitempty"`
 	// Filters field "login" to be not within the provided values.
 	UserLoginNotIn []string `form:"login.notIn,omitempty" json:"user_login_not_in,omitempty"`
+	// Filters field "login" to be equal to the provided value, case-insensitive.
+	UserLoginEqualFold *string `form:"login.ieq,omitempty" json:"user_login_equal_fold,omitempty"`
 	// Filters field "login" to contain the provided value.
 	UserLoginContains *string `form:"login.has,omitempty" json:"user_login_contains,omitempty"`
+	// Filters field "login" to contain the provided value, case-insensitive.
+	UserLoginContainsFold *string `form:"login.ihas,omitempty" json:"user_login_contains_fold,omitempty"`
 	// Filters field "login" to start with the provided value.
 	UserLoginHasPrefix *string `form:"login.prefix,omitempty" json:"user_login_has_prefix,omitempty"`
 	// Filters field "login" to end with the provided value.
 	UserLoginHasSuffix *string `form:"login.suffix,omitempty" json:"user_login_has_suffix,omitempty"`
-	// Filters field "login" to be equal to the provided value, case-insensitive.
-	UserLoginEqualFold *string `form:"login.ieq,omitempty" json:"user_login_equal_fold,omitempty"`
-	// Filters field "login" to contain the provided value, case-insensitive.
-	UserLoginContainsFold *string `form:"login.ihas,omitempty" json:"user_login_contains_fold,omitempty"`
 	// Filters field "name" to be equal to the provided value.
 	UserNameEQ *string `form:"name.eq,omitempty" json:"user_name_eq,omitempty"`
 	// Filters field "name" to be not equal to the provided value.
 	UserNameNEQ *string `form:"name.neq,omitempty" json:"user_name_neq,omitempty"`
+	// Filters field "name" to be null/nil.
+	UserNameIsNil *bool `form:"name.null,omitempty" json:"user_name_is_nil,omitempty"`
 	// Filters field "name" to be within the provided values.
 	UserNameIn []string `form:"name.in,omitempty" json:"user_name_in,omitempty"`
 	// Filters field "name" to be not within the provided values.
 	UserNameNotIn []string `form:"name.notIn,omitempty" json:"user_name_not_in,omitempty"`
+	// Filters field "name" to be equal to the provided value, case-insensitive.
+	UserNameEqualFold *string `form:"name.ieq,omitempty" json:"user_name_equal_fold,omitempty"`
 	// Filters field "name" to contain the provided value.
 	UserNameContains *string `form:"name.has,omitempty" json:"user_name_contains,omitempty"`
+	// Filters field "name" to contain the provided value, case-insensitive.
+	UserNameContainsFold *string `form:"name.ihas,omitempty" json:"user_name_contains_fold,omitempty"`
 	// Filters field "name" to start with the provided value.
 	UserNameHasPrefix *string `form:"name.prefix,omitempty" json:"user_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	UserNameHasSuffix *string `form:"name.suffix,omitempty" json:"user_name_has_suffix,omitempty"`
-	// Filters field "name" to be null/nil.
-	UserNameIsNil *bool `form:"name.null,omitempty" json:"user_name_is_nil,omitempty"`
-	// Filters field "name" to be equal to the provided value, case-insensitive.
-	UserNameEqualFold *string `form:"name.ieq,omitempty" json:"user_name_equal_fold,omitempty"`
-	// Filters field "name" to contain the provided value, case-insensitive.
-	UserNameContainsFold *string `form:"name.ihas,omitempty" json:"user_name_contains_fold,omitempty"`
 	// Filters field "email" to be equal to the provided value.
 	UserEmailEQ *string `form:"email.eq,omitempty" json:"user_email_eq,omitempty"`
 	// Filters field "email" to be not equal to the provided value.
 	UserEmailNEQ *string `form:"email.neq,omitempty" json:"user_email_neq,omitempty"`
+	// Filters field "email" to be null/nil.
+	UserEmailIsNil *bool `form:"email.null,omitempty" json:"user_email_is_nil,omitempty"`
 	// Filters field "email" to be within the provided values.
 	UserEmailIn []string `form:"email.in,omitempty" json:"user_email_in,omitempty"`
 	// Filters field "email" to be not within the provided values.
 	UserEmailNotIn []string `form:"email.notIn,omitempty" json:"user_email_not_in,omitempty"`
+	// Filters field "email" to be equal to the provided value, case-insensitive.
+	UserEmailEqualFold *string `form:"email.ieq,omitempty" json:"user_email_equal_fold,omitempty"`
 	// Filters field "email" to contain the provided value.
 	UserEmailContains *string `form:"email.has,omitempty" json:"user_email_contains,omitempty"`
+	// Filters field "email" to contain the provided value, case-insensitive.
+	UserEmailContainsFold *string `form:"email.ihas,omitempty" json:"user_email_contains_fold,omitempty"`
 	// Filters field "email" to start with the provided value.
 	UserEmailHasPrefix *string `form:"email.prefix,omitempty" json:"user_email_has_prefix,omitempty"`
 	// Filters field "email" to end with the provided value.
 	UserEmailHasSuffix *string `form:"email.suffix,omitempty" json:"user_email_has_suffix,omitempty"`
-	// Filters field "email" to be null/nil.
-	UserEmailIsNil *bool `form:"email.null,omitempty" json:"user_email_is_nil,omitempty"`
-	// Filters field "email" to be equal to the provided value, case-insensitive.
-	UserEmailEqualFold *string `form:"email.ieq,omitempty" json:"user_email_equal_fold,omitempty"`
-	// Filters field "email" to contain the provided value, case-insensitive.
-	UserEmailContainsFold *string `form:"email.ihas,omitempty" json:"user_email_contains_fold,omitempty"`
 	// Filters field "location" to be equal to the provided value.
 	UserLocationEQ *string `form:"location.eq,omitempty" json:"user_location_eq,omitempty"`
 	// Filters field "location" to be not equal to the provided value.
 	UserLocationNEQ *string `form:"location.neq,omitempty" json:"user_location_neq,omitempty"`
+	// Filters field "location" to be null/nil.
+	UserLocationIsNil *bool `form:"location.null,omitempty" json:"user_location_is_nil,omitempty"`
 	// Filters field "location" to be within the provided values.
 	UserLocationIn []string `form:"location.in,omitempty" json:"user_location_in,omitempty"`
 	// Filters field "location" to be not within the provided values.
 	UserLocationNotIn []string `form:"location.notIn,omitempty" json:"user_location_not_in,omitempty"`
+	// Filters field "location" to be equal to the provided value, case-insensitive.
+	UserLocationEqualFold *string `form:"location.ieq,omitempty" json:"user_location_equal_fold,omitempty"`
 	// Filters field "location" to contain the provided value.
 	UserLocationContains *string `form:"location.has,omitempty" json:"user_location_contains,omitempty"`
+	// Filters field "location" to contain the provided value, case-insensitive.
+	UserLocationContainsFold *string `form:"location.ihas,omitempty" json:"user_location_contains_fold,omitempty"`
 	// Filters field "location" to start with the provided value.
 	UserLocationHasPrefix *string `form:"location.prefix,omitempty" json:"user_location_has_prefix,omitempty"`
 	// Filters field "location" to end with the provided value.
 	UserLocationHasSuffix *string `form:"location.suffix,omitempty" json:"user_location_has_suffix,omitempty"`
-	// Filters field "location" to be null/nil.
-	UserLocationIsNil *bool `form:"location.null,omitempty" json:"user_location_is_nil,omitempty"`
-	// Filters field "location" to be equal to the provided value, case-insensitive.
-	UserLocationEqualFold *string `form:"location.ieq,omitempty" json:"user_location_equal_fold,omitempty"`
-	// Filters field "location" to contain the provided value, case-insensitive.
-	UserLocationContainsFold *string `form:"location.ihas,omitempty" json:"user_location_contains_fold,omitempty"`
 }
 
 // FilterPredicates returns the predicates for filter-related parameters in User.
@@ -4200,8 +3872,14 @@ func (l *ListUserParams) FilterPredicates() (predicate.User, error) {
 	if l.UserLoginNotIn != nil {
 		predicates = append(predicates, user.LoginNotIn(l.UserLoginNotIn...))
 	}
+	if l.UserLoginEqualFold != nil {
+		predicates = append(predicates, user.LoginEqualFold(*l.UserLoginEqualFold))
+	}
 	if l.UserLoginContains != nil {
 		predicates = append(predicates, user.LoginContains(*l.UserLoginContains))
+	}
+	if l.UserLoginContainsFold != nil {
+		predicates = append(predicates, user.LoginContainsFold(*l.UserLoginContainsFold))
 	}
 	if l.UserLoginHasPrefix != nil {
 		predicates = append(predicates, user.LoginHasPrefix(*l.UserLoginHasPrefix))
@@ -4209,32 +3887,11 @@ func (l *ListUserParams) FilterPredicates() (predicate.User, error) {
 	if l.UserLoginHasSuffix != nil {
 		predicates = append(predicates, user.LoginHasSuffix(*l.UserLoginHasSuffix))
 	}
-	if l.UserLoginEqualFold != nil {
-		predicates = append(predicates, user.LoginEqualFold(*l.UserLoginEqualFold))
-	}
-	if l.UserLoginContainsFold != nil {
-		predicates = append(predicates, user.LoginContainsFold(*l.UserLoginContainsFold))
-	}
 	if l.UserNameEQ != nil {
 		predicates = append(predicates, user.NameEQ(*l.UserNameEQ))
 	}
 	if l.UserNameNEQ != nil {
 		predicates = append(predicates, user.NameNEQ(*l.UserNameNEQ))
-	}
-	if l.UserNameIn != nil {
-		predicates = append(predicates, user.NameIn(l.UserNameIn...))
-	}
-	if l.UserNameNotIn != nil {
-		predicates = append(predicates, user.NameNotIn(l.UserNameNotIn...))
-	}
-	if l.UserNameContains != nil {
-		predicates = append(predicates, user.NameContains(*l.UserNameContains))
-	}
-	if l.UserNameHasPrefix != nil {
-		predicates = append(predicates, user.NameHasPrefix(*l.UserNameHasPrefix))
-	}
-	if l.UserNameHasSuffix != nil {
-		predicates = append(predicates, user.NameHasSuffix(*l.UserNameHasSuffix))
 	}
 	if l.UserNameIsNil != nil {
 		if *l.UserNameIsNil {
@@ -4243,32 +3900,32 @@ func (l *ListUserParams) FilterPredicates() (predicate.User, error) {
 			predicates = append(predicates, user.Not(user.NameIsNil()))
 		}
 	}
+	if l.UserNameIn != nil {
+		predicates = append(predicates, user.NameIn(l.UserNameIn...))
+	}
+	if l.UserNameNotIn != nil {
+		predicates = append(predicates, user.NameNotIn(l.UserNameNotIn...))
+	}
 	if l.UserNameEqualFold != nil {
 		predicates = append(predicates, user.NameEqualFold(*l.UserNameEqualFold))
 	}
+	if l.UserNameContains != nil {
+		predicates = append(predicates, user.NameContains(*l.UserNameContains))
+	}
 	if l.UserNameContainsFold != nil {
 		predicates = append(predicates, user.NameContainsFold(*l.UserNameContainsFold))
+	}
+	if l.UserNameHasPrefix != nil {
+		predicates = append(predicates, user.NameHasPrefix(*l.UserNameHasPrefix))
+	}
+	if l.UserNameHasSuffix != nil {
+		predicates = append(predicates, user.NameHasSuffix(*l.UserNameHasSuffix))
 	}
 	if l.UserEmailEQ != nil {
 		predicates = append(predicates, user.EmailEQ(*l.UserEmailEQ))
 	}
 	if l.UserEmailNEQ != nil {
 		predicates = append(predicates, user.EmailNEQ(*l.UserEmailNEQ))
-	}
-	if l.UserEmailIn != nil {
-		predicates = append(predicates, user.EmailIn(l.UserEmailIn...))
-	}
-	if l.UserEmailNotIn != nil {
-		predicates = append(predicates, user.EmailNotIn(l.UserEmailNotIn...))
-	}
-	if l.UserEmailContains != nil {
-		predicates = append(predicates, user.EmailContains(*l.UserEmailContains))
-	}
-	if l.UserEmailHasPrefix != nil {
-		predicates = append(predicates, user.EmailHasPrefix(*l.UserEmailHasPrefix))
-	}
-	if l.UserEmailHasSuffix != nil {
-		predicates = append(predicates, user.EmailHasSuffix(*l.UserEmailHasSuffix))
 	}
 	if l.UserEmailIsNil != nil {
 		if *l.UserEmailIsNil {
@@ -4277,32 +3934,32 @@ func (l *ListUserParams) FilterPredicates() (predicate.User, error) {
 			predicates = append(predicates, user.Not(user.EmailIsNil()))
 		}
 	}
+	if l.UserEmailIn != nil {
+		predicates = append(predicates, user.EmailIn(l.UserEmailIn...))
+	}
+	if l.UserEmailNotIn != nil {
+		predicates = append(predicates, user.EmailNotIn(l.UserEmailNotIn...))
+	}
 	if l.UserEmailEqualFold != nil {
 		predicates = append(predicates, user.EmailEqualFold(*l.UserEmailEqualFold))
 	}
+	if l.UserEmailContains != nil {
+		predicates = append(predicates, user.EmailContains(*l.UserEmailContains))
+	}
 	if l.UserEmailContainsFold != nil {
 		predicates = append(predicates, user.EmailContainsFold(*l.UserEmailContainsFold))
+	}
+	if l.UserEmailHasPrefix != nil {
+		predicates = append(predicates, user.EmailHasPrefix(*l.UserEmailHasPrefix))
+	}
+	if l.UserEmailHasSuffix != nil {
+		predicates = append(predicates, user.EmailHasSuffix(*l.UserEmailHasSuffix))
 	}
 	if l.UserLocationEQ != nil {
 		predicates = append(predicates, user.LocationEQ(*l.UserLocationEQ))
 	}
 	if l.UserLocationNEQ != nil {
 		predicates = append(predicates, user.LocationNEQ(*l.UserLocationNEQ))
-	}
-	if l.UserLocationIn != nil {
-		predicates = append(predicates, user.LocationIn(l.UserLocationIn...))
-	}
-	if l.UserLocationNotIn != nil {
-		predicates = append(predicates, user.LocationNotIn(l.UserLocationNotIn...))
-	}
-	if l.UserLocationContains != nil {
-		predicates = append(predicates, user.LocationContains(*l.UserLocationContains))
-	}
-	if l.UserLocationHasPrefix != nil {
-		predicates = append(predicates, user.LocationHasPrefix(*l.UserLocationHasPrefix))
-	}
-	if l.UserLocationHasSuffix != nil {
-		predicates = append(predicates, user.LocationHasSuffix(*l.UserLocationHasSuffix))
 	}
 	if l.UserLocationIsNil != nil {
 		if *l.UserLocationIsNil {
@@ -4311,52 +3968,41 @@ func (l *ListUserParams) FilterPredicates() (predicate.User, error) {
 			predicates = append(predicates, user.Not(user.LocationIsNil()))
 		}
 	}
+	if l.UserLocationIn != nil {
+		predicates = append(predicates, user.LocationIn(l.UserLocationIn...))
+	}
+	if l.UserLocationNotIn != nil {
+		predicates = append(predicates, user.LocationNotIn(l.UserLocationNotIn...))
+	}
 	if l.UserLocationEqualFold != nil {
 		predicates = append(predicates, user.LocationEqualFold(*l.UserLocationEqualFold))
+	}
+	if l.UserLocationContains != nil {
+		predicates = append(predicates, user.LocationContains(*l.UserLocationContains))
 	}
 	if l.UserLocationContainsFold != nil {
 		predicates = append(predicates, user.LocationContainsFold(*l.UserLocationContainsFold))
 	}
+	if l.UserLocationHasPrefix != nil {
+		predicates = append(predicates, user.LocationHasPrefix(*l.UserLocationHasPrefix))
+	}
+	if l.UserLocationHasSuffix != nil {
+		predicates = append(predicates, user.LocationHasSuffix(*l.UserLocationHasSuffix))
+	}
+
 	return l.ApplyFilterOperation(predicates...)
 }
 
 // ApplySorting applies sorting to the query based on the provided sort and order fields.
-func (l *ListUserParams) ApplySorting(query *ent.UserQuery) (*ent.UserQuery, error) {
-	if l.Sort == nil {
-		return query, nil
+func (l *ListUserParams) ApplySorting(query *ent.UserQuery) error {
+	if err := l.Sorted.Validate(UserSortConfig); err != nil {
+		return err
 	}
-	if err := l.Sorted.Validate(UserSortFields); err != nil {
-		return nil, err
+	if l.Field == nil { // No custom sort field provided and no defaults, so don't do anything.
+		return nil
 	}
-	if parts := strings.Split(*l.Sort, "."); len(parts) > 1 {
-		dir := l.Sorted.SortOrderTerm()
-
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
-
-		switch parts[0] {
-		case user.EdgePosts:
-			switch {
-			case isCount:
-				return query.Order(user.ByPostsCount(dir)), nil
-			case isSum:
-				return query.Order(user.ByPosts(sql.OrderBySum(parts[1], dir))), nil
-			default:
-				return query.Order(user.ByPosts(sql.OrderByField(parts[1], dir))), nil
-			}
-		}
-	}
-	if *l.Sort == "random" {
-		return query.Order(sql.OrderByRand()), nil
-	}
-	return query.Order(l.Sorted.SortFieldSelector()), nil
+	applySortingUser(query, *l.Field, *l.Order)
+	return nil
 }
 
 // Exec wraps all logic (filtering, sorting, pagination, eager loading) and
@@ -4366,8 +4012,8 @@ func (l *ListUserParams) Exec(ctx context.Context, query *ent.UserQuery) (result
 	if err != nil {
 		return nil, err
 	}
-	query = query.Where(predicates)
-	query, err = l.ApplySorting(EagerLoadUser(query))
+	query.Where(predicates)
+	err = l.ApplySorting(EagerLoadUser(query))
 	if err != nil {
 		return nil, err
 	}

@@ -237,11 +237,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubAssetSortableFields"
+                            "$ref": "#/components/schemas/GithubAssetSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -265,7 +276,13 @@
                         "$ref": "#/components/parameters/GithubAssetNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubAssetNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubAssetNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetNameHasPrefix"
@@ -274,16 +291,13 @@
                         "$ref": "#/components/parameters/GithubAssetNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubAssetNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubAssetLabelEQ"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetLabelIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelIn"
@@ -292,22 +306,19 @@
                         "$ref": "#/components/parameters/GithubAssetLabelNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubAssetLabelEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubAssetLabelContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetSizeGT"
@@ -370,19 +381,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEQ"
@@ -397,7 +408,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasPrefix"
@@ -406,16 +423,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameIn"
@@ -424,22 +438,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseDraftEQ"
@@ -679,11 +690,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubEventSortableFields"
+                            "$ref": "#/components/schemas/GithubEventSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -710,19 +732,19 @@
                         "$ref": "#/components/parameters/GithubEventEventTypeNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubEventEventTypeEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubEventEventTypeContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubEventEventTypeContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubEventEventTypeHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubEventEventTypeHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubEventEventTypeEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubEventEventTypeContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubEventCreatedAtEQ"
@@ -894,11 +916,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubGistSortableFields"
+                            "$ref": "#/components/schemas/GithubGistSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -940,10 +973,10 @@
                         "$ref": "#/components/parameters/GithubGistUpdatedAtLT"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubGistDescriptionContains"
+                        "$ref": "#/components/parameters/GithubGistDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubGistDescriptionIsNil"
+                        "$ref": "#/components/parameters/GithubGistDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistDescriptionContainsFold"
@@ -961,19 +994,19 @@
                         "$ref": "#/components/parameters/GithubGistNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubGistNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubGistNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubGistNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistTypeEQ"
@@ -988,7 +1021,13 @@
                         "$ref": "#/components/parameters/GithubGistTypeNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubGistTypeEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubGistTypeContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubGistTypeContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistTypeHasPrefix"
@@ -997,16 +1036,13 @@
                         "$ref": "#/components/parameters/GithubGistTypeHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubGistTypeEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistTypeContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubGistLanguageEQ"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistLanguageNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubGistLanguageIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistLanguageIn"
@@ -1015,22 +1051,19 @@
                         "$ref": "#/components/parameters/GithubGistLanguageNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubGistLanguageEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubGistLanguageContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubGistLanguageContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistLanguageHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistLanguageHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistLanguageIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistLanguageEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubGistLanguageContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubGistSizeEQ"
@@ -1187,11 +1220,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubReleaseSortableFields"
+                            "$ref": "#/components/schemas/GithubReleaseSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -1215,19 +1259,19 @@
                         "$ref": "#/components/parameters/GithubReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishEQ"
@@ -1242,7 +1286,13 @@
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishHasPrefix"
@@ -1251,16 +1301,13 @@
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameIn"
@@ -1269,22 +1316,19 @@
                         "$ref": "#/components/parameters/GithubReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseDraftEQ"
@@ -1338,19 +1382,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameEQ"
@@ -1365,19 +1409,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEQ"
@@ -1392,7 +1436,13 @@
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginHasPrefix"
@@ -1401,19 +1451,13 @@
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDescriptionContainsFold"
@@ -1440,19 +1484,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryIsTemplateEQ"
@@ -1518,7 +1562,13 @@
                         "$ref": "#/components/parameters/EdgeAssetNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAssetNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAssetNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetNameHasPrefix"
@@ -1527,16 +1577,13 @@
                         "$ref": "#/components/parameters/EdgeAssetNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAssetNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAssetLabelEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetLabelIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelIn"
@@ -1545,22 +1592,19 @@
                         "$ref": "#/components/parameters/EdgeAssetLabelNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAssetLabelEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAssetLabelContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetSizeGT"
@@ -1786,11 +1830,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubAssetSortableFields"
+                            "$ref": "#/components/schemas/GithubAssetSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -1814,7 +1869,13 @@
                         "$ref": "#/components/parameters/GithubAssetNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubAssetNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubAssetNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetNameHasPrefix"
@@ -1823,16 +1884,13 @@
                         "$ref": "#/components/parameters/GithubAssetNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubAssetNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubAssetLabelEQ"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetLabelIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelIn"
@@ -1841,22 +1899,19 @@
                         "$ref": "#/components/parameters/GithubAssetLabelNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubAssetLabelEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubAssetLabelContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetLabelHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubAssetSizeGT"
@@ -1919,19 +1974,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEQ"
@@ -1946,7 +2001,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasPrefix"
@@ -1955,16 +2016,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameIn"
@@ -1973,22 +2031,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseDraftEQ"
@@ -2167,11 +2222,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubRepositorySortableFields"
+                            "$ref": "#/components/schemas/GithubRepositorySortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -2195,19 +2261,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameEQ"
@@ -2222,19 +2288,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEQ"
@@ -2249,7 +2315,13 @@
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginHasPrefix"
@@ -2258,19 +2330,13 @@
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/GithubRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/GithubRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDescriptionContainsFold"
@@ -2297,19 +2363,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryIsTemplateEQ"
@@ -2393,19 +2459,19 @@
                         "$ref": "#/components/parameters/EdgeLabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeLabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasRelease"
@@ -2429,19 +2495,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEQ"
@@ -2456,7 +2522,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasPrefix"
@@ -2465,16 +2537,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameIn"
@@ -2483,22 +2552,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseDraftEQ"
@@ -2660,11 +2726,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/LabelSortableFields"
+                            "$ref": "#/components/schemas/LabelSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -2706,19 +2783,19 @@
                         "$ref": "#/components/parameters/LabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/LabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/LabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasPost"
@@ -2769,19 +2846,19 @@
                         "$ref": "#/components/parameters/EdgePostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgePostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostContentContains"
@@ -2844,19 +2921,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEQ"
@@ -2871,19 +2948,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEQ"
@@ -2898,7 +2975,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasPrefix"
@@ -2907,19 +2990,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContainsFold"
@@ -2946,19 +3023,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryIsTemplateEQ"
@@ -3085,11 +3162,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubReleaseSortableFields"
+                            "$ref": "#/components/schemas/GithubReleaseSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -3113,19 +3201,19 @@
                         "$ref": "#/components/parameters/GithubReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishEQ"
@@ -3140,7 +3228,13 @@
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishHasPrefix"
@@ -3149,16 +3243,13 @@
                         "$ref": "#/components/parameters/GithubReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameIn"
@@ -3167,22 +3258,19 @@
                         "$ref": "#/components/parameters/GithubReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubReleaseDraftEQ"
@@ -3236,19 +3324,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameEQ"
@@ -3263,19 +3351,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEQ"
@@ -3290,7 +3378,13 @@
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginHasPrefix"
@@ -3299,19 +3393,13 @@
                         "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/EdgeRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDescriptionContainsFold"
@@ -3338,19 +3426,19 @@
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeRepositoryIsTemplateEQ"
@@ -3416,7 +3504,13 @@
                         "$ref": "#/components/parameters/EdgeAssetNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAssetNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAssetNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetNameHasPrefix"
@@ -3425,16 +3519,13 @@
                         "$ref": "#/components/parameters/EdgeAssetNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAssetNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAssetLabelEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetLabelIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelIn"
@@ -3443,22 +3534,19 @@
                         "$ref": "#/components/parameters/EdgeAssetLabelNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAssetLabelEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAssetLabelContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetLabelHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAssetLabelContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAssetSizeGT"
@@ -3637,11 +3725,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/LabelSortableFields"
+                            "$ref": "#/components/schemas/LabelSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -3683,19 +3782,19 @@
                         "$ref": "#/components/parameters/LabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/LabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/LabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasPost"
@@ -3746,19 +3845,19 @@
                         "$ref": "#/components/parameters/EdgePostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgePostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostContentContains"
@@ -3821,19 +3920,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEQ"
@@ -3848,19 +3947,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEQ"
@@ -3875,7 +3974,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasPrefix"
@@ -3884,19 +3989,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContainsFold"
@@ -3923,19 +4022,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryIsTemplateEQ"
@@ -4345,11 +4444,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/GithubRepositorySortableFields"
+                            "$ref": "#/components/schemas/GithubRepositorySortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -4373,19 +4483,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameEQ"
@@ -4400,19 +4510,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEQ"
@@ -4427,7 +4537,13 @@
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginHasPrefix"
@@ -4436,19 +4552,13 @@
                         "$ref": "#/components/parameters/GithubRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/GithubRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/GithubRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/GithubRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/GithubRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDescriptionContainsFold"
@@ -4475,19 +4585,19 @@
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/GithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/GithubRepositoryIsTemplateEQ"
@@ -4571,19 +4681,19 @@
                         "$ref": "#/components/parameters/EdgeLabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeLabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasRelease"
@@ -4607,19 +4717,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseTagNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTagNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTagNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEQ"
@@ -4634,7 +4744,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasPrefix"
@@ -4643,16 +4759,13 @@
                         "$ref": "#/components/parameters/EdgeReleaseTargetCommitishHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseTargetCommitishContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameIn"
@@ -4661,22 +4774,19 @@
                         "$ref": "#/components/parameters/EdgeReleaseNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeReleaseNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeReleaseNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeReleaseDraftEQ"
@@ -4791,11 +4901,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/PostSortableFields"
+                            "$ref": "#/components/schemas/PostSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -4846,19 +4967,19 @@
                         "$ref": "#/components/parameters/PostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/PostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostContentContains"
@@ -4951,7 +5072,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasPrefix"
@@ -4960,16 +5087,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameIn"
@@ -4978,7 +5102,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameHasPrefix"
@@ -4987,19 +5117,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailIn"
@@ -5008,7 +5132,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasPrefix"
@@ -5017,19 +5147,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationIn"
@@ -5038,22 +5162,19 @@
                         "$ref": "#/components/parameters/EdgeAuthorLocationNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasLabel"
@@ -5095,19 +5216,19 @@
                         "$ref": "#/components/parameters/EdgeLabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeLabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     }
                 ],
                 "responses": {
@@ -5248,11 +5369,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/PostSortableFields"
+                            "$ref": "#/components/schemas/PostSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -5303,19 +5435,19 @@
                         "$ref": "#/components/parameters/PostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/PostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostContentContains"
@@ -5408,7 +5540,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasPrefix"
@@ -5417,16 +5555,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameIn"
@@ -5435,7 +5570,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameHasPrefix"
@@ -5444,19 +5585,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailIn"
@@ -5465,7 +5600,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasPrefix"
@@ -5474,19 +5615,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationIn"
@@ -5495,22 +5630,19 @@
                         "$ref": "#/components/parameters/EdgeAuthorLocationNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasLabel"
@@ -5552,19 +5684,19 @@
                         "$ref": "#/components/parameters/EdgeLabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeLabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     }
                 ],
                 "responses": {
@@ -5976,11 +6108,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/LabelSortableFields"
+                            "$ref": "#/components/schemas/LabelSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -6022,19 +6165,19 @@
                         "$ref": "#/components/parameters/LabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/LabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/LabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/LabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/LabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasPost"
@@ -6085,19 +6228,19 @@
                         "$ref": "#/components/parameters/EdgePostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgePostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgePostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostContentContains"
@@ -6160,19 +6303,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEQ"
@@ -6187,19 +6330,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryFullNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEQ"
@@ -6214,7 +6357,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasPrefix"
@@ -6223,19 +6372,13 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryOwnerLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryPublicEQ"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionIsNil"
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContains"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDescriptionContainsFold"
@@ -6262,19 +6405,19 @@
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeGithubRepositoryDefaultBranchContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeGithubRepositoryIsTemplateEQ"
@@ -6568,11 +6711,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/UserSortableFields"
+                            "$ref": "#/components/schemas/UserSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -6626,7 +6780,13 @@
                         "$ref": "#/components/parameters/UserLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/UserLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/UserLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/UserLoginHasPrefix"
@@ -6635,16 +6795,13 @@
                         "$ref": "#/components/parameters/UserLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/UserLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/UserNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/UserNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/UserNameIn"
@@ -6653,7 +6810,13 @@
                         "$ref": "#/components/parameters/UserNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/UserNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/UserNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/UserNameHasPrefix"
@@ -6662,19 +6825,13 @@
                         "$ref": "#/components/parameters/UserNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/UserNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/UserEmailEQ"
                     },
                     {
                         "$ref": "#/components/parameters/UserEmailNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserEmailIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/UserEmailIn"
@@ -6683,7 +6840,13 @@
                         "$ref": "#/components/parameters/UserEmailNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/UserEmailEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/UserEmailContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserEmailContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/UserEmailHasPrefix"
@@ -6692,19 +6855,13 @@
                         "$ref": "#/components/parameters/UserEmailHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/UserEmailIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserEmailEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserEmailContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/UserLocationEQ"
                     },
                     {
                         "$ref": "#/components/parameters/UserLocationNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserLocationIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/UserLocationIn"
@@ -6713,22 +6870,19 @@
                         "$ref": "#/components/parameters/UserLocationNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/UserLocationEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/UserLocationContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/UserLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/UserLocationHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/UserLocationHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserLocationIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserLocationEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/UserLocationContainsFold"
                     }
                 ],
                 "responses": {
@@ -6874,11 +7028,22 @@
                         "in": "query",
                         "description": "Sort entity results by the given field.",
                         "schema": {
-                            "$ref": "#/components/schemas/PostSortableFields"
+                            "$ref": "#/components/schemas/PostSortableFields",
+                            "default": "id"
                         }
                     },
                     {
-                        "$ref": "#/components/parameters/SortOrder"
+                        "name": "order",
+                        "in": "query",
+                        "description": "Order the results in ascending or descending order.",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "asc",
+                                "desc"
+                            ],
+                            "default": "asc"
+                        }
                     },
                     {
                         "$ref": "#/components/parameters/FilterOperation"
@@ -6929,19 +7094,19 @@
                         "$ref": "#/components/parameters/PostTitleNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/PostTitleEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/PostTitleHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/PostTitleContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/PostContentContains"
@@ -7034,7 +7199,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLoginContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasPrefix"
@@ -7043,16 +7214,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorLoginHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLoginContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameIn"
@@ -7061,7 +7229,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorNameHasPrefix"
@@ -7070,19 +7244,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorNameHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorNameIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorNameContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailIn"
@@ -7091,7 +7259,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorEmailContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasPrefix"
@@ -7100,19 +7274,13 @@
                         "$ref": "#/components/parameters/EdgeAuthorEmailHasSuffix"
                     },
                     {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorEmailContainsFold"
-                    },
-                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationEQ"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationIn"
@@ -7121,22 +7289,19 @@
                         "$ref": "#/components/parameters/EdgeAuthorLocationNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeAuthorLocationContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeAuthorLocationHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationIsNil"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeAuthorLocationContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeHasLabel"
@@ -7178,19 +7343,19 @@
                         "$ref": "#/components/parameters/EdgeLabelNameNotIn"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgeLabelNameContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasPrefix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameEqualFold"
-                    },
-                    {
-                        "$ref": "#/components/parameters/EdgeLabelNameContainsFold"
                     }
                 ],
                 "responses": {
@@ -7657,10 +7822,12 @@
                         "format": "date-time"
                     },
                     "uploader": {
-                        "$ref": "#/components/schemas/GithubUser"
+                        "$ref": "#/components/schemas/GithubUser",
+                        "description": "The data of the user that uploaded the asset."
                     }
                 },
                 "required": [
+                    "id",
                     "asset_id",
                     "browser_download_url",
                     "name",
@@ -7754,7 +7921,8 @@
                         "minimum": -9223372036854775808
                     },
                     "actor": {
-                        "$ref": "#/components/schemas/GithubUser"
+                        "$ref": "#/components/schemas/GithubUser",
+                        "description": "The actor data of the event."
                     },
                     "repo_id": {
                         "description": "The ID of the repository.",
@@ -7764,15 +7932,18 @@
                         "minimum": -9223372036854775808
                     },
                     "repo": {
+                        "description": "The repository of the event.",
                         "type": "object",
                         "additionalProperties": true
                     },
                     "payload": {
+                        "description": "The payload of the event.",
                         "type": "object",
                         "additionalProperties": true
                     }
                 },
                 "required": [
+                    "id",
                     "event_id",
                     "event_type",
                     "created_at",
@@ -7860,7 +8031,8 @@
                         "type": "string"
                     },
                     "owner": {
-                        "$ref": "#/components/schemas/GithubUser"
+                        "$ref": "#/components/schemas/GithubUser",
+                        "description": "The owner data of the gist."
                     },
                     "name": {
                         "description": "The name of the file.",
@@ -7891,6 +8063,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "gist_id",
                     "html_url",
                     "public",
@@ -8003,6 +8176,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "release_id",
                     "html_url",
                     "tag_name",
@@ -8028,10 +8202,13 @@
                         "$ref": "#/components/schemas/GithubRepository"
                     },
                     "assets": {
+                        "description": "A list of GithubAsset entities. Limited to 1000 items. If there are more results than the limit, the results are capped and you must use the associated edge endpoint with pagination -- see also the 'EagerLoadLimit' config option.",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/GithubAsset"
-                        }
+                        },
+                        "maxItems": 1000,
+                        "minItems": 0
                     }
                 },
                 "required": [
@@ -8145,7 +8322,8 @@
                         "example": "lrstanley"
                     },
                     "owner": {
-                        "$ref": "#/components/schemas/GithubUser"
+                        "$ref": "#/components/schemas/GithubUser",
+                        "description": "The owner data of the repository."
                     },
                     "public": {
                         "description": "Whether the repository is public or not.",
@@ -8217,6 +8395,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "repo_id",
                     "name",
                     "full_name",
@@ -8237,10 +8416,13 @@
                 "type": "object",
                 "properties": {
                     "labels": {
+                        "description": "A list of Label entities. Limited to 1000 items. If there are more results than the limit, the results are capped and you must use the associated edge endpoint with pagination -- see also the 'EagerLoadLimit' config option.",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Label"
-                        }
+                        },
+                        "maxItems": 1000,
+                        "minItems": 0
                     }
                 }
             },
@@ -8466,6 +8648,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "create_time",
                     "update_time",
                     "name"
@@ -8755,6 +8938,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "create_time",
                     "update_time",
                     "slug",
@@ -8829,10 +9013,13 @@
                         "$ref": "#/components/schemas/User"
                     },
                     "labels": {
+                        "description": "A list of Label entities. Limited to 1000 items. If there are more results than the limit, the results are capped and you must use the associated edge endpoint with pagination -- see also the 'EagerLoadLimit' config option.",
                         "type": "array",
                         "items": {
                             "$ref": "#/components/schemas/Label"
-                        }
+                        },
+                        "maxItems": 1000,
+                        "minItems": 0
                     }
                 },
                 "required": [
@@ -8961,15 +9148,6 @@
                     }
                 }
             },
-            "SortOrder": {
-                "description": "Sort order/direction.",
-                "type": "string",
-                "enum": [
-                    "asc",
-                    "desc"
-                ],
-                "default": "asc"
-            },
             "User": {
                 "description": "A single User entity.",
                 "type": "object",
@@ -9027,6 +9205,7 @@
                     }
                 },
                 "required": [
+                    "id",
                     "create_time",
                     "update_time",
                     "user_id",
@@ -14238,14 +14417,6 @@
                     "maximum": 2000,
                     "minimum": 600,
                     "default": 961
-                }
-            },
-            "SortOrder": {
-                "name": "order",
-                "in": "query",
-                "description": "Order the results in ascending or descending order.",
-                "schema": {
-                    "$ref": "#/components/schemas/SortOrder"
                 }
             },
             "UserCreateTimeEQ": {

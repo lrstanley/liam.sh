@@ -282,10 +282,10 @@ type CreateGithubRepositoryParams struct {
 	// The date the repository was created.
 	CreatedAt time.Time `json:"created_at"`
 	// The date the repository was last updated.
-	UpdatedAt *time.Time       `json:"updated_at,omitempty"`
-	License   **github.License `json:"license,omitempty"`
-	Labels    []int            `json:"labels,omitempty"`
-	Releases  []int            `json:"releases,omitempty"`
+	UpdatedAt *time.Time      `json:"updated_at,omitempty"`
+	License   *github.License `json:"license,omitempty"`
+	Labels    []int           `json:"labels,omitempty"`
+	Releases  []int           `json:"releases,omitempty"`
 }
 
 func (c *CreateGithubRepositoryParams) ApplyInputs(builder *ent.GithubRepositoryCreate) *ent.GithubRepositoryCreate {
@@ -328,7 +328,7 @@ func (c *CreateGithubRepositoryParams) ApplyInputs(builder *ent.GithubRepository
 		builder.SetUpdatedAt(*c.UpdatedAt)
 	}
 	if c.License != nil {
-		builder.SetLicense(*c.License)
+		builder.SetLicense(c.License)
 	}
 	builder.AddLabelIDs(c.Labels...)
 	builder.AddReleaseIDs(c.Releases...)
