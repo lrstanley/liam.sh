@@ -17,6 +17,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
+	"iter"
 	sqlite "modernc.org/sqlite"
 )
 
@@ -79,4 +80,46 @@ func Migrate(ctx context.Context, db *ent.Client) {
 		log.FromContext(ctx).WithError(err).Fatal("failed to create schema")
 	}
 	log.FromContext(ctx).Info("database schema migration complete")
+}
+
+type PagableQuery[P any, T any] interface {
+	Limit(int) P
+	Offset(int) P
+	All(context.Context) ([]*T, error)
+}
+
+func Chunked[P PagableQuery[P, T], T any](
+	ctx context.Context,
+	size int,
+	query PagableQuery[P, T],
+) iter.Seq2[*T, error] {
+	if size <= 1 {
+		size = 250
+	}
+
+	return func(yield func(*T, error) bool) {
+		var offset int
+		var results []*T
+		var err error
+
+		for {
+			results, err = query.Limit(size).Offset(offset).All(ctx)
+			if err != nil {
+				yield(nil, err)
+				return
+			}
+
+			for _, result := range results {
+				if !yield(result, nil) {
+					return
+				}
+			}
+
+			if len(results) < size {
+				return
+			}
+
+			offset += size
+		}
+	}
 }

@@ -204,7 +204,7 @@ func (grc *GithubReleaseCreate) check() error {
 	if _, ok := grc.mutation.Author(); !ok {
 		return &ValidationError{Name: "author", err: errors.New(`ent: missing required field "GithubRelease.author"`)}
 	}
-	if _, ok := grc.mutation.RepositoryID(); !ok {
+	if len(grc.mutation.RepositoryIDs()) == 0 {
 		return &ValidationError{Name: "repository", err: errors.New(`ent: missing required edge "GithubRelease.repository"`)}
 	}
 	return nil

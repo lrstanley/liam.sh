@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,7 +66,7 @@ func (geq *GithubEventQuery) Order(o ...githubevent.OrderOption) *GithubEventQue
 // First returns the first GithubEvent entity from the query.
 // Returns a *NotFoundError when no GithubEvent was found.
 func (geq *GithubEventQuery) First(ctx context.Context) (*GithubEvent, error) {
-	nodes, err := geq.Limit(1).All(setContextOp(ctx, geq.ctx, "First"))
+	nodes, err := geq.Limit(1).All(setContextOp(ctx, geq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +89,7 @@ func (geq *GithubEventQuery) FirstX(ctx context.Context) *GithubEvent {
 // Returns a *NotFoundError when no GithubEvent ID was found.
 func (geq *GithubEventQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = geq.Limit(1).IDs(setContextOp(ctx, geq.ctx, "FirstID")); err != nil {
+	if ids, err = geq.Limit(1).IDs(setContextOp(ctx, geq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -111,7 +112,7 @@ func (geq *GithubEventQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubEvent entity is found.
 // Returns a *NotFoundError when no GithubEvent entities are found.
 func (geq *GithubEventQuery) Only(ctx context.Context) (*GithubEvent, error) {
-	nodes, err := geq.Limit(2).All(setContextOp(ctx, geq.ctx, "Only"))
+	nodes, err := geq.Limit(2).All(setContextOp(ctx, geq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +140,7 @@ func (geq *GithubEventQuery) OnlyX(ctx context.Context) *GithubEvent {
 // Returns a *NotFoundError when no entities are found.
 func (geq *GithubEventQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = geq.Limit(2).IDs(setContextOp(ctx, geq.ctx, "OnlyID")); err != nil {
+	if ids, err = geq.Limit(2).IDs(setContextOp(ctx, geq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -164,7 +165,7 @@ func (geq *GithubEventQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubEvents.
 func (geq *GithubEventQuery) All(ctx context.Context) ([]*GithubEvent, error) {
-	ctx = setContextOp(ctx, geq.ctx, "All")
+	ctx = setContextOp(ctx, geq.ctx, ent.OpQueryAll)
 	if err := geq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -186,7 +187,7 @@ func (geq *GithubEventQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if geq.ctx.Unique == nil && geq.path != nil {
 		geq.Unique(true)
 	}
-	ctx = setContextOp(ctx, geq.ctx, "IDs")
+	ctx = setContextOp(ctx, geq.ctx, ent.OpQueryIDs)
 	if err = geq.Select(githubevent.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -204,7 +205,7 @@ func (geq *GithubEventQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (geq *GithubEventQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, geq.ctx, "Count")
+	ctx = setContextOp(ctx, geq.ctx, ent.OpQueryCount)
 	if err := geq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -222,7 +223,7 @@ func (geq *GithubEventQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (geq *GithubEventQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, geq.ctx, "Exist")
+	ctx = setContextOp(ctx, geq.ctx, ent.OpQueryExist)
 	switch _, err := geq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -460,7 +461,7 @@ func (gegb *GithubEventGroupBy) Aggregate(fns ...AggregateFunc) *GithubEventGrou
 
 // Scan applies the selector query and scans the result into the given value.
 func (gegb *GithubEventGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, gegb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, gegb.build.ctx, ent.OpQueryGroupBy)
 	if err := gegb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -508,7 +509,7 @@ func (ges *GithubEventSelect) Aggregate(fns ...AggregateFunc) *GithubEventSelect
 
 // Scan applies the selector query and scans the result into the given value.
 func (ges *GithubEventSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ges.ctx, "Select")
+	ctx = setContextOp(ctx, ges.ctx, ent.OpQuerySelect)
 	if err := ges.prepareQuery(ctx); err != nil {
 		return err
 	}

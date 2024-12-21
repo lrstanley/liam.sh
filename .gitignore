@@ -10,9 +10,18 @@ bin/*
 *.log
 .env
 .gitapicache
+
+# frontend-specific
 node_modules
 cmd/httpserver/public/src/lib/http
+cmd/httpserver/public-new/src/lib/http
 dist
 .eslintrc-auto-import.json
 **/*.d.ts
 !**/vue.d.ts
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist

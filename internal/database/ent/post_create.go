@@ -285,7 +285,7 @@ func (pc *PostCreate) check() error {
 	if _, ok := pc.mutation.Public(); !ok {
 		return &ValidationError{Name: "public", err: errors.New(`ent: missing required field "Post.public"`)}
 	}
-	if _, ok := pc.mutation.AuthorID(); !ok {
+	if len(pc.mutation.AuthorIDs()) == 0 {
 		return &ValidationError{Name: "author", err: errors.New(`ent: missing required edge "Post.author"`)}
 	}
 	return nil

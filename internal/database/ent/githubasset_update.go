@@ -285,7 +285,7 @@ func (gau *GithubAssetUpdate) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "GithubAsset.name": %w`, err)}
 		}
 	}
-	if _, ok := gau.mutation.ReleaseID(); gau.mutation.ReleaseCleared() && !ok {
+	if gau.mutation.ReleaseCleared() && len(gau.mutation.ReleaseIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "GithubAsset.release"`)
 	}
 	return nil
@@ -667,7 +667,7 @@ func (gauo *GithubAssetUpdateOne) check() error {
 			return &ValidationError{Name: "name", err: fmt.Errorf(`ent: validator failed for field "GithubAsset.name": %w`, err)}
 		}
 	}
-	if _, ok := gauo.mutation.ReleaseID(); gauo.mutation.ReleaseCleared() && !ok {
+	if gauo.mutation.ReleaseCleared() && len(gauo.mutation.ReleaseIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "GithubAsset.release"`)
 	}
 	return nil

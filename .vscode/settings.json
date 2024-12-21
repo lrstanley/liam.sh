@@ -54,11 +54,22 @@
         "**/LICENSE": true,
         "**/bin": true,
         "**/dist": true,
-        "**/ent": true,
+        // "**/ent": true,
         "**/node_modules": true,
         "**/package-lock.json": true,
         "**/pnpm-lock*": true,
         "**/tmp": true,
-        "**/.env": true
-    }
+        "**/.env": true,
+        "**/.output": true,
+        "**/.data": true,
+        "**/.nuxt": true,
+        "**/.nitro": true,
+    },
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "tailwindCSS.experimental.configFile": "cmd/httpserver/public-new/.nuxt/tailwind.config.cjs"
 }

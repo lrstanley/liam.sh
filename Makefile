@@ -49,40 +49,40 @@ node-fetch:
 		--no-fund \
 		--quiet \
 		--global pnpm
-	cd cmd/httpserver/public && \
+	cd cmd/httpserver/public-new && \
 		pnpm install
 
 node-upgrade-deps:
-	cd cmd/httpserver/public && \
+	cd cmd/httpserver/public-new && \
 		pnpm up -iL
 
 node-prepare: license node-fetch
-	cd cmd/httpserver/public && pnpm exec openapi-ts
-	cd cmd/httpserver/public && \
-		pnpm exec prettier \
-			--cache \
-			--write \
-			src/
+	cd cmd/httpserver/public-new && pnpm exec openapi-ts && rm -rf utils/http/index.ts
+	# cd cmd/httpserver/public-new && \
+	# 	pnpm exec prettier \
+	# 		--cache \
+	# 		--write \
+	# 		src/
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd cmd/httpserver/public && \
+	cd cmd/httpserver/public-new && \
 		pnpm exec eslint \
 			--ignore-path ../../../.gitignore \
 			--ext .js,.ts,.vue .
-	cd cmd/httpserver/public && \
+	cd cmd/httpserver/public-new && \
 		pnpm exec vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd cmd/httpserver/public && \
-		pnpm exec vite
+	cd cmd/httpserver/public-new && \
+		pnpm run dev
 
 node-build: node-prepare
-	cd cmd/httpserver/public && \
-		pnpm exec vite build
+	cd cmd/httpserver/public-new && \
+		pnpm run build
 
 node-preview: node-build
-	cd cmd/httpserver/public && \
-		pnpm exec vite preview
+	cd cmd/httpserver/public-new && \
+		pnpm run preview
 
 # backend
 go-prepare: license

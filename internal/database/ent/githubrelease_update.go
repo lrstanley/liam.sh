@@ -287,7 +287,7 @@ func (gru *GithubReleaseUpdate) check() error {
 			return &ValidationError{Name: "target_commitish", err: fmt.Errorf(`ent: validator failed for field "GithubRelease.target_commitish": %w`, err)}
 		}
 	}
-	if _, ok := gru.mutation.RepositoryID(); gru.mutation.RepositoryCleared() && !ok {
+	if gru.mutation.RepositoryCleared() && len(gru.mutation.RepositoryIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "GithubRelease.repository"`)
 	}
 	return nil
@@ -700,7 +700,7 @@ func (gruo *GithubReleaseUpdateOne) check() error {
 			return &ValidationError{Name: "target_commitish", err: fmt.Errorf(`ent: validator failed for field "GithubRelease.target_commitish": %w`, err)}
 		}
 	}
-	if _, ok := gruo.mutation.RepositoryID(); gruo.mutation.RepositoryCleared() && !ok {
+	if gruo.mutation.RepositoryCleared() && len(gruo.mutation.RepositoryIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "GithubRelease.repository"`)
 	}
 	return nil

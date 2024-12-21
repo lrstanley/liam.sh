@@ -1,0 +1,51 @@
+{
+  "dependencies": {
+    "@hey-api/client-fetch": "^0.2.4",
+    "naive-ui": "^2.39.0",
+    "nuxt": "^3.13.1",
+    "vue": "^3.5.4"
+  },
+  "devDependencies": {
+    "@codemirror/lang-markdown": "^6.2.5",
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "@formkit/auto-animate": "^0.8.2",
+    "@hebilicious/vue-query-nuxt": "^0.3.0",
+    "@hey-api/openapi-ts": "^0.53.0",
+    "@iconify-json/logos": "^1.2.0",
+    "@iconify-json/mdi": "^1.2.0",
+    "@nuxt/icon": "^1.5.1",
+    "@nuxtjs/tailwindcss": "^6.12.1",
+    "@tanstack/vue-query": "^5.56.2",
+    "@vueuse/components": "^11.0.3",
+    "@vueuse/core": "^11.0.3",
+    "@vueuse/nuxt": "^11.0.3",
+    "@vueuse/router": "^11.0.3",
+    "codemirror": "^6.0.1",
+    "nuxtjs-naive-ui": "^1.0.2",
+    "unplugin-vue-components": "^0.27.4",
+    "vue-codemirror": "^6.1.1"
+  },
+  "name": "liam.sh",
+  "prettier": {
+    "arrowParens": "always",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "htmlWhitespaceSensitivity": "ignore",
+    "quoteProps": "as-needed",
+    "semi": false,
+    "singleQuote": false,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "vueIndentScriptAndStyle": false
+  },
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "postinstall": "nuxt prepare",
+    "preinstall": "npx only-allow pnpm",
+    "preview": "nuxt preview"
+  },
+  "type": "module"
+}

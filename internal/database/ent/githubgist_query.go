@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -65,7 +66,7 @@ func (ggq *GithubGistQuery) Order(o ...githubgist.OrderOption) *GithubGistQuery 
 // First returns the first GithubGist entity from the query.
 // Returns a *NotFoundError when no GithubGist was found.
 func (ggq *GithubGistQuery) First(ctx context.Context) (*GithubGist, error) {
-	nodes, err := ggq.Limit(1).All(setContextOp(ctx, ggq.ctx, "First"))
+	nodes, err := ggq.Limit(1).All(setContextOp(ctx, ggq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +89,7 @@ func (ggq *GithubGistQuery) FirstX(ctx context.Context) *GithubGist {
 // Returns a *NotFoundError when no GithubGist ID was found.
 func (ggq *GithubGistQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ggq.Limit(1).IDs(setContextOp(ctx, ggq.ctx, "FirstID")); err != nil {
+	if ids, err = ggq.Limit(1).IDs(setContextOp(ctx, ggq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -111,7 +112,7 @@ func (ggq *GithubGistQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubGist entity is found.
 // Returns a *NotFoundError when no GithubGist entities are found.
 func (ggq *GithubGistQuery) Only(ctx context.Context) (*GithubGist, error) {
-	nodes, err := ggq.Limit(2).All(setContextOp(ctx, ggq.ctx, "Only"))
+	nodes, err := ggq.Limit(2).All(setContextOp(ctx, ggq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -139,7 +140,7 @@ func (ggq *GithubGistQuery) OnlyX(ctx context.Context) *GithubGist {
 // Returns a *NotFoundError when no entities are found.
 func (ggq *GithubGistQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = ggq.Limit(2).IDs(setContextOp(ctx, ggq.ctx, "OnlyID")); err != nil {
+	if ids, err = ggq.Limit(2).IDs(setContextOp(ctx, ggq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -164,7 +165,7 @@ func (ggq *GithubGistQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubGists.
 func (ggq *GithubGistQuery) All(ctx context.Context) ([]*GithubGist, error) {
-	ctx = setContextOp(ctx, ggq.ctx, "All")
+	ctx = setContextOp(ctx, ggq.ctx, ent.OpQueryAll)
 	if err := ggq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -186,7 +187,7 @@ func (ggq *GithubGistQuery) IDs(ctx context.Context) (ids []int, err error) {
 	if ggq.ctx.Unique == nil && ggq.path != nil {
 		ggq.Unique(true)
 	}
-	ctx = setContextOp(ctx, ggq.ctx, "IDs")
+	ctx = setContextOp(ctx, ggq.ctx, ent.OpQueryIDs)
 	if err = ggq.Select(githubgist.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -204,7 +205,7 @@ func (ggq *GithubGistQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (ggq *GithubGistQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, ggq.ctx, "Count")
+	ctx = setContextOp(ctx, ggq.ctx, ent.OpQueryCount)
 	if err := ggq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -222,7 +223,7 @@ func (ggq *GithubGistQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (ggq *GithubGistQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, ggq.ctx, "Exist")
+	ctx = setContextOp(ctx, ggq.ctx, ent.OpQueryExist)
 	switch _, err := ggq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -460,7 +461,7 @@ func (gggb *GithubGistGroupBy) Aggregate(fns ...AggregateFunc) *GithubGistGroupB
 
 // Scan applies the selector query and scans the result into the given value.
 func (gggb *GithubGistGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, gggb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, gggb.build.ctx, ent.OpQueryGroupBy)
 	if err := gggb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -508,7 +509,7 @@ func (ggs *GithubGistSelect) Aggregate(fns ...AggregateFunc) *GithubGistSelect {
 
 // Scan applies the selector query and scans the result into the given value.
 func (ggs *GithubGistSelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, ggs.ctx, "Select")
+	ctx = setContextOp(ctx, ggs.ctx, ent.OpQuerySelect)
 	if err := ggs.prepareQuery(ctx); err != nil {
 		return err
 	}

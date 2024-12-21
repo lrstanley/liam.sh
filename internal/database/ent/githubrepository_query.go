@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"math"
 
+	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -114,7 +115,7 @@ func (grq *GithubRepositoryQuery) QueryReleases() *GithubReleaseQuery {
 // First returns the first GithubRepository entity from the query.
 // Returns a *NotFoundError when no GithubRepository was found.
 func (grq *GithubRepositoryQuery) First(ctx context.Context) (*GithubRepository, error) {
-	nodes, err := grq.Limit(1).All(setContextOp(ctx, grq.ctx, "First"))
+	nodes, err := grq.Limit(1).All(setContextOp(ctx, grq.ctx, ent.OpQueryFirst))
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +138,7 @@ func (grq *GithubRepositoryQuery) FirstX(ctx context.Context) *GithubRepository 
 // Returns a *NotFoundError when no GithubRepository ID was found.
 func (grq *GithubRepositoryQuery) FirstID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = grq.Limit(1).IDs(setContextOp(ctx, grq.ctx, "FirstID")); err != nil {
+	if ids, err = grq.Limit(1).IDs(setContextOp(ctx, grq.ctx, ent.OpQueryFirstID)); err != nil {
 		return
 	}
 	if len(ids) == 0 {
@@ -160,7 +161,7 @@ func (grq *GithubRepositoryQuery) FirstIDX(ctx context.Context) int {
 // Returns a *NotSingularError when more than one GithubRepository entity is found.
 // Returns a *NotFoundError when no GithubRepository entities are found.
 func (grq *GithubRepositoryQuery) Only(ctx context.Context) (*GithubRepository, error) {
-	nodes, err := grq.Limit(2).All(setContextOp(ctx, grq.ctx, "Only"))
+	nodes, err := grq.Limit(2).All(setContextOp(ctx, grq.ctx, ent.OpQueryOnly))
 	if err != nil {
 		return nil, err
 	}
@@ -188,7 +189,7 @@ func (grq *GithubRepositoryQuery) OnlyX(ctx context.Context) *GithubRepository {
 // Returns a *NotFoundError when no entities are found.
 func (grq *GithubRepositoryQuery) OnlyID(ctx context.Context) (id int, err error) {
 	var ids []int
-	if ids, err = grq.Limit(2).IDs(setContextOp(ctx, grq.ctx, "OnlyID")); err != nil {
+	if ids, err = grq.Limit(2).IDs(setContextOp(ctx, grq.ctx, ent.OpQueryOnlyID)); err != nil {
 		return
 	}
 	switch len(ids) {
@@ -213,7 +214,7 @@ func (grq *GithubRepositoryQuery) OnlyIDX(ctx context.Context) int {
 
 // All executes the query and returns a list of GithubRepositories.
 func (grq *GithubRepositoryQuery) All(ctx context.Context) ([]*GithubRepository, error) {
-	ctx = setContextOp(ctx, grq.ctx, "All")
+	ctx = setContextOp(ctx, grq.ctx, ent.OpQueryAll)
 	if err := grq.prepareQuery(ctx); err != nil {
 		return nil, err
 	}
@@ -235,7 +236,7 @@ func (grq *GithubRepositoryQuery) IDs(ctx context.Context) (ids []int, err error
 	if grq.ctx.Unique == nil && grq.path != nil {
 		grq.Unique(true)
 	}
-	ctx = setContextOp(ctx, grq.ctx, "IDs")
+	ctx = setContextOp(ctx, grq.ctx, ent.OpQueryIDs)
 	if err = grq.Select(githubrepository.FieldID).Scan(ctx, &ids); err != nil {
 		return nil, err
 	}
@@ -253,7 +254,7 @@ func (grq *GithubRepositoryQuery) IDsX(ctx context.Context) []int {
 
 // Count returns the count of the given query.
 func (grq *GithubRepositoryQuery) Count(ctx context.Context) (int, error) {
-	ctx = setContextOp(ctx, grq.ctx, "Count")
+	ctx = setContextOp(ctx, grq.ctx, ent.OpQueryCount)
 	if err := grq.prepareQuery(ctx); err != nil {
 		return 0, err
 	}
@@ -271,7 +272,7 @@ func (grq *GithubRepositoryQuery) CountX(ctx context.Context) int {
 
 // Exist returns true if the query has elements in the graph.
 func (grq *GithubRepositoryQuery) Exist(ctx context.Context) (bool, error) {
-	ctx = setContextOp(ctx, grq.ctx, "Exist")
+	ctx = setContextOp(ctx, grq.ctx, ent.OpQueryExist)
 	switch _, err := grq.FirstID(ctx); {
 	case IsNotFound(err):
 		return false, nil
@@ -645,7 +646,7 @@ func (grgb *GithubRepositoryGroupBy) Aggregate(fns ...AggregateFunc) *GithubRepo
 
 // Scan applies the selector query and scans the result into the given value.
 func (grgb *GithubRepositoryGroupBy) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, grgb.build.ctx, "GroupBy")
+	ctx = setContextOp(ctx, grgb.build.ctx, ent.OpQueryGroupBy)
 	if err := grgb.build.prepareQuery(ctx); err != nil {
 		return err
 	}
@@ -693,7 +694,7 @@ func (grs *GithubRepositorySelect) Aggregate(fns ...AggregateFunc) *GithubReposi
 
 // Scan applies the selector query and scans the result into the given value.
 func (grs *GithubRepositorySelect) Scan(ctx context.Context, v any) error {
-	ctx = setContextOp(ctx, grs.ctx, "Select")
+	ctx = setContextOp(ctx, grs.ctx, ent.OpQuerySelect)
 	if err := grs.prepareQuery(ctx); err != nil {
 		return err
 	}
