@@ -78,7 +78,7 @@ func httpServer(ctx context.Context) *http.Server {
 			"Permissions-Policy":      "clipboard-write=(self)",
 		}),
 		chix.UseAuthContext(authSvc),
-		httprate.LimitByIP(200, 1*time.Minute),
+		httprate.LimitByIP(400, 1*time.Minute),
 	)
 
 	// Legacy redirects.
