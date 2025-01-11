@@ -1,28 +1,26 @@
 {
   "dependencies": {
-    "@hey-api/client-fetch": "^0.2.4",
+    "@hey-api/client-nuxt": "https://pkg.pr.new/hey-api/openapi-ts/@hey-api/client-nuxt@1519",
     "naive-ui": "^2.39.0",
-    "nuxt": "^3.13.1",
+    "nuxt": "^3.15.1",
     "vue": "^3.5.4"
   },
   "devDependencies": {
     "@codemirror/lang-markdown": "^6.2.5",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@formkit/auto-animate": "^0.8.2",
-    "@hebilicious/vue-query-nuxt": "^0.3.0",
-    "@hey-api/openapi-ts": "^0.53.0",
+    "@hey-api/openapi-ts": "https://pkg.pr.new/hey-api/openapi-ts/@hey-api/openapi-ts@1519",
     "@iconify-json/logos": "^1.2.0",
     "@iconify-json/mdi": "^1.2.0",
     "@nuxt/icon": "^1.5.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
-    "@tanstack/vue-query": "^5.56.2",
-    "@vueuse/components": "^11.0.3",
-    "@vueuse/core": "^11.0.3",
-    "@vueuse/nuxt": "^11.0.3",
-    "@vueuse/router": "^11.0.3",
+    "@vueuse/components": "^12.4.0",
+    "@vueuse/core": "^12.4.0",
+    "@vueuse/nuxt": "^12.4.0",
+    "@vueuse/router": "^12.4.0",
     "codemirror": "^6.0.1",
     "nuxtjs-naive-ui": "^1.0.2",
-    "unplugin-vue-components": "^0.27.4",
+    "unplugin-vue-components": "^28.0.0",
     "vue-codemirror": "^6.1.1"
   },
   "name": "liam.sh",
@@ -47,5 +45,6 @@
     "preinstall": "npx only-allow pnpm",
     "preview": "nuxt preview"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"
 }

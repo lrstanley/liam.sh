@@ -3,9 +3,9 @@
  * this source code is governed by the MIT license that can be found in
  * the LICENSE file.
  */
-import { getSelf, getGithubUser } from "@/utils/http/services.gen"
+import { getSelf, getGithubUser } from "@/utils/http/sdk.gen"
 import type { ErrorUnauthorized } from "@/utils/http/types.gen"
-import { client } from "@/utils/http/services.gen"
+import { client } from "@/utils/http/sdk.gen"
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // TODO: this is fucking stupid.
@@ -23,30 +23,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   client.setConfig({
     baseUrl: url,
-    // fetch: (request) => {
-    //   return new Promise((resolve, reject) => {
-    //     useFetch(request, {
-    //       onResponse: ({ response: r }) => {
-    //         resolve(
-    //           new Response(JSON.stringify(toRaw(r._data)), {
-    //             status: r.status,
-    //             statusText: r.statusText,
-    //             headers: r.headers,
-    //           })
-    //         )
-    //       },
-    //       onResponseError: ({ response: r }) => {
-    //         reject(
-    //           new Response(JSON.stringify(toRaw(r._data)), {
-    //             status: r.status,
-    //             statusText: r.statusText,
-    //             headers: r.headers,
-    //           })
-    //         )
-    //       },
-    //     })
-    //   })
-    // },
   })
 
   const self = useSelf()
@@ -55,22 +31,24 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   let apiError: ErrorUnauthorized | undefined
 
   if (self.value === undefined || (from.path == "/" && from.name == undefined)) {
-    const { data, error } = await getSelf()
+    const selfResults = await getSelf({ composable: "$fetch" })
 
-    if (error) {
-      apiError = error as ErrorUnauthorized
-      self.value = null
-    } else {
-      self.value = data
-    }
+    // if (error) {
+    //   apiError = error as ErrorUnauthorized
+    //   self.value = null
+    // } else {
+    //   self.value = data
+    // }
+    self.value = selfResults
   }
 
-  const { data, error } = await getGithubUser()
-  if (error) {
-    if (!apiError) apiError = error as ErrorUnauthorized
-  } else {
-    githubUser.value = data
-  }
+  const githubUserResult = await getGithubUser({ composable: "$fetch" })
+  // if (error) {
+  //   if (!apiError) apiError = error as ErrorUnauthorized
+  // } else {
+  //   githubUser.value = data
+  // }
+  githubUser.value = githubUserResult
 
   if (to.meta.auth == true && self.value == null) {
     return navigateTo(`/-/auth/providers/github?next=${window.location.origin + to.path}`)

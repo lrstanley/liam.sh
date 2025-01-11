@@ -17,11 +17,9 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    API_URL: "",
-    // API_URL: "https://liam.sh/-",
+    API_URL: "", // use $NUXT_API_URL
     public: {
-      // API_URL: "https://liam.sh/-",
-      API_URL: "",
+      API_URL: "", // use $NUXT_PUBLIC_API_URL
     },
   },
   components: [
@@ -39,16 +37,12 @@ export default defineNuxtConfig({
     typedPages: true,
   },
   telemetry: false,
-  vueQuery: {
-    queryClientOptions: {
-      defaultOptions: { queries: {} },
-    },
-  },
   vite: {
     server: {
       open: false,
       strictPort: true,
       proxy: {
+        // TODO: can this be removed with the usage of nuxt request logic?
         "^/(-|security\\.txt|robots\\.txt)(/.*|$)": {
           target: "http://localhost:8080",
           xfwd: true,
@@ -77,10 +71,6 @@ export default defineNuxtConfig({
         from: "naiveui",
         imports: ["useDialog", "useMessage", "useNotification", "useLoadingBar"],
       },
-      {
-        from: "@tanstack/vue-query",
-        imports: ["useQuery", "useMutation", "useQueryClient", "keepPreviousData"],
-      },
     ],
   },
   modules: [
@@ -88,7 +78,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@nuxt/icon",
     "nuxtjs-naive-ui",
-    "@hebilicious/vue-query-nuxt",
     "@formkit/auto-animate",
   ],
 })

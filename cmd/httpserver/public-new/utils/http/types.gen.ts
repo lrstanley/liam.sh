@@ -227,9 +227,6 @@ export type GithubAsset = {
      * The date the asset was last updated.
      */
     updated_at?: string;
-    /**
-     * The data of the user that uploaded the asset.
-     */
     uploader: GithubUser;
 };
 
@@ -298,9 +295,6 @@ export type GithubEvent = {
      * The ID of the actor.
      */
     actor_id: number;
-    /**
-     * The actor data of the event.
-     */
     actor: GithubUser;
     /**
      * The ID of the repository.
@@ -380,9 +374,6 @@ export type GithubGist = {
      * The description of the gist.
      */
     description?: string;
-    /**
-     * The owner data of the gist.
-     */
     owner: GithubUser;
     /**
      * The name of the file.
@@ -577,9 +568,6 @@ export type GithubRepository = {
      * The username which owns the repository (user or organization).
      */
     owner_login: string;
-    /**
-     * The owner data of the repository.
-     */
     owner: GithubUser;
     /**
      * Whether the repository is public or not.
@@ -774,8 +762,8 @@ export type LabelCreate = {
      * Label name.
      */
     name: string;
-    posts?: Array<(number)>;
-    github_repositories?: Array<(number)>;
+    posts?: Array<number>;
+    github_repositories?: Array<number>;
 };
 
 /**
@@ -820,10 +808,10 @@ export type LabelUpdate = {
      * Label name.
      */
     name?: string;
-    add_posts?: Array<(number)>;
-    remove_posts?: Array<(number)>;
-    add_github_repositories?: Array<(number)>;
-    remove_github_repositories?: Array<(number)>;
+    add_posts?: Array<number>;
+    remove_posts?: Array<number>;
+    add_github_repositories?: Array<number>;
+    remove_github_repositories?: Array<number>;
 };
 
 export type LanguageStat = {
@@ -937,7 +925,7 @@ export type PostCreate = {
      */
     public?: boolean;
     author: number;
-    labels?: Array<(number)>;
+    labels?: Array<number>;
 };
 
 export type PostEdges = {
@@ -1021,8 +1009,8 @@ export type PostUpdate = {
      */
     public?: boolean;
     author?: number;
-    add_labels?: Array<(number)>;
-    remove_labels?: Array<(number)>;
+    add_labels?: Array<number>;
+    remove_labels?: Array<number>;
 };
 
 /**
@@ -1158,2817 +1146,2817 @@ export type VersionLink = {
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type ParameterEdgeAssetAssetIDEQ = number;
+export type EdgeAssetAssetIdeq = number;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type ParameterEdgeAssetAssetIDNEQ = number;
+export type EdgeAssetAssetIdneq = number;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterEdgeAssetCreatedAtEQ = string;
+export type EdgeAssetCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterEdgeAssetCreatedAtGT = number;
+export type EdgeAssetCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterEdgeAssetCreatedAtLT = number;
+export type EdgeAssetCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterEdgeAssetCreatedAtNEQ = string;
+export type EdgeAssetCreatedAtNeq = string;
 
 /**
  * Filters field "download_count" to be greater than the provided value.
  */
-export type ParameterEdgeAssetDownloadCountGT = number;
+export type EdgeAssetDownloadCountGt = number;
 
 /**
  * Filters field "download_count" to be less than the provided value.
  */
-export type ParameterEdgeAssetDownloadCountLT = number;
+export type EdgeAssetDownloadCountLt = number;
 
 /**
  * Filters field "label" to contain the provided value.
  */
-export type ParameterEdgeAssetLabelContains = string;
+export type EdgeAssetLabelContains = string;
 
 /**
  * Filters field "label" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAssetLabelContainsFold = string;
+export type EdgeAssetLabelContainsFold = string;
 
 /**
  * Filters field "label" to be equal to the provided value.
  */
-export type ParameterEdgeAssetLabelEQ = string;
+export type EdgeAssetLabelEq = string;
 
 /**
  * Filters field "label" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAssetLabelEqualFold = string;
+export type EdgeAssetLabelEqualFold = string;
 
 /**
  * Filters field "label" to start with the provided value.
  */
-export type ParameterEdgeAssetLabelHasPrefix = string;
+export type EdgeAssetLabelHasPrefix = string;
 
 /**
  * Filters field "label" to end with the provided value.
  */
-export type ParameterEdgeAssetLabelHasSuffix = string;
+export type EdgeAssetLabelHasSuffix = string;
 
 /**
  * Filters field "label" to be within the provided values.
  */
-export type ParameterEdgeAssetLabelIn = Array<(string)>;
+export type EdgeAssetLabelIn = Array<string>;
 
 /**
  * Filters field "label" to be null/nil.
  */
-export type ParameterEdgeAssetLabelIsNil = boolean;
+export type EdgeAssetLabelIsNil = boolean;
 
 /**
  * Filters field "label" to be not equal to the provided value.
  */
-export type ParameterEdgeAssetLabelNEQ = string;
+export type EdgeAssetLabelNeq = string;
 
 /**
  * Filters field "label" to be not within the provided values.
  */
-export type ParameterEdgeAssetLabelNotIn = Array<(string)>;
+export type EdgeAssetLabelNotIn = Array<string>;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeAssetNameContains = string;
+export type EdgeAssetNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAssetNameContainsFold = string;
+export type EdgeAssetNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeAssetNameEQ = string;
+export type EdgeAssetNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAssetNameEqualFold = string;
+export type EdgeAssetNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeAssetNameHasPrefix = string;
+export type EdgeAssetNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeAssetNameHasSuffix = string;
+export type EdgeAssetNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeAssetNameIn = Array<(string)>;
+export type EdgeAssetNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeAssetNameNEQ = string;
+export type EdgeAssetNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeAssetNameNotIn = Array<(string)>;
+export type EdgeAssetNameNotIn = Array<string>;
 
 /**
  * Filters field "size" to be greater than the provided value.
  */
-export type ParameterEdgeAssetSizeGT = number;
+export type EdgeAssetSizeGt = number;
 
 /**
  * Filters field "size" to be less than the provided value.
  */
-export type ParameterEdgeAssetSizeLT = number;
+export type EdgeAssetSizeLt = number;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterEdgeAssetUpdatedAtEQ = string;
+export type EdgeAssetUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterEdgeAssetUpdatedAtGT = number;
+export type EdgeAssetUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be null/nil.
  */
-export type ParameterEdgeAssetUpdatedAtIsNil = boolean;
+export type EdgeAssetUpdatedAtIsNil = boolean;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterEdgeAssetUpdatedAtLT = number;
+export type EdgeAssetUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterEdgeAssetUpdatedAtNEQ = string;
+export type EdgeAssetUpdatedAtNeq = string;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorCreateTimeEQ = string;
+export type EdgeAuthorCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterEdgeAuthorCreateTimeGT = number;
+export type EdgeAuthorCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterEdgeAuthorCreateTimeLT = number;
+export type EdgeAuthorCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorCreateTimeNEQ = string;
+export type EdgeAuthorCreateTimeNeq = string;
 
 /**
  * Filters field "email" to contain the provided value.
  */
-export type ParameterEdgeAuthorEmailContains = string;
+export type EdgeAuthorEmailContains = string;
 
 /**
  * Filters field "email" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorEmailContainsFold = string;
+export type EdgeAuthorEmailContainsFold = string;
 
 /**
  * Filters field "email" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorEmailEQ = string;
+export type EdgeAuthorEmailEq = string;
 
 /**
  * Filters field "email" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorEmailEqualFold = string;
+export type EdgeAuthorEmailEqualFold = string;
 
 /**
  * Filters field "email" to start with the provided value.
  */
-export type ParameterEdgeAuthorEmailHasPrefix = string;
+export type EdgeAuthorEmailHasPrefix = string;
 
 /**
  * Filters field "email" to end with the provided value.
  */
-export type ParameterEdgeAuthorEmailHasSuffix = string;
+export type EdgeAuthorEmailHasSuffix = string;
 
 /**
  * Filters field "email" to be within the provided values.
  */
-export type ParameterEdgeAuthorEmailIn = Array<(string)>;
+export type EdgeAuthorEmailIn = Array<string>;
 
 /**
  * Filters field "email" to be null/nil.
  */
-export type ParameterEdgeAuthorEmailIsNil = boolean;
+export type EdgeAuthorEmailIsNil = boolean;
 
 /**
  * Filters field "email" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorEmailNEQ = string;
+export type EdgeAuthorEmailNeq = string;
 
 /**
  * Filters field "email" to be not within the provided values.
  */
-export type ParameterEdgeAuthorEmailNotIn = Array<(string)>;
+export type EdgeAuthorEmailNotIn = Array<string>;
 
 /**
  * Filters field "location" to contain the provided value.
  */
-export type ParameterEdgeAuthorLocationContains = string;
+export type EdgeAuthorLocationContains = string;
 
 /**
  * Filters field "location" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorLocationContainsFold = string;
+export type EdgeAuthorLocationContainsFold = string;
 
 /**
  * Filters field "location" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorLocationEQ = string;
+export type EdgeAuthorLocationEq = string;
 
 /**
  * Filters field "location" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorLocationEqualFold = string;
+export type EdgeAuthorLocationEqualFold = string;
 
 /**
  * Filters field "location" to start with the provided value.
  */
-export type ParameterEdgeAuthorLocationHasPrefix = string;
+export type EdgeAuthorLocationHasPrefix = string;
 
 /**
  * Filters field "location" to end with the provided value.
  */
-export type ParameterEdgeAuthorLocationHasSuffix = string;
+export type EdgeAuthorLocationHasSuffix = string;
 
 /**
  * Filters field "location" to be within the provided values.
  */
-export type ParameterEdgeAuthorLocationIn = Array<(string)>;
+export type EdgeAuthorLocationIn = Array<string>;
 
 /**
  * Filters field "location" to be null/nil.
  */
-export type ParameterEdgeAuthorLocationIsNil = boolean;
+export type EdgeAuthorLocationIsNil = boolean;
 
 /**
  * Filters field "location" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorLocationNEQ = string;
+export type EdgeAuthorLocationNeq = string;
 
 /**
  * Filters field "location" to be not within the provided values.
  */
-export type ParameterEdgeAuthorLocationNotIn = Array<(string)>;
+export type EdgeAuthorLocationNotIn = Array<string>;
 
 /**
  * Filters field "login" to contain the provided value.
  */
-export type ParameterEdgeAuthorLoginContains = string;
+export type EdgeAuthorLoginContains = string;
 
 /**
  * Filters field "login" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorLoginContainsFold = string;
+export type EdgeAuthorLoginContainsFold = string;
 
 /**
  * Filters field "login" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorLoginEQ = string;
+export type EdgeAuthorLoginEq = string;
 
 /**
  * Filters field "login" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorLoginEqualFold = string;
+export type EdgeAuthorLoginEqualFold = string;
 
 /**
  * Filters field "login" to start with the provided value.
  */
-export type ParameterEdgeAuthorLoginHasPrefix = string;
+export type EdgeAuthorLoginHasPrefix = string;
 
 /**
  * Filters field "login" to end with the provided value.
  */
-export type ParameterEdgeAuthorLoginHasSuffix = string;
+export type EdgeAuthorLoginHasSuffix = string;
 
 /**
  * Filters field "login" to be within the provided values.
  */
-export type ParameterEdgeAuthorLoginIn = Array<(string)>;
+export type EdgeAuthorLoginIn = Array<string>;
 
 /**
  * Filters field "login" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorLoginNEQ = string;
+export type EdgeAuthorLoginNeq = string;
 
 /**
  * Filters field "login" to be not within the provided values.
  */
-export type ParameterEdgeAuthorLoginNotIn = Array<(string)>;
+export type EdgeAuthorLoginNotIn = Array<string>;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeAuthorNameContains = string;
+export type EdgeAuthorNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorNameContainsFold = string;
+export type EdgeAuthorNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorNameEQ = string;
+export type EdgeAuthorNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeAuthorNameEqualFold = string;
+export type EdgeAuthorNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeAuthorNameHasPrefix = string;
+export type EdgeAuthorNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeAuthorNameHasSuffix = string;
+export type EdgeAuthorNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeAuthorNameIn = Array<(string)>;
+export type EdgeAuthorNameIn = Array<string>;
 
 /**
  * Filters field "name" to be null/nil.
  */
-export type ParameterEdgeAuthorNameIsNil = boolean;
+export type EdgeAuthorNameIsNil = boolean;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorNameNEQ = string;
+export type EdgeAuthorNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeAuthorNameNotIn = Array<(string)>;
+export type EdgeAuthorNameNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorUpdateTimeEQ = string;
+export type EdgeAuthorUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterEdgeAuthorUpdateTimeGT = number;
+export type EdgeAuthorUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterEdgeAuthorUpdateTimeLT = number;
+export type EdgeAuthorUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorUpdateTimeNEQ = string;
+export type EdgeAuthorUpdateTimeNeq = string;
 
 /**
  * Filters field "user_id" to be equal to the provided value.
  */
-export type ParameterEdgeAuthorUserIDEQ = number;
+export type EdgeAuthorUserIdeq = number;
 
 /**
  * Filters field "user_id" to be within the provided values.
  */
-export type ParameterEdgeAuthorUserIDIn = Array<(number)>;
+export type EdgeAuthorUserIdIn = Array<number>;
 
 /**
  * Filters field "user_id" to be not equal to the provided value.
  */
-export type ParameterEdgeAuthorUserIDNEQ = number;
+export type EdgeAuthorUserIdneq = number;
 
 /**
  * Filters field "user_id" to be not within the provided values.
  */
-export type ParameterEdgeAuthorUserIDNotIn = Array<(number)>;
+export type EdgeAuthorUserIdNotIn = Array<number>;
 
 /**
  * Filters field "archived" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryArchivedEQ = boolean;
+export type EdgeGithubRepositoryArchivedEq = boolean;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryCreatedAtEQ = string;
+export type EdgeGithubRepositoryCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterEdgeGithubRepositoryCreatedAtGT = number;
+export type EdgeGithubRepositoryCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterEdgeGithubRepositoryCreatedAtLT = number;
+export type EdgeGithubRepositoryCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryCreatedAtNEQ = string;
+export type EdgeGithubRepositoryCreatedAtNeq = string;
 
 /**
  * Filters field "default_branch" to contain the provided value.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchContains = string;
+export type EdgeGithubRepositoryDefaultBranchContains = string;
 
 /**
  * Filters field "default_branch" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchContainsFold = string;
+export type EdgeGithubRepositoryDefaultBranchContainsFold = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchEQ = string;
+export type EdgeGithubRepositoryDefaultBranchEq = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchEqualFold = string;
+export type EdgeGithubRepositoryDefaultBranchEqualFold = string;
 
 /**
  * Filters field "default_branch" to start with the provided value.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchHasPrefix = string;
+export type EdgeGithubRepositoryDefaultBranchHasPrefix = string;
 
 /**
  * Filters field "default_branch" to end with the provided value.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchHasSuffix = string;
+export type EdgeGithubRepositoryDefaultBranchHasSuffix = string;
 
 /**
  * Filters field "default_branch" to be within the provided values.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchIn = Array<(string)>;
+export type EdgeGithubRepositoryDefaultBranchIn = Array<string>;
 
 /**
  * Filters field "default_branch" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchNEQ = string;
+export type EdgeGithubRepositoryDefaultBranchNeq = string;
 
 /**
  * Filters field "default_branch" to be not within the provided values.
  */
-export type ParameterEdgeGithubRepositoryDefaultBranchNotIn = Array<(string)>;
+export type EdgeGithubRepositoryDefaultBranchNotIn = Array<string>;
 
 /**
  * Filters field "description" to contain the provided value.
  */
-export type ParameterEdgeGithubRepositoryDescriptionContains = string;
+export type EdgeGithubRepositoryDescriptionContains = string;
 
 /**
  * Filters field "description" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryDescriptionContainsFold = string;
+export type EdgeGithubRepositoryDescriptionContainsFold = string;
 
 /**
  * Filters field "description" to be null/nil.
  */
-export type ParameterEdgeGithubRepositoryDescriptionIsNil = boolean;
+export type EdgeGithubRepositoryDescriptionIsNil = boolean;
 
 /**
  * Filters field "fork" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryForkEQ = boolean;
+export type EdgeGithubRepositoryForkEq = boolean;
 
 /**
  * Filters field "full_name" to contain the provided value.
  */
-export type ParameterEdgeGithubRepositoryFullNameContains = string;
+export type EdgeGithubRepositoryFullNameContains = string;
 
 /**
  * Filters field "full_name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryFullNameContainsFold = string;
+export type EdgeGithubRepositoryFullNameContainsFold = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryFullNameEQ = string;
+export type EdgeGithubRepositoryFullNameEq = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryFullNameEqualFold = string;
+export type EdgeGithubRepositoryFullNameEqualFold = string;
 
 /**
  * Filters field "full_name" to start with the provided value.
  */
-export type ParameterEdgeGithubRepositoryFullNameHasPrefix = string;
+export type EdgeGithubRepositoryFullNameHasPrefix = string;
 
 /**
  * Filters field "full_name" to end with the provided value.
  */
-export type ParameterEdgeGithubRepositoryFullNameHasSuffix = string;
+export type EdgeGithubRepositoryFullNameHasSuffix = string;
 
 /**
  * Filters field "full_name" to be within the provided values.
  */
-export type ParameterEdgeGithubRepositoryFullNameIn = Array<(string)>;
+export type EdgeGithubRepositoryFullNameIn = Array<string>;
 
 /**
  * Filters field "full_name" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryFullNameNEQ = string;
+export type EdgeGithubRepositoryFullNameNeq = string;
 
 /**
  * Filters field "full_name" to be not within the provided values.
  */
-export type ParameterEdgeGithubRepositoryFullNameNotIn = Array<(string)>;
+export type EdgeGithubRepositoryFullNameNotIn = Array<string>;
 
 /**
  * Filters field "has_issues" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryHasIssuesEQ = boolean;
+export type EdgeGithubRepositoryHasIssuesEq = boolean;
 
 /**
  * Filters field "is_template" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryIsTemplateEQ = boolean;
+export type EdgeGithubRepositoryIsTemplateEq = boolean;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeGithubRepositoryNameContains = string;
+export type EdgeGithubRepositoryNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryNameContainsFold = string;
+export type EdgeGithubRepositoryNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryNameEQ = string;
+export type EdgeGithubRepositoryNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryNameEqualFold = string;
+export type EdgeGithubRepositoryNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeGithubRepositoryNameHasPrefix = string;
+export type EdgeGithubRepositoryNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeGithubRepositoryNameHasSuffix = string;
+export type EdgeGithubRepositoryNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeGithubRepositoryNameIn = Array<(string)>;
+export type EdgeGithubRepositoryNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryNameNEQ = string;
+export type EdgeGithubRepositoryNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeGithubRepositoryNameNotIn = Array<(string)>;
+export type EdgeGithubRepositoryNameNotIn = Array<string>;
 
 /**
  * Filters field "owner_login" to contain the provided value.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginContains = string;
+export type EdgeGithubRepositoryOwnerLoginContains = string;
 
 /**
  * Filters field "owner_login" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginContainsFold = string;
+export type EdgeGithubRepositoryOwnerLoginContainsFold = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginEQ = string;
+export type EdgeGithubRepositoryOwnerLoginEq = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginEqualFold = string;
+export type EdgeGithubRepositoryOwnerLoginEqualFold = string;
 
 /**
  * Filters field "owner_login" to start with the provided value.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginHasPrefix = string;
+export type EdgeGithubRepositoryOwnerLoginHasPrefix = string;
 
 /**
  * Filters field "owner_login" to end with the provided value.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginHasSuffix = string;
+export type EdgeGithubRepositoryOwnerLoginHasSuffix = string;
 
 /**
  * Filters field "owner_login" to be within the provided values.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginIn = Array<(string)>;
+export type EdgeGithubRepositoryOwnerLoginIn = Array<string>;
 
 /**
  * Filters field "owner_login" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginNEQ = string;
+export type EdgeGithubRepositoryOwnerLoginNeq = string;
 
 /**
  * Filters field "owner_login" to be not within the provided values.
  */
-export type ParameterEdgeGithubRepositoryOwnerLoginNotIn = Array<(string)>;
+export type EdgeGithubRepositoryOwnerLoginNotIn = Array<string>;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryPublicEQ = boolean;
+export type EdgeGithubRepositoryPublicEq = boolean;
 
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type ParameterEdgeGithubRepositoryPushedAtIn = Array<(string)>;
+export type EdgeGithubRepositoryPushedAtIn = Array<string>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type ParameterEdgeGithubRepositoryPushedAtNotIn = Array<(string)>;
+export type EdgeGithubRepositoryPushedAtNotIn = Array<string>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryRepoIDEQ = number;
+export type EdgeGithubRepositoryRepoIdeq = number;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryRepoIDNEQ = number;
+export type EdgeGithubRepositoryRepoIdneq = number;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
  */
-export type ParameterEdgeGithubRepositoryStarCountGT = number;
+export type EdgeGithubRepositoryStarCountGt = number;
 
 /**
  * Filters field "star_count" to be less than the provided value.
  */
-export type ParameterEdgeGithubRepositoryStarCountLT = number;
+export type EdgeGithubRepositoryStarCountLt = number;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryUpdatedAtEQ = string;
+export type EdgeGithubRepositoryUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterEdgeGithubRepositoryUpdatedAtGT = number;
+export type EdgeGithubRepositoryUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be null/nil.
  */
-export type ParameterEdgeGithubRepositoryUpdatedAtIsNil = boolean;
+export type EdgeGithubRepositoryUpdatedAtIsNil = boolean;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterEdgeGithubRepositoryUpdatedAtLT = number;
+export type EdgeGithubRepositoryUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterEdgeGithubRepositoryUpdatedAtNEQ = string;
+export type EdgeGithubRepositoryUpdatedAtNeq = string;
 
 /**
  * If true, only return entities that have a asset edge.
  */
-export type ParameterEdgeHasAsset = boolean;
+export type EdgeHasAsset = boolean;
 
 /**
  * If true, only return entities that have a author edge.
  */
-export type ParameterEdgeHasAuthor = boolean;
+export type EdgeHasAuthor = boolean;
 
 /**
  * If true, only return entities that have a github_repository edge.
  */
-export type ParameterEdgeHasGithubRepository = boolean;
+export type EdgeHasGithubRepository = boolean;
 
 /**
  * If true, only return entities that have a label edge.
  */
-export type ParameterEdgeHasLabel = boolean;
+export type EdgeHasLabel = boolean;
 
 /**
  * If true, only return entities that have a post edge.
  */
-export type ParameterEdgeHasPost = boolean;
+export type EdgeHasPost = boolean;
 
 /**
  * If true, only return entities that have a release edge.
  */
-export type ParameterEdgeHasRelease = boolean;
+export type EdgeHasRelease = boolean;
 
 /**
  * If true, only return entities that have a repository edge.
  */
-export type ParameterEdgeHasRepository = boolean;
+export type EdgeHasRepository = boolean;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterEdgeLabelCreateTimeEQ = string;
+export type EdgeLabelCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterEdgeLabelCreateTimeGT = number;
+export type EdgeLabelCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterEdgeLabelCreateTimeLT = number;
+export type EdgeLabelCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterEdgeLabelCreateTimeNEQ = string;
+export type EdgeLabelCreateTimeNeq = string;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeLabelNameContains = string;
+export type EdgeLabelNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeLabelNameContainsFold = string;
+export type EdgeLabelNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeLabelNameEQ = string;
+export type EdgeLabelNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeLabelNameEqualFold = string;
+export type EdgeLabelNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeLabelNameHasPrefix = string;
+export type EdgeLabelNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeLabelNameHasSuffix = string;
+export type EdgeLabelNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeLabelNameIn = Array<(string)>;
+export type EdgeLabelNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeLabelNameNEQ = string;
+export type EdgeLabelNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeLabelNameNotIn = Array<(string)>;
+export type EdgeLabelNameNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterEdgeLabelUpdateTimeEQ = string;
+export type EdgeLabelUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterEdgeLabelUpdateTimeGT = number;
+export type EdgeLabelUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterEdgeLabelUpdateTimeLT = number;
+export type EdgeLabelUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterEdgeLabelUpdateTimeNEQ = string;
+export type EdgeLabelUpdateTimeNeq = string;
 
 /**
  * Filters field "content" to contain the provided value.
  */
-export type ParameterEdgePostContentContains = string;
+export type EdgePostContentContains = string;
 
 /**
  * Filters field "content" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgePostContentContainsFold = string;
+export type EdgePostContentContainsFold = string;
 
 /**
  * Filters field "content_html" to contain the provided value.
  */
-export type ParameterEdgePostContentHTMLContains = string;
+export type EdgePostContentHtmlContains = string;
 
 /**
  * Filters field "content_html" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgePostContentHTMLContainsFold = string;
+export type EdgePostContentHtmlContainsFold = string;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterEdgePostCreateTimeEQ = string;
+export type EdgePostCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterEdgePostCreateTimeGT = number;
+export type EdgePostCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterEdgePostCreateTimeLT = number;
+export type EdgePostCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterEdgePostCreateTimeNEQ = string;
+export type EdgePostCreateTimeNeq = string;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterEdgePostPublicEQ = boolean;
+export type EdgePostPublicEq = boolean;
 
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type ParameterEdgePostPublishedAtEQ = string;
+export type EdgePostPublishedAtEq = string;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
  */
-export type ParameterEdgePostPublishedAtGT = number;
+export type EdgePostPublishedAtGt = number;
 
 /**
  * Filters field "published_at" to be less than the provided value.
  */
-export type ParameterEdgePostPublishedAtLT = number;
+export type EdgePostPublishedAtLt = number;
 
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type ParameterEdgePostPublishedAtNEQ = string;
+export type EdgePostPublishedAtNeq = string;
 
 /**
  * Filters field "slug" to be equal to the provided value.
  */
-export type ParameterEdgePostSlugEQ = string;
+export type EdgePostSlugEq = string;
 
 /**
  * Filters field "slug" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgePostSlugEqualFold = string;
+export type EdgePostSlugEqualFold = string;
 
 /**
  * Filters field "slug" to be not equal to the provided value.
  */
-export type ParameterEdgePostSlugNEQ = string;
+export type EdgePostSlugNeq = string;
 
 /**
  * Filters field "title" to contain the provided value.
  */
-export type ParameterEdgePostTitleContains = string;
+export type EdgePostTitleContains = string;
 
 /**
  * Filters field "title" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgePostTitleContainsFold = string;
+export type EdgePostTitleContainsFold = string;
 
 /**
  * Filters field "title" to be equal to the provided value.
  */
-export type ParameterEdgePostTitleEQ = string;
+export type EdgePostTitleEq = string;
 
 /**
  * Filters field "title" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgePostTitleEqualFold = string;
+export type EdgePostTitleEqualFold = string;
 
 /**
  * Filters field "title" to start with the provided value.
  */
-export type ParameterEdgePostTitleHasPrefix = string;
+export type EdgePostTitleHasPrefix = string;
 
 /**
  * Filters field "title" to end with the provided value.
  */
-export type ParameterEdgePostTitleHasSuffix = string;
+export type EdgePostTitleHasSuffix = string;
 
 /**
  * Filters field "title" to be within the provided values.
  */
-export type ParameterEdgePostTitleIn = Array<(string)>;
+export type EdgePostTitleIn = Array<string>;
 
 /**
  * Filters field "title" to be not equal to the provided value.
  */
-export type ParameterEdgePostTitleNEQ = string;
+export type EdgePostTitleNeq = string;
 
 /**
  * Filters field "title" to be not within the provided values.
  */
-export type ParameterEdgePostTitleNotIn = Array<(string)>;
+export type EdgePostTitleNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterEdgePostUpdateTimeEQ = string;
+export type EdgePostUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterEdgePostUpdateTimeGT = number;
+export type EdgePostUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterEdgePostUpdateTimeLT = number;
+export type EdgePostUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterEdgePostUpdateTimeNEQ = string;
+export type EdgePostUpdateTimeNeq = string;
 
 /**
  * Filters field "view_count" to be equal to the provided value.
  */
-export type ParameterEdgePostViewCountEQ = number;
+export type EdgePostViewCountEq = number;
 
 /**
  * Filters field "view_count" to be greater than the provided value.
  */
-export type ParameterEdgePostViewCountGT = number;
+export type EdgePostViewCountGt = number;
 
 /**
  * Filters field "view_count" to be less than the provided value.
  */
-export type ParameterEdgePostViewCountLT = number;
+export type EdgePostViewCountLt = number;
 
 /**
  * Filters field "view_count" to be not equal to the provided value.
  */
-export type ParameterEdgePostViewCountNEQ = number;
+export type EdgePostViewCountNeq = number;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseCreatedAtEQ = string;
+export type EdgeReleaseCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterEdgeReleaseCreatedAtGT = number;
+export type EdgeReleaseCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterEdgeReleaseCreatedAtLT = number;
+export type EdgeReleaseCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterEdgeReleaseCreatedAtNEQ = string;
+export type EdgeReleaseCreatedAtNeq = string;
 
 /**
  * Filters field "draft" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseDraftEQ = boolean;
+export type EdgeReleaseDraftEq = boolean;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeReleaseNameContains = string;
+export type EdgeReleaseNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseNameContainsFold = string;
+export type EdgeReleaseNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseNameEQ = string;
+export type EdgeReleaseNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseNameEqualFold = string;
+export type EdgeReleaseNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeReleaseNameHasPrefix = string;
+export type EdgeReleaseNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeReleaseNameHasSuffix = string;
+export type EdgeReleaseNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeReleaseNameIn = Array<(string)>;
+export type EdgeReleaseNameIn = Array<string>;
 
 /**
  * Filters field "name" to be null/nil.
  */
-export type ParameterEdgeReleaseNameIsNil = boolean;
+export type EdgeReleaseNameIsNil = boolean;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeReleaseNameNEQ = string;
+export type EdgeReleaseNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeReleaseNameNotIn = Array<(string)>;
+export type EdgeReleaseNameNotIn = Array<string>;
 
 /**
  * Filters field "prerelease" to be equal to the provided value.
  */
-export type ParameterEdgeReleasePrereleaseEQ = boolean;
+export type EdgeReleasePrereleaseEq = boolean;
 
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type ParameterEdgeReleasePublishedAtEQ = string;
+export type EdgeReleasePublishedAtEq = string;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
  */
-export type ParameterEdgeReleasePublishedAtGT = number;
+export type EdgeReleasePublishedAtGt = number;
 
 /**
  * Filters field "published_at" to be less than the provided value.
  */
-export type ParameterEdgeReleasePublishedAtLT = number;
+export type EdgeReleasePublishedAtLt = number;
 
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type ParameterEdgeReleasePublishedAtNEQ = string;
+export type EdgeReleasePublishedAtNeq = string;
 
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseReleaseIDEQ = number;
+export type EdgeReleaseReleaseIdeq = number;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type ParameterEdgeReleaseReleaseIDNEQ = number;
+export type EdgeReleaseReleaseIdneq = number;
 
 /**
  * Filters field "tag_name" to contain the provided value.
  */
-export type ParameterEdgeReleaseTagNameContains = string;
+export type EdgeReleaseTagNameContains = string;
 
 /**
  * Filters field "tag_name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseTagNameContainsFold = string;
+export type EdgeReleaseTagNameContainsFold = string;
 
 /**
  * Filters field "tag_name" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseTagNameEQ = string;
+export type EdgeReleaseTagNameEq = string;
 
 /**
  * Filters field "tag_name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseTagNameEqualFold = string;
+export type EdgeReleaseTagNameEqualFold = string;
 
 /**
  * Filters field "tag_name" to start with the provided value.
  */
-export type ParameterEdgeReleaseTagNameHasPrefix = string;
+export type EdgeReleaseTagNameHasPrefix = string;
 
 /**
  * Filters field "tag_name" to end with the provided value.
  */
-export type ParameterEdgeReleaseTagNameHasSuffix = string;
+export type EdgeReleaseTagNameHasSuffix = string;
 
 /**
  * Filters field "tag_name" to be within the provided values.
  */
-export type ParameterEdgeReleaseTagNameIn = Array<(string)>;
+export type EdgeReleaseTagNameIn = Array<string>;
 
 /**
  * Filters field "tag_name" to be not equal to the provided value.
  */
-export type ParameterEdgeReleaseTagNameNEQ = string;
+export type EdgeReleaseTagNameNeq = string;
 
 /**
  * Filters field "tag_name" to be not within the provided values.
  */
-export type ParameterEdgeReleaseTagNameNotIn = Array<(string)>;
+export type EdgeReleaseTagNameNotIn = Array<string>;
 
 /**
  * Filters field "target_commitish" to contain the provided value.
  */
-export type ParameterEdgeReleaseTargetCommitishContains = string;
+export type EdgeReleaseTargetCommitishContains = string;
 
 /**
  * Filters field "target_commitish" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseTargetCommitishContainsFold = string;
+export type EdgeReleaseTargetCommitishContainsFold = string;
 
 /**
  * Filters field "target_commitish" to be equal to the provided value.
  */
-export type ParameterEdgeReleaseTargetCommitishEQ = string;
+export type EdgeReleaseTargetCommitishEq = string;
 
 /**
  * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeReleaseTargetCommitishEqualFold = string;
+export type EdgeReleaseTargetCommitishEqualFold = string;
 
 /**
  * Filters field "target_commitish" to start with the provided value.
  */
-export type ParameterEdgeReleaseTargetCommitishHasPrefix = string;
+export type EdgeReleaseTargetCommitishHasPrefix = string;
 
 /**
  * Filters field "target_commitish" to end with the provided value.
  */
-export type ParameterEdgeReleaseTargetCommitishHasSuffix = string;
+export type EdgeReleaseTargetCommitishHasSuffix = string;
 
 /**
  * Filters field "target_commitish" to be within the provided values.
  */
-export type ParameterEdgeReleaseTargetCommitishIn = Array<(string)>;
+export type EdgeReleaseTargetCommitishIn = Array<string>;
 
 /**
  * Filters field "target_commitish" to be not equal to the provided value.
  */
-export type ParameterEdgeReleaseTargetCommitishNEQ = string;
+export type EdgeReleaseTargetCommitishNeq = string;
 
 /**
  * Filters field "target_commitish" to be not within the provided values.
  */
-export type ParameterEdgeReleaseTargetCommitishNotIn = Array<(string)>;
+export type EdgeReleaseTargetCommitishNotIn = Array<string>;
 
 /**
  * Filters field "archived" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryArchivedEQ = boolean;
+export type EdgeRepositoryArchivedEq = boolean;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryCreatedAtEQ = string;
+export type EdgeRepositoryCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterEdgeRepositoryCreatedAtGT = number;
+export type EdgeRepositoryCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterEdgeRepositoryCreatedAtLT = number;
+export type EdgeRepositoryCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryCreatedAtNEQ = string;
+export type EdgeRepositoryCreatedAtNeq = string;
 
 /**
  * Filters field "default_branch" to contain the provided value.
  */
-export type ParameterEdgeRepositoryDefaultBranchContains = string;
+export type EdgeRepositoryDefaultBranchContains = string;
 
 /**
  * Filters field "default_branch" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryDefaultBranchContainsFold = string;
+export type EdgeRepositoryDefaultBranchContainsFold = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryDefaultBranchEQ = string;
+export type EdgeRepositoryDefaultBranchEq = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryDefaultBranchEqualFold = string;
+export type EdgeRepositoryDefaultBranchEqualFold = string;
 
 /**
  * Filters field "default_branch" to start with the provided value.
  */
-export type ParameterEdgeRepositoryDefaultBranchHasPrefix = string;
+export type EdgeRepositoryDefaultBranchHasPrefix = string;
 
 /**
  * Filters field "default_branch" to end with the provided value.
  */
-export type ParameterEdgeRepositoryDefaultBranchHasSuffix = string;
+export type EdgeRepositoryDefaultBranchHasSuffix = string;
 
 /**
  * Filters field "default_branch" to be within the provided values.
  */
-export type ParameterEdgeRepositoryDefaultBranchIn = Array<(string)>;
+export type EdgeRepositoryDefaultBranchIn = Array<string>;
 
 /**
  * Filters field "default_branch" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryDefaultBranchNEQ = string;
+export type EdgeRepositoryDefaultBranchNeq = string;
 
 /**
  * Filters field "default_branch" to be not within the provided values.
  */
-export type ParameterEdgeRepositoryDefaultBranchNotIn = Array<(string)>;
+export type EdgeRepositoryDefaultBranchNotIn = Array<string>;
 
 /**
  * Filters field "description" to contain the provided value.
  */
-export type ParameterEdgeRepositoryDescriptionContains = string;
+export type EdgeRepositoryDescriptionContains = string;
 
 /**
  * Filters field "description" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryDescriptionContainsFold = string;
+export type EdgeRepositoryDescriptionContainsFold = string;
 
 /**
  * Filters field "description" to be null/nil.
  */
-export type ParameterEdgeRepositoryDescriptionIsNil = boolean;
+export type EdgeRepositoryDescriptionIsNil = boolean;
 
 /**
  * Filters field "fork" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryForkEQ = boolean;
+export type EdgeRepositoryForkEq = boolean;
 
 /**
  * Filters field "full_name" to contain the provided value.
  */
-export type ParameterEdgeRepositoryFullNameContains = string;
+export type EdgeRepositoryFullNameContains = string;
 
 /**
  * Filters field "full_name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryFullNameContainsFold = string;
+export type EdgeRepositoryFullNameContainsFold = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryFullNameEQ = string;
+export type EdgeRepositoryFullNameEq = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryFullNameEqualFold = string;
+export type EdgeRepositoryFullNameEqualFold = string;
 
 /**
  * Filters field "full_name" to start with the provided value.
  */
-export type ParameterEdgeRepositoryFullNameHasPrefix = string;
+export type EdgeRepositoryFullNameHasPrefix = string;
 
 /**
  * Filters field "full_name" to end with the provided value.
  */
-export type ParameterEdgeRepositoryFullNameHasSuffix = string;
+export type EdgeRepositoryFullNameHasSuffix = string;
 
 /**
  * Filters field "full_name" to be within the provided values.
  */
-export type ParameterEdgeRepositoryFullNameIn = Array<(string)>;
+export type EdgeRepositoryFullNameIn = Array<string>;
 
 /**
  * Filters field "full_name" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryFullNameNEQ = string;
+export type EdgeRepositoryFullNameNeq = string;
 
 /**
  * Filters field "full_name" to be not within the provided values.
  */
-export type ParameterEdgeRepositoryFullNameNotIn = Array<(string)>;
+export type EdgeRepositoryFullNameNotIn = Array<string>;
 
 /**
  * Filters field "has_issues" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryHasIssuesEQ = boolean;
+export type EdgeRepositoryHasIssuesEq = boolean;
 
 /**
  * Filters field "is_template" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryIsTemplateEQ = boolean;
+export type EdgeRepositoryIsTemplateEq = boolean;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterEdgeRepositoryNameContains = string;
+export type EdgeRepositoryNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryNameContainsFold = string;
+export type EdgeRepositoryNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryNameEQ = string;
+export type EdgeRepositoryNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryNameEqualFold = string;
+export type EdgeRepositoryNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterEdgeRepositoryNameHasPrefix = string;
+export type EdgeRepositoryNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterEdgeRepositoryNameHasSuffix = string;
+export type EdgeRepositoryNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterEdgeRepositoryNameIn = Array<(string)>;
+export type EdgeRepositoryNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryNameNEQ = string;
+export type EdgeRepositoryNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterEdgeRepositoryNameNotIn = Array<(string)>;
+export type EdgeRepositoryNameNotIn = Array<string>;
 
 /**
  * Filters field "owner_login" to contain the provided value.
  */
-export type ParameterEdgeRepositoryOwnerLoginContains = string;
+export type EdgeRepositoryOwnerLoginContains = string;
 
 /**
  * Filters field "owner_login" to contain the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryOwnerLoginContainsFold = string;
+export type EdgeRepositoryOwnerLoginContainsFold = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryOwnerLoginEQ = string;
+export type EdgeRepositoryOwnerLoginEq = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value, case-insensitive.
  */
-export type ParameterEdgeRepositoryOwnerLoginEqualFold = string;
+export type EdgeRepositoryOwnerLoginEqualFold = string;
 
 /**
  * Filters field "owner_login" to start with the provided value.
  */
-export type ParameterEdgeRepositoryOwnerLoginHasPrefix = string;
+export type EdgeRepositoryOwnerLoginHasPrefix = string;
 
 /**
  * Filters field "owner_login" to end with the provided value.
  */
-export type ParameterEdgeRepositoryOwnerLoginHasSuffix = string;
+export type EdgeRepositoryOwnerLoginHasSuffix = string;
 
 /**
  * Filters field "owner_login" to be within the provided values.
  */
-export type ParameterEdgeRepositoryOwnerLoginIn = Array<(string)>;
+export type EdgeRepositoryOwnerLoginIn = Array<string>;
 
 /**
  * Filters field "owner_login" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryOwnerLoginNEQ = string;
+export type EdgeRepositoryOwnerLoginNeq = string;
 
 /**
  * Filters field "owner_login" to be not within the provided values.
  */
-export type ParameterEdgeRepositoryOwnerLoginNotIn = Array<(string)>;
+export type EdgeRepositoryOwnerLoginNotIn = Array<string>;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryPublicEQ = boolean;
+export type EdgeRepositoryPublicEq = boolean;
 
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type ParameterEdgeRepositoryPushedAtIn = Array<(string)>;
+export type EdgeRepositoryPushedAtIn = Array<string>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type ParameterEdgeRepositoryPushedAtNotIn = Array<(string)>;
+export type EdgeRepositoryPushedAtNotIn = Array<string>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryRepoIDEQ = number;
+export type EdgeRepositoryRepoIdeq = number;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryRepoIDNEQ = number;
+export type EdgeRepositoryRepoIdneq = number;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
  */
-export type ParameterEdgeRepositoryStarCountGT = number;
+export type EdgeRepositoryStarCountGt = number;
 
 /**
  * Filters field "star_count" to be less than the provided value.
  */
-export type ParameterEdgeRepositoryStarCountLT = number;
+export type EdgeRepositoryStarCountLt = number;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterEdgeRepositoryUpdatedAtEQ = string;
+export type EdgeRepositoryUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterEdgeRepositoryUpdatedAtGT = number;
+export type EdgeRepositoryUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be null/nil.
  */
-export type ParameterEdgeRepositoryUpdatedAtIsNil = boolean;
+export type EdgeRepositoryUpdatedAtIsNil = boolean;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterEdgeRepositoryUpdatedAtLT = number;
+export type EdgeRepositoryUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterEdgeRepositoryUpdatedAtNEQ = string;
+export type EdgeRepositoryUpdatedAtNeq = string;
 
 /**
  * Filter operation to use.
  */
-export type ParameterFilterOperation = FilterOperation;
+export type FilterOperation2 = FilterOperation;
 
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type ParameterGithubAssetAssetIDEQ = number;
+export type GithubAssetAssetIdeq = number;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type ParameterGithubAssetAssetIDNEQ = number;
+export type GithubAssetAssetIdneq = number;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterGithubAssetCreatedAtEQ = string;
+export type GithubAssetCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterGithubAssetCreatedAtGT = number;
+export type GithubAssetCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterGithubAssetCreatedAtLT = number;
+export type GithubAssetCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterGithubAssetCreatedAtNEQ = string;
+export type GithubAssetCreatedAtNeq = string;
 
 /**
  * Filters field "download_count" to be greater than the provided value.
  */
-export type ParameterGithubAssetDownloadCountGT = number;
+export type GithubAssetDownloadCountGt = number;
 
 /**
  * Filters field "download_count" to be less than the provided value.
  */
-export type ParameterGithubAssetDownloadCountLT = number;
+export type GithubAssetDownloadCountLt = number;
 
 /**
  * The ID of the GithubAsset to act upon.
  */
-export type ParameterGithubAssetID = number;
+export type GithubAssetId = number;
 
 /**
  * Filters field "label" to contain the provided value.
  */
-export type ParameterGithubAssetLabelContains = string;
+export type GithubAssetLabelContains = string;
 
 /**
  * Filters field "label" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubAssetLabelContainsFold = string;
+export type GithubAssetLabelContainsFold = string;
 
 /**
  * Filters field "label" to be equal to the provided value.
  */
-export type ParameterGithubAssetLabelEQ = string;
+export type GithubAssetLabelEq = string;
 
 /**
  * Filters field "label" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubAssetLabelEqualFold = string;
+export type GithubAssetLabelEqualFold = string;
 
 /**
  * Filters field "label" to start with the provided value.
  */
-export type ParameterGithubAssetLabelHasPrefix = string;
+export type GithubAssetLabelHasPrefix = string;
 
 /**
  * Filters field "label" to end with the provided value.
  */
-export type ParameterGithubAssetLabelHasSuffix = string;
+export type GithubAssetLabelHasSuffix = string;
 
 /**
  * Filters field "label" to be within the provided values.
  */
-export type ParameterGithubAssetLabelIn = Array<(string)>;
+export type GithubAssetLabelIn = Array<string>;
 
 /**
  * Filters field "label" to be null/nil.
  */
-export type ParameterGithubAssetLabelIsNil = boolean;
+export type GithubAssetLabelIsNil = boolean;
 
 /**
  * Filters field "label" to be not equal to the provided value.
  */
-export type ParameterGithubAssetLabelNEQ = string;
+export type GithubAssetLabelNeq = string;
 
 /**
  * Filters field "label" to be not within the provided values.
  */
-export type ParameterGithubAssetLabelNotIn = Array<(string)>;
+export type GithubAssetLabelNotIn = Array<string>;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterGithubAssetNameContains = string;
+export type GithubAssetNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubAssetNameContainsFold = string;
+export type GithubAssetNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterGithubAssetNameEQ = string;
+export type GithubAssetNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubAssetNameEqualFold = string;
+export type GithubAssetNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterGithubAssetNameHasPrefix = string;
+export type GithubAssetNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterGithubAssetNameHasSuffix = string;
+export type GithubAssetNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterGithubAssetNameIn = Array<(string)>;
+export type GithubAssetNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterGithubAssetNameNEQ = string;
+export type GithubAssetNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterGithubAssetNameNotIn = Array<(string)>;
+export type GithubAssetNameNotIn = Array<string>;
 
 /**
  * Filters field "size" to be greater than the provided value.
  */
-export type ParameterGithubAssetSizeGT = number;
+export type GithubAssetSizeGt = number;
 
 /**
  * Filters field "size" to be less than the provided value.
  */
-export type ParameterGithubAssetSizeLT = number;
+export type GithubAssetSizeLt = number;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterGithubAssetUpdatedAtEQ = string;
+export type GithubAssetUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterGithubAssetUpdatedAtGT = number;
+export type GithubAssetUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be null/nil.
  */
-export type ParameterGithubAssetUpdatedAtIsNil = boolean;
+export type GithubAssetUpdatedAtIsNil = boolean;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterGithubAssetUpdatedAtLT = number;
+export type GithubAssetUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterGithubAssetUpdatedAtNEQ = string;
+export type GithubAssetUpdatedAtNeq = string;
 
 /**
  * Filters field "actor_id" to be equal to the provided value.
  */
-export type ParameterGithubEventActorIDEQ = number;
+export type GithubEventActorIdeq = number;
 
 /**
  * Filters field "actor_id" to be not equal to the provided value.
  */
-export type ParameterGithubEventActorIDNEQ = number;
+export type GithubEventActorIdneq = number;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterGithubEventCreatedAtEQ = string;
+export type GithubEventCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterGithubEventCreatedAtGT = number;
+export type GithubEventCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterGithubEventCreatedAtLT = number;
+export type GithubEventCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterGithubEventCreatedAtNEQ = string;
+export type GithubEventCreatedAtNeq = string;
 
 /**
  * Filters field "event_id" to be equal to the provided value.
  */
-export type ParameterGithubEventEventIDEQ = string;
+export type GithubEventEventIdeq = string;
 
 /**
  * Filters field "event_id" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubEventEventIDEqualFold = string;
+export type GithubEventEventIdEqualFold = string;
 
 /**
  * Filters field "event_id" to be not equal to the provided value.
  */
-export type ParameterGithubEventEventIDNEQ = string;
+export type GithubEventEventIdneq = string;
 
 /**
  * Filters field "event_type" to contain the provided value.
  */
-export type ParameterGithubEventEventTypeContains = string;
+export type GithubEventEventTypeContains = string;
 
 /**
  * Filters field "event_type" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubEventEventTypeContainsFold = string;
+export type GithubEventEventTypeContainsFold = string;
 
 /**
  * Filters field "event_type" to be equal to the provided value.
  */
-export type ParameterGithubEventEventTypeEQ = string;
+export type GithubEventEventTypeEq = string;
 
 /**
  * Filters field "event_type" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubEventEventTypeEqualFold = string;
+export type GithubEventEventTypeEqualFold = string;
 
 /**
  * Filters field "event_type" to start with the provided value.
  */
-export type ParameterGithubEventEventTypeHasPrefix = string;
+export type GithubEventEventTypeHasPrefix = string;
 
 /**
  * Filters field "event_type" to end with the provided value.
  */
-export type ParameterGithubEventEventTypeHasSuffix = string;
+export type GithubEventEventTypeHasSuffix = string;
 
 /**
  * Filters field "event_type" to be within the provided values.
  */
-export type ParameterGithubEventEventTypeIn = Array<(string)>;
+export type GithubEventEventTypeIn = Array<string>;
 
 /**
  * Filters field "event_type" to be not equal to the provided value.
  */
-export type ParameterGithubEventEventTypeNEQ = string;
+export type GithubEventEventTypeNeq = string;
 
 /**
  * Filters field "event_type" to be not within the provided values.
  */
-export type ParameterGithubEventEventTypeNotIn = Array<(string)>;
+export type GithubEventEventTypeNotIn = Array<string>;
 
 /**
  * The ID of the GithubEvent to act upon.
  */
-export type ParameterGithubEventID = number;
+export type GithubEventId = number;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterGithubEventPublicEQ = boolean;
+export type GithubEventPublicEq = boolean;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type ParameterGithubEventRepoIDEQ = number;
+export type GithubEventRepoIdeq = number;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type ParameterGithubEventRepoIDNEQ = number;
+export type GithubEventRepoIdneq = number;
 
 /**
  * Filters field "content" to contain the provided value.
  */
-export type ParameterGithubGistContentContains = string;
+export type GithubGistContentContains = string;
 
 /**
  * Filters field "content" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubGistContentContainsFold = string;
+export type GithubGistContentContainsFold = string;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterGithubGistCreatedAtEQ = string;
+export type GithubGistCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterGithubGistCreatedAtGT = number;
+export type GithubGistCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterGithubGistCreatedAtLT = number;
+export type GithubGistCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterGithubGistCreatedAtNEQ = string;
+export type GithubGistCreatedAtNeq = string;
 
 /**
  * Filters field "description" to contain the provided value.
  */
-export type ParameterGithubGistDescriptionContains = string;
+export type GithubGistDescriptionContains = string;
 
 /**
  * Filters field "description" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubGistDescriptionContainsFold = string;
+export type GithubGistDescriptionContainsFold = string;
 
 /**
  * Filters field "description" to be null/nil.
  */
-export type ParameterGithubGistDescriptionIsNil = boolean;
+export type GithubGistDescriptionIsNil = boolean;
 
 /**
  * Filters field "gist_id" to be equal to the provided value.
  */
-export type ParameterGithubGistGistIDEQ = string;
+export type GithubGistGistIdeq = string;
 
 /**
  * Filters field "gist_id" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubGistGistIDEqualFold = string;
+export type GithubGistGistIdEqualFold = string;
 
 /**
  * Filters field "gist_id" to be not equal to the provided value.
  */
-export type ParameterGithubGistGistIDNEQ = string;
+export type GithubGistGistIdneq = string;
 
 /**
  * The ID of the GithubGist to act upon.
  */
-export type ParameterGithubGistID = number;
+export type GithubGistId = number;
 
 /**
  * Filters field "language" to contain the provided value.
  */
-export type ParameterGithubGistLanguageContains = string;
+export type GithubGistLanguageContains = string;
 
 /**
  * Filters field "language" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubGistLanguageContainsFold = string;
+export type GithubGistLanguageContainsFold = string;
 
 /**
  * Filters field "language" to be equal to the provided value.
  */
-export type ParameterGithubGistLanguageEQ = string;
+export type GithubGistLanguageEq = string;
 
 /**
  * Filters field "language" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubGistLanguageEqualFold = string;
+export type GithubGistLanguageEqualFold = string;
 
 /**
  * Filters field "language" to start with the provided value.
  */
-export type ParameterGithubGistLanguageHasPrefix = string;
+export type GithubGistLanguageHasPrefix = string;
 
 /**
  * Filters field "language" to end with the provided value.
  */
-export type ParameterGithubGistLanguageHasSuffix = string;
+export type GithubGistLanguageHasSuffix = string;
 
 /**
  * Filters field "language" to be within the provided values.
  */
-export type ParameterGithubGistLanguageIn = Array<(string)>;
+export type GithubGistLanguageIn = Array<string>;
 
 /**
  * Filters field "language" to be null/nil.
  */
-export type ParameterGithubGistLanguageIsNil = boolean;
+export type GithubGistLanguageIsNil = boolean;
 
 /**
  * Filters field "language" to be not equal to the provided value.
  */
-export type ParameterGithubGistLanguageNEQ = string;
+export type GithubGistLanguageNeq = string;
 
 /**
  * Filters field "language" to be not within the provided values.
  */
-export type ParameterGithubGistLanguageNotIn = Array<(string)>;
+export type GithubGistLanguageNotIn = Array<string>;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterGithubGistNameContains = string;
+export type GithubGistNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubGistNameContainsFold = string;
+export type GithubGistNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterGithubGistNameEQ = string;
+export type GithubGistNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubGistNameEqualFold = string;
+export type GithubGistNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterGithubGistNameHasPrefix = string;
+export type GithubGistNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterGithubGistNameHasSuffix = string;
+export type GithubGistNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterGithubGistNameIn = Array<(string)>;
+export type GithubGistNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterGithubGistNameNEQ = string;
+export type GithubGistNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterGithubGistNameNotIn = Array<(string)>;
+export type GithubGistNameNotIn = Array<string>;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterGithubGistPublicEQ = boolean;
+export type GithubGistPublicEq = boolean;
 
 /**
  * Filters field "size" to be equal to the provided value.
  */
-export type ParameterGithubGistSizeEQ = number;
+export type GithubGistSizeEq = number;
 
 /**
  * Filters field "size" to be not equal to the provided value.
  */
-export type ParameterGithubGistSizeNEQ = number;
+export type GithubGistSizeNeq = number;
 
 /**
  * Filters field "type" to contain the provided value.
  */
-export type ParameterGithubGistTypeContains = string;
+export type GithubGistTypeContains = string;
 
 /**
  * Filters field "type" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubGistTypeContainsFold = string;
+export type GithubGistTypeContainsFold = string;
 
 /**
  * Filters field "type" to be equal to the provided value.
  */
-export type ParameterGithubGistTypeEQ = string;
+export type GithubGistTypeEq = string;
 
 /**
  * Filters field "type" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubGistTypeEqualFold = string;
+export type GithubGistTypeEqualFold = string;
 
 /**
  * Filters field "type" to start with the provided value.
  */
-export type ParameterGithubGistTypeHasPrefix = string;
+export type GithubGistTypeHasPrefix = string;
 
 /**
  * Filters field "type" to end with the provided value.
  */
-export type ParameterGithubGistTypeHasSuffix = string;
+export type GithubGistTypeHasSuffix = string;
 
 /**
  * Filters field "type" to be within the provided values.
  */
-export type ParameterGithubGistTypeIn = Array<(string)>;
+export type GithubGistTypeIn = Array<string>;
 
 /**
  * Filters field "type" to be not equal to the provided value.
  */
-export type ParameterGithubGistTypeNEQ = string;
+export type GithubGistTypeNeq = string;
 
 /**
  * Filters field "type" to be not within the provided values.
  */
-export type ParameterGithubGistTypeNotIn = Array<(string)>;
+export type GithubGistTypeNotIn = Array<string>;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterGithubGistUpdatedAtEQ = string;
+export type GithubGistUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterGithubGistUpdatedAtGT = number;
+export type GithubGistUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterGithubGistUpdatedAtLT = number;
+export type GithubGistUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterGithubGistUpdatedAtNEQ = string;
+export type GithubGistUpdatedAtNeq = string;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterGithubReleaseCreatedAtEQ = string;
+export type GithubReleaseCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterGithubReleaseCreatedAtGT = number;
+export type GithubReleaseCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterGithubReleaseCreatedAtLT = number;
+export type GithubReleaseCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterGithubReleaseCreatedAtNEQ = string;
+export type GithubReleaseCreatedAtNeq = string;
 
 /**
  * Filters field "draft" to be equal to the provided value.
  */
-export type ParameterGithubReleaseDraftEQ = boolean;
+export type GithubReleaseDraftEq = boolean;
 
 /**
  * The ID of the GithubRelease to act upon.
  */
-export type ParameterGithubReleaseID = number;
+export type GithubReleaseId = number;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterGithubReleaseNameContains = string;
+export type GithubReleaseNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseNameContainsFold = string;
+export type GithubReleaseNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterGithubReleaseNameEQ = string;
+export type GithubReleaseNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseNameEqualFold = string;
+export type GithubReleaseNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterGithubReleaseNameHasPrefix = string;
+export type GithubReleaseNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterGithubReleaseNameHasSuffix = string;
+export type GithubReleaseNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterGithubReleaseNameIn = Array<(string)>;
+export type GithubReleaseNameIn = Array<string>;
 
 /**
  * Filters field "name" to be null/nil.
  */
-export type ParameterGithubReleaseNameIsNil = boolean;
+export type GithubReleaseNameIsNil = boolean;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterGithubReleaseNameNEQ = string;
+export type GithubReleaseNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterGithubReleaseNameNotIn = Array<(string)>;
+export type GithubReleaseNameNotIn = Array<string>;
 
 /**
  * Filters field "prerelease" to be equal to the provided value.
  */
-export type ParameterGithubReleasePrereleaseEQ = boolean;
+export type GithubReleasePrereleaseEq = boolean;
 
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type ParameterGithubReleasePublishedAtEQ = string;
+export type GithubReleasePublishedAtEq = string;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
  */
-export type ParameterGithubReleasePublishedAtGT = number;
+export type GithubReleasePublishedAtGt = number;
 
 /**
  * Filters field "published_at" to be less than the provided value.
  */
-export type ParameterGithubReleasePublishedAtLT = number;
+export type GithubReleasePublishedAtLt = number;
 
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type ParameterGithubReleasePublishedAtNEQ = string;
+export type GithubReleasePublishedAtNeq = string;
 
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type ParameterGithubReleaseReleaseIDEQ = number;
+export type GithubReleaseReleaseIdeq = number;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type ParameterGithubReleaseReleaseIDNEQ = number;
+export type GithubReleaseReleaseIdneq = number;
 
 /**
  * Filters field "tag_name" to contain the provided value.
  */
-export type ParameterGithubReleaseTagNameContains = string;
+export type GithubReleaseTagNameContains = string;
 
 /**
  * Filters field "tag_name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseTagNameContainsFold = string;
+export type GithubReleaseTagNameContainsFold = string;
 
 /**
  * Filters field "tag_name" to be equal to the provided value.
  */
-export type ParameterGithubReleaseTagNameEQ = string;
+export type GithubReleaseTagNameEq = string;
 
 /**
  * Filters field "tag_name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseTagNameEqualFold = string;
+export type GithubReleaseTagNameEqualFold = string;
 
 /**
  * Filters field "tag_name" to start with the provided value.
  */
-export type ParameterGithubReleaseTagNameHasPrefix = string;
+export type GithubReleaseTagNameHasPrefix = string;
 
 /**
  * Filters field "tag_name" to end with the provided value.
  */
-export type ParameterGithubReleaseTagNameHasSuffix = string;
+export type GithubReleaseTagNameHasSuffix = string;
 
 /**
  * Filters field "tag_name" to be within the provided values.
  */
-export type ParameterGithubReleaseTagNameIn = Array<(string)>;
+export type GithubReleaseTagNameIn = Array<string>;
 
 /**
  * Filters field "tag_name" to be not equal to the provided value.
  */
-export type ParameterGithubReleaseTagNameNEQ = string;
+export type GithubReleaseTagNameNeq = string;
 
 /**
  * Filters field "tag_name" to be not within the provided values.
  */
-export type ParameterGithubReleaseTagNameNotIn = Array<(string)>;
+export type GithubReleaseTagNameNotIn = Array<string>;
 
 /**
  * Filters field "target_commitish" to contain the provided value.
  */
-export type ParameterGithubReleaseTargetCommitishContains = string;
+export type GithubReleaseTargetCommitishContains = string;
 
 /**
  * Filters field "target_commitish" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseTargetCommitishContainsFold = string;
+export type GithubReleaseTargetCommitishContainsFold = string;
 
 /**
  * Filters field "target_commitish" to be equal to the provided value.
  */
-export type ParameterGithubReleaseTargetCommitishEQ = string;
+export type GithubReleaseTargetCommitishEq = string;
 
 /**
  * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubReleaseTargetCommitishEqualFold = string;
+export type GithubReleaseTargetCommitishEqualFold = string;
 
 /**
  * Filters field "target_commitish" to start with the provided value.
  */
-export type ParameterGithubReleaseTargetCommitishHasPrefix = string;
+export type GithubReleaseTargetCommitishHasPrefix = string;
 
 /**
  * Filters field "target_commitish" to end with the provided value.
  */
-export type ParameterGithubReleaseTargetCommitishHasSuffix = string;
+export type GithubReleaseTargetCommitishHasSuffix = string;
 
 /**
  * Filters field "target_commitish" to be within the provided values.
  */
-export type ParameterGithubReleaseTargetCommitishIn = Array<(string)>;
+export type GithubReleaseTargetCommitishIn = Array<string>;
 
 /**
  * Filters field "target_commitish" to be not equal to the provided value.
  */
-export type ParameterGithubReleaseTargetCommitishNEQ = string;
+export type GithubReleaseTargetCommitishNeq = string;
 
 /**
  * Filters field "target_commitish" to be not within the provided values.
  */
-export type ParameterGithubReleaseTargetCommitishNotIn = Array<(string)>;
+export type GithubReleaseTargetCommitishNotIn = Array<string>;
 
 /**
  * Filters field "archived" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryArchivedEQ = boolean;
+export type GithubRepositoryArchivedEq = boolean;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryCreatedAtEQ = string;
+export type GithubRepositoryCreatedAtEq = string;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
  */
-export type ParameterGithubRepositoryCreatedAtGT = number;
+export type GithubRepositoryCreatedAtGt = number;
 
 /**
  * Filters field "created_at" to be less than the provided value.
  */
-export type ParameterGithubRepositoryCreatedAtLT = number;
+export type GithubRepositoryCreatedAtLt = number;
 
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryCreatedAtNEQ = string;
+export type GithubRepositoryCreatedAtNeq = string;
 
 /**
  * Filters field "default_branch" to contain the provided value.
  */
-export type ParameterGithubRepositoryDefaultBranchContains = string;
+export type GithubRepositoryDefaultBranchContains = string;
 
 /**
  * Filters field "default_branch" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryDefaultBranchContainsFold = string;
+export type GithubRepositoryDefaultBranchContainsFold = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryDefaultBranchEQ = string;
+export type GithubRepositoryDefaultBranchEq = string;
 
 /**
  * Filters field "default_branch" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryDefaultBranchEqualFold = string;
+export type GithubRepositoryDefaultBranchEqualFold = string;
 
 /**
  * Filters field "default_branch" to start with the provided value.
  */
-export type ParameterGithubRepositoryDefaultBranchHasPrefix = string;
+export type GithubRepositoryDefaultBranchHasPrefix = string;
 
 /**
  * Filters field "default_branch" to end with the provided value.
  */
-export type ParameterGithubRepositoryDefaultBranchHasSuffix = string;
+export type GithubRepositoryDefaultBranchHasSuffix = string;
 
 /**
  * Filters field "default_branch" to be within the provided values.
  */
-export type ParameterGithubRepositoryDefaultBranchIn = Array<(string)>;
+export type GithubRepositoryDefaultBranchIn = Array<string>;
 
 /**
  * Filters field "default_branch" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryDefaultBranchNEQ = string;
+export type GithubRepositoryDefaultBranchNeq = string;
 
 /**
  * Filters field "default_branch" to be not within the provided values.
  */
-export type ParameterGithubRepositoryDefaultBranchNotIn = Array<(string)>;
+export type GithubRepositoryDefaultBranchNotIn = Array<string>;
 
 /**
  * Filters field "description" to contain the provided value.
  */
-export type ParameterGithubRepositoryDescriptionContains = string;
+export type GithubRepositoryDescriptionContains = string;
 
 /**
  * Filters field "description" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryDescriptionContainsFold = string;
+export type GithubRepositoryDescriptionContainsFold = string;
 
 /**
  * Filters field "description" to be null/nil.
  */
-export type ParameterGithubRepositoryDescriptionIsNil = boolean;
+export type GithubRepositoryDescriptionIsNil = boolean;
 
 /**
  * Filters field "fork" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryForkEQ = boolean;
+export type GithubRepositoryForkEq = boolean;
 
 /**
  * Filters field "full_name" to contain the provided value.
  */
-export type ParameterGithubRepositoryFullNameContains = string;
+export type GithubRepositoryFullNameContains = string;
 
 /**
  * Filters field "full_name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryFullNameContainsFold = string;
+export type GithubRepositoryFullNameContainsFold = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryFullNameEQ = string;
+export type GithubRepositoryFullNameEq = string;
 
 /**
  * Filters field "full_name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryFullNameEqualFold = string;
+export type GithubRepositoryFullNameEqualFold = string;
 
 /**
  * Filters field "full_name" to start with the provided value.
  */
-export type ParameterGithubRepositoryFullNameHasPrefix = string;
+export type GithubRepositoryFullNameHasPrefix = string;
 
 /**
  * Filters field "full_name" to end with the provided value.
  */
-export type ParameterGithubRepositoryFullNameHasSuffix = string;
+export type GithubRepositoryFullNameHasSuffix = string;
 
 /**
  * Filters field "full_name" to be within the provided values.
  */
-export type ParameterGithubRepositoryFullNameIn = Array<(string)>;
+export type GithubRepositoryFullNameIn = Array<string>;
 
 /**
  * Filters field "full_name" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryFullNameNEQ = string;
+export type GithubRepositoryFullNameNeq = string;
 
 /**
  * Filters field "full_name" to be not within the provided values.
  */
-export type ParameterGithubRepositoryFullNameNotIn = Array<(string)>;
+export type GithubRepositoryFullNameNotIn = Array<string>;
 
 /**
  * Filters field "has_issues" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryHasIssuesEQ = boolean;
+export type GithubRepositoryHasIssuesEq = boolean;
 
 /**
  * The ID of the GithubRepository to act upon.
  */
-export type ParameterGithubRepositoryID = number;
+export type GithubRepositoryId = number;
 
 /**
  * Filters field "is_template" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryIsTemplateEQ = boolean;
+export type GithubRepositoryIsTemplateEq = boolean;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterGithubRepositoryNameContains = string;
+export type GithubRepositoryNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryNameContainsFold = string;
+export type GithubRepositoryNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryNameEQ = string;
+export type GithubRepositoryNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryNameEqualFold = string;
+export type GithubRepositoryNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterGithubRepositoryNameHasPrefix = string;
+export type GithubRepositoryNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterGithubRepositoryNameHasSuffix = string;
+export type GithubRepositoryNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterGithubRepositoryNameIn = Array<(string)>;
+export type GithubRepositoryNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryNameNEQ = string;
+export type GithubRepositoryNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterGithubRepositoryNameNotIn = Array<(string)>;
+export type GithubRepositoryNameNotIn = Array<string>;
 
 /**
  * Filters field "owner_login" to contain the provided value.
  */
-export type ParameterGithubRepositoryOwnerLoginContains = string;
+export type GithubRepositoryOwnerLoginContains = string;
 
 /**
  * Filters field "owner_login" to contain the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryOwnerLoginContainsFold = string;
+export type GithubRepositoryOwnerLoginContainsFold = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryOwnerLoginEQ = string;
+export type GithubRepositoryOwnerLoginEq = string;
 
 /**
  * Filters field "owner_login" to be equal to the provided value, case-insensitive.
  */
-export type ParameterGithubRepositoryOwnerLoginEqualFold = string;
+export type GithubRepositoryOwnerLoginEqualFold = string;
 
 /**
  * Filters field "owner_login" to start with the provided value.
  */
-export type ParameterGithubRepositoryOwnerLoginHasPrefix = string;
+export type GithubRepositoryOwnerLoginHasPrefix = string;
 
 /**
  * Filters field "owner_login" to end with the provided value.
  */
-export type ParameterGithubRepositoryOwnerLoginHasSuffix = string;
+export type GithubRepositoryOwnerLoginHasSuffix = string;
 
 /**
  * Filters field "owner_login" to be within the provided values.
  */
-export type ParameterGithubRepositoryOwnerLoginIn = Array<(string)>;
+export type GithubRepositoryOwnerLoginIn = Array<string>;
 
 /**
  * Filters field "owner_login" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryOwnerLoginNEQ = string;
+export type GithubRepositoryOwnerLoginNeq = string;
 
 /**
  * Filters field "owner_login" to be not within the provided values.
  */
-export type ParameterGithubRepositoryOwnerLoginNotIn = Array<(string)>;
+export type GithubRepositoryOwnerLoginNotIn = Array<string>;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryPublicEQ = boolean;
+export type GithubRepositoryPublicEq = boolean;
 
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type ParameterGithubRepositoryPushedAtIn = Array<(string)>;
+export type GithubRepositoryPushedAtIn = Array<string>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type ParameterGithubRepositoryPushedAtNotIn = Array<(string)>;
+export type GithubRepositoryPushedAtNotIn = Array<string>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryRepoIDEQ = number;
+export type GithubRepositoryRepoIdeq = number;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryRepoIDNEQ = number;
+export type GithubRepositoryRepoIdneq = number;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
  */
-export type ParameterGithubRepositoryStarCountGT = number;
+export type GithubRepositoryStarCountGt = number;
 
 /**
  * Filters field "star_count" to be less than the provided value.
  */
-export type ParameterGithubRepositoryStarCountLT = number;
+export type GithubRepositoryStarCountLt = number;
 
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type ParameterGithubRepositoryUpdatedAtEQ = string;
+export type GithubRepositoryUpdatedAtEq = string;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
  */
-export type ParameterGithubRepositoryUpdatedAtGT = number;
+export type GithubRepositoryUpdatedAtGt = number;
 
 /**
  * Filters field "updated_at" to be null/nil.
  */
-export type ParameterGithubRepositoryUpdatedAtIsNil = boolean;
+export type GithubRepositoryUpdatedAtIsNil = boolean;
 
 /**
  * Filters field "updated_at" to be less than the provided value.
  */
-export type ParameterGithubRepositoryUpdatedAtLT = number;
+export type GithubRepositoryUpdatedAtLt = number;
 
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type ParameterGithubRepositoryUpdatedAtNEQ = string;
+export type GithubRepositoryUpdatedAtNeq = string;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterLabelCreateTimeEQ = string;
+export type LabelCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterLabelCreateTimeGT = number;
+export type LabelCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterLabelCreateTimeLT = number;
+export type LabelCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterLabelCreateTimeNEQ = string;
+export type LabelCreateTimeNeq = string;
 
 /**
  * The ID of the Label to act upon.
  */
-export type ParameterLabelID = number;
+export type LabelId = number;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterLabelNameContains = string;
+export type LabelNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterLabelNameContainsFold = string;
+export type LabelNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterLabelNameEQ = string;
+export type LabelNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterLabelNameEqualFold = string;
+export type LabelNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterLabelNameHasPrefix = string;
+export type LabelNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterLabelNameHasSuffix = string;
+export type LabelNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterLabelNameIn = Array<(string)>;
+export type LabelNameIn = Array<string>;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterLabelNameNEQ = string;
+export type LabelNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterLabelNameNotIn = Array<(string)>;
+export type LabelNameNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterLabelUpdateTimeEQ = string;
+export type LabelUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterLabelUpdateTimeGT = number;
+export type LabelUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterLabelUpdateTimeLT = number;
+export type LabelUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterLabelUpdateTimeNEQ = string;
+export type LabelUpdateTimeNeq = string;
 
 /**
  * The page number to retrieve.
  */
-export type ParameterPage = number;
+export type Page = number;
 
 /**
  * Filters field "content" to contain the provided value.
  */
-export type ParameterPostContentContains = string;
+export type PostContentContains = string;
 
 /**
  * Filters field "content" to contain the provided value, case-insensitive.
  */
-export type ParameterPostContentContainsFold = string;
+export type PostContentContainsFold = string;
 
 /**
  * Filters field "content_html" to contain the provided value.
  */
-export type ParameterPostContentHTMLContains = string;
+export type PostContentHtmlContains = string;
 
 /**
  * Filters field "content_html" to contain the provided value, case-insensitive.
  */
-export type ParameterPostContentHTMLContainsFold = string;
+export type PostContentHtmlContainsFold = string;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterPostCreateTimeEQ = string;
+export type PostCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterPostCreateTimeGT = number;
+export type PostCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterPostCreateTimeLT = number;
+export type PostCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterPostCreateTimeNEQ = string;
+export type PostCreateTimeNeq = string;
 
 /**
  * The ID of the Post to act upon.
  */
-export type ParameterPostID = number;
+export type PostId = number;
 
 /**
  * Filters field "public" to be equal to the provided value.
  */
-export type ParameterPostPublicEQ = boolean;
+export type PostPublicEq = boolean;
 
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type ParameterPostPublishedAtEQ = string;
+export type PostPublishedAtEq = string;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
  */
-export type ParameterPostPublishedAtGT = number;
+export type PostPublishedAtGt = number;
 
 /**
  * Filters field "published_at" to be less than the provided value.
  */
-export type ParameterPostPublishedAtLT = number;
+export type PostPublishedAtLt = number;
 
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type ParameterPostPublishedAtNEQ = string;
+export type PostPublishedAtNeq = string;
 
 /**
  * Filters field "slug" to be equal to the provided value.
  */
-export type ParameterPostSlugEQ = string;
+export type PostSlugEq = string;
 
 /**
  * Filters field "slug" to be equal to the provided value, case-insensitive.
  */
-export type ParameterPostSlugEqualFold = string;
+export type PostSlugEqualFold = string;
 
 /**
  * Filters field "slug" to be not equal to the provided value.
  */
-export type ParameterPostSlugNEQ = string;
+export type PostSlugNeq = string;
 
 /**
  * Filters field "title" to contain the provided value.
  */
-export type ParameterPostTitleContains = string;
+export type PostTitleContains = string;
 
 /**
  * Filters field "title" to contain the provided value, case-insensitive.
  */
-export type ParameterPostTitleContainsFold = string;
+export type PostTitleContainsFold = string;
 
 /**
  * Filters field "title" to be equal to the provided value.
  */
-export type ParameterPostTitleEQ = string;
+export type PostTitleEq = string;
 
 /**
  * Filters field "title" to be equal to the provided value, case-insensitive.
  */
-export type ParameterPostTitleEqualFold = string;
+export type PostTitleEqualFold = string;
 
 /**
  * Filters field "title" to start with the provided value.
  */
-export type ParameterPostTitleHasPrefix = string;
+export type PostTitleHasPrefix = string;
 
 /**
  * Filters field "title" to end with the provided value.
  */
-export type ParameterPostTitleHasSuffix = string;
+export type PostTitleHasSuffix = string;
 
 /**
  * Filters field "title" to be within the provided values.
  */
-export type ParameterPostTitleIn = Array<(string)>;
+export type PostTitleIn = Array<string>;
 
 /**
  * Filters field "title" to be not equal to the provided value.
  */
-export type ParameterPostTitleNEQ = string;
+export type PostTitleNeq = string;
 
 /**
  * Filters field "title" to be not within the provided values.
  */
-export type ParameterPostTitleNotIn = Array<(string)>;
+export type PostTitleNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterPostUpdateTimeEQ = string;
+export type PostUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterPostUpdateTimeGT = number;
+export type PostUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterPostUpdateTimeLT = number;
+export type PostUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterPostUpdateTimeNEQ = string;
+export type PostUpdateTimeNeq = string;
 
 /**
  * Filters field "view_count" to be equal to the provided value.
  */
-export type ParameterPostViewCountEQ = number;
+export type PostViewCountEq = number;
 
 /**
  * Filters field "view_count" to be greater than the provided value.
  */
-export type ParameterPostViewCountGT = number;
+export type PostViewCountGt = number;
 
 /**
  * Filters field "view_count" to be less than the provided value.
  */
-export type ParameterPostViewCountLT = number;
+export type PostViewCountLt = number;
 
 /**
  * Filters field "view_count" to be not equal to the provided value.
  */
-export type ParameterPostViewCountNEQ = number;
+export type PostViewCountNeq = number;
 
 /**
- * If set to true, any JSON response will be indented. Not recommended for best performance.
+ * If set to true, any JSON response will be indented.
  */
-export type ParameterPrettyResponse = boolean;
-
-/**
- * Background type.
- */
-export type ParameterSVGBackground = 'geometric' | 'topography';
+export type PrettyResponse = boolean;
 
 /**
  * Background type.
  */
-export const ParameterSVGBackground = {
+export type SvgBackground = 'geometric' | 'topography';
+
+/**
+ * Background type.
+ */
+export const SvgBackground = {
     GEOMETRIC: 'geometric',
     TOPOGRAPHY: 'topography'
 } as const;
@@ -3976,42 +3964,42 @@ export const ParameterSVGBackground = {
 /**
  * Background color (hex, rgb, rgba, hsl).
  */
-export type ParameterSVGBackgroundColor = string;
+export type SvgBackgroundColor = string;
 
 /**
  * Description of the project (not required if using owner/repo).
  */
-export type ParameterSVGDescription = string;
+export type SvgDescription = string;
 
 /**
  * Font scale.
  */
-export type ParameterSVGFontScale = number;
+export type SvgFontScale = number;
 
 /**
  * Height of the SVG (in px).
  */
-export type ParameterSVGHeight = number;
+export type SvgHeight = number;
 
 /**
  * Iconidfy icon to use.
  */
-export type ParameterSVGIcon = string;
+export type SvgIcon = string;
 
 /**
  * Color of the icon (hex, rgb, rgba, hsl).
  */
-export type ParameterSVGIconColor = string;
+export type SvgIconColor = string;
 
 /**
  * Flip the icon.
  */
-export type ParameterSVGIconFlip = 'horizontal' | 'vertical';
+export type SvgIconFlip = 'horizontal' | 'vertical';
 
 /**
  * Flip the icon.
  */
-export const ParameterSVGIconFlip = {
+export const SvgIconFlip = {
     HORIZONTAL: 'horizontal',
     VERTICAL: 'vertical'
 } as const;
@@ -4019,36 +4007,36 @@ export const ParameterSVGIconFlip = {
 /**
  * Height of the icon (in px).
  */
-export type ParameterSVGIconHeight = number;
+export type SvgIconHeight = number;
 
 /**
  * Rotate the icon (1=90deg, 2=180deg, 3=270deg).
  */
-export type ParameterSVGIconRotate = 1 | 2 | 3;
+export type SvgIconRotate = 1 | 2 | 3;
 
 /**
  * Rotate the icon (1=90deg, 2=180deg, 3=270deg).
  */
-export const ParameterSVGIconRotate = {
-    '_1': 1,
-    '_2': 2,
-    '_3': 3
+export const SvgIconRotate = {
+    1: 1,
+    2: 2,
+    3: 3
 } as const;
 
 /**
  * Width of the icon (in px).
  */
-export type ParameterSVGIconWidth = number;
+export type SvgIconWidth = number;
 
 /**
  * Layout of the SVG.
  */
-export type ParameterSVGLayout = 'all' | 'left' | 'right';
+export type SvgLayout = 'all' | 'left' | 'right';
 
 /**
  * Layout of the SVG.
  */
-export const ParameterSVGLayout = {
+export const SvgLayout = {
     ALL: 'all',
     LEFT: 'left',
     RIGHT: 'right'
@@ -4057,285 +4045,287 @@ export const ParameterSVGLayout = {
 /**
  * Title of the project (not required if using owner/repo).
  */
-export type ParameterSVGTitle = string;
+export type SvgTitle = string;
 
 /**
  * Width of the SVG (in px).
  */
-export type ParameterSVGWidth = number;
+export type SvgWidth = number;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type ParameterUserCreateTimeEQ = string;
+export type UserCreateTimeEq = string;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
  */
-export type ParameterUserCreateTimeGT = number;
+export type UserCreateTimeGt = number;
 
 /**
  * Filters field "create_time" to be less than the provided value.
  */
-export type ParameterUserCreateTimeLT = number;
+export type UserCreateTimeLt = number;
 
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type ParameterUserCreateTimeNEQ = string;
+export type UserCreateTimeNeq = string;
 
 /**
  * Filters field "email" to contain the provided value.
  */
-export type ParameterUserEmailContains = string;
+export type UserEmailContains = string;
 
 /**
  * Filters field "email" to contain the provided value, case-insensitive.
  */
-export type ParameterUserEmailContainsFold = string;
+export type UserEmailContainsFold = string;
 
 /**
  * Filters field "email" to be equal to the provided value.
  */
-export type ParameterUserEmailEQ = string;
+export type UserEmailEq = string;
 
 /**
  * Filters field "email" to be equal to the provided value, case-insensitive.
  */
-export type ParameterUserEmailEqualFold = string;
+export type UserEmailEqualFold = string;
 
 /**
  * Filters field "email" to start with the provided value.
  */
-export type ParameterUserEmailHasPrefix = string;
+export type UserEmailHasPrefix = string;
 
 /**
  * Filters field "email" to end with the provided value.
  */
-export type ParameterUserEmailHasSuffix = string;
+export type UserEmailHasSuffix = string;
 
 /**
  * Filters field "email" to be within the provided values.
  */
-export type ParameterUserEmailIn = Array<(string)>;
+export type UserEmailIn = Array<string>;
 
 /**
  * Filters field "email" to be null/nil.
  */
-export type ParameterUserEmailIsNil = boolean;
+export type UserEmailIsNil = boolean;
 
 /**
  * Filters field "email" to be not equal to the provided value.
  */
-export type ParameterUserEmailNEQ = string;
+export type UserEmailNeq = string;
 
 /**
  * Filters field "email" to be not within the provided values.
  */
-export type ParameterUserEmailNotIn = Array<(string)>;
+export type UserEmailNotIn = Array<string>;
 
 /**
  * The ID of the User to act upon.
  */
-export type ParameterUserID = number;
+export type UserId = number;
 
 /**
  * Filters field "location" to contain the provided value.
  */
-export type ParameterUserLocationContains = string;
+export type UserLocationContains = string;
 
 /**
  * Filters field "location" to contain the provided value, case-insensitive.
  */
-export type ParameterUserLocationContainsFold = string;
+export type UserLocationContainsFold = string;
 
 /**
  * Filters field "location" to be equal to the provided value.
  */
-export type ParameterUserLocationEQ = string;
+export type UserLocationEq = string;
 
 /**
  * Filters field "location" to be equal to the provided value, case-insensitive.
  */
-export type ParameterUserLocationEqualFold = string;
+export type UserLocationEqualFold = string;
 
 /**
  * Filters field "location" to start with the provided value.
  */
-export type ParameterUserLocationHasPrefix = string;
+export type UserLocationHasPrefix = string;
 
 /**
  * Filters field "location" to end with the provided value.
  */
-export type ParameterUserLocationHasSuffix = string;
+export type UserLocationHasSuffix = string;
 
 /**
  * Filters field "location" to be within the provided values.
  */
-export type ParameterUserLocationIn = Array<(string)>;
+export type UserLocationIn = Array<string>;
 
 /**
  * Filters field "location" to be null/nil.
  */
-export type ParameterUserLocationIsNil = boolean;
+export type UserLocationIsNil = boolean;
 
 /**
  * Filters field "location" to be not equal to the provided value.
  */
-export type ParameterUserLocationNEQ = string;
+export type UserLocationNeq = string;
 
 /**
  * Filters field "location" to be not within the provided values.
  */
-export type ParameterUserLocationNotIn = Array<(string)>;
+export type UserLocationNotIn = Array<string>;
 
 /**
  * Filters field "login" to contain the provided value.
  */
-export type ParameterUserLoginContains = string;
+export type UserLoginContains = string;
 
 /**
  * Filters field "login" to contain the provided value, case-insensitive.
  */
-export type ParameterUserLoginContainsFold = string;
+export type UserLoginContainsFold = string;
 
 /**
  * Filters field "login" to be equal to the provided value.
  */
-export type ParameterUserLoginEQ = string;
+export type UserLoginEq = string;
 
 /**
  * Filters field "login" to be equal to the provided value, case-insensitive.
  */
-export type ParameterUserLoginEqualFold = string;
+export type UserLoginEqualFold = string;
 
 /**
  * Filters field "login" to start with the provided value.
  */
-export type ParameterUserLoginHasPrefix = string;
+export type UserLoginHasPrefix = string;
 
 /**
  * Filters field "login" to end with the provided value.
  */
-export type ParameterUserLoginHasSuffix = string;
+export type UserLoginHasSuffix = string;
 
 /**
  * Filters field "login" to be within the provided values.
  */
-export type ParameterUserLoginIn = Array<(string)>;
+export type UserLoginIn = Array<string>;
 
 /**
  * Filters field "login" to be not equal to the provided value.
  */
-export type ParameterUserLoginNEQ = string;
+export type UserLoginNeq = string;
 
 /**
  * Filters field "login" to be not within the provided values.
  */
-export type ParameterUserLoginNotIn = Array<(string)>;
+export type UserLoginNotIn = Array<string>;
 
 /**
  * Filters field "name" to contain the provided value.
  */
-export type ParameterUserNameContains = string;
+export type UserNameContains = string;
 
 /**
  * Filters field "name" to contain the provided value, case-insensitive.
  */
-export type ParameterUserNameContainsFold = string;
+export type UserNameContainsFold = string;
 
 /**
  * Filters field "name" to be equal to the provided value.
  */
-export type ParameterUserNameEQ = string;
+export type UserNameEq = string;
 
 /**
  * Filters field "name" to be equal to the provided value, case-insensitive.
  */
-export type ParameterUserNameEqualFold = string;
+export type UserNameEqualFold = string;
 
 /**
  * Filters field "name" to start with the provided value.
  */
-export type ParameterUserNameHasPrefix = string;
+export type UserNameHasPrefix = string;
 
 /**
  * Filters field "name" to end with the provided value.
  */
-export type ParameterUserNameHasSuffix = string;
+export type UserNameHasSuffix = string;
 
 /**
  * Filters field "name" to be within the provided values.
  */
-export type ParameterUserNameIn = Array<(string)>;
+export type UserNameIn = Array<string>;
 
 /**
  * Filters field "name" to be null/nil.
  */
-export type ParameterUserNameIsNil = boolean;
+export type UserNameIsNil = boolean;
 
 /**
  * Filters field "name" to be not equal to the provided value.
  */
-export type ParameterUserNameNEQ = string;
+export type UserNameNeq = string;
 
 /**
  * Filters field "name" to be not within the provided values.
  */
-export type ParameterUserNameNotIn = Array<(string)>;
+export type UserNameNotIn = Array<string>;
 
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type ParameterUserUpdateTimeEQ = string;
+export type UserUpdateTimeEq = string;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
  */
-export type ParameterUserUpdateTimeGT = number;
+export type UserUpdateTimeGt = number;
 
 /**
  * Filters field "update_time" to be less than the provided value.
  */
-export type ParameterUserUpdateTimeLT = number;
+export type UserUpdateTimeLt = number;
 
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type ParameterUserUpdateTimeNEQ = string;
+export type UserUpdateTimeNeq = string;
 
 /**
  * Filters field "user_id" to be equal to the provided value.
  */
-export type ParameterUserUserIDEQ = number;
+export type UserUserIdeq = number;
 
 /**
  * Filters field "user_id" to be within the provided values.
  */
-export type ParameterUserUserIDIn = Array<(number)>;
+export type UserUserIdIn = Array<number>;
 
 /**
  * Filters field "user_id" to be not equal to the provided value.
  */
-export type ParameterUserUserIDNEQ = number;
+export type UserUserIdneq = number;
 
 /**
  * Filters field "user_id" to be not within the provided values.
  */
-export type ParameterUserUserIDNotIn = Array<(number)>;
+export type UserUserIdNotIn = Array<number>;
 
 /**
  * A unique identifier for the request.
  */
-export type ParameterX_Request_Id = string;
+export type XRequestId = string;
 
 export type GetGithubSvgData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query: {
         /**
          * Background type.
@@ -4366,10 +4356,6 @@ export type GetGithubSvgData = {
          */
         'icon.color'?: string;
         /**
-         * Flip the icon.
-         */
-        'icon.flip'?: 'horizontal' | 'vertical';
-        /**
          * Height of the icon (in px).
          */
         'icon.height'?: number;
@@ -4393,14 +4379,51 @@ export type GetGithubSvgData = {
          * Width of the SVG (in px).
          */
         w?: number;
+        /**
+         * Flip the icon.
+         */
+        'icon.flip'?: 'horizontal' | 'vertical';
     };
+    url: '/gh/svg';
 };
 
-export type GetGithubSvgResponse = (string);
+export type GetGithubSvgErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubSvgError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubSvgError = GetGithubSvgErrors[keyof GetGithubSvgErrors];
+
+export type GetGithubSvgResponses = {
+    200: Blob | File;
+};
+
+export type GetGithubSvgResponse = GetGithubSvgResponses[keyof GetGithubSvgResponses];
 
 export type GetGithubRepoSvgData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -4408,7 +4431,13 @@ export type GetGithubRepoSvgData = {
         'X-Request-Id'?: string;
     };
     path: {
+        /**
+         * GitHub user ID.
+         */
         ownerID: string;
+        /**
+         * GitHub repository ID.
+         */
         repoID: string;
     };
     query?: {
@@ -4437,10 +4466,6 @@ export type GetGithubRepoSvgData = {
          */
         'icon.color'?: string;
         /**
-         * Flip the icon.
-         */
-        'icon.flip'?: 'horizontal' | 'vertical';
-        /**
          * Height of the icon (in px).
          */
         'icon.height'?: number;
@@ -4460,141 +4485,63 @@ export type GetGithubRepoSvgData = {
          * Width of the SVG (in px).
          */
         w?: number;
+        /**
+         * Flip the icon.
+         */
+        'icon.flip'?: 'horizontal' | 'vertical';
     };
+    url: '/gh/svg/{ownerID}/{repoID}';
 };
 
-export type GetGithubRepoSvgResponse = (string);
+export type GetGithubRepoSvgErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubRepoSvgError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubRepoSvgError = GetGithubRepoSvgErrors[keyof GetGithubRepoSvgErrors];
+
+export type GetGithubRepoSvgResponses = {
+    200: Blob | File;
+};
+
+export type GetGithubRepoSvgResponse = GetGithubRepoSvgResponses[keyof GetGithubRepoSvgResponses];
 
 export type ListGithubAssetsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * Filters field "asset_id" to be equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'assetID.eq'?: number;
-        /**
-         * Filters field "asset_id" to be not equal to the provided value.
-         */
-        'assetID.neq'?: number;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "download_count" to be greater than the provided value.
-         */
-        'downloadCount.gt'?: number;
-        /**
-         * Filters field "download_count" to be less than the provided value.
-         */
-        'downloadCount.lt'?: number;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a release edge.
-         */
-        'has.release'?: boolean;
-        /**
-         * Filters field "label" to be equal to the provided value.
-         */
-        'label.eq'?: string;
-        /**
-         * Filters field "label" to contain the provided value.
-         */
-        'label.has'?: string;
-        /**
-         * Filters field "label" to be equal to the provided value, case-insensitive.
-         */
-        'label.ieq'?: string;
-        /**
-         * Filters field "label" to contain the provided value, case-insensitive.
-         */
-        'label.ihas'?: string;
-        /**
-         * Filters field "label" to be within the provided values.
-         */
-        'label.in'?: Array<(string)>;
-        /**
-         * Filters field "label" to be not equal to the provided value.
-         */
-        'label.neq'?: string;
-        /**
-         * Filters field "label" to be not within the provided values.
-         */
-        'label.notIn'?: Array<(string)>;
-        /**
-         * Filters field "label" to be null/nil.
-         */
-        'label.null'?: boolean;
-        /**
-         * Filters field "label" to start with the provided value.
-         */
-        'label.prefix'?: string;
-        /**
-         * Filters field "label" to end with the provided value.
-         */
-        'label.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -4604,89 +4551,157 @@ export type ListGithubAssetsData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Sort entity results by the given field.
          */
-        pretty?: boolean;
+        sort?: GithubAssetSortableFields;
         /**
-         * Filters field "created_at" to be equal to the provided value.
+         * Order the results in ascending or descending order.
          */
-        'release.createdAt.eq'?: string;
+        order?: 'asc' | 'desc';
         /**
-         * Filters field "created_at" to be greater than the provided value.
+         * Filter operation to use.
          */
-        'release.createdAt.gt'?: number;
+        filter_op?: FilterOperation;
         /**
-         * Filters field "created_at" to be less than the provided value.
+         * Filters field "asset_id" to be equal to the provided value.
          */
-        'release.createdAt.lt'?: number;
+        'assetID.eq'?: number;
         /**
-         * Filters field "created_at" to be not equal to the provided value.
+         * Filters field "asset_id" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
-        /**
-         * Filters field "draft" to be equal to the provided value.
-         */
-        'release.draft.eq'?: boolean;
+        'assetID.neq'?: number;
         /**
          * Filters field "name" to be equal to the provided value.
          */
-        'release.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'release.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'release.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'release.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'release.name.in'?: Array<(string)>;
+        'name.eq'?: string;
         /**
          * Filters field "name" to be not equal to the provided value.
          */
-        'release.name.neq'?: string;
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
         /**
          * Filters field "name" to be not within the provided values.
          */
-        'release.name.notIn'?: Array<(string)>;
+        'name.notIn'?: Array<string>;
         /**
-         * Filters field "name" to be null/nil.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'release.name.null'?: boolean;
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
         /**
          * Filters field "name" to start with the provided value.
          */
-        'release.name.prefix'?: string;
+        'name.prefix'?: string;
         /**
          * Filters field "name" to end with the provided value.
          */
-        'release.name.suffix'?: string;
+        'name.suffix'?: string;
         /**
-         * Filters field "prerelease" to be equal to the provided value.
+         * Filters field "label" to be equal to the provided value.
          */
-        'release.prerelease.eq'?: boolean;
+        'label.eq'?: string;
         /**
-         * Filters field "published_at" to be equal to the provided value.
+         * Filters field "label" to be not equal to the provided value.
          */
-        'release.publishedAt.eq'?: string;
+        'label.neq'?: string;
         /**
-         * Filters field "published_at" to be greater than the provided value.
+         * Filters field "label" to be null/nil.
          */
-        'release.publishedAt.gt'?: number;
+        'label.null'?: boolean;
         /**
-         * Filters field "published_at" to be less than the provided value.
+         * Filters field "label" to be within the provided values.
          */
-        'release.publishedAt.lt'?: number;
+        'label.in'?: Array<string>;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
+         * Filters field "label" to be not within the provided values.
          */
-        'release.publishedAt.neq'?: string;
+        'label.notIn'?: Array<string>;
+        /**
+         * Filters field "label" to be equal to the provided value, case-insensitive.
+         */
+        'label.ieq'?: string;
+        /**
+         * Filters field "label" to contain the provided value.
+         */
+        'label.has'?: string;
+        /**
+         * Filters field "label" to contain the provided value, case-insensitive.
+         */
+        'label.ihas'?: string;
+        /**
+         * Filters field "label" to start with the provided value.
+         */
+        'label.prefix'?: string;
+        /**
+         * Filters field "label" to end with the provided value.
+         */
+        'label.suffix'?: string;
+        /**
+         * Filters field "size" to be greater than the provided value.
+         */
+        'size.gt'?: number;
+        /**
+         * Filters field "size" to be less than the provided value.
+         */
+        'size.lt'?: number;
+        /**
+         * Filters field "download_count" to be greater than the provided value.
+         */
+        'downloadCount.gt'?: number;
+        /**
+         * Filters field "download_count" to be less than the provided value.
+         */
+        'downloadCount.lt'?: number;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'updatedAt.null'?: boolean;
+        /**
+         * If true, only return entities that have a release edge.
+         */
+        'has.release'?: boolean;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -4700,29 +4715,29 @@ export type ListGithubAssetsData = {
          */
         'release.tagName.eq'?: string;
         /**
-         * Filters field "tag_name" to contain the provided value.
+         * Filters field "tag_name" to be not equal to the provided value.
          */
-        'release.tagName.has'?: string;
+        'release.tagName.neq'?: string;
+        /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'release.tagName.in'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be not within the provided values.
+         */
+        'release.tagName.notIn'?: Array<string>;
         /**
          * Filters field "tag_name" to be equal to the provided value, case-insensitive.
          */
         'release.tagName.ieq'?: string;
         /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'release.tagName.has'?: string;
+        /**
          * Filters field "tag_name" to contain the provided value, case-insensitive.
          */
         'release.tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'release.tagName.in'?: Array<(string)>;
-        /**
-         * Filters field "tag_name" to be not equal to the provided value.
-         */
-        'release.tagName.neq'?: string;
-        /**
-         * Filters field "tag_name" to be not within the provided values.
-         */
-        'release.tagName.notIn'?: Array<(string)>;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -4736,29 +4751,29 @@ export type ListGithubAssetsData = {
          */
         'release.targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'release.targetCommitish.has'?: string;
+        'release.targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'release.targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'release.targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'release.targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'release.targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'release.targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'release.targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'release.targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'release.targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -4768,182 +4783,259 @@ export type ListGithubAssetsData = {
          */
         'release.targetCommitish.suffix'?: string;
         /**
-         * Filters field "size" to be greater than the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'size.gt'?: number;
+        'release.name.eq'?: string;
         /**
-         * Filters field "size" to be less than the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'size.lt'?: number;
+        'release.name.neq'?: string;
         /**
-         * Sort entity results by the given field.
+         * Filters field "name" to be null/nil.
          */
-        sort?: GithubAssetSortableFields;
+        'release.name.null'?: boolean;
         /**
-         * Filters field "updated_at" to be equal to the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'updatedAt.eq'?: string;
+        'release.name.in'?: Array<string>;
         /**
-         * Filters field "updated_at" to be greater than the provided value.
+         * Filters field "name" to be not within the provided values.
          */
-        'updatedAt.gt'?: number;
+        'release.name.notIn'?: Array<string>;
         /**
-         * Filters field "updated_at" to be less than the provided value.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'updatedAt.lt'?: number;
+        'release.name.ieq'?: string;
         /**
-         * Filters field "updated_at" to be not equal to the provided value.
+         * Filters field "name" to contain the provided value.
          */
-        'updatedAt.neq'?: string;
+        'release.name.has'?: string;
         /**
-         * Filters field "updated_at" to be null/nil.
+         * Filters field "name" to contain the provided value, case-insensitive.
          */
-        'updatedAt.null'?: boolean;
-    };
-};
-
-export type ListGithubAssetsResponse = (GithubAssetList);
-
-export type ListGithubAssetsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetGithubAssetData = {
-    headers?: {
+        'release.name.ihas'?: string;
         /**
-         * A unique identifier for the request.
+         * Filters field "name" to start with the provided value.
          */
-        'X-Request-Id'?: string;
-    };
-    path: {
+        'release.name.prefix'?: string;
         /**
-         * The ID of the GithubAsset to act upon.
+         * Filters field "name" to end with the provided value.
          */
-        githubassetID: number;
-    };
-    query?: {
+        'release.name.suffix'?: string;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Filters field "draft" to be equal to the provided value.
          */
-        pretty?: boolean;
-    };
-};
-
-export type GetGithubAssetResponse = (GithubAsset);
-
-export type GetGithubAssetError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetGithubAssetReleaseData = {
-    headers?: {
+        'release.draft.eq'?: boolean;
         /**
-         * A unique identifier for the request.
+         * Filters field "prerelease" to be equal to the provided value.
          */
-        'X-Request-Id'?: string;
-    };
-    path: {
-        /**
-         * The ID of the GithubAsset to act upon.
-         */
-        githubassetID: number;
-    };
-    query?: {
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-    };
-};
-
-export type GetGithubAssetReleaseResponse = (GithubReleaseRead);
-
-export type GetGithubAssetReleaseError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type ListGithubEventsData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-    query?: {
-        /**
-         * Filters field "actor_id" to be equal to the provided value.
-         */
-        'actorID.eq'?: number;
-        /**
-         * Filters field "actor_id" to be not equal to the provided value.
-         */
-        'actorID.neq'?: number;
+        'release.prerelease.eq'?: boolean;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
+        'release.createdAt.eq'?: string;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'release.createdAt.neq'?: string;
         /**
-         * Filters field "event_id" to be equal to the provided value.
+         * Filters field "created_at" to be greater than the provided value.
          */
-        'eventID.eq'?: string;
+        'release.createdAt.gt'?: number;
         /**
-         * Filters field "event_id" to be equal to the provided value, case-insensitive.
+         * Filters field "created_at" to be less than the provided value.
          */
-        'eventID.ieq'?: string;
+        'release.createdAt.lt'?: number;
         /**
-         * Filters field "event_id" to be not equal to the provided value.
+         * Filters field "published_at" to be equal to the provided value.
          */
-        'eventID.neq'?: string;
+        'release.publishedAt.eq'?: string;
         /**
-         * Filters field "event_type" to be equal to the provided value.
+         * Filters field "published_at" to be not equal to the provided value.
          */
-        'eventType.eq'?: string;
+        'release.publishedAt.neq'?: string;
         /**
-         * Filters field "event_type" to contain the provided value.
+         * Filters field "published_at" to be greater than the provided value.
          */
-        'eventType.has'?: string;
+        'release.publishedAt.gt'?: number;
         /**
-         * Filters field "event_type" to be equal to the provided value, case-insensitive.
+         * Filters field "published_at" to be less than the provided value.
          */
-        'eventType.ieq'?: string;
+        'release.publishedAt.lt'?: number;
+    };
+    url: '/github-assets';
+};
+
+export type ListGithubAssetsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type ListGithubAssetsError = ListGithubAssetsErrors[keyof ListGithubAssetsErrors];
+
+export type ListGithubAssetsResponses = {
+    /**
+     * The requested GithubAsset.
+     */
+    200: GithubAssetList;
+};
+
+export type ListGithubAssetsResponse = ListGithubAssetsResponses[keyof ListGithubAssetsResponses];
+
+export type GetGithubAssetData = {
+    body?: never;
+    headers?: {
         /**
-         * Filters field "event_type" to contain the provided value, case-insensitive.
+         * A unique identifier for the request.
          */
-        'eventType.ihas'?: string;
+        'X-Request-Id'?: string;
+    };
+    path: {
         /**
-         * Filters field "event_type" to be within the provided values.
+         * The ID of the GithubAsset to act upon.
          */
-        'eventType.in'?: Array<(string)>;
+        githubassetID: number;
+    };
+    query?: {
         /**
-         * Filters field "event_type" to be not equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'eventType.neq'?: string;
+        pretty?: boolean;
+    };
+    url: '/github-assets/{githubassetID}';
+};
+
+export type GetGithubAssetErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetGithubAssetError = GetGithubAssetErrors[keyof GetGithubAssetErrors];
+
+export type GetGithubAssetResponses = {
+    /**
+     * The requested GithubAsset entity.
+     */
+    200: GithubAsset;
+};
+
+export type GetGithubAssetResponse = GetGithubAssetResponses[keyof GetGithubAssetResponses];
+
+export type GetGithubAssetReleaseData = {
+    body?: never;
+    headers?: {
         /**
-         * Filters field "event_type" to be not within the provided values.
+         * A unique identifier for the request.
          */
-        'eventType.notIn'?: Array<(string)>;
+        'X-Request-Id'?: string;
+    };
+    path: {
         /**
-         * Filters field "event_type" to start with the provided value.
+         * The ID of the GithubAsset to act upon.
          */
-        'eventType.prefix'?: string;
+        githubassetID: number;
+    };
+    query?: {
         /**
-         * Filters field "event_type" to end with the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'eventType.suffix'?: string;
+        pretty?: boolean;
+    };
+    url: '/github-assets/{githubassetID}/release';
+};
+
+export type GetGithubAssetReleaseErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetGithubAssetReleaseError = GetGithubAssetReleaseErrors[keyof GetGithubAssetReleaseErrors];
+
+export type GetGithubAssetReleaseResponses = {
+    /**
+     * The requested release entity.
+     */
+    200: GithubReleaseRead;
+};
+
+export type GetGithubAssetReleaseResponse = GetGithubAssetReleaseResponses[keyof GetGithubAssetReleaseResponses];
+
+export type ListGithubEventsData = {
+    body?: never;
+    headers?: {
         /**
-         * Filter operation to use.
+         * A unique identifier for the request.
          */
-        filter_op?: FilterOperation;
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: {
         /**
-         * Order the results in ascending or descending order.
+         * If set to true, any JSON response will be indented.
          */
-        order?: 'asc' | 'desc';
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -4953,13 +5045,93 @@ export type ListGithubEventsData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Sort entity results by the given field.
          */
-        pretty?: boolean;
+        sort?: GithubEventSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "event_id" to be equal to the provided value.
+         */
+        'eventID.eq'?: string;
+        /**
+         * Filters field "event_id" to be not equal to the provided value.
+         */
+        'eventID.neq'?: string;
+        /**
+         * Filters field "event_id" to be equal to the provided value, case-insensitive.
+         */
+        'eventID.ieq'?: string;
+        /**
+         * Filters field "event_type" to be equal to the provided value.
+         */
+        'eventType.eq'?: string;
+        /**
+         * Filters field "event_type" to be not equal to the provided value.
+         */
+        'eventType.neq'?: string;
+        /**
+         * Filters field "event_type" to be within the provided values.
+         */
+        'eventType.in'?: Array<string>;
+        /**
+         * Filters field "event_type" to be not within the provided values.
+         */
+        'eventType.notIn'?: Array<string>;
+        /**
+         * Filters field "event_type" to be equal to the provided value, case-insensitive.
+         */
+        'eventType.ieq'?: string;
+        /**
+         * Filters field "event_type" to contain the provided value.
+         */
+        'eventType.has'?: string;
+        /**
+         * Filters field "event_type" to contain the provided value, case-insensitive.
+         */
+        'eventType.ihas'?: string;
+        /**
+         * Filters field "event_type" to start with the provided value.
+         */
+        'eventType.prefix'?: string;
+        /**
+         * Filters field "event_type" to end with the provided value.
+         */
+        'eventType.suffix'?: string;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
         /**
          * Filters field "public" to be equal to the provided value.
          */
         'public.eq'?: boolean;
+        /**
+         * Filters field "actor_id" to be equal to the provided value.
+         */
+        'actorID.eq'?: number;
+        /**
+         * Filters field "actor_id" to be not equal to the provided value.
+         */
+        'actorID.neq'?: number;
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
@@ -4968,18 +5140,46 @@ export type ListGithubEventsData = {
          * Filters field "repo_id" to be not equal to the provided value.
          */
         'repoID.neq'?: number;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: GithubEventSortableFields;
     };
+    url: '/github-events';
 };
 
-export type ListGithubEventsResponse = (GithubEventList);
+export type ListGithubEventsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubEventsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubEventsError = ListGithubEventsErrors[keyof ListGithubEventsErrors];
+
+export type ListGithubEventsResponses = {
+    /**
+     * The requested GithubEvent.
+     */
+    200: GithubEventList;
+};
+
+export type ListGithubEventsResponse = ListGithubEventsResponses[keyof ListGithubEventsResponses];
 
 export type GetGithubEventData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -4994,156 +5194,65 @@ export type GetGithubEventData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/github-events/{githubeventID}';
 };
 
-export type GetGithubEventResponse = (GithubEvent);
+export type GetGithubEventErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubEventError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubEventError = GetGithubEventErrors[keyof GetGithubEventErrors];
+
+export type GetGithubEventResponses = {
+    /**
+     * The requested GithubEvent entity.
+     */
+    200: GithubEvent;
+};
+
+export type GetGithubEventResponse = GetGithubEventResponses[keyof GetGithubEventResponses];
 
 export type ListGithubGistsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * Filters field "content" to contain the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'content.has'?: string;
-        /**
-         * Filters field "content" to contain the provided value, case-insensitive.
-         */
-        'content.ihas'?: string;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'description.null'?: boolean;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * Filters field "gist_id" to be equal to the provided value.
-         */
-        'gistID.eq'?: string;
-        /**
-         * Filters field "gist_id" to be equal to the provided value, case-insensitive.
-         */
-        'gistID.ieq'?: string;
-        /**
-         * Filters field "gist_id" to be not equal to the provided value.
-         */
-        'gistID.neq'?: string;
-        /**
-         * Filters field "language" to be equal to the provided value.
-         */
-        'language.eq'?: string;
-        /**
-         * Filters field "language" to contain the provided value.
-         */
-        'language.has'?: string;
-        /**
-         * Filters field "language" to be equal to the provided value, case-insensitive.
-         */
-        'language.ieq'?: string;
-        /**
-         * Filters field "language" to contain the provided value, case-insensitive.
-         */
-        'language.ihas'?: string;
-        /**
-         * Filters field "language" to be within the provided values.
-         */
-        'language.in'?: Array<(string)>;
-        /**
-         * Filters field "language" to be not equal to the provided value.
-         */
-        'language.neq'?: string;
-        /**
-         * Filters field "language" to be not within the provided values.
-         */
-        'language.notIn'?: Array<(string)>;
-        /**
-         * Filters field "language" to be null/nil.
-         */
-        'language.null'?: boolean;
-        /**
-         * Filters field "language" to start with the provided value.
-         */
-        'language.prefix'?: string;
-        /**
-         * Filters field "language" to end with the provided value.
-         */
-        'language.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -5153,65 +5262,57 @@ export type ListGithubGistsData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Sort entity results by the given field.
          */
-        pretty?: boolean;
+        sort?: GithubGistSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "gist_id" to be equal to the provided value.
+         */
+        'gistID.eq'?: string;
+        /**
+         * Filters field "gist_id" to be not equal to the provided value.
+         */
+        'gistID.neq'?: string;
+        /**
+         * Filters field "gist_id" to be equal to the provided value, case-insensitive.
+         */
+        'gistID.ieq'?: string;
         /**
          * Filters field "public" to be equal to the provided value.
          */
         'public.eq'?: boolean;
         /**
-         * Filters field "size" to be equal to the provided value.
+         * Filters field "created_at" to be equal to the provided value.
          */
-        'size.eq'?: number;
+        'createdAt.eq'?: string;
         /**
-         * Filters field "size" to be not equal to the provided value.
+         * Filters field "created_at" to be not equal to the provided value.
          */
-        'size.neq'?: number;
+        'createdAt.neq'?: string;
         /**
-         * Sort entity results by the given field.
+         * Filters field "created_at" to be greater than the provided value.
          */
-        sort?: GithubGistSortableFields;
+        'createdAt.gt'?: number;
         /**
-         * Filters field "type" to be equal to the provided value.
+         * Filters field "created_at" to be less than the provided value.
          */
-        'type.eq'?: string;
-        /**
-         * Filters field "type" to contain the provided value.
-         */
-        'type.has'?: string;
-        /**
-         * Filters field "type" to be equal to the provided value, case-insensitive.
-         */
-        'type.ieq'?: string;
-        /**
-         * Filters field "type" to contain the provided value, case-insensitive.
-         */
-        'type.ihas'?: string;
-        /**
-         * Filters field "type" to be within the provided values.
-         */
-        'type.in'?: Array<(string)>;
-        /**
-         * Filters field "type" to be not equal to the provided value.
-         */
-        'type.neq'?: string;
-        /**
-         * Filters field "type" to be not within the provided values.
-         */
-        'type.notIn'?: Array<(string)>;
-        /**
-         * Filters field "type" to start with the provided value.
-         */
-        'type.prefix'?: string;
-        /**
-         * Filters field "type" to end with the provided value.
-         */
-        'type.suffix'?: string;
+        'createdAt.lt'?: number;
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
         'updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'updatedAt.neq'?: string;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -5221,17 +5322,185 @@ export type ListGithubGistsData = {
          */
         'updatedAt.lt'?: number;
         /**
-         * Filters field "updated_at" to be not equal to the provided value.
+         * Filters field "description" to be null/nil.
          */
-        'updatedAt.neq'?: string;
+        'description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'description.ihas'?: string;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'name.suffix'?: string;
+        /**
+         * Filters field "type" to be equal to the provided value.
+         */
+        'type.eq'?: string;
+        /**
+         * Filters field "type" to be not equal to the provided value.
+         */
+        'type.neq'?: string;
+        /**
+         * Filters field "type" to be within the provided values.
+         */
+        'type.in'?: Array<string>;
+        /**
+         * Filters field "type" to be not within the provided values.
+         */
+        'type.notIn'?: Array<string>;
+        /**
+         * Filters field "type" to be equal to the provided value, case-insensitive.
+         */
+        'type.ieq'?: string;
+        /**
+         * Filters field "type" to contain the provided value.
+         */
+        'type.has'?: string;
+        /**
+         * Filters field "type" to contain the provided value, case-insensitive.
+         */
+        'type.ihas'?: string;
+        /**
+         * Filters field "type" to start with the provided value.
+         */
+        'type.prefix'?: string;
+        /**
+         * Filters field "type" to end with the provided value.
+         */
+        'type.suffix'?: string;
+        /**
+         * Filters field "language" to be equal to the provided value.
+         */
+        'language.eq'?: string;
+        /**
+         * Filters field "language" to be not equal to the provided value.
+         */
+        'language.neq'?: string;
+        /**
+         * Filters field "language" to be null/nil.
+         */
+        'language.null'?: boolean;
+        /**
+         * Filters field "language" to be within the provided values.
+         */
+        'language.in'?: Array<string>;
+        /**
+         * Filters field "language" to be not within the provided values.
+         */
+        'language.notIn'?: Array<string>;
+        /**
+         * Filters field "language" to be equal to the provided value, case-insensitive.
+         */
+        'language.ieq'?: string;
+        /**
+         * Filters field "language" to contain the provided value.
+         */
+        'language.has'?: string;
+        /**
+         * Filters field "language" to contain the provided value, case-insensitive.
+         */
+        'language.ihas'?: string;
+        /**
+         * Filters field "language" to start with the provided value.
+         */
+        'language.prefix'?: string;
+        /**
+         * Filters field "language" to end with the provided value.
+         */
+        'language.suffix'?: string;
+        /**
+         * Filters field "size" to be equal to the provided value.
+         */
+        'size.eq'?: number;
+        /**
+         * Filters field "size" to be not equal to the provided value.
+         */
+        'size.neq'?: number;
+        /**
+         * Filters field "content" to contain the provided value.
+         */
+        'content.has'?: string;
+        /**
+         * Filters field "content" to contain the provided value, case-insensitive.
+         */
+        'content.ihas'?: string;
     };
+    url: '/github-gists';
 };
 
-export type ListGithubGistsResponse = (GithubGistList);
+export type ListGithubGistsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubGistsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubGistsError = ListGithubGistsErrors[keyof ListGithubGistsErrors];
+
+export type ListGithubGistsResponses = {
+    /**
+     * The requested GithubGist.
+     */
+    200: GithubGistList;
+};
+
+export type ListGithubGistsResponse = ListGithubGistsResponses[keyof ListGithubGistsResponses];
 
 export type GetGithubGistData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -5246,236 +5515,65 @@ export type GetGithubGistData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/github-gists/{githubgistID}';
 };
 
-export type GetGithubGistResponse = (GithubGist);
+export type GetGithubGistErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubGistError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubGistError = GetGithubGistErrors[keyof GetGithubGistErrors];
+
+export type GetGithubGistResponses = {
+    /**
+     * The requested GithubGist entity.
+     */
+    200: GithubGist;
+};
+
+export type GetGithubGistResponse = GetGithubGistResponses[keyof GetGithubGistResponses];
 
 export type ListGithubReleasesData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * Filters field "asset_id" to be equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'asset.assetID.eq'?: number;
-        /**
-         * Filters field "asset_id" to be not equal to the provided value.
-         */
-        'asset.assetID.neq'?: number;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'asset.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'asset.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'asset.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'asset.createdAt.neq'?: string;
-        /**
-         * Filters field "download_count" to be greater than the provided value.
-         */
-        'asset.downloadCount.gt'?: number;
-        /**
-         * Filters field "download_count" to be less than the provided value.
-         */
-        'asset.downloadCount.lt'?: number;
-        /**
-         * Filters field "label" to be equal to the provided value.
-         */
-        'asset.label.eq'?: string;
-        /**
-         * Filters field "label" to contain the provided value.
-         */
-        'asset.label.has'?: string;
-        /**
-         * Filters field "label" to be equal to the provided value, case-insensitive.
-         */
-        'asset.label.ieq'?: string;
-        /**
-         * Filters field "label" to contain the provided value, case-insensitive.
-         */
-        'asset.label.ihas'?: string;
-        /**
-         * Filters field "label" to be within the provided values.
-         */
-        'asset.label.in'?: Array<(string)>;
-        /**
-         * Filters field "label" to be not equal to the provided value.
-         */
-        'asset.label.neq'?: string;
-        /**
-         * Filters field "label" to be not within the provided values.
-         */
-        'asset.label.notIn'?: Array<(string)>;
-        /**
-         * Filters field "label" to be null/nil.
-         */
-        'asset.label.null'?: boolean;
-        /**
-         * Filters field "label" to start with the provided value.
-         */
-        'asset.label.prefix'?: string;
-        /**
-         * Filters field "label" to end with the provided value.
-         */
-        'asset.label.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'asset.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'asset.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'asset.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'asset.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'asset.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'asset.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'asset.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'asset.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'asset.name.suffix'?: string;
-        /**
-         * Filters field "size" to be greater than the provided value.
-         */
-        'asset.size.gt'?: number;
-        /**
-         * Filters field "size" to be less than the provided value.
-         */
-        'asset.size.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'asset.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'asset.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'asset.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'asset.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'asset.updatedAt.null'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "draft" to be equal to the provided value.
-         */
-        'draft.eq'?: boolean;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a asset edge.
-         */
-        'has.asset'?: boolean;
-        /**
-         * If true, only return entities that have a repository edge.
-         */
-        'has.repository'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -5485,29 +5583,17 @@ export type ListGithubReleasesData = {
          */
         per_page?: number;
         /**
-         * Filters field "prerelease" to be equal to the provided value.
+         * Sort entity results by the given field.
          */
-        'prerelease.eq'?: boolean;
+        sort?: GithubReleaseSortableFields;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Order the results in ascending or descending order.
          */
-        pretty?: boolean;
+        order?: 'asc' | 'desc';
         /**
-         * Filters field "published_at" to be equal to the provided value.
+         * Filter operation to use.
          */
-        'publishedAt.eq'?: string;
-        /**
-         * Filters field "published_at" to be greater than the provided value.
-         */
-        'publishedAt.gt'?: number;
-        /**
-         * Filters field "published_at" to be less than the provided value.
-         */
-        'publishedAt.lt'?: number;
-        /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'publishedAt.neq'?: string;
+        filter_op?: FilterOperation;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -5517,273 +5603,33 @@ export type ListGithubReleasesData = {
          */
         'releaseID.neq'?: number;
         /**
-         * Filters field "archived" to be equal to the provided value.
-         */
-        'repository.archived.eq'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'repository.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'repository.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'repository.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'repository.createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'repository.defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'repository.defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'repository.defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'repository.defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'repository.defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'repository.defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'repository.defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'repository.defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'repository.defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'repository.description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'repository.description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'repository.description.null'?: boolean;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'repository.fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'repository.fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'repository.fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'repository.fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'repository.fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'repository.fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'repository.fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'repository.fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'repository.fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'repository.fullName.suffix'?: string;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'repository.hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'repository.isTemplate.eq'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'repository.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'repository.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'repository.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'repository.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'repository.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'repository.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'repository.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'repository.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'repository.name.suffix'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'repository.ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'repository.ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'repository.ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'repository.ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'repository.ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'repository.ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'repository.ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'repository.ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'repository.ownerLogin.suffix'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'repository.public.eq'?: boolean;
-        /**
-         * Filters field "pushed_at" to be within the provided values.
-         */
-        'repository.pushedAt.in'?: Array<(string)>;
-        /**
-         * Filters field "pushed_at" to be not within the provided values.
-         */
-        'repository.pushedAt.notIn'?: Array<(string)>;
-        /**
-         * Filters field "repo_id" to be equal to the provided value.
-         */
-        'repository.repoID.eq'?: number;
-        /**
-         * Filters field "repo_id" to be not equal to the provided value.
-         */
-        'repository.repoID.neq'?: number;
-        /**
-         * Filters field "star_count" to be greater than the provided value.
-         */
-        'repository.starCount.gt'?: number;
-        /**
-         * Filters field "star_count" to be less than the provided value.
-         */
-        'repository.starCount.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'repository.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'repository.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'repository.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'repository.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'repository.updatedAt.null'?: boolean;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: GithubReleaseSortableFields;
-        /**
          * Filters field "tag_name" to be equal to the provided value.
          */
         'tagName.eq'?: string;
-        /**
-         * Filters field "tag_name" to contain the provided value.
-         */
-        'tagName.has'?: string;
-        /**
-         * Filters field "tag_name" to be equal to the provided value, case-insensitive.
-         */
-        'tagName.ieq'?: string;
-        /**
-         * Filters field "tag_name" to contain the provided value, case-insensitive.
-         */
-        'tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'tagName.in'?: Array<(string)>;
         /**
          * Filters field "tag_name" to be not equal to the provided value.
          */
         'tagName.neq'?: string;
         /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'tagName.in'?: Array<string>;
+        /**
          * Filters field "tag_name" to be not within the provided values.
          */
-        'tagName.notIn'?: Array<(string)>;
+        'tagName.notIn'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be equal to the provided value, case-insensitive.
+         */
+        'tagName.ieq'?: string;
+        /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'tagName.has'?: string;
+        /**
+         * Filters field "tag_name" to contain the provided value, case-insensitive.
+         */
+        'tagName.ihas'?: string;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -5797,29 +5643,29 @@ export type ListGithubReleasesData = {
          */
         'targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'targetCommitish.has'?: string;
+        'targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -5828,27 +5674,550 @@ export type ListGithubReleasesData = {
          * Filters field "target_commitish" to end with the provided value.
          */
         'targetCommitish.suffix'?: string;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'name.suffix'?: string;
+        /**
+         * Filters field "draft" to be equal to the provided value.
+         */
+        'draft.eq'?: boolean;
+        /**
+         * Filters field "prerelease" to be equal to the provided value.
+         */
+        'prerelease.eq'?: boolean;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
+        /**
+         * Filters field "published_at" to be equal to the provided value.
+         */
+        'publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'publishedAt.neq'?: string;
+        /**
+         * Filters field "published_at" to be greater than the provided value.
+         */
+        'publishedAt.gt'?: number;
+        /**
+         * Filters field "published_at" to be less than the provided value.
+         */
+        'publishedAt.lt'?: number;
+        /**
+         * If true, only return entities that have a repository edge.
+         */
+        'has.repository'?: boolean;
+        /**
+         * Filters field "repo_id" to be equal to the provided value.
+         */
+        'repository.repoID.eq'?: number;
+        /**
+         * Filters field "repo_id" to be not equal to the provided value.
+         */
+        'repository.repoID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'repository.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'repository.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'repository.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'repository.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'repository.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'repository.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'repository.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'repository.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'repository.name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'repository.fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'repository.fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'repository.fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'repository.fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'repository.fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'repository.fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'repository.fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'repository.fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'repository.fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'repository.ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'repository.ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'repository.ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'repository.ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'repository.ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'repository.ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'repository.ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'repository.ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'repository.ownerLogin.suffix'?: string;
+        /**
+         * Filters field "public" to be equal to the provided value.
+         */
+        'repository.public.eq'?: boolean;
+        /**
+         * Filters field "description" to be null/nil.
+         */
+        'repository.description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'repository.description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'repository.description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'repository.fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'repository.starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'repository.starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'repository.defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'repository.defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'repository.defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'repository.defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'repository.defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'repository.defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'repository.defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'repository.defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'repository.defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'repository.isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'repository.hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'repository.archived.eq'?: boolean;
+        /**
+         * Filters field "pushed_at" to be within the provided values.
+         */
+        'repository.pushedAt.in'?: Array<string>;
+        /**
+         * Filters field "pushed_at" to be not within the provided values.
+         */
+        'repository.pushedAt.notIn'?: Array<string>;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'repository.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'repository.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'repository.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'repository.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'repository.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'repository.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'repository.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'repository.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'repository.updatedAt.null'?: boolean;
+        /**
+         * If true, only return entities that have a asset edge.
+         */
+        'has.asset'?: boolean;
+        /**
+         * Filters field "asset_id" to be equal to the provided value.
+         */
+        'asset.assetID.eq'?: number;
+        /**
+         * Filters field "asset_id" to be not equal to the provided value.
+         */
+        'asset.assetID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'asset.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'asset.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'asset.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'asset.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'asset.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'asset.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'asset.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'asset.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'asset.name.suffix'?: string;
+        /**
+         * Filters field "label" to be equal to the provided value.
+         */
+        'asset.label.eq'?: string;
+        /**
+         * Filters field "label" to be not equal to the provided value.
+         */
+        'asset.label.neq'?: string;
+        /**
+         * Filters field "label" to be null/nil.
+         */
+        'asset.label.null'?: boolean;
+        /**
+         * Filters field "label" to be within the provided values.
+         */
+        'asset.label.in'?: Array<string>;
+        /**
+         * Filters field "label" to be not within the provided values.
+         */
+        'asset.label.notIn'?: Array<string>;
+        /**
+         * Filters field "label" to be equal to the provided value, case-insensitive.
+         */
+        'asset.label.ieq'?: string;
+        /**
+         * Filters field "label" to contain the provided value.
+         */
+        'asset.label.has'?: string;
+        /**
+         * Filters field "label" to contain the provided value, case-insensitive.
+         */
+        'asset.label.ihas'?: string;
+        /**
+         * Filters field "label" to start with the provided value.
+         */
+        'asset.label.prefix'?: string;
+        /**
+         * Filters field "label" to end with the provided value.
+         */
+        'asset.label.suffix'?: string;
+        /**
+         * Filters field "size" to be greater than the provided value.
+         */
+        'asset.size.gt'?: number;
+        /**
+         * Filters field "size" to be less than the provided value.
+         */
+        'asset.size.lt'?: number;
+        /**
+         * Filters field "download_count" to be greater than the provided value.
+         */
+        'asset.downloadCount.gt'?: number;
+        /**
+         * Filters field "download_count" to be less than the provided value.
+         */
+        'asset.downloadCount.lt'?: number;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'asset.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'asset.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'asset.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'asset.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'asset.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'asset.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'asset.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'asset.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'asset.updatedAt.null'?: boolean;
     };
+    url: '/github-releases';
 };
 
-export type ListGithubReleasesResponse = (GithubReleaseList);
+export type ListGithubReleasesErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubReleasesError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubReleasesError = ListGithubReleasesErrors[keyof ListGithubReleasesErrors];
+
+export type ListGithubReleasesResponses = {
+    /**
+     * The requested GithubRelease.
+     */
+    200: GithubReleaseList;
+};
+
+export type ListGithubReleasesResponse = ListGithubReleasesResponses[keyof ListGithubReleasesResponses];
 
 export type ListOutdatedGithubReleasesData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
+    query?: never;
+    url: '/github-releases/outdated';
 };
 
-export type ListOutdatedGithubReleasesResponse = (Array<OutdatedRepositoryRelease>);
+export type ListOutdatedGithubReleasesErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListOutdatedGithubReleasesError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListOutdatedGithubReleasesError = ListOutdatedGithubReleasesErrors[keyof ListOutdatedGithubReleasesErrors];
+
+export type ListOutdatedGithubReleasesResponses = {
+    200: Array<OutdatedRepositoryRelease>;
+};
+
+export type ListOutdatedGithubReleasesResponse = ListOutdatedGithubReleasesResponses[keyof ListOutdatedGithubReleasesResponses];
 
 export type GetGithubReleaseData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -5863,17 +6232,53 @@ export type GetGithubReleaseData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/github-releases/{githubreleaseID}';
 };
 
-export type GetGithubReleaseResponse = (GithubReleaseRead);
+export type GetGithubReleaseErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubReleaseError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubReleaseError = GetGithubReleaseErrors[keyof GetGithubReleaseErrors];
+
+export type GetGithubReleaseResponses = {
+    /**
+     * The requested GithubRelease entity.
+     */
+    200: GithubReleaseRead;
+};
+
+export type GetGithubReleaseResponse = GetGithubReleaseResponses[keyof GetGithubReleaseResponses];
 
 export type ListGithubReleaseAssetsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -5887,6 +6292,22 @@ export type ListGithubReleaseAssetsData = {
         githubreleaseID: number;
     };
     query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: GithubAssetSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
@@ -5896,105 +6317,33 @@ export type ListGithubReleaseAssetsData = {
          */
         'assetID.neq'?: number;
         /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "download_count" to be greater than the provided value.
-         */
-        'downloadCount.gt'?: number;
-        /**
-         * Filters field "download_count" to be less than the provided value.
-         */
-        'downloadCount.lt'?: number;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a release edge.
-         */
-        'has.release'?: boolean;
-        /**
-         * Filters field "label" to be equal to the provided value.
-         */
-        'label.eq'?: string;
-        /**
-         * Filters field "label" to contain the provided value.
-         */
-        'label.has'?: string;
-        /**
-         * Filters field "label" to be equal to the provided value, case-insensitive.
-         */
-        'label.ieq'?: string;
-        /**
-         * Filters field "label" to contain the provided value, case-insensitive.
-         */
-        'label.ihas'?: string;
-        /**
-         * Filters field "label" to be within the provided values.
-         */
-        'label.in'?: Array<(string)>;
-        /**
-         * Filters field "label" to be not equal to the provided value.
-         */
-        'label.neq'?: string;
-        /**
-         * Filters field "label" to be not within the provided values.
-         */
-        'label.notIn'?: Array<(string)>;
-        /**
-         * Filters field "label" to be null/nil.
-         */
-        'label.null'?: boolean;
-        /**
-         * Filters field "label" to start with the provided value.
-         */
-        'label.prefix'?: string;
-        /**
-         * Filters field "label" to end with the provided value.
-         */
-        'label.suffix'?: string;
-        /**
          * Filters field "name" to be equal to the provided value.
          */
         'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
         /**
          * Filters field "name" to be not equal to the provided value.
          */
         'name.neq'?: string;
         /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
          * Filters field "name" to be not within the provided values.
          */
-        'name.notIn'?: Array<(string)>;
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
         /**
          * Filters field "name" to start with the provided value.
          */
@@ -6004,93 +6353,101 @@ export type ListGithubReleaseAssetsData = {
          */
         'name.suffix'?: string;
         /**
-         * Order the results in ascending or descending order.
+         * Filters field "label" to be equal to the provided value.
          */
-        order?: 'asc' | 'desc';
+        'label.eq'?: string;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Filters field "label" to be not equal to the provided value.
          */
-        pretty?: boolean;
+        'label.neq'?: string;
+        /**
+         * Filters field "label" to be null/nil.
+         */
+        'label.null'?: boolean;
+        /**
+         * Filters field "label" to be within the provided values.
+         */
+        'label.in'?: Array<string>;
+        /**
+         * Filters field "label" to be not within the provided values.
+         */
+        'label.notIn'?: Array<string>;
+        /**
+         * Filters field "label" to be equal to the provided value, case-insensitive.
+         */
+        'label.ieq'?: string;
+        /**
+         * Filters field "label" to contain the provided value.
+         */
+        'label.has'?: string;
+        /**
+         * Filters field "label" to contain the provided value, case-insensitive.
+         */
+        'label.ihas'?: string;
+        /**
+         * Filters field "label" to start with the provided value.
+         */
+        'label.prefix'?: string;
+        /**
+         * Filters field "label" to end with the provided value.
+         */
+        'label.suffix'?: string;
+        /**
+         * Filters field "size" to be greater than the provided value.
+         */
+        'size.gt'?: number;
+        /**
+         * Filters field "size" to be less than the provided value.
+         */
+        'size.lt'?: number;
+        /**
+         * Filters field "download_count" to be greater than the provided value.
+         */
+        'downloadCount.gt'?: number;
+        /**
+         * Filters field "download_count" to be less than the provided value.
+         */
+        'downloadCount.lt'?: number;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'release.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'release.createdAt.lt'?: number;
+        'createdAt.eq'?: string;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'createdAt.neq'?: string;
         /**
-         * Filters field "draft" to be equal to the provided value.
+         * Filters field "created_at" to be greater than the provided value.
          */
-        'release.draft.eq'?: boolean;
+        'createdAt.gt'?: number;
         /**
-         * Filters field "name" to be equal to the provided value.
+         * Filters field "created_at" to be less than the provided value.
          */
-        'release.name.eq'?: string;
+        'createdAt.lt'?: number;
         /**
-         * Filters field "name" to contain the provided value.
+         * Filters field "updated_at" to be equal to the provided value.
          */
-        'release.name.has'?: string;
+        'updatedAt.eq'?: string;
         /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
+         * Filters field "updated_at" to be not equal to the provided value.
          */
-        'release.name.ieq'?: string;
+        'updatedAt.neq'?: string;
         /**
-         * Filters field "name" to contain the provided value, case-insensitive.
+         * Filters field "updated_at" to be greater than the provided value.
          */
-        'release.name.ihas'?: string;
+        'updatedAt.gt'?: number;
         /**
-         * Filters field "name" to be within the provided values.
+         * Filters field "updated_at" to be less than the provided value.
          */
-        'release.name.in'?: Array<(string)>;
+        'updatedAt.lt'?: number;
         /**
-         * Filters field "name" to be not equal to the provided value.
+         * Filters field "updated_at" to be null/nil.
          */
-        'release.name.neq'?: string;
+        'updatedAt.null'?: boolean;
         /**
-         * Filters field "name" to be not within the provided values.
+         * If true, only return entities that have a release edge.
          */
-        'release.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'release.name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'release.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'release.name.suffix'?: string;
-        /**
-         * Filters field "prerelease" to be equal to the provided value.
-         */
-        'release.prerelease.eq'?: boolean;
-        /**
-         * Filters field "published_at" to be equal to the provided value.
-         */
-        'release.publishedAt.eq'?: string;
-        /**
-         * Filters field "published_at" to be greater than the provided value.
-         */
-        'release.publishedAt.gt'?: number;
-        /**
-         * Filters field "published_at" to be less than the provided value.
-         */
-        'release.publishedAt.lt'?: number;
-        /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'release.publishedAt.neq'?: string;
+        'has.release'?: boolean;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -6104,29 +6461,29 @@ export type ListGithubReleaseAssetsData = {
          */
         'release.tagName.eq'?: string;
         /**
-         * Filters field "tag_name" to contain the provided value.
+         * Filters field "tag_name" to be not equal to the provided value.
          */
-        'release.tagName.has'?: string;
+        'release.tagName.neq'?: string;
+        /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'release.tagName.in'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be not within the provided values.
+         */
+        'release.tagName.notIn'?: Array<string>;
         /**
          * Filters field "tag_name" to be equal to the provided value, case-insensitive.
          */
         'release.tagName.ieq'?: string;
         /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'release.tagName.has'?: string;
+        /**
          * Filters field "tag_name" to contain the provided value, case-insensitive.
          */
         'release.tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'release.tagName.in'?: Array<(string)>;
-        /**
-         * Filters field "tag_name" to be not equal to the provided value.
-         */
-        'release.tagName.neq'?: string;
-        /**
-         * Filters field "tag_name" to be not within the provided values.
-         */
-        'release.tagName.notIn'?: Array<(string)>;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -6140,29 +6497,29 @@ export type ListGithubReleaseAssetsData = {
          */
         'release.targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'release.targetCommitish.has'?: string;
+        'release.targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'release.targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'release.targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'release.targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'release.targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'release.targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'release.targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'release.targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'release.targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -6172,45 +6529,125 @@ export type ListGithubReleaseAssetsData = {
          */
         'release.targetCommitish.suffix'?: string;
         /**
-         * Filters field "size" to be greater than the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'size.gt'?: number;
+        'release.name.eq'?: string;
         /**
-         * Filters field "size" to be less than the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'size.lt'?: number;
+        'release.name.neq'?: string;
         /**
-         * Sort entity results by the given field.
+         * Filters field "name" to be null/nil.
          */
-        sort?: GithubAssetSortableFields;
+        'release.name.null'?: boolean;
         /**
-         * Filters field "updated_at" to be equal to the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'updatedAt.eq'?: string;
+        'release.name.in'?: Array<string>;
         /**
-         * Filters field "updated_at" to be greater than the provided value.
+         * Filters field "name" to be not within the provided values.
          */
-        'updatedAt.gt'?: number;
+        'release.name.notIn'?: Array<string>;
         /**
-         * Filters field "updated_at" to be less than the provided value.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'updatedAt.lt'?: number;
+        'release.name.ieq'?: string;
         /**
-         * Filters field "updated_at" to be not equal to the provided value.
+         * Filters field "name" to contain the provided value.
          */
-        'updatedAt.neq'?: string;
+        'release.name.has'?: string;
         /**
-         * Filters field "updated_at" to be null/nil.
+         * Filters field "name" to contain the provided value, case-insensitive.
          */
-        'updatedAt.null'?: boolean;
+        'release.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'release.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'release.name.suffix'?: string;
+        /**
+         * Filters field "draft" to be equal to the provided value.
+         */
+        'release.draft.eq'?: boolean;
+        /**
+         * Filters field "prerelease" to be equal to the provided value.
+         */
+        'release.prerelease.eq'?: boolean;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'release.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'release.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'release.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'release.createdAt.lt'?: number;
+        /**
+         * Filters field "published_at" to be equal to the provided value.
+         */
+        'release.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'release.publishedAt.neq'?: string;
+        /**
+         * Filters field "published_at" to be greater than the provided value.
+         */
+        'release.publishedAt.gt'?: number;
+        /**
+         * Filters field "published_at" to be less than the provided value.
+         */
+        'release.publishedAt.lt'?: number;
     };
+    url: '/github-releases/{githubreleaseID}/assets';
 };
 
-export type ListGithubReleaseAssetsResponse = (GithubReleaseAssetList);
+export type ListGithubReleaseAssetsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubReleaseAssetsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubReleaseAssetsError = ListGithubReleaseAssetsErrors[keyof ListGithubReleaseAssetsErrors];
+
+export type ListGithubReleaseAssetsResponses = {
+    /**
+     * The requested assets.
+     */
+    200: GithubReleaseAssetList;
+};
+
+export type ListGithubReleaseAssetsResponse = ListGithubReleaseAssetsResponses[keyof ListGithubReleaseAssetsResponses];
 
 export type GetGithubReleaseRepositoryData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -6225,296 +6662,65 @@ export type GetGithubReleaseRepositoryData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/github-releases/{githubreleaseID}/repository';
 };
 
-export type GetGithubReleaseRepositoryResponse = (GithubRepositoryRead);
+export type GetGithubReleaseRepositoryErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubReleaseRepositoryError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubReleaseRepositoryError = GetGithubReleaseRepositoryErrors[keyof GetGithubReleaseRepositoryErrors];
+
+export type GetGithubReleaseRepositoryResponses = {
+    /**
+     * The requested repository entity.
+     */
+    200: GithubRepositoryRead;
+};
+
+export type GetGithubReleaseRepositoryResponse = GetGithubReleaseRepositoryResponses[keyof GetGithubReleaseRepositoryResponses];
 
 export type ListGithubRepositoriesData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * Filters field "archived" to be equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'archived.eq'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'description.null'?: boolean;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'fullName.suffix'?: string;
-        /**
-         * If true, only return entities that have a label edge.
-         */
-        'has.label'?: boolean;
-        /**
-         * If true, only return entities that have a release edge.
-         */
-        'has.release'?: boolean;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'isTemplate.eq'?: boolean;
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'label.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'label.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'label.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'label.createTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'label.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'label.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'label.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'label.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'label.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'label.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'label.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'label.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'label.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'label.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'label.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'label.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'label.updateTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'ownerLogin.suffix'?: string;
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -6524,101 +6730,329 @@ export type ListGithubRepositoriesData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Sort entity results by the given field.
          */
-        pretty?: boolean;
+        sort?: GithubRepositorySortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "repo_id" to be equal to the provided value.
+         */
+        'repoID.eq'?: number;
+        /**
+         * Filters field "repo_id" to be not equal to the provided value.
+         */
+        'repoID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'ownerLogin.suffix'?: string;
         /**
          * Filters field "public" to be equal to the provided value.
          */
         'public.eq'?: boolean;
         /**
+         * Filters field "description" to be null/nil.
+         */
+        'description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'archived.eq'?: boolean;
+        /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'pushedAt.in'?: Array<(string)>;
+        'pushedAt.in'?: Array<string>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'pushedAt.notIn'?: Array<(string)>;
+        'pushedAt.notIn'?: Array<string>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'release.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'release.createdAt.lt'?: number;
+        'createdAt.eq'?: string;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'createdAt.neq'?: string;
         /**
-         * Filters field "draft" to be equal to the provided value.
+         * Filters field "created_at" to be greater than the provided value.
          */
-        'release.draft.eq'?: boolean;
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'updatedAt.null'?: boolean;
+        /**
+         * If true, only return entities that have a label edge.
+         */
+        'has.label'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'label.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'label.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'label.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'label.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'label.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'label.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'label.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'label.updateTime.lt'?: number;
         /**
          * Filters field "name" to be equal to the provided value.
          */
-        'release.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'release.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'release.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'release.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'release.name.in'?: Array<(string)>;
+        'label.name.eq'?: string;
         /**
          * Filters field "name" to be not equal to the provided value.
          */
-        'release.name.neq'?: string;
+        'label.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'label.name.in'?: Array<string>;
         /**
          * Filters field "name" to be not within the provided values.
          */
-        'release.name.notIn'?: Array<(string)>;
+        'label.name.notIn'?: Array<string>;
         /**
-         * Filters field "name" to be null/nil.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'release.name.null'?: boolean;
+        'label.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'label.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'label.name.ihas'?: string;
         /**
          * Filters field "name" to start with the provided value.
          */
-        'release.name.prefix'?: string;
+        'label.name.prefix'?: string;
         /**
          * Filters field "name" to end with the provided value.
          */
-        'release.name.suffix'?: string;
+        'label.name.suffix'?: string;
         /**
-         * Filters field "prerelease" to be equal to the provided value.
+         * If true, only return entities that have a release edge.
          */
-        'release.prerelease.eq'?: boolean;
-        /**
-         * Filters field "published_at" to be equal to the provided value.
-         */
-        'release.publishedAt.eq'?: string;
-        /**
-         * Filters field "published_at" to be greater than the provided value.
-         */
-        'release.publishedAt.gt'?: number;
-        /**
-         * Filters field "published_at" to be less than the provided value.
-         */
-        'release.publishedAt.lt'?: number;
-        /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'release.publishedAt.neq'?: string;
+        'has.release'?: boolean;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -6632,29 +7066,29 @@ export type ListGithubRepositoriesData = {
          */
         'release.tagName.eq'?: string;
         /**
-         * Filters field "tag_name" to contain the provided value.
+         * Filters field "tag_name" to be not equal to the provided value.
          */
-        'release.tagName.has'?: string;
+        'release.tagName.neq'?: string;
+        /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'release.tagName.in'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be not within the provided values.
+         */
+        'release.tagName.notIn'?: Array<string>;
         /**
          * Filters field "tag_name" to be equal to the provided value, case-insensitive.
          */
         'release.tagName.ieq'?: string;
         /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'release.tagName.has'?: string;
+        /**
          * Filters field "tag_name" to contain the provided value, case-insensitive.
          */
         'release.tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'release.tagName.in'?: Array<(string)>;
-        /**
-         * Filters field "tag_name" to be not equal to the provided value.
-         */
-        'release.tagName.neq'?: string;
-        /**
-         * Filters field "tag_name" to be not within the provided values.
-         */
-        'release.tagName.notIn'?: Array<(string)>;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -6668,29 +7102,29 @@ export type ListGithubRepositoriesData = {
          */
         'release.targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'release.targetCommitish.has'?: string;
+        'release.targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'release.targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'release.targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'release.targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'release.targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'release.targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'release.targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'release.targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'release.targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -6700,53 +7134,125 @@ export type ListGithubRepositoriesData = {
          */
         'release.targetCommitish.suffix'?: string;
         /**
-         * Filters field "repo_id" to be equal to the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'repoID.eq'?: number;
+        'release.name.eq'?: string;
         /**
-         * Filters field "repo_id" to be not equal to the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'repoID.neq'?: number;
+        'release.name.neq'?: string;
         /**
-         * Sort entity results by the given field.
+         * Filters field "name" to be null/nil.
          */
-        sort?: GithubRepositorySortableFields;
+        'release.name.null'?: boolean;
         /**
-         * Filters field "star_count" to be greater than the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'starCount.gt'?: number;
+        'release.name.in'?: Array<string>;
         /**
-         * Filters field "star_count" to be less than the provided value.
+         * Filters field "name" to be not within the provided values.
          */
-        'starCount.lt'?: number;
+        'release.name.notIn'?: Array<string>;
         /**
-         * Filters field "updated_at" to be equal to the provided value.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'updatedAt.eq'?: string;
+        'release.name.ieq'?: string;
         /**
-         * Filters field "updated_at" to be greater than the provided value.
+         * Filters field "name" to contain the provided value.
          */
-        'updatedAt.gt'?: number;
+        'release.name.has'?: string;
         /**
-         * Filters field "updated_at" to be less than the provided value.
+         * Filters field "name" to contain the provided value, case-insensitive.
          */
-        'updatedAt.lt'?: number;
+        'release.name.ihas'?: string;
         /**
-         * Filters field "updated_at" to be not equal to the provided value.
+         * Filters field "name" to start with the provided value.
          */
-        'updatedAt.neq'?: string;
+        'release.name.prefix'?: string;
         /**
-         * Filters field "updated_at" to be null/nil.
+         * Filters field "name" to end with the provided value.
          */
-        'updatedAt.null'?: boolean;
+        'release.name.suffix'?: string;
+        /**
+         * Filters field "draft" to be equal to the provided value.
+         */
+        'release.draft.eq'?: boolean;
+        /**
+         * Filters field "prerelease" to be equal to the provided value.
+         */
+        'release.prerelease.eq'?: boolean;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'release.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'release.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'release.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'release.createdAt.lt'?: number;
+        /**
+         * Filters field "published_at" to be equal to the provided value.
+         */
+        'release.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'release.publishedAt.neq'?: string;
+        /**
+         * Filters field "published_at" to be greater than the provided value.
+         */
+        'release.publishedAt.gt'?: number;
+        /**
+         * Filters field "published_at" to be less than the provided value.
+         */
+        'release.publishedAt.lt'?: number;
     };
+    url: '/github-repositories';
 };
 
-export type ListGithubRepositoriesResponse = (GithubRepositoryList);
+export type ListGithubRepositoriesErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubRepositoriesError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubRepositoriesError = ListGithubRepositoriesErrors[keyof ListGithubRepositoriesErrors];
+
+export type ListGithubRepositoriesResponses = {
+    /**
+     * The requested GithubRepository.
+     */
+    200: GithubRepositoryList;
+};
+
+export type ListGithubRepositoriesResponse = ListGithubRepositoriesResponses[keyof ListGithubRepositoriesResponses];
 
 export type GetGithubRepositoryData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -6761,17 +7267,53 @@ export type GetGithubRepositoryData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/github-repositories/{githubrepositoryID}';
 };
 
-export type GetGithubRepositoryResponse = (GithubRepositoryRead);
+export type GetGithubRepositoryErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetGithubRepositoryError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetGithubRepositoryError = GetGithubRepositoryErrors[keyof GetGithubRepositoryErrors];
+
+export type GetGithubRepositoryResponses = {
+    /**
+     * The requested GithubRepository entity.
+     */
+    200: GithubRepositoryRead;
+};
+
+export type GetGithubRepositoryResponse = GetGithubRepositoryResponses[keyof GetGithubRepositoryResponses];
 
 export type ListGithubRepositoryLabelsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -6785,10 +7327,30 @@ export type ListGithubRepositoryLabelsData = {
         githubrepositoryID: number;
     };
     query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: LabelSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
         'createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'createTime.neq'?: string;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -6798,285 +7360,49 @@ export type ListGithubRepositoryLabelsData = {
          */
         'createTime.lt'?: number;
         /**
-         * Filters field "create_time" to be not equal to the provided value.
+         * Filters field "update_time" to be equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'updateTime.eq'?: string;
         /**
-         * Filter operation to use.
+         * Filters field "update_time" to be not equal to the provided value.
          */
-        filter_op?: FilterOperation;
+        'updateTime.neq'?: string;
         /**
-         * Filters field "archived" to be equal to the provided value.
+         * Filters field "update_time" to be greater than the provided value.
          */
-        'githubRepository.archived.eq'?: boolean;
+        'updateTime.gt'?: number;
         /**
-         * Filters field "created_at" to be equal to the provided value.
+         * Filters field "update_time" to be less than the provided value.
          */
-        'githubRepository.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'githubRepository.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'githubRepository.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'githubRepository.createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'githubRepository.defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'githubRepository.defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'githubRepository.defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'githubRepository.defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'githubRepository.defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'githubRepository.defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'githubRepository.defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'githubRepository.description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'githubRepository.description.null'?: boolean;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'githubRepository.fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'githubRepository.fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'githubRepository.fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'githubRepository.fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'githubRepository.fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'githubRepository.fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'githubRepository.fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'githubRepository.fullName.suffix'?: string;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'githubRepository.hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'githubRepository.isTemplate.eq'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'githubRepository.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'githubRepository.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'githubRepository.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'githubRepository.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'githubRepository.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'githubRepository.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'githubRepository.name.suffix'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'githubRepository.ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'githubRepository.ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'githubRepository.ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'githubRepository.ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'githubRepository.ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'githubRepository.ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'githubRepository.ownerLogin.suffix'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'githubRepository.public.eq'?: boolean;
-        /**
-         * Filters field "pushed_at" to be within the provided values.
-         */
-        'githubRepository.pushedAt.in'?: Array<(string)>;
-        /**
-         * Filters field "pushed_at" to be not within the provided values.
-         */
-        'githubRepository.pushedAt.notIn'?: Array<(string)>;
-        /**
-         * Filters field "repo_id" to be equal to the provided value.
-         */
-        'githubRepository.repoID.eq'?: number;
-        /**
-         * Filters field "repo_id" to be not equal to the provided value.
-         */
-        'githubRepository.repoID.neq'?: number;
-        /**
-         * Filters field "star_count" to be greater than the provided value.
-         */
-        'githubRepository.starCount.gt'?: number;
-        /**
-         * Filters field "star_count" to be less than the provided value.
-         */
-        'githubRepository.starCount.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'githubRepository.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'githubRepository.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'githubRepository.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'githubRepository.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'githubRepository.updatedAt.null'?: boolean;
-        /**
-         * If true, only return entities that have a github_repository edge.
-         */
-        'has.githubRepository'?: boolean;
-        /**
-         * If true, only return entities that have a post edge.
-         */
-        'has.post'?: boolean;
+        'updateTime.lt'?: number;
         /**
          * Filters field "name" to be equal to the provided value.
          */
         'name.eq'?: string;
         /**
-         * Filters field "name" to contain the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'name.has'?: string;
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
         /**
          * Filters field "name" to be equal to the provided value, case-insensitive.
          */
         'name.ieq'?: string;
         /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
          * Filters field "name" to contain the provided value, case-insensitive.
          */
         'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
         /**
          * Filters field "name" to start with the provided value.
          */
@@ -7086,9 +7412,89 @@ export type ListGithubRepositoryLabelsData = {
          */
         'name.suffix'?: string;
         /**
-         * Order the results in ascending or descending order.
+         * If true, only return entities that have a post edge.
          */
-        order?: 'asc' | 'desc';
+        'has.post'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'post.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'post.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'post.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'post.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'post.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'post.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'post.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'post.updateTime.lt'?: number;
+        /**
+         * Filters field "slug" to be equal to the provided value.
+         */
+        'post.slug.eq'?: string;
+        /**
+         * Filters field "slug" to be not equal to the provided value.
+         */
+        'post.slug.neq'?: string;
+        /**
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
+         */
+        'post.slug.ieq'?: string;
+        /**
+         * Filters field "title" to be equal to the provided value.
+         */
+        'post.title.eq'?: string;
+        /**
+         * Filters field "title" to be not equal to the provided value.
+         */
+        'post.title.neq'?: string;
+        /**
+         * Filters field "title" to be within the provided values.
+         */
+        'post.title.in'?: Array<string>;
+        /**
+         * Filters field "title" to be not within the provided values.
+         */
+        'post.title.notIn'?: Array<string>;
+        /**
+         * Filters field "title" to be equal to the provided value, case-insensitive.
+         */
+        'post.title.ieq'?: string;
+        /**
+         * Filters field "title" to contain the provided value.
+         */
+        'post.title.has'?: string;
+        /**
+         * Filters field "title" to contain the provided value, case-insensitive.
+         */
+        'post.title.ihas'?: string;
+        /**
+         * Filters field "title" to start with the provided value.
+         */
+        'post.title.prefix'?: string;
+        /**
+         * Filters field "title" to end with the provided value.
+         */
+        'post.title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -7106,29 +7512,13 @@ export type ListGithubRepositoryLabelsData = {
          */
         'post.contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'post.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'post.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'post.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'post.createTime.neq'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'post.public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'post.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'post.publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -7138,77 +7528,13 @@ export type ListGithubRepositoryLabelsData = {
          */
         'post.publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'post.publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'post.slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'post.slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'post.slug.neq'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'post.title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'post.title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'post.title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'post.title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'post.title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'post.title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'post.title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'post.title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'post.title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'post.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'post.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'post.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'post.updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'post.viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'post.viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -7218,41 +7544,289 @@ export type ListGithubRepositoryLabelsData = {
          */
         'post.viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'post.viewCount.neq'?: number;
+        'post.public.eq'?: boolean;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If true, only return entities that have a github_repository edge.
          */
-        pretty?: boolean;
+        'has.githubRepository'?: boolean;
         /**
-         * Sort entity results by the given field.
+         * Filters field "repo_id" to be equal to the provided value.
          */
-        sort?: LabelSortableFields;
+        'githubRepository.repoID.eq'?: number;
         /**
-         * Filters field "update_time" to be equal to the provided value.
+         * Filters field "repo_id" to be not equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'githubRepository.repoID.neq'?: number;
         /**
-         * Filters field "update_time" to be greater than the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'updateTime.gt'?: number;
+        'githubRepository.name.eq'?: string;
         /**
-         * Filters field "update_time" to be less than the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'updateTime.lt'?: number;
+        'githubRepository.name.neq'?: string;
         /**
-         * Filters field "update_time" to be not equal to the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'updateTime.neq'?: string;
+        'githubRepository.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'githubRepository.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'githubRepository.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'githubRepository.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'githubRepository.name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'githubRepository.fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'githubRepository.fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'githubRepository.fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'githubRepository.fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'githubRepository.fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'githubRepository.fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'githubRepository.fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'githubRepository.ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'githubRepository.ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'githubRepository.ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'githubRepository.ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'githubRepository.ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'githubRepository.ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'githubRepository.ownerLogin.suffix'?: string;
+        /**
+         * Filters field "public" to be equal to the provided value.
+         */
+        'githubRepository.public.eq'?: boolean;
+        /**
+         * Filters field "description" to be null/nil.
+         */
+        'githubRepository.description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'githubRepository.description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'githubRepository.fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'githubRepository.starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'githubRepository.starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'githubRepository.defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'githubRepository.defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'githubRepository.defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'githubRepository.defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'githubRepository.defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'githubRepository.defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'githubRepository.defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'githubRepository.isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'githubRepository.hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'githubRepository.archived.eq'?: boolean;
+        /**
+         * Filters field "pushed_at" to be within the provided values.
+         */
+        'githubRepository.pushedAt.in'?: Array<string>;
+        /**
+         * Filters field "pushed_at" to be not within the provided values.
+         */
+        'githubRepository.pushedAt.notIn'?: Array<string>;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'githubRepository.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'githubRepository.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'githubRepository.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'githubRepository.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'githubRepository.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'githubRepository.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'githubRepository.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'githubRepository.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'githubRepository.updatedAt.null'?: boolean;
     };
+    url: '/github-repositories/{githubrepositoryID}/labels';
 };
 
-export type ListGithubRepositoryLabelsResponse = (GithubRepositoryLabelList);
+export type ListGithubRepositoryLabelsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListGithubRepositoryLabelsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListGithubRepositoryLabelsError = ListGithubRepositoryLabelsErrors[keyof ListGithubRepositoryLabelsErrors];
+
+export type ListGithubRepositoryLabelsResponses = {
+    /**
+     * The requested labels.
+     */
+    200: GithubRepositoryLabelList;
+};
+
+export type ListGithubRepositoryLabelsResponse = ListGithubRepositoryLabelsResponses[keyof ListGithubRepositoryLabelsResponses];
 
 export type ListGithubRepositoryReleasesData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -7267,217 +7841,9 @@ export type ListGithubRepositoryReleasesData = {
     };
     query?: {
         /**
-         * Filters field "asset_id" to be equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'asset.assetID.eq'?: number;
-        /**
-         * Filters field "asset_id" to be not equal to the provided value.
-         */
-        'asset.assetID.neq'?: number;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'asset.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'asset.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'asset.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'asset.createdAt.neq'?: string;
-        /**
-         * Filters field "download_count" to be greater than the provided value.
-         */
-        'asset.downloadCount.gt'?: number;
-        /**
-         * Filters field "download_count" to be less than the provided value.
-         */
-        'asset.downloadCount.lt'?: number;
-        /**
-         * Filters field "label" to be equal to the provided value.
-         */
-        'asset.label.eq'?: string;
-        /**
-         * Filters field "label" to contain the provided value.
-         */
-        'asset.label.has'?: string;
-        /**
-         * Filters field "label" to be equal to the provided value, case-insensitive.
-         */
-        'asset.label.ieq'?: string;
-        /**
-         * Filters field "label" to contain the provided value, case-insensitive.
-         */
-        'asset.label.ihas'?: string;
-        /**
-         * Filters field "label" to be within the provided values.
-         */
-        'asset.label.in'?: Array<(string)>;
-        /**
-         * Filters field "label" to be not equal to the provided value.
-         */
-        'asset.label.neq'?: string;
-        /**
-         * Filters field "label" to be not within the provided values.
-         */
-        'asset.label.notIn'?: Array<(string)>;
-        /**
-         * Filters field "label" to be null/nil.
-         */
-        'asset.label.null'?: boolean;
-        /**
-         * Filters field "label" to start with the provided value.
-         */
-        'asset.label.prefix'?: string;
-        /**
-         * Filters field "label" to end with the provided value.
-         */
-        'asset.label.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'asset.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'asset.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'asset.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'asset.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'asset.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'asset.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'asset.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'asset.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'asset.name.suffix'?: string;
-        /**
-         * Filters field "size" to be greater than the provided value.
-         */
-        'asset.size.gt'?: number;
-        /**
-         * Filters field "size" to be less than the provided value.
-         */
-        'asset.size.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'asset.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'asset.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'asset.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'asset.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'asset.updatedAt.null'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "draft" to be equal to the provided value.
-         */
-        'draft.eq'?: boolean;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a asset edge.
-         */
-        'has.asset'?: boolean;
-        /**
-         * If true, only return entities that have a repository edge.
-         */
-        'has.repository'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -7487,29 +7853,17 @@ export type ListGithubRepositoryReleasesData = {
          */
         per_page?: number;
         /**
-         * Filters field "prerelease" to be equal to the provided value.
+         * Sort entity results by the given field.
          */
-        'prerelease.eq'?: boolean;
+        sort?: GithubReleaseSortableFields;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Order the results in ascending or descending order.
          */
-        pretty?: boolean;
+        order?: 'asc' | 'desc';
         /**
-         * Filters field "published_at" to be equal to the provided value.
+         * Filter operation to use.
          */
-        'publishedAt.eq'?: string;
-        /**
-         * Filters field "published_at" to be greater than the provided value.
-         */
-        'publishedAt.gt'?: number;
-        /**
-         * Filters field "published_at" to be less than the provided value.
-         */
-        'publishedAt.lt'?: number;
-        /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'publishedAt.neq'?: string;
+        filter_op?: FilterOperation;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -7519,273 +7873,33 @@ export type ListGithubRepositoryReleasesData = {
          */
         'releaseID.neq'?: number;
         /**
-         * Filters field "archived" to be equal to the provided value.
-         */
-        'repository.archived.eq'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'repository.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'repository.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'repository.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'repository.createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'repository.defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'repository.defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'repository.defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'repository.defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'repository.defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'repository.defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'repository.defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'repository.defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'repository.defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'repository.description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'repository.description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'repository.description.null'?: boolean;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'repository.fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'repository.fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'repository.fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'repository.fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'repository.fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'repository.fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'repository.fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'repository.fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'repository.fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'repository.fullName.suffix'?: string;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'repository.hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'repository.isTemplate.eq'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'repository.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'repository.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'repository.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'repository.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'repository.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'repository.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'repository.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'repository.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'repository.name.suffix'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'repository.ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'repository.ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'repository.ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'repository.ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'repository.ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'repository.ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'repository.ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'repository.ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'repository.ownerLogin.suffix'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'repository.public.eq'?: boolean;
-        /**
-         * Filters field "pushed_at" to be within the provided values.
-         */
-        'repository.pushedAt.in'?: Array<(string)>;
-        /**
-         * Filters field "pushed_at" to be not within the provided values.
-         */
-        'repository.pushedAt.notIn'?: Array<(string)>;
-        /**
-         * Filters field "repo_id" to be equal to the provided value.
-         */
-        'repository.repoID.eq'?: number;
-        /**
-         * Filters field "repo_id" to be not equal to the provided value.
-         */
-        'repository.repoID.neq'?: number;
-        /**
-         * Filters field "star_count" to be greater than the provided value.
-         */
-        'repository.starCount.gt'?: number;
-        /**
-         * Filters field "star_count" to be less than the provided value.
-         */
-        'repository.starCount.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'repository.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'repository.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'repository.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'repository.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'repository.updatedAt.null'?: boolean;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: GithubReleaseSortableFields;
-        /**
          * Filters field "tag_name" to be equal to the provided value.
          */
         'tagName.eq'?: string;
-        /**
-         * Filters field "tag_name" to contain the provided value.
-         */
-        'tagName.has'?: string;
-        /**
-         * Filters field "tag_name" to be equal to the provided value, case-insensitive.
-         */
-        'tagName.ieq'?: string;
-        /**
-         * Filters field "tag_name" to contain the provided value, case-insensitive.
-         */
-        'tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'tagName.in'?: Array<(string)>;
         /**
          * Filters field "tag_name" to be not equal to the provided value.
          */
         'tagName.neq'?: string;
         /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'tagName.in'?: Array<string>;
+        /**
          * Filters field "tag_name" to be not within the provided values.
          */
-        'tagName.notIn'?: Array<(string)>;
+        'tagName.notIn'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be equal to the provided value, case-insensitive.
+         */
+        'tagName.ieq'?: string;
+        /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'tagName.has'?: string;
+        /**
+         * Filters field "tag_name" to contain the provided value, case-insensitive.
+         */
+        'tagName.ihas'?: string;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -7799,29 +7913,29 @@ export type ListGithubRepositoryReleasesData = {
          */
         'targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'targetCommitish.has'?: string;
+        'targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -7830,326 +7944,38 @@ export type ListGithubRepositoryReleasesData = {
          * Filters field "target_commitish" to end with the provided value.
          */
         'targetCommitish.suffix'?: string;
-    };
-};
-
-export type ListGithubRepositoryReleasesResponse = (GithubReleaseList);
-
-export type ListGithubRepositoryReleasesError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetGithubUserData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-};
-
-export type GetGithubUserResponse = (GithubUser);
-
-export type GetGithubUserError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type ListLabelsData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-    query?: {
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'createTime.neq'?: string;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * Filters field "archived" to be equal to the provided value.
-         */
-        'githubRepository.archived.eq'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'githubRepository.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'githubRepository.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'githubRepository.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'githubRepository.createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'githubRepository.defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'githubRepository.defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'githubRepository.defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'githubRepository.defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'githubRepository.defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'githubRepository.defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'githubRepository.defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'githubRepository.description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'githubRepository.description.null'?: boolean;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'githubRepository.fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'githubRepository.fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'githubRepository.fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'githubRepository.fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'githubRepository.fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'githubRepository.fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'githubRepository.fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'githubRepository.fullName.suffix'?: string;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'githubRepository.hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'githubRepository.isTemplate.eq'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'githubRepository.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'githubRepository.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'githubRepository.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'githubRepository.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'githubRepository.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'githubRepository.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'githubRepository.name.suffix'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'githubRepository.ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'githubRepository.ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'githubRepository.ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'githubRepository.ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'githubRepository.ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'githubRepository.ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'githubRepository.ownerLogin.suffix'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'githubRepository.public.eq'?: boolean;
-        /**
-         * Filters field "pushed_at" to be within the provided values.
-         */
-        'githubRepository.pushedAt.in'?: Array<(string)>;
-        /**
-         * Filters field "pushed_at" to be not within the provided values.
-         */
-        'githubRepository.pushedAt.notIn'?: Array<(string)>;
-        /**
-         * Filters field "repo_id" to be equal to the provided value.
-         */
-        'githubRepository.repoID.eq'?: number;
-        /**
-         * Filters field "repo_id" to be not equal to the provided value.
-         */
-        'githubRepository.repoID.neq'?: number;
-        /**
-         * Filters field "star_count" to be greater than the provided value.
-         */
-        'githubRepository.starCount.gt'?: number;
-        /**
-         * Filters field "star_count" to be less than the provided value.
-         */
-        'githubRepository.starCount.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'githubRepository.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'githubRepository.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'githubRepository.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'githubRepository.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'githubRepository.updatedAt.null'?: boolean;
-        /**
-         * If true, only return entities that have a github_repository edge.
-         */
-        'has.githubRepository'?: boolean;
-        /**
-         * If true, only return entities that have a post edge.
-         */
-        'has.post'?: boolean;
         /**
          * Filters field "name" to be equal to the provided value.
          */
         'name.eq'?: string;
         /**
-         * Filters field "name" to contain the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'name.has'?: string;
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
         /**
          * Filters field "name" to be equal to the provided value, case-insensitive.
          */
         'name.ieq'?: string;
         /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
          * Filters field "name" to contain the provided value, case-insensitive.
          */
         'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
         /**
          * Filters field "name" to start with the provided value.
          */
@@ -8159,9 +7985,528 @@ export type ListLabelsData = {
          */
         'name.suffix'?: string;
         /**
-         * Order the results in ascending or descending order.
+         * Filters field "draft" to be equal to the provided value.
          */
-        order?: 'asc' | 'desc';
+        'draft.eq'?: boolean;
+        /**
+         * Filters field "prerelease" to be equal to the provided value.
+         */
+        'prerelease.eq'?: boolean;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
+        /**
+         * Filters field "published_at" to be equal to the provided value.
+         */
+        'publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'publishedAt.neq'?: string;
+        /**
+         * Filters field "published_at" to be greater than the provided value.
+         */
+        'publishedAt.gt'?: number;
+        /**
+         * Filters field "published_at" to be less than the provided value.
+         */
+        'publishedAt.lt'?: number;
+        /**
+         * If true, only return entities that have a repository edge.
+         */
+        'has.repository'?: boolean;
+        /**
+         * Filters field "repo_id" to be equal to the provided value.
+         */
+        'repository.repoID.eq'?: number;
+        /**
+         * Filters field "repo_id" to be not equal to the provided value.
+         */
+        'repository.repoID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'repository.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'repository.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'repository.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'repository.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'repository.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'repository.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'repository.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'repository.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'repository.name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'repository.fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'repository.fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'repository.fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'repository.fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'repository.fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'repository.fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'repository.fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'repository.fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'repository.fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'repository.ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'repository.ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'repository.ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'repository.ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'repository.ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'repository.ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'repository.ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'repository.ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'repository.ownerLogin.suffix'?: string;
+        /**
+         * Filters field "public" to be equal to the provided value.
+         */
+        'repository.public.eq'?: boolean;
+        /**
+         * Filters field "description" to be null/nil.
+         */
+        'repository.description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'repository.description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'repository.description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'repository.fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'repository.starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'repository.starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'repository.defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'repository.defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'repository.defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'repository.defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'repository.defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'repository.defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'repository.defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'repository.defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'repository.defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'repository.isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'repository.hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'repository.archived.eq'?: boolean;
+        /**
+         * Filters field "pushed_at" to be within the provided values.
+         */
+        'repository.pushedAt.in'?: Array<string>;
+        /**
+         * Filters field "pushed_at" to be not within the provided values.
+         */
+        'repository.pushedAt.notIn'?: Array<string>;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'repository.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'repository.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'repository.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'repository.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'repository.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'repository.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'repository.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'repository.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'repository.updatedAt.null'?: boolean;
+        /**
+         * If true, only return entities that have a asset edge.
+         */
+        'has.asset'?: boolean;
+        /**
+         * Filters field "asset_id" to be equal to the provided value.
+         */
+        'asset.assetID.eq'?: number;
+        /**
+         * Filters field "asset_id" to be not equal to the provided value.
+         */
+        'asset.assetID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'asset.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'asset.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'asset.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'asset.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'asset.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'asset.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'asset.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'asset.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'asset.name.suffix'?: string;
+        /**
+         * Filters field "label" to be equal to the provided value.
+         */
+        'asset.label.eq'?: string;
+        /**
+         * Filters field "label" to be not equal to the provided value.
+         */
+        'asset.label.neq'?: string;
+        /**
+         * Filters field "label" to be null/nil.
+         */
+        'asset.label.null'?: boolean;
+        /**
+         * Filters field "label" to be within the provided values.
+         */
+        'asset.label.in'?: Array<string>;
+        /**
+         * Filters field "label" to be not within the provided values.
+         */
+        'asset.label.notIn'?: Array<string>;
+        /**
+         * Filters field "label" to be equal to the provided value, case-insensitive.
+         */
+        'asset.label.ieq'?: string;
+        /**
+         * Filters field "label" to contain the provided value.
+         */
+        'asset.label.has'?: string;
+        /**
+         * Filters field "label" to contain the provided value, case-insensitive.
+         */
+        'asset.label.ihas'?: string;
+        /**
+         * Filters field "label" to start with the provided value.
+         */
+        'asset.label.prefix'?: string;
+        /**
+         * Filters field "label" to end with the provided value.
+         */
+        'asset.label.suffix'?: string;
+        /**
+         * Filters field "size" to be greater than the provided value.
+         */
+        'asset.size.gt'?: number;
+        /**
+         * Filters field "size" to be less than the provided value.
+         */
+        'asset.size.lt'?: number;
+        /**
+         * Filters field "download_count" to be greater than the provided value.
+         */
+        'asset.downloadCount.gt'?: number;
+        /**
+         * Filters field "download_count" to be less than the provided value.
+         */
+        'asset.downloadCount.lt'?: number;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'asset.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'asset.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'asset.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'asset.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'asset.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'asset.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'asset.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'asset.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'asset.updatedAt.null'?: boolean;
+    };
+    url: '/github-repositories/{githubrepositoryID}/releases';
+};
+
+export type ListGithubRepositoryReleasesErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type ListGithubRepositoryReleasesError = ListGithubRepositoryReleasesErrors[keyof ListGithubRepositoryReleasesErrors];
+
+export type ListGithubRepositoryReleasesResponses = {
+    /**
+     * The requested releases.
+     */
+    200: GithubReleaseList;
+};
+
+export type ListGithubRepositoryReleasesResponse = ListGithubRepositoryReleasesResponses[keyof ListGithubRepositoryReleasesResponses];
+
+export type GetGithubUserData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/github-user';
+};
+
+export type GetGithubUserErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetGithubUserError = GetGithubUserErrors[keyof GetGithubUserErrors];
+
+export type GetGithubUserResponses = {
+    /**
+     * Github user was found.
+     */
+    200: GithubUser;
+};
+
+export type GetGithubUserResponse = GetGithubUserResponses[keyof GetGithubUserResponses];
+
+export type ListLabelsData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -8170,6 +8515,170 @@ export type ListLabelsData = {
          * The number of entities to retrieve per page.
          */
         per_page?: number;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: LabelSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'updateTime.lt'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'name.suffix'?: string;
+        /**
+         * If true, only return entities that have a post edge.
+         */
+        'has.post'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'post.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'post.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'post.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'post.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'post.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'post.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'post.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'post.updateTime.lt'?: number;
+        /**
+         * Filters field "slug" to be equal to the provided value.
+         */
+        'post.slug.eq'?: string;
+        /**
+         * Filters field "slug" to be not equal to the provided value.
+         */
+        'post.slug.neq'?: string;
+        /**
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
+         */
+        'post.slug.ieq'?: string;
+        /**
+         * Filters field "title" to be equal to the provided value.
+         */
+        'post.title.eq'?: string;
+        /**
+         * Filters field "title" to be not equal to the provided value.
+         */
+        'post.title.neq'?: string;
+        /**
+         * Filters field "title" to be within the provided values.
+         */
+        'post.title.in'?: Array<string>;
+        /**
+         * Filters field "title" to be not within the provided values.
+         */
+        'post.title.notIn'?: Array<string>;
+        /**
+         * Filters field "title" to be equal to the provided value, case-insensitive.
+         */
+        'post.title.ieq'?: string;
+        /**
+         * Filters field "title" to contain the provided value.
+         */
+        'post.title.has'?: string;
+        /**
+         * Filters field "title" to contain the provided value, case-insensitive.
+         */
+        'post.title.ihas'?: string;
+        /**
+         * Filters field "title" to start with the provided value.
+         */
+        'post.title.prefix'?: string;
+        /**
+         * Filters field "title" to end with the provided value.
+         */
+        'post.title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -8187,29 +8696,13 @@ export type ListLabelsData = {
          */
         'post.contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'post.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'post.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'post.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'post.createTime.neq'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'post.public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'post.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'post.publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -8219,77 +8712,13 @@ export type ListLabelsData = {
          */
         'post.publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'post.publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'post.slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'post.slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'post.slug.neq'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'post.title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'post.title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'post.title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'post.title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'post.title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'post.title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'post.title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'post.title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'post.title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'post.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'post.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'post.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'post.updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'post.viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'post.viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -8299,39 +8728,286 @@ export type ListLabelsData = {
          */
         'post.viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'post.viewCount.neq'?: number;
+        'post.public.eq'?: boolean;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If true, only return entities that have a github_repository edge.
          */
-        pretty?: boolean;
+        'has.githubRepository'?: boolean;
         /**
-         * Sort entity results by the given field.
+         * Filters field "repo_id" to be equal to the provided value.
          */
-        sort?: LabelSortableFields;
+        'githubRepository.repoID.eq'?: number;
         /**
-         * Filters field "update_time" to be equal to the provided value.
+         * Filters field "repo_id" to be not equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'githubRepository.repoID.neq'?: number;
         /**
-         * Filters field "update_time" to be greater than the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'updateTime.gt'?: number;
+        'githubRepository.name.eq'?: string;
         /**
-         * Filters field "update_time" to be less than the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'updateTime.lt'?: number;
+        'githubRepository.name.neq'?: string;
         /**
-         * Filters field "update_time" to be not equal to the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'updateTime.neq'?: string;
+        'githubRepository.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'githubRepository.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'githubRepository.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'githubRepository.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'githubRepository.name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'githubRepository.fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'githubRepository.fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'githubRepository.fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'githubRepository.fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'githubRepository.fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'githubRepository.fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'githubRepository.fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'githubRepository.ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'githubRepository.ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'githubRepository.ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'githubRepository.ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'githubRepository.ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'githubRepository.ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'githubRepository.ownerLogin.suffix'?: string;
+        /**
+         * Filters field "public" to be equal to the provided value.
+         */
+        'githubRepository.public.eq'?: boolean;
+        /**
+         * Filters field "description" to be null/nil.
+         */
+        'githubRepository.description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'githubRepository.description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'githubRepository.fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'githubRepository.starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'githubRepository.starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'githubRepository.defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'githubRepository.defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'githubRepository.defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'githubRepository.defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'githubRepository.defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'githubRepository.defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'githubRepository.defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'githubRepository.isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'githubRepository.hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'githubRepository.archived.eq'?: boolean;
+        /**
+         * Filters field "pushed_at" to be within the provided values.
+         */
+        'githubRepository.pushedAt.in'?: Array<string>;
+        /**
+         * Filters field "pushed_at" to be not within the provided values.
+         */
+        'githubRepository.pushedAt.notIn'?: Array<string>;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'githubRepository.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'githubRepository.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'githubRepository.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'githubRepository.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'githubRepository.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'githubRepository.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'githubRepository.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'githubRepository.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'githubRepository.updatedAt.null'?: boolean;
     };
+    url: '/labels';
 };
 
-export type ListLabelsResponse = (LabelList);
+export type ListLabelsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListLabelsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListLabelsError = ListLabelsErrors[keyof ListLabelsErrors];
+
+export type ListLabelsResponses = {
+    /**
+     * The requested Label.
+     */
+    200: LabelList;
+};
+
+export type ListLabelsResponse = ListLabelsResponses[keyof ListLabelsResponses];
 
 export type CreateLabelData = {
     body: LabelCreate;
@@ -8341,57 +9017,111 @@ export type CreateLabelData = {
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/labels';
 };
 
-export type CreateLabelResponse = (Label);
+export type CreateLabelErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Conflict (http status code 409)
+     */
+    409: ErrorConflict;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type CreateLabelError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorConflict | ErrorTooManyRequests | ErrorInternalServerError);
+export type CreateLabelError = CreateLabelErrors[keyof CreateLabelErrors];
+
+export type CreateLabelResponses = {
+    /**
+     * The created Label entity.
+     */
+    201: Label;
+};
+
+export type CreateLabelResponse = CreateLabelResponses[keyof CreateLabelResponses];
 
 export type GetLabelsCountData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
+    query?: never;
+    url: '/labels/count';
 };
 
-export type GetLabelsCountResponse = (LabelCountList);
-
-export type GetLabelsCountError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetLabelData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-    path: {
-        /**
-         * The ID of the Label to act upon.
-         */
-        labelID: number;
-    };
-    query?: {
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-    };
+export type GetLabelsCountErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
 };
 
-export type GetLabelResponse = (Label);
+export type GetLabelsCountError = GetLabelsCountErrors[keyof GetLabelsCountErrors];
 
-export type GetLabelError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetLabelsCountResponses = {
+    /**
+     * Labels count was found.
+     */
+    200: LabelCountList;
+};
+
+export type GetLabelsCountResponse = GetLabelsCountResponses[keyof GetLabelsCountResponses];
 
 export type DeleteLabelData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -8406,15 +9136,111 @@ export type DeleteLabelData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/labels/{labelID}';
 };
 
-export type DeleteLabelResponse = (string);
+export type DeleteLabelErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type DeleteLabelError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type DeleteLabelError = DeleteLabelErrors[keyof DeleteLabelErrors];
+
+export type DeleteLabelResponses = {
+    /**
+     * The requested Label entity.
+     */
+    204: void;
+};
+
+export type DeleteLabelResponse = DeleteLabelResponses[keyof DeleteLabelResponses];
+
+export type GetLabelData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path: {
+        /**
+         * The ID of the Label to act upon.
+         */
+        labelID: number;
+    };
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+    };
+    url: '/labels/{labelID}';
+};
+
+export type GetLabelErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetLabelError = GetLabelErrors[keyof GetLabelErrors];
+
+export type GetLabelResponses = {
+    /**
+     * The requested Label entity.
+     */
+    200: Label;
+};
+
+export type GetLabelResponse = GetLabelResponses[keyof GetLabelResponses];
 
 export type UpdateLabelData = {
     body: LabelUpdate;
@@ -8432,17 +9258,57 @@ export type UpdateLabelData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/labels/{labelID}';
 };
 
-export type UpdateLabelResponse = (Label);
+export type UpdateLabelErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Conflict (http status code 409)
+     */
+    409: ErrorConflict;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type UpdateLabelError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorConflict | ErrorTooManyRequests | ErrorInternalServerError);
+export type UpdateLabelError = UpdateLabelErrors[keyof UpdateLabelErrors];
+
+export type UpdateLabelResponses = {
+    /**
+     * The update Label entity.
+     */
+    200: Label;
+};
+
+export type UpdateLabelResponse = UpdateLabelResponses[keyof UpdateLabelResponses];
 
 export type ListLabelGithubRepositoriesData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -8457,277 +9323,9 @@ export type ListLabelGithubRepositoriesData = {
     };
     query?: {
         /**
-         * Filters field "archived" to be equal to the provided value.
+         * If set to true, any JSON response will be indented.
          */
-        'archived.eq'?: boolean;
-        /**
-         * Filters field "created_at" to be equal to the provided value.
-         */
-        'createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'description.null'?: boolean;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'fullName.suffix'?: string;
-        /**
-         * If true, only return entities that have a label edge.
-         */
-        'has.label'?: boolean;
-        /**
-         * If true, only return entities that have a release edge.
-         */
-        'has.release'?: boolean;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'isTemplate.eq'?: boolean;
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'label.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'label.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'label.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'label.createTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'label.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'label.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'label.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'label.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'label.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'label.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'label.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'label.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'label.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'label.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'label.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'label.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'label.updateTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'name.suffix'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'ownerLogin.suffix'?: string;
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -8737,101 +9335,329 @@ export type ListLabelGithubRepositoriesData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Sort entity results by the given field.
          */
-        pretty?: boolean;
+        sort?: GithubRepositorySortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "repo_id" to be equal to the provided value.
+         */
+        'repoID.eq'?: number;
+        /**
+         * Filters field "repo_id" to be not equal to the provided value.
+         */
+        'repoID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'ownerLogin.suffix'?: string;
         /**
          * Filters field "public" to be equal to the provided value.
          */
         'public.eq'?: boolean;
         /**
+         * Filters field "description" to be null/nil.
+         */
+        'description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'archived.eq'?: boolean;
+        /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'pushedAt.in'?: Array<(string)>;
+        'pushedAt.in'?: Array<string>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'pushedAt.notIn'?: Array<(string)>;
+        'pushedAt.notIn'?: Array<string>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'release.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'release.createdAt.lt'?: number;
+        'createdAt.eq'?: string;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'createdAt.neq'?: string;
         /**
-         * Filters field "draft" to be equal to the provided value.
+         * Filters field "created_at" to be greater than the provided value.
          */
-        'release.draft.eq'?: boolean;
+        'createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'updatedAt.null'?: boolean;
+        /**
+         * If true, only return entities that have a label edge.
+         */
+        'has.label'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'label.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'label.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'label.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'label.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'label.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'label.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'label.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'label.updateTime.lt'?: number;
         /**
          * Filters field "name" to be equal to the provided value.
          */
-        'release.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'release.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'release.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'release.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'release.name.in'?: Array<(string)>;
+        'label.name.eq'?: string;
         /**
          * Filters field "name" to be not equal to the provided value.
          */
-        'release.name.neq'?: string;
+        'label.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'label.name.in'?: Array<string>;
         /**
          * Filters field "name" to be not within the provided values.
          */
-        'release.name.notIn'?: Array<(string)>;
+        'label.name.notIn'?: Array<string>;
         /**
-         * Filters field "name" to be null/nil.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'release.name.null'?: boolean;
+        'label.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'label.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'label.name.ihas'?: string;
         /**
          * Filters field "name" to start with the provided value.
          */
-        'release.name.prefix'?: string;
+        'label.name.prefix'?: string;
         /**
          * Filters field "name" to end with the provided value.
          */
-        'release.name.suffix'?: string;
+        'label.name.suffix'?: string;
         /**
-         * Filters field "prerelease" to be equal to the provided value.
+         * If true, only return entities that have a release edge.
          */
-        'release.prerelease.eq'?: boolean;
-        /**
-         * Filters field "published_at" to be equal to the provided value.
-         */
-        'release.publishedAt.eq'?: string;
-        /**
-         * Filters field "published_at" to be greater than the provided value.
-         */
-        'release.publishedAt.gt'?: number;
-        /**
-         * Filters field "published_at" to be less than the provided value.
-         */
-        'release.publishedAt.lt'?: number;
-        /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'release.publishedAt.neq'?: string;
+        'has.release'?: boolean;
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
@@ -8845,29 +9671,29 @@ export type ListLabelGithubRepositoriesData = {
          */
         'release.tagName.eq'?: string;
         /**
-         * Filters field "tag_name" to contain the provided value.
+         * Filters field "tag_name" to be not equal to the provided value.
          */
-        'release.tagName.has'?: string;
+        'release.tagName.neq'?: string;
+        /**
+         * Filters field "tag_name" to be within the provided values.
+         */
+        'release.tagName.in'?: Array<string>;
+        /**
+         * Filters field "tag_name" to be not within the provided values.
+         */
+        'release.tagName.notIn'?: Array<string>;
         /**
          * Filters field "tag_name" to be equal to the provided value, case-insensitive.
          */
         'release.tagName.ieq'?: string;
         /**
+         * Filters field "tag_name" to contain the provided value.
+         */
+        'release.tagName.has'?: string;
+        /**
          * Filters field "tag_name" to contain the provided value, case-insensitive.
          */
         'release.tagName.ihas'?: string;
-        /**
-         * Filters field "tag_name" to be within the provided values.
-         */
-        'release.tagName.in'?: Array<(string)>;
-        /**
-         * Filters field "tag_name" to be not equal to the provided value.
-         */
-        'release.tagName.neq'?: string;
-        /**
-         * Filters field "tag_name" to be not within the provided values.
-         */
-        'release.tagName.notIn'?: Array<(string)>;
         /**
          * Filters field "tag_name" to start with the provided value.
          */
@@ -8881,29 +9707,29 @@ export type ListLabelGithubRepositoriesData = {
          */
         'release.targetCommitish.eq'?: string;
         /**
-         * Filters field "target_commitish" to contain the provided value.
+         * Filters field "target_commitish" to be not equal to the provided value.
          */
-        'release.targetCommitish.has'?: string;
+        'release.targetCommitish.neq'?: string;
+        /**
+         * Filters field "target_commitish" to be within the provided values.
+         */
+        'release.targetCommitish.in'?: Array<string>;
+        /**
+         * Filters field "target_commitish" to be not within the provided values.
+         */
+        'release.targetCommitish.notIn'?: Array<string>;
         /**
          * Filters field "target_commitish" to be equal to the provided value, case-insensitive.
          */
         'release.targetCommitish.ieq'?: string;
         /**
+         * Filters field "target_commitish" to contain the provided value.
+         */
+        'release.targetCommitish.has'?: string;
+        /**
          * Filters field "target_commitish" to contain the provided value, case-insensitive.
          */
         'release.targetCommitish.ihas'?: string;
-        /**
-         * Filters field "target_commitish" to be within the provided values.
-         */
-        'release.targetCommitish.in'?: Array<(string)>;
-        /**
-         * Filters field "target_commitish" to be not equal to the provided value.
-         */
-        'release.targetCommitish.neq'?: string;
-        /**
-         * Filters field "target_commitish" to be not within the provided values.
-         */
-        'release.targetCommitish.notIn'?: Array<(string)>;
         /**
          * Filters field "target_commitish" to start with the provided value.
          */
@@ -8913,53 +9739,125 @@ export type ListLabelGithubRepositoriesData = {
          */
         'release.targetCommitish.suffix'?: string;
         /**
-         * Filters field "repo_id" to be equal to the provided value.
+         * Filters field "name" to be equal to the provided value.
          */
-        'repoID.eq'?: number;
+        'release.name.eq'?: string;
         /**
-         * Filters field "repo_id" to be not equal to the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'repoID.neq'?: number;
+        'release.name.neq'?: string;
         /**
-         * Sort entity results by the given field.
+         * Filters field "name" to be null/nil.
          */
-        sort?: GithubRepositorySortableFields;
+        'release.name.null'?: boolean;
         /**
-         * Filters field "star_count" to be greater than the provided value.
+         * Filters field "name" to be within the provided values.
          */
-        'starCount.gt'?: number;
+        'release.name.in'?: Array<string>;
         /**
-         * Filters field "star_count" to be less than the provided value.
+         * Filters field "name" to be not within the provided values.
          */
-        'starCount.lt'?: number;
+        'release.name.notIn'?: Array<string>;
         /**
-         * Filters field "updated_at" to be equal to the provided value.
+         * Filters field "name" to be equal to the provided value, case-insensitive.
          */
-        'updatedAt.eq'?: string;
+        'release.name.ieq'?: string;
         /**
-         * Filters field "updated_at" to be greater than the provided value.
+         * Filters field "name" to contain the provided value.
          */
-        'updatedAt.gt'?: number;
+        'release.name.has'?: string;
         /**
-         * Filters field "updated_at" to be less than the provided value.
+         * Filters field "name" to contain the provided value, case-insensitive.
          */
-        'updatedAt.lt'?: number;
+        'release.name.ihas'?: string;
         /**
-         * Filters field "updated_at" to be not equal to the provided value.
+         * Filters field "name" to start with the provided value.
          */
-        'updatedAt.neq'?: string;
+        'release.name.prefix'?: string;
         /**
-         * Filters field "updated_at" to be null/nil.
+         * Filters field "name" to end with the provided value.
          */
-        'updatedAt.null'?: boolean;
+        'release.name.suffix'?: string;
+        /**
+         * Filters field "draft" to be equal to the provided value.
+         */
+        'release.draft.eq'?: boolean;
+        /**
+         * Filters field "prerelease" to be equal to the provided value.
+         */
+        'release.prerelease.eq'?: boolean;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'release.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'release.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'release.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'release.createdAt.lt'?: number;
+        /**
+         * Filters field "published_at" to be equal to the provided value.
+         */
+        'release.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'release.publishedAt.neq'?: string;
+        /**
+         * Filters field "published_at" to be greater than the provided value.
+         */
+        'release.publishedAt.gt'?: number;
+        /**
+         * Filters field "published_at" to be less than the provided value.
+         */
+        'release.publishedAt.lt'?: number;
     };
+    url: '/labels/{labelID}/github-repositories';
 };
 
-export type ListLabelGithubRepositoriesResponse = (GithubRepositoryList);
+export type ListLabelGithubRepositoriesErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListLabelGithubRepositoriesError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListLabelGithubRepositoriesError = ListLabelGithubRepositoriesErrors[keyof ListLabelGithubRepositoriesErrors];
+
+export type ListLabelGithubRepositoriesResponses = {
+    /**
+     * The requested githubRepositories.
+     */
+    200: GithubRepositoryList;
+};
+
+export type ListLabelGithubRepositoriesResponse = ListLabelGithubRepositoriesResponses[keyof ListLabelGithubRepositoriesResponses];
 
 export type ListLabelPostsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -8974,209 +9872,109 @@ export type ListLabelPostsData = {
     };
     query?: {
         /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+        /**
+         * The page number to retrieve.
+         */
+        page?: number;
+        /**
+         * The number of entities to retrieve per page.
+         */
+        per_page?: number;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: PostSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'author.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'author.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'author.createTime.lt'?: number;
+        'createTime.eq'?: string;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'author.createTime.neq'?: string;
+        'createTime.neq'?: string;
         /**
-         * Filters field "email" to be equal to the provided value.
+         * Filters field "create_time" to be greater than the provided value.
          */
-        'author.email.eq'?: string;
+        'createTime.gt'?: number;
         /**
-         * Filters field "email" to contain the provided value.
+         * Filters field "create_time" to be less than the provided value.
          */
-        'author.email.has'?: string;
-        /**
-         * Filters field "email" to be equal to the provided value, case-insensitive.
-         */
-        'author.email.ieq'?: string;
-        /**
-         * Filters field "email" to contain the provided value, case-insensitive.
-         */
-        'author.email.ihas'?: string;
-        /**
-         * Filters field "email" to be within the provided values.
-         */
-        'author.email.in'?: Array<(string)>;
-        /**
-         * Filters field "email" to be not equal to the provided value.
-         */
-        'author.email.neq'?: string;
-        /**
-         * Filters field "email" to be not within the provided values.
-         */
-        'author.email.notIn'?: Array<(string)>;
-        /**
-         * Filters field "email" to be null/nil.
-         */
-        'author.email.null'?: boolean;
-        /**
-         * Filters field "email" to start with the provided value.
-         */
-        'author.email.prefix'?: string;
-        /**
-         * Filters field "email" to end with the provided value.
-         */
-        'author.email.suffix'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value.
-         */
-        'author.location.eq'?: string;
-        /**
-         * Filters field "location" to contain the provided value.
-         */
-        'author.location.has'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value, case-insensitive.
-         */
-        'author.location.ieq'?: string;
-        /**
-         * Filters field "location" to contain the provided value, case-insensitive.
-         */
-        'author.location.ihas'?: string;
-        /**
-         * Filters field "location" to be within the provided values.
-         */
-        'author.location.in'?: Array<(string)>;
-        /**
-         * Filters field "location" to be not equal to the provided value.
-         */
-        'author.location.neq'?: string;
-        /**
-         * Filters field "location" to be not within the provided values.
-         */
-        'author.location.notIn'?: Array<(string)>;
-        /**
-         * Filters field "location" to be null/nil.
-         */
-        'author.location.null'?: boolean;
-        /**
-         * Filters field "location" to start with the provided value.
-         */
-        'author.location.prefix'?: string;
-        /**
-         * Filters field "location" to end with the provided value.
-         */
-        'author.location.suffix'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value.
-         */
-        'author.login.eq'?: string;
-        /**
-         * Filters field "login" to contain the provided value.
-         */
-        'author.login.has'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value, case-insensitive.
-         */
-        'author.login.ieq'?: string;
-        /**
-         * Filters field "login" to contain the provided value, case-insensitive.
-         */
-        'author.login.ihas'?: string;
-        /**
-         * Filters field "login" to be within the provided values.
-         */
-        'author.login.in'?: Array<(string)>;
-        /**
-         * Filters field "login" to be not equal to the provided value.
-         */
-        'author.login.neq'?: string;
-        /**
-         * Filters field "login" to be not within the provided values.
-         */
-        'author.login.notIn'?: Array<(string)>;
-        /**
-         * Filters field "login" to start with the provided value.
-         */
-        'author.login.prefix'?: string;
-        /**
-         * Filters field "login" to end with the provided value.
-         */
-        'author.login.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'author.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'author.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'author.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'author.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'author.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'author.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'author.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'author.name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'author.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'author.name.suffix'?: string;
+        'createTime.lt'?: number;
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'author.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'author.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'author.updateTime.lt'?: number;
+        'updateTime.eq'?: string;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'author.updateTime.neq'?: string;
+        'updateTime.neq'?: string;
         /**
-         * Filters field "user_id" to be equal to the provided value.
+         * Filters field "update_time" to be greater than the provided value.
          */
-        'author.userID.eq'?: number;
+        'updateTime.gt'?: number;
         /**
-         * Filters field "user_id" to be within the provided values.
+         * Filters field "update_time" to be less than the provided value.
          */
-        'author.userID.in'?: Array<(number)>;
+        'updateTime.lt'?: number;
         /**
-         * Filters field "user_id" to be not equal to the provided value.
+         * Filters field "slug" to be equal to the provided value.
          */
-        'author.userID.neq'?: number;
+        'slug.eq'?: string;
         /**
-         * Filters field "user_id" to be not within the provided values.
+         * Filters field "slug" to be not equal to the provided value.
          */
-        'author.userID.notIn'?: Array<(number)>;
+        'slug.neq'?: string;
+        /**
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
+         */
+        'slug.ieq'?: string;
+        /**
+         * Filters field "title" to be equal to the provided value.
+         */
+        'title.eq'?: string;
+        /**
+         * Filters field "title" to be not equal to the provided value.
+         */
+        'title.neq'?: string;
+        /**
+         * Filters field "title" to be within the provided values.
+         */
+        'title.in'?: Array<string>;
+        /**
+         * Filters field "title" to be not within the provided values.
+         */
+        'title.notIn'?: Array<string>;
+        /**
+         * Filters field "title" to be equal to the provided value, case-insensitive.
+         */
+        'title.ieq'?: string;
+        /**
+         * Filters field "title" to contain the provided value.
+         */
+        'title.has'?: string;
+        /**
+         * Filters field "title" to contain the provided value, case-insensitive.
+         */
+        'title.ihas'?: string;
+        /**
+         * Filters field "title" to start with the provided value.
+         */
+        'title.prefix'?: string;
+        /**
+         * Filters field "title" to end with the provided value.
+         */
+        'title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -9194,125 +9992,13 @@ export type ListLabelPostsData = {
          */
         'contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'createTime.neq'?: string;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a author edge.
-         */
-        'has.author'?: boolean;
-        /**
-         * If true, only return entities that have a label edge.
-         */
-        'has.label'?: boolean;
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'label.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'label.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'label.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'label.createTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'label.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'label.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'label.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'label.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'label.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'label.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'label.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'label.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'label.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'label.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'label.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'label.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'label.updateTime.neq'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
-        /**
-         * The page number to retrieve.
-         */
-        page?: number;
-        /**
-         * The number of entities to retrieve per page.
-         */
-        per_page?: number;
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -9322,81 +10008,13 @@ export type ListLabelPostsData = {
          */
         'publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'slug.neq'?: string;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: PostSortableFields;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -9406,243 +10024,494 @@ export type ListLabelPostsData = {
          */
         'viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'viewCount.neq'?: number;
+        'public.eq'?: boolean;
+        /**
+         * If true, only return entities that have a author edge.
+         */
+        'has.author'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'author.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'author.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'author.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'author.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'author.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'author.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'author.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'author.updateTime.lt'?: number;
+        /**
+         * Filters field "user_id" to be equal to the provided value.
+         */
+        'author.userID.eq'?: number;
+        /**
+         * Filters field "user_id" to be not equal to the provided value.
+         */
+        'author.userID.neq'?: number;
+        /**
+         * Filters field "user_id" to be within the provided values.
+         */
+        'author.userID.in'?: Array<number>;
+        /**
+         * Filters field "user_id" to be not within the provided values.
+         */
+        'author.userID.notIn'?: Array<number>;
+        /**
+         * Filters field "login" to be equal to the provided value.
+         */
+        'author.login.eq'?: string;
+        /**
+         * Filters field "login" to be not equal to the provided value.
+         */
+        'author.login.neq'?: string;
+        /**
+         * Filters field "login" to be within the provided values.
+         */
+        'author.login.in'?: Array<string>;
+        /**
+         * Filters field "login" to be not within the provided values.
+         */
+        'author.login.notIn'?: Array<string>;
+        /**
+         * Filters field "login" to be equal to the provided value, case-insensitive.
+         */
+        'author.login.ieq'?: string;
+        /**
+         * Filters field "login" to contain the provided value.
+         */
+        'author.login.has'?: string;
+        /**
+         * Filters field "login" to contain the provided value, case-insensitive.
+         */
+        'author.login.ihas'?: string;
+        /**
+         * Filters field "login" to start with the provided value.
+         */
+        'author.login.prefix'?: string;
+        /**
+         * Filters field "login" to end with the provided value.
+         */
+        'author.login.suffix'?: string;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'author.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'author.name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'author.name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'author.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'author.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'author.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'author.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'author.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'author.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'author.name.suffix'?: string;
+        /**
+         * Filters field "email" to be equal to the provided value.
+         */
+        'author.email.eq'?: string;
+        /**
+         * Filters field "email" to be not equal to the provided value.
+         */
+        'author.email.neq'?: string;
+        /**
+         * Filters field "email" to be null/nil.
+         */
+        'author.email.null'?: boolean;
+        /**
+         * Filters field "email" to be within the provided values.
+         */
+        'author.email.in'?: Array<string>;
+        /**
+         * Filters field "email" to be not within the provided values.
+         */
+        'author.email.notIn'?: Array<string>;
+        /**
+         * Filters field "email" to be equal to the provided value, case-insensitive.
+         */
+        'author.email.ieq'?: string;
+        /**
+         * Filters field "email" to contain the provided value.
+         */
+        'author.email.has'?: string;
+        /**
+         * Filters field "email" to contain the provided value, case-insensitive.
+         */
+        'author.email.ihas'?: string;
+        /**
+         * Filters field "email" to start with the provided value.
+         */
+        'author.email.prefix'?: string;
+        /**
+         * Filters field "email" to end with the provided value.
+         */
+        'author.email.suffix'?: string;
+        /**
+         * Filters field "location" to be equal to the provided value.
+         */
+        'author.location.eq'?: string;
+        /**
+         * Filters field "location" to be not equal to the provided value.
+         */
+        'author.location.neq'?: string;
+        /**
+         * Filters field "location" to be null/nil.
+         */
+        'author.location.null'?: boolean;
+        /**
+         * Filters field "location" to be within the provided values.
+         */
+        'author.location.in'?: Array<string>;
+        /**
+         * Filters field "location" to be not within the provided values.
+         */
+        'author.location.notIn'?: Array<string>;
+        /**
+         * Filters field "location" to be equal to the provided value, case-insensitive.
+         */
+        'author.location.ieq'?: string;
+        /**
+         * Filters field "location" to contain the provided value.
+         */
+        'author.location.has'?: string;
+        /**
+         * Filters field "location" to contain the provided value, case-insensitive.
+         */
+        'author.location.ihas'?: string;
+        /**
+         * Filters field "location" to start with the provided value.
+         */
+        'author.location.prefix'?: string;
+        /**
+         * Filters field "location" to end with the provided value.
+         */
+        'author.location.suffix'?: string;
+        /**
+         * If true, only return entities that have a label edge.
+         */
+        'has.label'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'label.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'label.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'label.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'label.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'label.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'label.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'label.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'label.updateTime.lt'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'label.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'label.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'label.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'label.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'label.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'label.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'label.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'label.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'label.name.suffix'?: string;
     };
+    url: '/labels/{labelID}/posts';
 };
 
-export type ListLabelPostsResponse = (PostList);
+export type ListLabelPostsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListLabelPostsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListLabelPostsError = ListLabelPostsErrors[keyof ListLabelPostsErrors];
+
+export type ListLabelPostsResponses = {
+    /**
+     * The requested posts.
+     */
+    200: PostList;
+};
+
+export type ListLabelPostsResponse = ListLabelPostsResponses[keyof ListLabelPostsResponses];
 
 export type GetOpenApiData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/openapi.json';
+};
+
+export type GetOpenApiErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetOpenApiError = GetOpenApiErrors[keyof GetOpenApiErrors];
+
+export type GetOpenApiResponses = {
+    /**
+     * OpenAPI specification was found
+     */
+    200: {
+        [key: string]: unknown;
     };
 };
 
-export type GetOpenApiResponse = ({
-    [key: string]: unknown;
-});
-
-export type GetOpenApiError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetOpenApiResponse = GetOpenApiResponses[keyof GetOpenApiResponses];
 
 export type ListPostsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+        /**
+         * The page number to retrieve.
+         */
+        page?: number;
+        /**
+         * The number of entities to retrieve per page.
+         */
+        per_page?: number;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: PostSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'author.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'author.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'author.createTime.lt'?: number;
+        'createTime.eq'?: string;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'author.createTime.neq'?: string;
+        'createTime.neq'?: string;
         /**
-         * Filters field "email" to be equal to the provided value.
+         * Filters field "create_time" to be greater than the provided value.
          */
-        'author.email.eq'?: string;
+        'createTime.gt'?: number;
         /**
-         * Filters field "email" to contain the provided value.
+         * Filters field "create_time" to be less than the provided value.
          */
-        'author.email.has'?: string;
-        /**
-         * Filters field "email" to be equal to the provided value, case-insensitive.
-         */
-        'author.email.ieq'?: string;
-        /**
-         * Filters field "email" to contain the provided value, case-insensitive.
-         */
-        'author.email.ihas'?: string;
-        /**
-         * Filters field "email" to be within the provided values.
-         */
-        'author.email.in'?: Array<(string)>;
-        /**
-         * Filters field "email" to be not equal to the provided value.
-         */
-        'author.email.neq'?: string;
-        /**
-         * Filters field "email" to be not within the provided values.
-         */
-        'author.email.notIn'?: Array<(string)>;
-        /**
-         * Filters field "email" to be null/nil.
-         */
-        'author.email.null'?: boolean;
-        /**
-         * Filters field "email" to start with the provided value.
-         */
-        'author.email.prefix'?: string;
-        /**
-         * Filters field "email" to end with the provided value.
-         */
-        'author.email.suffix'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value.
-         */
-        'author.location.eq'?: string;
-        /**
-         * Filters field "location" to contain the provided value.
-         */
-        'author.location.has'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value, case-insensitive.
-         */
-        'author.location.ieq'?: string;
-        /**
-         * Filters field "location" to contain the provided value, case-insensitive.
-         */
-        'author.location.ihas'?: string;
-        /**
-         * Filters field "location" to be within the provided values.
-         */
-        'author.location.in'?: Array<(string)>;
-        /**
-         * Filters field "location" to be not equal to the provided value.
-         */
-        'author.location.neq'?: string;
-        /**
-         * Filters field "location" to be not within the provided values.
-         */
-        'author.location.notIn'?: Array<(string)>;
-        /**
-         * Filters field "location" to be null/nil.
-         */
-        'author.location.null'?: boolean;
-        /**
-         * Filters field "location" to start with the provided value.
-         */
-        'author.location.prefix'?: string;
-        /**
-         * Filters field "location" to end with the provided value.
-         */
-        'author.location.suffix'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value.
-         */
-        'author.login.eq'?: string;
-        /**
-         * Filters field "login" to contain the provided value.
-         */
-        'author.login.has'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value, case-insensitive.
-         */
-        'author.login.ieq'?: string;
-        /**
-         * Filters field "login" to contain the provided value, case-insensitive.
-         */
-        'author.login.ihas'?: string;
-        /**
-         * Filters field "login" to be within the provided values.
-         */
-        'author.login.in'?: Array<(string)>;
-        /**
-         * Filters field "login" to be not equal to the provided value.
-         */
-        'author.login.neq'?: string;
-        /**
-         * Filters field "login" to be not within the provided values.
-         */
-        'author.login.notIn'?: Array<(string)>;
-        /**
-         * Filters field "login" to start with the provided value.
-         */
-        'author.login.prefix'?: string;
-        /**
-         * Filters field "login" to end with the provided value.
-         */
-        'author.login.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'author.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'author.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'author.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'author.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'author.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'author.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'author.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'author.name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'author.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'author.name.suffix'?: string;
+        'createTime.lt'?: number;
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'author.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'author.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'author.updateTime.lt'?: number;
+        'updateTime.eq'?: string;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'author.updateTime.neq'?: string;
+        'updateTime.neq'?: string;
         /**
-         * Filters field "user_id" to be equal to the provided value.
+         * Filters field "update_time" to be greater than the provided value.
          */
-        'author.userID.eq'?: number;
+        'updateTime.gt'?: number;
         /**
-         * Filters field "user_id" to be within the provided values.
+         * Filters field "update_time" to be less than the provided value.
          */
-        'author.userID.in'?: Array<(number)>;
+        'updateTime.lt'?: number;
         /**
-         * Filters field "user_id" to be not equal to the provided value.
+         * Filters field "slug" to be equal to the provided value.
          */
-        'author.userID.neq'?: number;
+        'slug.eq'?: string;
         /**
-         * Filters field "user_id" to be not within the provided values.
+         * Filters field "slug" to be not equal to the provided value.
          */
-        'author.userID.notIn'?: Array<(number)>;
+        'slug.neq'?: string;
+        /**
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
+         */
+        'slug.ieq'?: string;
+        /**
+         * Filters field "title" to be equal to the provided value.
+         */
+        'title.eq'?: string;
+        /**
+         * Filters field "title" to be not equal to the provided value.
+         */
+        'title.neq'?: string;
+        /**
+         * Filters field "title" to be within the provided values.
+         */
+        'title.in'?: Array<string>;
+        /**
+         * Filters field "title" to be not within the provided values.
+         */
+        'title.notIn'?: Array<string>;
+        /**
+         * Filters field "title" to be equal to the provided value, case-insensitive.
+         */
+        'title.ieq'?: string;
+        /**
+         * Filters field "title" to contain the provided value.
+         */
+        'title.has'?: string;
+        /**
+         * Filters field "title" to contain the provided value, case-insensitive.
+         */
+        'title.ihas'?: string;
+        /**
+         * Filters field "title" to start with the provided value.
+         */
+        'title.prefix'?: string;
+        /**
+         * Filters field "title" to end with the provided value.
+         */
+        'title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -9660,125 +10529,13 @@ export type ListPostsData = {
          */
         'contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'createTime.neq'?: string;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a author edge.
-         */
-        'has.author'?: boolean;
-        /**
-         * If true, only return entities that have a label edge.
-         */
-        'has.label'?: boolean;
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'label.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'label.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'label.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'label.createTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'label.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'label.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'label.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'label.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'label.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'label.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'label.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'label.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'label.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'label.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'label.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'label.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'label.updateTime.neq'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
-        /**
-         * The page number to retrieve.
-         */
-        page?: number;
-        /**
-         * The number of entities to retrieve per page.
-         */
-        per_page?: number;
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -9788,81 +10545,13 @@ export type ListPostsData = {
          */
         'publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'slug.neq'?: string;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: PostSortableFields;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -9872,15 +10561,326 @@ export type ListPostsData = {
          */
         'viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'viewCount.neq'?: number;
+        'public.eq'?: boolean;
+        /**
+         * If true, only return entities that have a author edge.
+         */
+        'has.author'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'author.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'author.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'author.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'author.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'author.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'author.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'author.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'author.updateTime.lt'?: number;
+        /**
+         * Filters field "user_id" to be equal to the provided value.
+         */
+        'author.userID.eq'?: number;
+        /**
+         * Filters field "user_id" to be not equal to the provided value.
+         */
+        'author.userID.neq'?: number;
+        /**
+         * Filters field "user_id" to be within the provided values.
+         */
+        'author.userID.in'?: Array<number>;
+        /**
+         * Filters field "user_id" to be not within the provided values.
+         */
+        'author.userID.notIn'?: Array<number>;
+        /**
+         * Filters field "login" to be equal to the provided value.
+         */
+        'author.login.eq'?: string;
+        /**
+         * Filters field "login" to be not equal to the provided value.
+         */
+        'author.login.neq'?: string;
+        /**
+         * Filters field "login" to be within the provided values.
+         */
+        'author.login.in'?: Array<string>;
+        /**
+         * Filters field "login" to be not within the provided values.
+         */
+        'author.login.notIn'?: Array<string>;
+        /**
+         * Filters field "login" to be equal to the provided value, case-insensitive.
+         */
+        'author.login.ieq'?: string;
+        /**
+         * Filters field "login" to contain the provided value.
+         */
+        'author.login.has'?: string;
+        /**
+         * Filters field "login" to contain the provided value, case-insensitive.
+         */
+        'author.login.ihas'?: string;
+        /**
+         * Filters field "login" to start with the provided value.
+         */
+        'author.login.prefix'?: string;
+        /**
+         * Filters field "login" to end with the provided value.
+         */
+        'author.login.suffix'?: string;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'author.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'author.name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'author.name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'author.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'author.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'author.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'author.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'author.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'author.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'author.name.suffix'?: string;
+        /**
+         * Filters field "email" to be equal to the provided value.
+         */
+        'author.email.eq'?: string;
+        /**
+         * Filters field "email" to be not equal to the provided value.
+         */
+        'author.email.neq'?: string;
+        /**
+         * Filters field "email" to be null/nil.
+         */
+        'author.email.null'?: boolean;
+        /**
+         * Filters field "email" to be within the provided values.
+         */
+        'author.email.in'?: Array<string>;
+        /**
+         * Filters field "email" to be not within the provided values.
+         */
+        'author.email.notIn'?: Array<string>;
+        /**
+         * Filters field "email" to be equal to the provided value, case-insensitive.
+         */
+        'author.email.ieq'?: string;
+        /**
+         * Filters field "email" to contain the provided value.
+         */
+        'author.email.has'?: string;
+        /**
+         * Filters field "email" to contain the provided value, case-insensitive.
+         */
+        'author.email.ihas'?: string;
+        /**
+         * Filters field "email" to start with the provided value.
+         */
+        'author.email.prefix'?: string;
+        /**
+         * Filters field "email" to end with the provided value.
+         */
+        'author.email.suffix'?: string;
+        /**
+         * Filters field "location" to be equal to the provided value.
+         */
+        'author.location.eq'?: string;
+        /**
+         * Filters field "location" to be not equal to the provided value.
+         */
+        'author.location.neq'?: string;
+        /**
+         * Filters field "location" to be null/nil.
+         */
+        'author.location.null'?: boolean;
+        /**
+         * Filters field "location" to be within the provided values.
+         */
+        'author.location.in'?: Array<string>;
+        /**
+         * Filters field "location" to be not within the provided values.
+         */
+        'author.location.notIn'?: Array<string>;
+        /**
+         * Filters field "location" to be equal to the provided value, case-insensitive.
+         */
+        'author.location.ieq'?: string;
+        /**
+         * Filters field "location" to contain the provided value.
+         */
+        'author.location.has'?: string;
+        /**
+         * Filters field "location" to contain the provided value, case-insensitive.
+         */
+        'author.location.ihas'?: string;
+        /**
+         * Filters field "location" to start with the provided value.
+         */
+        'author.location.prefix'?: string;
+        /**
+         * Filters field "location" to end with the provided value.
+         */
+        'author.location.suffix'?: string;
+        /**
+         * If true, only return entities that have a label edge.
+         */
+        'has.label'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'label.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'label.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'label.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'label.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'label.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'label.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'label.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'label.updateTime.lt'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'label.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'label.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'label.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'label.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'label.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'label.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'label.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'label.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'label.name.suffix'?: string;
     };
+    url: '/posts';
 };
 
-export type ListPostsResponse = (PostList);
+export type ListPostsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListPostsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListPostsError = ListPostsErrors[keyof ListPostsErrors];
+
+export type ListPostsResponses = {
+    /**
+     * The requested Post.
+     */
+    200: PostList;
+};
+
+export type ListPostsResponse = ListPostsResponses[keyof ListPostsResponses];
 
 export type CreatePostData = {
     body: PostCreate;
@@ -9890,57 +10890,109 @@ export type CreatePostData = {
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/posts';
 };
 
-export type CreatePostResponse = (PostRead);
+export type CreatePostErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Conflict (http status code 409)
+     */
+    409: ErrorConflict;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type CreatePostError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorConflict | ErrorTooManyRequests | ErrorInternalServerError);
+export type CreatePostError = CreatePostErrors[keyof CreatePostErrors];
+
+export type CreatePostResponses = {
+    /**
+     * The created Post entity.
+     */
+    201: PostRead;
+};
+
+export type CreatePostResponse = CreatePostResponses[keyof CreatePostResponses];
 
 export type RegeneratePostsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
+    query?: never;
+    url: '/posts/regenerate';
 };
 
-export type RegeneratePostsResponse = (string);
-
-export type RegeneratePostsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetPostData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-    path: {
-        /**
-         * The ID of the Post to act upon.
-         */
-        postID: number;
-    };
-    query?: {
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-    };
+export type RegeneratePostsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
 };
 
-export type GetPostResponse = (PostRead);
+export type RegeneratePostsError = RegeneratePostsErrors[keyof RegeneratePostsErrors];
 
-export type GetPostError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type RegeneratePostsResponses = {
+    /**
+     * Posts were regenerated.
+     */
+    200: unknown;
+};
 
 export type DeletePostData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -9955,15 +11007,111 @@ export type DeletePostData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/posts/{postID}';
 };
 
-export type DeletePostResponse = (string);
+export type DeletePostErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type DeletePostError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type DeletePostError = DeletePostErrors[keyof DeletePostErrors];
+
+export type DeletePostResponses = {
+    /**
+     * The requested Post entity.
+     */
+    204: void;
+};
+
+export type DeletePostResponse = DeletePostResponses[keyof DeletePostResponses];
+
+export type GetPostData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path: {
+        /**
+         * The ID of the Post to act upon.
+         */
+        postID: number;
+    };
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+    };
+    url: '/posts/{postID}';
+};
+
+export type GetPostErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetPostError = GetPostErrors[keyof GetPostErrors];
+
+export type GetPostResponses = {
+    /**
+     * The requested Post entity.
+     */
+    200: PostRead;
+};
+
+export type GetPostResponse = GetPostResponses[keyof GetPostResponses];
 
 export type UpdatePostData = {
     body: PostUpdate;
@@ -9981,17 +11129,57 @@ export type UpdatePostData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/posts/{postID}';
 };
 
-export type UpdatePostResponse = (PostRead);
+export type UpdatePostErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Conflict (http status code 409)
+     */
+    409: ErrorConflict;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type UpdatePostError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorConflict | ErrorTooManyRequests | ErrorInternalServerError);
+export type UpdatePostError = UpdatePostErrors[keyof UpdatePostErrors];
+
+export type UpdatePostResponses = {
+    /**
+     * The update Post entity.
+     */
+    200: PostRead;
+};
+
+export type UpdatePostResponse = UpdatePostResponses[keyof UpdatePostResponses];
 
 export type GetPostAuthorData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -10006,17 +11194,53 @@ export type GetPostAuthorData = {
     };
     query?: {
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
     };
+    url: '/posts/{postID}/author';
 };
 
-export type GetPostAuthorResponse = (User);
+export type GetPostAuthorErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetPostAuthorError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetPostAuthorError = GetPostAuthorErrors[keyof GetPostAuthorErrors];
+
+export type GetPostAuthorResponses = {
+    /**
+     * The requested author entity.
+     */
+    200: User;
+};
+
+export type GetPostAuthorResponse = GetPostAuthorResponses[keyof GetPostAuthorResponses];
 
 export type ListPostLabelsData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
@@ -10030,10 +11254,30 @@ export type ListPostLabelsData = {
         postID: number;
     };
     query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+        /**
+         * Sort entity results by the given field.
+         */
+        sort?: LabelSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
         'createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'createTime.neq'?: string;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10043,285 +11287,49 @@ export type ListPostLabelsData = {
          */
         'createTime.lt'?: number;
         /**
-         * Filters field "create_time" to be not equal to the provided value.
+         * Filters field "update_time" to be equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'updateTime.eq'?: string;
         /**
-         * Filter operation to use.
+         * Filters field "update_time" to be not equal to the provided value.
          */
-        filter_op?: FilterOperation;
+        'updateTime.neq'?: string;
         /**
-         * Filters field "archived" to be equal to the provided value.
+         * Filters field "update_time" to be greater than the provided value.
          */
-        'githubRepository.archived.eq'?: boolean;
+        'updateTime.gt'?: number;
         /**
-         * Filters field "created_at" to be equal to the provided value.
+         * Filters field "update_time" to be less than the provided value.
          */
-        'githubRepository.createdAt.eq'?: string;
-        /**
-         * Filters field "created_at" to be greater than the provided value.
-         */
-        'githubRepository.createdAt.gt'?: number;
-        /**
-         * Filters field "created_at" to be less than the provided value.
-         */
-        'githubRepository.createdAt.lt'?: number;
-        /**
-         * Filters field "created_at" to be not equal to the provided value.
-         */
-        'githubRepository.createdAt.neq'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value.
-         */
-        'githubRepository.defaultBranch.eq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value.
-         */
-        'githubRepository.defaultBranch.has'?: string;
-        /**
-         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ieq'?: string;
-        /**
-         * Filters field "default_branch" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.defaultBranch.ihas'?: string;
-        /**
-         * Filters field "default_branch" to be within the provided values.
-         */
-        'githubRepository.defaultBranch.in'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to be not equal to the provided value.
-         */
-        'githubRepository.defaultBranch.neq'?: string;
-        /**
-         * Filters field "default_branch" to be not within the provided values.
-         */
-        'githubRepository.defaultBranch.notIn'?: Array<(string)>;
-        /**
-         * Filters field "default_branch" to start with the provided value.
-         */
-        'githubRepository.defaultBranch.prefix'?: string;
-        /**
-         * Filters field "default_branch" to end with the provided value.
-         */
-        'githubRepository.defaultBranch.suffix'?: string;
-        /**
-         * Filters field "description" to contain the provided value.
-         */
-        'githubRepository.description.has'?: string;
-        /**
-         * Filters field "description" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.description.ihas'?: string;
-        /**
-         * Filters field "description" to be null/nil.
-         */
-        'githubRepository.description.null'?: boolean;
-        /**
-         * Filters field "fork" to be equal to the provided value.
-         */
-        'githubRepository.fork.eq'?: boolean;
-        /**
-         * Filters field "full_name" to be equal to the provided value.
-         */
-        'githubRepository.fullName.eq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value.
-         */
-        'githubRepository.fullName.has'?: string;
-        /**
-         * Filters field "full_name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ieq'?: string;
-        /**
-         * Filters field "full_name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.fullName.ihas'?: string;
-        /**
-         * Filters field "full_name" to be within the provided values.
-         */
-        'githubRepository.fullName.in'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to be not equal to the provided value.
-         */
-        'githubRepository.fullName.neq'?: string;
-        /**
-         * Filters field "full_name" to be not within the provided values.
-         */
-        'githubRepository.fullName.notIn'?: Array<(string)>;
-        /**
-         * Filters field "full_name" to start with the provided value.
-         */
-        'githubRepository.fullName.prefix'?: string;
-        /**
-         * Filters field "full_name" to end with the provided value.
-         */
-        'githubRepository.fullName.suffix'?: string;
-        /**
-         * Filters field "has_issues" to be equal to the provided value.
-         */
-        'githubRepository.hasIssues.eq'?: boolean;
-        /**
-         * Filters field "is_template" to be equal to the provided value.
-         */
-        'githubRepository.isTemplate.eq'?: boolean;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'githubRepository.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'githubRepository.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'githubRepository.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'githubRepository.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'githubRepository.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'githubRepository.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'githubRepository.name.suffix'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value.
-         */
-        'githubRepository.ownerLogin.eq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value.
-         */
-        'githubRepository.ownerLogin.has'?: string;
-        /**
-         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ieq'?: string;
-        /**
-         * Filters field "owner_login" to contain the provided value, case-insensitive.
-         */
-        'githubRepository.ownerLogin.ihas'?: string;
-        /**
-         * Filters field "owner_login" to be within the provided values.
-         */
-        'githubRepository.ownerLogin.in'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to be not equal to the provided value.
-         */
-        'githubRepository.ownerLogin.neq'?: string;
-        /**
-         * Filters field "owner_login" to be not within the provided values.
-         */
-        'githubRepository.ownerLogin.notIn'?: Array<(string)>;
-        /**
-         * Filters field "owner_login" to start with the provided value.
-         */
-        'githubRepository.ownerLogin.prefix'?: string;
-        /**
-         * Filters field "owner_login" to end with the provided value.
-         */
-        'githubRepository.ownerLogin.suffix'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'githubRepository.public.eq'?: boolean;
-        /**
-         * Filters field "pushed_at" to be within the provided values.
-         */
-        'githubRepository.pushedAt.in'?: Array<(string)>;
-        /**
-         * Filters field "pushed_at" to be not within the provided values.
-         */
-        'githubRepository.pushedAt.notIn'?: Array<(string)>;
-        /**
-         * Filters field "repo_id" to be equal to the provided value.
-         */
-        'githubRepository.repoID.eq'?: number;
-        /**
-         * Filters field "repo_id" to be not equal to the provided value.
-         */
-        'githubRepository.repoID.neq'?: number;
-        /**
-         * Filters field "star_count" to be greater than the provided value.
-         */
-        'githubRepository.starCount.gt'?: number;
-        /**
-         * Filters field "star_count" to be less than the provided value.
-         */
-        'githubRepository.starCount.lt'?: number;
-        /**
-         * Filters field "updated_at" to be equal to the provided value.
-         */
-        'githubRepository.updatedAt.eq'?: string;
-        /**
-         * Filters field "updated_at" to be greater than the provided value.
-         */
-        'githubRepository.updatedAt.gt'?: number;
-        /**
-         * Filters field "updated_at" to be less than the provided value.
-         */
-        'githubRepository.updatedAt.lt'?: number;
-        /**
-         * Filters field "updated_at" to be not equal to the provided value.
-         */
-        'githubRepository.updatedAt.neq'?: string;
-        /**
-         * Filters field "updated_at" to be null/nil.
-         */
-        'githubRepository.updatedAt.null'?: boolean;
-        /**
-         * If true, only return entities that have a github_repository edge.
-         */
-        'has.githubRepository'?: boolean;
-        /**
-         * If true, only return entities that have a post edge.
-         */
-        'has.post'?: boolean;
+        'updateTime.lt'?: number;
         /**
          * Filters field "name" to be equal to the provided value.
          */
         'name.eq'?: string;
         /**
-         * Filters field "name" to contain the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'name.has'?: string;
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
         /**
          * Filters field "name" to be equal to the provided value, case-insensitive.
          */
         'name.ieq'?: string;
         /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
          * Filters field "name" to contain the provided value, case-insensitive.
          */
         'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
         /**
          * Filters field "name" to start with the provided value.
          */
@@ -10331,9 +11339,89 @@ export type ListPostLabelsData = {
          */
         'name.suffix'?: string;
         /**
-         * Order the results in ascending or descending order.
+         * If true, only return entities that have a post edge.
          */
-        order?: 'asc' | 'desc';
+        'has.post'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'post.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'post.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'post.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'post.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'post.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'post.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'post.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'post.updateTime.lt'?: number;
+        /**
+         * Filters field "slug" to be equal to the provided value.
+         */
+        'post.slug.eq'?: string;
+        /**
+         * Filters field "slug" to be not equal to the provided value.
+         */
+        'post.slug.neq'?: string;
+        /**
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
+         */
+        'post.slug.ieq'?: string;
+        /**
+         * Filters field "title" to be equal to the provided value.
+         */
+        'post.title.eq'?: string;
+        /**
+         * Filters field "title" to be not equal to the provided value.
+         */
+        'post.title.neq'?: string;
+        /**
+         * Filters field "title" to be within the provided values.
+         */
+        'post.title.in'?: Array<string>;
+        /**
+         * Filters field "title" to be not within the provided values.
+         */
+        'post.title.notIn'?: Array<string>;
+        /**
+         * Filters field "title" to be equal to the provided value, case-insensitive.
+         */
+        'post.title.ieq'?: string;
+        /**
+         * Filters field "title" to contain the provided value.
+         */
+        'post.title.has'?: string;
+        /**
+         * Filters field "title" to contain the provided value, case-insensitive.
+         */
+        'post.title.ihas'?: string;
+        /**
+         * Filters field "title" to start with the provided value.
+         */
+        'post.title.prefix'?: string;
+        /**
+         * Filters field "title" to end with the provided value.
+         */
+        'post.title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -10351,29 +11439,13 @@ export type ListPostLabelsData = {
          */
         'post.contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'post.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'post.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'post.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'post.createTime.neq'?: string;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'post.public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'post.publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'post.publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -10383,77 +11455,13 @@ export type ListPostLabelsData = {
          */
         'post.publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'post.publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'post.slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'post.slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'post.slug.neq'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'post.title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'post.title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'post.title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'post.title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'post.title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'post.title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'post.title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'post.title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'post.title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'post.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'post.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'post.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'post.updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'post.viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'post.viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -10463,91 +11471,482 @@ export type ListPostLabelsData = {
          */
         'post.viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'post.viewCount.neq'?: number;
+        'post.public.eq'?: boolean;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * If true, only return entities that have a github_repository edge.
+         */
+        'has.githubRepository'?: boolean;
+        /**
+         * Filters field "repo_id" to be equal to the provided value.
+         */
+        'githubRepository.repoID.eq'?: number;
+        /**
+         * Filters field "repo_id" to be not equal to the provided value.
+         */
+        'githubRepository.repoID.neq'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'githubRepository.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'githubRepository.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'githubRepository.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'githubRepository.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'githubRepository.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'githubRepository.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'githubRepository.name.suffix'?: string;
+        /**
+         * Filters field "full_name" to be equal to the provided value.
+         */
+        'githubRepository.fullName.eq'?: string;
+        /**
+         * Filters field "full_name" to be not equal to the provided value.
+         */
+        'githubRepository.fullName.neq'?: string;
+        /**
+         * Filters field "full_name" to be within the provided values.
+         */
+        'githubRepository.fullName.in'?: Array<string>;
+        /**
+         * Filters field "full_name" to be not within the provided values.
+         */
+        'githubRepository.fullName.notIn'?: Array<string>;
+        /**
+         * Filters field "full_name" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ieq'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value.
+         */
+        'githubRepository.fullName.has'?: string;
+        /**
+         * Filters field "full_name" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.fullName.ihas'?: string;
+        /**
+         * Filters field "full_name" to start with the provided value.
+         */
+        'githubRepository.fullName.prefix'?: string;
+        /**
+         * Filters field "full_name" to end with the provided value.
+         */
+        'githubRepository.fullName.suffix'?: string;
+        /**
+         * Filters field "owner_login" to be equal to the provided value.
+         */
+        'githubRepository.ownerLogin.eq'?: string;
+        /**
+         * Filters field "owner_login" to be not equal to the provided value.
+         */
+        'githubRepository.ownerLogin.neq'?: string;
+        /**
+         * Filters field "owner_login" to be within the provided values.
+         */
+        'githubRepository.ownerLogin.in'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be not within the provided values.
+         */
+        'githubRepository.ownerLogin.notIn'?: Array<string>;
+        /**
+         * Filters field "owner_login" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ieq'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value.
+         */
+        'githubRepository.ownerLogin.has'?: string;
+        /**
+         * Filters field "owner_login" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.ownerLogin.ihas'?: string;
+        /**
+         * Filters field "owner_login" to start with the provided value.
+         */
+        'githubRepository.ownerLogin.prefix'?: string;
+        /**
+         * Filters field "owner_login" to end with the provided value.
+         */
+        'githubRepository.ownerLogin.suffix'?: string;
+        /**
+         * Filters field "public" to be equal to the provided value.
+         */
+        'githubRepository.public.eq'?: boolean;
+        /**
+         * Filters field "description" to be null/nil.
+         */
+        'githubRepository.description.null'?: boolean;
+        /**
+         * Filters field "description" to contain the provided value.
+         */
+        'githubRepository.description.has'?: string;
+        /**
+         * Filters field "description" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.description.ihas'?: string;
+        /**
+         * Filters field "fork" to be equal to the provided value.
+         */
+        'githubRepository.fork.eq'?: boolean;
+        /**
+         * Filters field "star_count" to be greater than the provided value.
+         */
+        'githubRepository.starCount.gt'?: number;
+        /**
+         * Filters field "star_count" to be less than the provided value.
+         */
+        'githubRepository.starCount.lt'?: number;
+        /**
+         * Filters field "default_branch" to be equal to the provided value.
+         */
+        'githubRepository.defaultBranch.eq'?: string;
+        /**
+         * Filters field "default_branch" to be not equal to the provided value.
+         */
+        'githubRepository.defaultBranch.neq'?: string;
+        /**
+         * Filters field "default_branch" to be within the provided values.
+         */
+        'githubRepository.defaultBranch.in'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be not within the provided values.
+         */
+        'githubRepository.defaultBranch.notIn'?: Array<string>;
+        /**
+         * Filters field "default_branch" to be equal to the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ieq'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value.
+         */
+        'githubRepository.defaultBranch.has'?: string;
+        /**
+         * Filters field "default_branch" to contain the provided value, case-insensitive.
+         */
+        'githubRepository.defaultBranch.ihas'?: string;
+        /**
+         * Filters field "default_branch" to start with the provided value.
+         */
+        'githubRepository.defaultBranch.prefix'?: string;
+        /**
+         * Filters field "default_branch" to end with the provided value.
+         */
+        'githubRepository.defaultBranch.suffix'?: string;
+        /**
+         * Filters field "is_template" to be equal to the provided value.
+         */
+        'githubRepository.isTemplate.eq'?: boolean;
+        /**
+         * Filters field "has_issues" to be equal to the provided value.
+         */
+        'githubRepository.hasIssues.eq'?: boolean;
+        /**
+         * Filters field "archived" to be equal to the provided value.
+         */
+        'githubRepository.archived.eq'?: boolean;
+        /**
+         * Filters field "pushed_at" to be within the provided values.
+         */
+        'githubRepository.pushedAt.in'?: Array<string>;
+        /**
+         * Filters field "pushed_at" to be not within the provided values.
+         */
+        'githubRepository.pushedAt.notIn'?: Array<string>;
+        /**
+         * Filters field "created_at" to be equal to the provided value.
+         */
+        'githubRepository.createdAt.eq'?: string;
+        /**
+         * Filters field "created_at" to be not equal to the provided value.
+         */
+        'githubRepository.createdAt.neq'?: string;
+        /**
+         * Filters field "created_at" to be greater than the provided value.
+         */
+        'githubRepository.createdAt.gt'?: number;
+        /**
+         * Filters field "created_at" to be less than the provided value.
+         */
+        'githubRepository.createdAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be equal to the provided value.
+         */
+        'githubRepository.updatedAt.eq'?: string;
+        /**
+         * Filters field "updated_at" to be not equal to the provided value.
+         */
+        'githubRepository.updatedAt.neq'?: string;
+        /**
+         * Filters field "updated_at" to be greater than the provided value.
+         */
+        'githubRepository.updatedAt.gt'?: number;
+        /**
+         * Filters field "updated_at" to be less than the provided value.
+         */
+        'githubRepository.updatedAt.lt'?: number;
+        /**
+         * Filters field "updated_at" to be null/nil.
+         */
+        'githubRepository.updatedAt.null'?: boolean;
+    };
+    url: '/posts/{postID}/labels';
+};
+
+export type ListPostLabelsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type ListPostLabelsError = ListPostLabelsErrors[keyof ListPostLabelsErrors];
+
+export type ListPostLabelsResponses = {
+    /**
+     * The requested labels.
+     */
+    200: PostLabelList;
+};
+
+export type ListPostLabelsResponse = ListPostLabelsResponses[keyof ListPostLabelsResponses];
+
+export type GetSelfData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/self';
+};
+
+export type GetSelfErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetSelfError = GetSelfErrors[keyof GetSelfErrors];
+
+export type GetSelfResponses = {
+    /**
+     * The authenticated user.
+     */
+    200: User;
+};
+
+export type GetSelfResponse = GetSelfResponses[keyof GetSelfResponses];
+
+export type GetCodingStatsData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/stats/coding';
+};
+
+export type GetCodingStatsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetCodingStatsError = GetCodingStatsErrors[keyof GetCodingStatsErrors];
+
+export type GetCodingStatsResponses = {
+    /**
+     * Coding statistics were found.
+     */
+    200: CodingStats;
+};
+
+export type GetCodingStatsResponse = GetCodingStatsResponses[keyof GetCodingStatsResponses];
+
+export type GetGithubStatsData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: never;
+    url: '/stats/github';
+};
+
+export type GetGithubStatsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetGithubStatsError = GetGithubStatsErrors[keyof GetGithubStatsErrors];
+
+export type GetGithubStatsResponses = {
+    /**
+     * Github statistics were found.
+     */
+    200: GithubStats;
+};
+
+export type GetGithubStatsResponse = GetGithubStatsResponses[keyof GetGithubStatsResponses];
+
+export type ListUsersData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path?: never;
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
          */
         pretty?: boolean;
         /**
+         * The page number to retrieve.
+         */
+        page?: number;
+        /**
+         * The number of entities to retrieve per page.
+         */
+        per_page?: number;
+        /**
          * Sort entity results by the given field.
          */
-        sort?: LabelSortableFields;
+        sort?: UserSortableFields;
         /**
-         * Filters field "update_time" to be equal to the provided value.
+         * Order the results in ascending or descending order.
          */
-        'updateTime.eq'?: string;
+        order?: 'asc' | 'desc';
         /**
-         * Filters field "update_time" to be greater than the provided value.
+         * Filter operation to use.
          */
-        'updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'updateTime.neq'?: string;
-    };
-};
-
-export type ListPostLabelsResponse = (PostLabelList);
-
-export type ListPostLabelsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetSelfData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-};
-
-export type GetSelfResponse = (User);
-
-export type GetSelfError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetCodingStatsData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-};
-
-export type GetCodingStatsResponse = (CodingStats);
-
-export type GetCodingStatsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetGithubStatsData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-};
-
-export type GetGithubStatsResponse = (GithubStats);
-
-export type GetGithubStatsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type ListUsersData = {
-    headers?: {
-        /**
-         * A unique identifier for the request.
-         */
-        'X-Request-Id'?: string;
-    };
-    query?: {
+        filter_op?: FilterOperation;
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
         'createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'createTime.neq'?: string;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10557,121 +11956,65 @@ export type ListUsersData = {
          */
         'createTime.lt'?: number;
         /**
-         * Filters field "create_time" to be not equal to the provided value.
+         * Filters field "update_time" to be equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'updateTime.eq'?: string;
         /**
-         * Filters field "email" to be equal to the provided value.
+         * Filters field "update_time" to be not equal to the provided value.
          */
-        'email.eq'?: string;
+        'updateTime.neq'?: string;
         /**
-         * Filters field "email" to contain the provided value.
+         * Filters field "update_time" to be greater than the provided value.
          */
-        'email.has'?: string;
+        'updateTime.gt'?: number;
         /**
-         * Filters field "email" to be equal to the provided value, case-insensitive.
+         * Filters field "update_time" to be less than the provided value.
          */
-        'email.ieq'?: string;
+        'updateTime.lt'?: number;
         /**
-         * Filters field "email" to contain the provided value, case-insensitive.
+         * Filters field "user_id" to be equal to the provided value.
          */
-        'email.ihas'?: string;
+        'userID.eq'?: number;
         /**
-         * Filters field "email" to be within the provided values.
+         * Filters field "user_id" to be not equal to the provided value.
          */
-        'email.in'?: Array<(string)>;
+        'userID.neq'?: number;
         /**
-         * Filters field "email" to be not equal to the provided value.
+         * Filters field "user_id" to be within the provided values.
          */
-        'email.neq'?: string;
+        'userID.in'?: Array<number>;
         /**
-         * Filters field "email" to be not within the provided values.
+         * Filters field "user_id" to be not within the provided values.
          */
-        'email.notIn'?: Array<(string)>;
-        /**
-         * Filters field "email" to be null/nil.
-         */
-        'email.null'?: boolean;
-        /**
-         * Filters field "email" to start with the provided value.
-         */
-        'email.prefix'?: string;
-        /**
-         * Filters field "email" to end with the provided value.
-         */
-        'email.suffix'?: string;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * Filters field "location" to be equal to the provided value.
-         */
-        'location.eq'?: string;
-        /**
-         * Filters field "location" to contain the provided value.
-         */
-        'location.has'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value, case-insensitive.
-         */
-        'location.ieq'?: string;
-        /**
-         * Filters field "location" to contain the provided value, case-insensitive.
-         */
-        'location.ihas'?: string;
-        /**
-         * Filters field "location" to be within the provided values.
-         */
-        'location.in'?: Array<(string)>;
-        /**
-         * Filters field "location" to be not equal to the provided value.
-         */
-        'location.neq'?: string;
-        /**
-         * Filters field "location" to be not within the provided values.
-         */
-        'location.notIn'?: Array<(string)>;
-        /**
-         * Filters field "location" to be null/nil.
-         */
-        'location.null'?: boolean;
-        /**
-         * Filters field "location" to start with the provided value.
-         */
-        'location.prefix'?: string;
-        /**
-         * Filters field "location" to end with the provided value.
-         */
-        'location.suffix'?: string;
+        'userID.notIn'?: Array<number>;
         /**
          * Filters field "login" to be equal to the provided value.
          */
         'login.eq'?: string;
         /**
-         * Filters field "login" to contain the provided value.
+         * Filters field "login" to be not equal to the provided value.
          */
-        'login.has'?: string;
+        'login.neq'?: string;
+        /**
+         * Filters field "login" to be within the provided values.
+         */
+        'login.in'?: Array<string>;
+        /**
+         * Filters field "login" to be not within the provided values.
+         */
+        'login.notIn'?: Array<string>;
         /**
          * Filters field "login" to be equal to the provided value, case-insensitive.
          */
         'login.ieq'?: string;
         /**
+         * Filters field "login" to contain the provided value.
+         */
+        'login.has'?: string;
+        /**
          * Filters field "login" to contain the provided value, case-insensitive.
          */
         'login.ihas'?: string;
-        /**
-         * Filters field "login" to be within the provided values.
-         */
-        'login.in'?: Array<(string)>;
-        /**
-         * Filters field "login" to be not equal to the provided value.
-         */
-        'login.neq'?: string;
-        /**
-         * Filters field "login" to be not within the provided values.
-         */
-        'login.notIn'?: Array<(string)>;
         /**
          * Filters field "login" to start with the provided value.
          */
@@ -10685,33 +12028,33 @@ export type ListUsersData = {
          */
         'name.eq'?: string;
         /**
-         * Filters field "name" to contain the provided value.
+         * Filters field "name" to be not equal to the provided value.
          */
-        'name.has'?: string;
+        'name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'name.notIn'?: Array<string>;
         /**
          * Filters field "name" to be equal to the provided value, case-insensitive.
          */
         'name.ieq'?: string;
         /**
+         * Filters field "name" to contain the provided value.
+         */
+        'name.has'?: string;
+        /**
          * Filters field "name" to contain the provided value, case-insensitive.
          */
         'name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'name.null'?: boolean;
         /**
          * Filters field "name" to start with the provided value.
          */
@@ -10721,9 +12064,203 @@ export type ListUsersData = {
          */
         'name.suffix'?: string;
         /**
-         * Order the results in ascending or descending order.
+         * Filters field "email" to be equal to the provided value.
          */
-        order?: 'asc' | 'desc';
+        'email.eq'?: string;
+        /**
+         * Filters field "email" to be not equal to the provided value.
+         */
+        'email.neq'?: string;
+        /**
+         * Filters field "email" to be null/nil.
+         */
+        'email.null'?: boolean;
+        /**
+         * Filters field "email" to be within the provided values.
+         */
+        'email.in'?: Array<string>;
+        /**
+         * Filters field "email" to be not within the provided values.
+         */
+        'email.notIn'?: Array<string>;
+        /**
+         * Filters field "email" to be equal to the provided value, case-insensitive.
+         */
+        'email.ieq'?: string;
+        /**
+         * Filters field "email" to contain the provided value.
+         */
+        'email.has'?: string;
+        /**
+         * Filters field "email" to contain the provided value, case-insensitive.
+         */
+        'email.ihas'?: string;
+        /**
+         * Filters field "email" to start with the provided value.
+         */
+        'email.prefix'?: string;
+        /**
+         * Filters field "email" to end with the provided value.
+         */
+        'email.suffix'?: string;
+        /**
+         * Filters field "location" to be equal to the provided value.
+         */
+        'location.eq'?: string;
+        /**
+         * Filters field "location" to be not equal to the provided value.
+         */
+        'location.neq'?: string;
+        /**
+         * Filters field "location" to be null/nil.
+         */
+        'location.null'?: boolean;
+        /**
+         * Filters field "location" to be within the provided values.
+         */
+        'location.in'?: Array<string>;
+        /**
+         * Filters field "location" to be not within the provided values.
+         */
+        'location.notIn'?: Array<string>;
+        /**
+         * Filters field "location" to be equal to the provided value, case-insensitive.
+         */
+        'location.ieq'?: string;
+        /**
+         * Filters field "location" to contain the provided value.
+         */
+        'location.has'?: string;
+        /**
+         * Filters field "location" to contain the provided value, case-insensitive.
+         */
+        'location.ihas'?: string;
+        /**
+         * Filters field "location" to start with the provided value.
+         */
+        'location.prefix'?: string;
+        /**
+         * Filters field "location" to end with the provided value.
+         */
+        'location.suffix'?: string;
+    };
+    url: '/users';
+};
+
+export type ListUsersErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type ListUsersError = ListUsersErrors[keyof ListUsersErrors];
+
+export type ListUsersResponses = {
+    /**
+     * The requested User.
+     */
+    200: UserList;
+};
+
+export type ListUsersResponse = ListUsersResponses[keyof ListUsersResponses];
+
+export type GetUserData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path: {
+        /**
+         * The ID of the User to act upon.
+         */
+        userID: number;
+    };
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
+    };
+    url: '/users/{userID}';
+};
+
+export type GetUserErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
+
+export type GetUserError = GetUserErrors[keyof GetUserErrors];
+
+export type GetUserResponses = {
+    /**
+     * The requested User entity.
+     */
+    200: User;
+};
+
+export type GetUserResponse = GetUserResponses[keyof GetUserResponses];
+
+export type ListUserPostsData = {
+    body?: never;
+    headers?: {
+        /**
+         * A unique identifier for the request.
+         */
+        'X-Request-Id'?: string;
+    };
+    path: {
+        /**
+         * The ID of the User to act upon.
+         */
+        userID: number;
+    };
+    query?: {
+        /**
+         * If set to true, any JSON response will be indented.
+         */
+        pretty?: boolean;
         /**
          * The page number to retrieve.
          */
@@ -10733,17 +12270,41 @@ export type ListUsersData = {
          */
         per_page?: number;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-        /**
          * Sort entity results by the given field.
          */
-        sort?: UserSortableFields;
+        sort?: PostSortableFields;
+        /**
+         * Order the results in ascending or descending order.
+         */
+        order?: 'asc' | 'desc';
+        /**
+         * Filter operation to use.
+         */
+        filter_op?: FilterOperation;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'createTime.lt'?: number;
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
         'updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'updateTime.neq'?: string;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -10753,275 +12314,53 @@ export type ListUsersData = {
          */
         'updateTime.lt'?: number;
         /**
-         * Filters field "update_time" to be not equal to the provided value.
+         * Filters field "slug" to be equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'slug.eq'?: string;
         /**
-         * Filters field "user_id" to be equal to the provided value.
+         * Filters field "slug" to be not equal to the provided value.
          */
-        'userID.eq'?: number;
+        'slug.neq'?: string;
         /**
-         * Filters field "user_id" to be within the provided values.
+         * Filters field "slug" to be equal to the provided value, case-insensitive.
          */
-        'userID.in'?: Array<(number)>;
+        'slug.ieq'?: string;
         /**
-         * Filters field "user_id" to be not equal to the provided value.
+         * Filters field "title" to be equal to the provided value.
          */
-        'userID.neq'?: number;
+        'title.eq'?: string;
         /**
-         * Filters field "user_id" to be not within the provided values.
+         * Filters field "title" to be not equal to the provided value.
          */
-        'userID.notIn'?: Array<(number)>;
-    };
-};
-
-export type ListUsersResponse = (UserList);
-
-export type ListUsersError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type GetUserData = {
-    headers?: {
+        'title.neq'?: string;
         /**
-         * A unique identifier for the request.
+         * Filters field "title" to be within the provided values.
          */
-        'X-Request-Id'?: string;
-    };
-    path: {
+        'title.in'?: Array<string>;
         /**
-         * The ID of the User to act upon.
+         * Filters field "title" to be not within the provided values.
          */
-        userID: number;
-    };
-    query?: {
+        'title.notIn'?: Array<string>;
         /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
+         * Filters field "title" to be equal to the provided value, case-insensitive.
          */
-        pretty?: boolean;
-    };
-};
-
-export type GetUserResponse = (User);
-
-export type GetUserError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
-
-export type ListUserPostsData = {
-    headers?: {
+        'title.ieq'?: string;
         /**
-         * A unique identifier for the request.
+         * Filters field "title" to contain the provided value.
          */
-        'X-Request-Id'?: string;
-    };
-    path: {
+        'title.has'?: string;
         /**
-         * The ID of the User to act upon.
+         * Filters field "title" to contain the provided value, case-insensitive.
          */
-        userID: number;
-    };
-    query?: {
+        'title.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
+         * Filters field "title" to start with the provided value.
          */
-        'author.createTime.eq'?: string;
+        'title.prefix'?: string;
         /**
-         * Filters field "create_time" to be greater than the provided value.
+         * Filters field "title" to end with the provided value.
          */
-        'author.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'author.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'author.createTime.neq'?: string;
-        /**
-         * Filters field "email" to be equal to the provided value.
-         */
-        'author.email.eq'?: string;
-        /**
-         * Filters field "email" to contain the provided value.
-         */
-        'author.email.has'?: string;
-        /**
-         * Filters field "email" to be equal to the provided value, case-insensitive.
-         */
-        'author.email.ieq'?: string;
-        /**
-         * Filters field "email" to contain the provided value, case-insensitive.
-         */
-        'author.email.ihas'?: string;
-        /**
-         * Filters field "email" to be within the provided values.
-         */
-        'author.email.in'?: Array<(string)>;
-        /**
-         * Filters field "email" to be not equal to the provided value.
-         */
-        'author.email.neq'?: string;
-        /**
-         * Filters field "email" to be not within the provided values.
-         */
-        'author.email.notIn'?: Array<(string)>;
-        /**
-         * Filters field "email" to be null/nil.
-         */
-        'author.email.null'?: boolean;
-        /**
-         * Filters field "email" to start with the provided value.
-         */
-        'author.email.prefix'?: string;
-        /**
-         * Filters field "email" to end with the provided value.
-         */
-        'author.email.suffix'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value.
-         */
-        'author.location.eq'?: string;
-        /**
-         * Filters field "location" to contain the provided value.
-         */
-        'author.location.has'?: string;
-        /**
-         * Filters field "location" to be equal to the provided value, case-insensitive.
-         */
-        'author.location.ieq'?: string;
-        /**
-         * Filters field "location" to contain the provided value, case-insensitive.
-         */
-        'author.location.ihas'?: string;
-        /**
-         * Filters field "location" to be within the provided values.
-         */
-        'author.location.in'?: Array<(string)>;
-        /**
-         * Filters field "location" to be not equal to the provided value.
-         */
-        'author.location.neq'?: string;
-        /**
-         * Filters field "location" to be not within the provided values.
-         */
-        'author.location.notIn'?: Array<(string)>;
-        /**
-         * Filters field "location" to be null/nil.
-         */
-        'author.location.null'?: boolean;
-        /**
-         * Filters field "location" to start with the provided value.
-         */
-        'author.location.prefix'?: string;
-        /**
-         * Filters field "location" to end with the provided value.
-         */
-        'author.location.suffix'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value.
-         */
-        'author.login.eq'?: string;
-        /**
-         * Filters field "login" to contain the provided value.
-         */
-        'author.login.has'?: string;
-        /**
-         * Filters field "login" to be equal to the provided value, case-insensitive.
-         */
-        'author.login.ieq'?: string;
-        /**
-         * Filters field "login" to contain the provided value, case-insensitive.
-         */
-        'author.login.ihas'?: string;
-        /**
-         * Filters field "login" to be within the provided values.
-         */
-        'author.login.in'?: Array<(string)>;
-        /**
-         * Filters field "login" to be not equal to the provided value.
-         */
-        'author.login.neq'?: string;
-        /**
-         * Filters field "login" to be not within the provided values.
-         */
-        'author.login.notIn'?: Array<(string)>;
-        /**
-         * Filters field "login" to start with the provided value.
-         */
-        'author.login.prefix'?: string;
-        /**
-         * Filters field "login" to end with the provided value.
-         */
-        'author.login.suffix'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'author.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'author.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'author.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'author.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'author.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'author.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'author.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to be null/nil.
-         */
-        'author.name.null'?: boolean;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'author.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'author.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'author.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'author.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'author.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'author.updateTime.neq'?: string;
-        /**
-         * Filters field "user_id" to be equal to the provided value.
-         */
-        'author.userID.eq'?: number;
-        /**
-         * Filters field "user_id" to be within the provided values.
-         */
-        'author.userID.in'?: Array<(number)>;
-        /**
-         * Filters field "user_id" to be not equal to the provided value.
-         */
-        'author.userID.neq'?: number;
-        /**
-         * Filters field "user_id" to be not within the provided values.
-         */
-        'author.userID.notIn'?: Array<(number)>;
+        'title.suffix'?: string;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -11039,125 +12378,13 @@ export type ListUserPostsData = {
          */
         'contentHTML.ihas'?: string;
         /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'createTime.neq'?: string;
-        /**
-         * Filter operation to use.
-         */
-        filter_op?: FilterOperation;
-        /**
-         * If true, only return entities that have a author edge.
-         */
-        'has.author'?: boolean;
-        /**
-         * If true, only return entities that have a label edge.
-         */
-        'has.label'?: boolean;
-        /**
-         * Filters field "create_time" to be equal to the provided value.
-         */
-        'label.createTime.eq'?: string;
-        /**
-         * Filters field "create_time" to be greater than the provided value.
-         */
-        'label.createTime.gt'?: number;
-        /**
-         * Filters field "create_time" to be less than the provided value.
-         */
-        'label.createTime.lt'?: number;
-        /**
-         * Filters field "create_time" to be not equal to the provided value.
-         */
-        'label.createTime.neq'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value.
-         */
-        'label.name.eq'?: string;
-        /**
-         * Filters field "name" to contain the provided value.
-         */
-        'label.name.has'?: string;
-        /**
-         * Filters field "name" to be equal to the provided value, case-insensitive.
-         */
-        'label.name.ieq'?: string;
-        /**
-         * Filters field "name" to contain the provided value, case-insensitive.
-         */
-        'label.name.ihas'?: string;
-        /**
-         * Filters field "name" to be within the provided values.
-         */
-        'label.name.in'?: Array<(string)>;
-        /**
-         * Filters field "name" to be not equal to the provided value.
-         */
-        'label.name.neq'?: string;
-        /**
-         * Filters field "name" to be not within the provided values.
-         */
-        'label.name.notIn'?: Array<(string)>;
-        /**
-         * Filters field "name" to start with the provided value.
-         */
-        'label.name.prefix'?: string;
-        /**
-         * Filters field "name" to end with the provided value.
-         */
-        'label.name.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'label.updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'label.updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'label.updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'label.updateTime.neq'?: string;
-        /**
-         * Order the results in ascending or descending order.
-         */
-        order?: 'asc' | 'desc';
-        /**
-         * The page number to retrieve.
-         */
-        page?: number;
-        /**
-         * The number of entities to retrieve per page.
-         */
-        per_page?: number;
-        /**
-         * If set to true, any JSON response will be indented. Not recommended for best performance.
-         */
-        pretty?: boolean;
-        /**
-         * Filters field "public" to be equal to the provided value.
-         */
-        'public.eq'?: boolean;
-        /**
          * Filters field "published_at" to be equal to the provided value.
          */
         'publishedAt.eq'?: string;
+        /**
+         * Filters field "published_at" to be not equal to the provided value.
+         */
+        'publishedAt.neq'?: string;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -11167,81 +12394,13 @@ export type ListUserPostsData = {
          */
         'publishedAt.lt'?: number;
         /**
-         * Filters field "published_at" to be not equal to the provided value.
-         */
-        'publishedAt.neq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value.
-         */
-        'slug.eq'?: string;
-        /**
-         * Filters field "slug" to be equal to the provided value, case-insensitive.
-         */
-        'slug.ieq'?: string;
-        /**
-         * Filters field "slug" to be not equal to the provided value.
-         */
-        'slug.neq'?: string;
-        /**
-         * Sort entity results by the given field.
-         */
-        sort?: PostSortableFields;
-        /**
-         * Filters field "title" to be equal to the provided value.
-         */
-        'title.eq'?: string;
-        /**
-         * Filters field "title" to contain the provided value.
-         */
-        'title.has'?: string;
-        /**
-         * Filters field "title" to be equal to the provided value, case-insensitive.
-         */
-        'title.ieq'?: string;
-        /**
-         * Filters field "title" to contain the provided value, case-insensitive.
-         */
-        'title.ihas'?: string;
-        /**
-         * Filters field "title" to be within the provided values.
-         */
-        'title.in'?: Array<(string)>;
-        /**
-         * Filters field "title" to be not equal to the provided value.
-         */
-        'title.neq'?: string;
-        /**
-         * Filters field "title" to be not within the provided values.
-         */
-        'title.notIn'?: Array<(string)>;
-        /**
-         * Filters field "title" to start with the provided value.
-         */
-        'title.prefix'?: string;
-        /**
-         * Filters field "title" to end with the provided value.
-         */
-        'title.suffix'?: string;
-        /**
-         * Filters field "update_time" to be equal to the provided value.
-         */
-        'updateTime.eq'?: string;
-        /**
-         * Filters field "update_time" to be greater than the provided value.
-         */
-        'updateTime.gt'?: number;
-        /**
-         * Filters field "update_time" to be less than the provided value.
-         */
-        'updateTime.lt'?: number;
-        /**
-         * Filters field "update_time" to be not equal to the provided value.
-         */
-        'updateTime.neq'?: string;
-        /**
          * Filters field "view_count" to be equal to the provided value.
          */
         'viewCount.eq'?: number;
+        /**
+         * Filters field "view_count" to be not equal to the provided value.
+         */
+        'viewCount.neq'?: number;
         /**
          * Filters field "view_count" to be greater than the provided value.
          */
@@ -11251,25 +12410,374 @@ export type ListUserPostsData = {
          */
         'viewCount.lt'?: number;
         /**
-         * Filters field "view_count" to be not equal to the provided value.
+         * Filters field "public" to be equal to the provided value.
          */
-        'viewCount.neq'?: number;
+        'public.eq'?: boolean;
+        /**
+         * If true, only return entities that have a author edge.
+         */
+        'has.author'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'author.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'author.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'author.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'author.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'author.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'author.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'author.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'author.updateTime.lt'?: number;
+        /**
+         * Filters field "user_id" to be equal to the provided value.
+         */
+        'author.userID.eq'?: number;
+        /**
+         * Filters field "user_id" to be not equal to the provided value.
+         */
+        'author.userID.neq'?: number;
+        /**
+         * Filters field "user_id" to be within the provided values.
+         */
+        'author.userID.in'?: Array<number>;
+        /**
+         * Filters field "user_id" to be not within the provided values.
+         */
+        'author.userID.notIn'?: Array<number>;
+        /**
+         * Filters field "login" to be equal to the provided value.
+         */
+        'author.login.eq'?: string;
+        /**
+         * Filters field "login" to be not equal to the provided value.
+         */
+        'author.login.neq'?: string;
+        /**
+         * Filters field "login" to be within the provided values.
+         */
+        'author.login.in'?: Array<string>;
+        /**
+         * Filters field "login" to be not within the provided values.
+         */
+        'author.login.notIn'?: Array<string>;
+        /**
+         * Filters field "login" to be equal to the provided value, case-insensitive.
+         */
+        'author.login.ieq'?: string;
+        /**
+         * Filters field "login" to contain the provided value.
+         */
+        'author.login.has'?: string;
+        /**
+         * Filters field "login" to contain the provided value, case-insensitive.
+         */
+        'author.login.ihas'?: string;
+        /**
+         * Filters field "login" to start with the provided value.
+         */
+        'author.login.prefix'?: string;
+        /**
+         * Filters field "login" to end with the provided value.
+         */
+        'author.login.suffix'?: string;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'author.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'author.name.neq'?: string;
+        /**
+         * Filters field "name" to be null/nil.
+         */
+        'author.name.null'?: boolean;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'author.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'author.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'author.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'author.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'author.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'author.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'author.name.suffix'?: string;
+        /**
+         * Filters field "email" to be equal to the provided value.
+         */
+        'author.email.eq'?: string;
+        /**
+         * Filters field "email" to be not equal to the provided value.
+         */
+        'author.email.neq'?: string;
+        /**
+         * Filters field "email" to be null/nil.
+         */
+        'author.email.null'?: boolean;
+        /**
+         * Filters field "email" to be within the provided values.
+         */
+        'author.email.in'?: Array<string>;
+        /**
+         * Filters field "email" to be not within the provided values.
+         */
+        'author.email.notIn'?: Array<string>;
+        /**
+         * Filters field "email" to be equal to the provided value, case-insensitive.
+         */
+        'author.email.ieq'?: string;
+        /**
+         * Filters field "email" to contain the provided value.
+         */
+        'author.email.has'?: string;
+        /**
+         * Filters field "email" to contain the provided value, case-insensitive.
+         */
+        'author.email.ihas'?: string;
+        /**
+         * Filters field "email" to start with the provided value.
+         */
+        'author.email.prefix'?: string;
+        /**
+         * Filters field "email" to end with the provided value.
+         */
+        'author.email.suffix'?: string;
+        /**
+         * Filters field "location" to be equal to the provided value.
+         */
+        'author.location.eq'?: string;
+        /**
+         * Filters field "location" to be not equal to the provided value.
+         */
+        'author.location.neq'?: string;
+        /**
+         * Filters field "location" to be null/nil.
+         */
+        'author.location.null'?: boolean;
+        /**
+         * Filters field "location" to be within the provided values.
+         */
+        'author.location.in'?: Array<string>;
+        /**
+         * Filters field "location" to be not within the provided values.
+         */
+        'author.location.notIn'?: Array<string>;
+        /**
+         * Filters field "location" to be equal to the provided value, case-insensitive.
+         */
+        'author.location.ieq'?: string;
+        /**
+         * Filters field "location" to contain the provided value.
+         */
+        'author.location.has'?: string;
+        /**
+         * Filters field "location" to contain the provided value, case-insensitive.
+         */
+        'author.location.ihas'?: string;
+        /**
+         * Filters field "location" to start with the provided value.
+         */
+        'author.location.prefix'?: string;
+        /**
+         * Filters field "location" to end with the provided value.
+         */
+        'author.location.suffix'?: string;
+        /**
+         * If true, only return entities that have a label edge.
+         */
+        'has.label'?: boolean;
+        /**
+         * Filters field "create_time" to be equal to the provided value.
+         */
+        'label.createTime.eq'?: string;
+        /**
+         * Filters field "create_time" to be not equal to the provided value.
+         */
+        'label.createTime.neq'?: string;
+        /**
+         * Filters field "create_time" to be greater than the provided value.
+         */
+        'label.createTime.gt'?: number;
+        /**
+         * Filters field "create_time" to be less than the provided value.
+         */
+        'label.createTime.lt'?: number;
+        /**
+         * Filters field "update_time" to be equal to the provided value.
+         */
+        'label.updateTime.eq'?: string;
+        /**
+         * Filters field "update_time" to be not equal to the provided value.
+         */
+        'label.updateTime.neq'?: string;
+        /**
+         * Filters field "update_time" to be greater than the provided value.
+         */
+        'label.updateTime.gt'?: number;
+        /**
+         * Filters field "update_time" to be less than the provided value.
+         */
+        'label.updateTime.lt'?: number;
+        /**
+         * Filters field "name" to be equal to the provided value.
+         */
+        'label.name.eq'?: string;
+        /**
+         * Filters field "name" to be not equal to the provided value.
+         */
+        'label.name.neq'?: string;
+        /**
+         * Filters field "name" to be within the provided values.
+         */
+        'label.name.in'?: Array<string>;
+        /**
+         * Filters field "name" to be not within the provided values.
+         */
+        'label.name.notIn'?: Array<string>;
+        /**
+         * Filters field "name" to be equal to the provided value, case-insensitive.
+         */
+        'label.name.ieq'?: string;
+        /**
+         * Filters field "name" to contain the provided value.
+         */
+        'label.name.has'?: string;
+        /**
+         * Filters field "name" to contain the provided value, case-insensitive.
+         */
+        'label.name.ihas'?: string;
+        /**
+         * Filters field "name" to start with the provided value.
+         */
+        'label.name.prefix'?: string;
+        /**
+         * Filters field "name" to end with the provided value.
+         */
+        'label.name.suffix'?: string;
     };
+    url: '/users/{userID}/posts';
 };
 
-export type ListUserPostsResponse = (PostList);
+export type ListUserPostsErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type ListUserPostsError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorTooManyRequests | ErrorInternalServerError);
+export type ListUserPostsError = ListUserPostsErrors[keyof ListUserPostsErrors];
+
+export type ListUserPostsResponses = {
+    /**
+     * The requested posts.
+     */
+    200: PostList;
+};
+
+export type ListUserPostsResponse = ListUserPostsResponses[keyof ListUserPostsResponses];
 
 export type GetServiceVersionData = {
+    body?: never;
     headers?: {
         /**
          * A unique identifier for the request.
          */
         'X-Request-Id'?: string;
     };
+    path?: never;
+    query?: never;
+    url: '/version';
 };
 
-export type GetServiceVersionResponse = (VersionInfo);
+export type GetServiceVersionErrors = {
+    /**
+     * Bad Request (http status code 400)
+     */
+    400: ErrorBadRequest;
+    /**
+     * Unauthorized (http status code 401)
+     */
+    401: ErrorUnauthorized;
+    /**
+     * Forbidden (http status code 403)
+     */
+    403: ErrorForbidden;
+    /**
+     * Not Found (http status code 404)
+     */
+    404: ErrorNotFound;
+    /**
+     * Too Many Requests (http status code 429)
+     */
+    429: ErrorTooManyRequests;
+    /**
+     * Internal Server Error (http status code 500)
+     */
+    500: ErrorInternalServerError;
+};
 
-export type GetServiceVersionError = (ErrorBadRequest | ErrorUnauthorized | ErrorForbidden | ErrorNotFound | ErrorTooManyRequests | ErrorInternalServerError);
+export type GetServiceVersionError = GetServiceVersionErrors[keyof GetServiceVersionErrors];
+
+export type GetServiceVersionResponses = {
+    /**
+     * Service version information was found.
+     */
+    200: VersionInfo;
+};
+
+export type GetServiceVersionResponse = GetServiceVersionResponses[keyof GetServiceVersionResponses];
