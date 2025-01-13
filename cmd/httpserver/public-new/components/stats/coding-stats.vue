@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import { getCodingStats } from "@/utils/http/services.gen"
+import { getCodingStats } from "@/utils/http/sdk.gen"
 import type { LanguageStat } from "@/utils/http/types.gen"
 
-const { data: codingStats, suspense } = useQuery({
-  queryKey: ["stats", "coding"],
-  queryFn: () => unwrapErrors(getCodingStats()),
-})
-onServerPrefetch(async () => {
-  await suspense()
-})
+const codingStats = await getCodingStats({ composable: "$fetch" })
 
 type LanguageBucket = LanguageStat & {
   percentage?: number
@@ -16,13 +10,13 @@ type LanguageBucket = LanguageStat & {
 }
 
 const computedCodingStats = computed(() => {
-  if (!codingStats.value) return []
+  if (!codingStats) return []
 
   const out: LanguageBucket[] = []
   let maxTitleLength = 5
 
   // Bucket by language with a cap.
-  for (const stat of codingStats.value.languages) {
+  for (const stat of codingStats.languages) {
     if (out.length === 6) {
       out[5].key = "Other"
       out[5].hex_color = stat.hex_color
@@ -37,7 +31,7 @@ const computedCodingStats = computed(() => {
   // Calculate percentages.
   for (const stat of out) {
     stat.title_length = maxTitleLength
-    stat.percentage = Math.round((stat.total / codingStats.value.total_seconds) * 100)
+    stat.percentage = Math.round((stat.total / codingStats.total_seconds) * 100)
   }
 
   return out

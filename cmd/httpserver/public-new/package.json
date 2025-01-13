@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@hey-api/client-nuxt": "https://pkg.pr.new/hey-api/openapi-ts/@hey-api/client-nuxt@1519",
+    "@hey-api/openapi-ts": "https://pkg.pr.new/hey-api/openapi-ts/@hey-api/openapi-ts@1519",
     "naive-ui": "^2.39.0",
     "nuxt": "^3.15.1",
     "vue": "^3.5.4"
@@ -9,7 +10,6 @@
     "@codemirror/lang-markdown": "^6.2.5",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@formkit/auto-animate": "^0.8.2",
-    "@hey-api/openapi-ts": "https://pkg.pr.new/hey-api/openapi-ts/@hey-api/openapi-ts@1519",
     "@iconify-json/logos": "^1.2.0",
     "@iconify-json/mdi": "^1.2.0",
     "@nuxt/icon": "^1.5.1",

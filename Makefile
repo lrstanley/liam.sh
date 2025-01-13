@@ -42,6 +42,14 @@ docker-build:
 		--pull \
 		--force-rm .
 
+# TODO: TEMPORARY
+node-clean:
+	rm -rf cmd/httpserver/public-new/node_modules
+	rm -rf cmd/httpserver/public-new/.nuxt
+	rm -rf cmd/httpserver/public-new/.output
+	cd cmd/httpserver/public-new && pnpm store prune
+	cd cmd/httpserver/public-new && pnpm i
+
 # frontend
 node-fetch:
 	command -v pnpm >/dev/null >&2 || npm install \

@@ -11,10 +11,17 @@ export default defineConfig({
   },
   plugins: [
     "@hey-api/schemas",
-    "@hey-api/sdk",
+    {
+      name: "@hey-api/sdk",
+      transformer: true,
+    },
     {
       enums: "javascript",
       name: "@hey-api/typescript",
+    },
+    {
+      name: "@hey-api/transformers",
+      dates: true,
     },
   ],
 })

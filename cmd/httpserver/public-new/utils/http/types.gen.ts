@@ -28,7 +28,7 @@ export type ErrorBadRequest = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorConflict = {
@@ -51,7 +51,7 @@ export type ErrorConflict = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorForbidden = {
@@ -74,7 +74,7 @@ export type ErrorForbidden = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorInternalServerError = {
@@ -97,7 +97,7 @@ export type ErrorInternalServerError = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorNotFound = {
@@ -120,7 +120,7 @@ export type ErrorNotFound = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorTooManyRequests = {
@@ -143,7 +143,7 @@ export type ErrorTooManyRequests = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 export type ErrorUnauthorized = {
@@ -166,7 +166,7 @@ export type ErrorUnauthorized = {
     /**
      * The timestamp of the error, in RFC3339 format.
      */
-    timestamp: string;
+    timestamp: Date;
 };
 
 /**
@@ -193,7 +193,7 @@ export type GithubAsset = {
     /**
      * The ID of the asset.
      */
-    asset_id: number;
+    asset_id: BigInt;
     /**
      * The URL of the asset.
      */
@@ -217,16 +217,16 @@ export type GithubAsset = {
     /**
      * The size of the asset in bytes.
      */
-    size: number;
-    download_count: number;
+    size: BigInt;
+    download_count: BigInt;
     /**
      * The date the asset was created.
      */
-    created_at: string;
+    created_at: Date;
     /**
      * The date the asset was last updated.
      */
-    updated_at?: string;
+    updated_at?: Date;
     uploader: GithubUser;
 };
 
@@ -286,7 +286,7 @@ export type GithubEvent = {
     /**
      * The date the event was created.
      */
-    created_at: string;
+    created_at: Date;
     /**
      * Whether the event is public or not.
      */
@@ -294,12 +294,12 @@ export type GithubEvent = {
     /**
      * The ID of the actor.
      */
-    actor_id: number;
+    actor_id: BigInt;
     actor: GithubUser;
     /**
      * The ID of the repository.
      */
-    repo_id: number;
+    repo_id: BigInt;
     /**
      * The repository of the event.
      */
@@ -365,11 +365,11 @@ export type GithubGist = {
     /**
      * The date the gist was created.
      */
-    created_at: string;
+    created_at: Date;
     /**
      * The date the gist was last updated.
      */
-    updated_at: string;
+    updated_at: Date;
     /**
      * The description of the gist.
      */
@@ -390,7 +390,7 @@ export type GithubGist = {
     /**
      * The size of the file in bytes.
      */
-    size: number;
+    size: BigInt;
     /**
      * The raw URL of the file.
      */
@@ -442,7 +442,7 @@ export type GithubRelease = {
     /**
      * The ID of the release.
      */
-    release_id: number;
+    release_id: BigInt;
     /**
      * The URL of the release.
      */
@@ -470,11 +470,11 @@ export type GithubRelease = {
     /**
      * The date the release was created.
      */
-    created_at: string;
+    created_at: Date;
     /**
      * The date the release was published.
      */
-    published_at: string;
+    published_at: Date;
     author: GithubUser;
 };
 
@@ -555,7 +555,7 @@ export type GithubRepository = {
     /**
      * The ID of the repository.
      */
-    repo_id: number;
+    repo_id: BigInt;
     /**
      * The name of the repository.
      */
@@ -612,15 +612,15 @@ export type GithubRepository = {
     /**
      * The date the repository was last pushed to.
      */
-    pushed_at?: string;
+    pushed_at?: Date;
     /**
      * The date the repository was created.
      */
-    created_at: string;
+    created_at: Date;
     /**
      * The date the repository was last updated.
      */
-    updated_at?: string;
+    updated_at?: Date;
     license?: {
         [key: string]: unknown;
     };
@@ -727,11 +727,11 @@ export type Label = {
     /**
      * Time the entity was created.
      */
-    create_time: string;
+    create_time: Date;
     /**
      * Time the entity was last updated.
      */
-    update_time: string;
+    update_time: Date;
     /**
      * Label name.
      */
@@ -753,11 +753,11 @@ export type LabelCreate = {
     /**
      * Time the entity was created.
      */
-    create_time?: string;
+    create_time?: Date;
     /**
      * Time the entity was last updated.
      */
-    update_time?: string;
+    update_time?: Date;
     /**
      * Label name.
      */
@@ -803,7 +803,7 @@ export type LabelUpdate = {
     /**
      * Time the entity was last updated.
      */
-    update_time?: string;
+    update_time?: Date;
     /**
      * Label name.
      */
@@ -859,11 +859,11 @@ export type Post = {
     /**
      * Time the entity was created.
      */
-    create_time: string;
+    create_time: Date;
     /**
      * Time the entity was last updated.
      */
-    update_time: string;
+    update_time: Date;
     /**
      * Post slug.
      */
@@ -884,7 +884,7 @@ export type Post = {
      * Post summary, which is produced from the first sentence or two of the post content.
      */
     summary: string;
-    published_at: string;
+    published_at: Date;
     /**
      * Number of times the post has been viewed.
      */
@@ -902,11 +902,11 @@ export type PostCreate = {
     /**
      * Time the entity was created.
      */
-    create_time?: string;
+    create_time?: Date;
     /**
      * Time the entity was last updated.
      */
-    update_time?: string;
+    update_time?: Date;
     /**
      * Post slug.
      */
@@ -919,7 +919,7 @@ export type PostCreate = {
      * Post content in Markdown.
      */
     content: string;
-    published_at?: string;
+    published_at?: Date;
     /**
      * Whether the post is public or not.
      */
@@ -990,7 +990,7 @@ export type PostUpdate = {
     /**
      * Time the entity was last updated.
      */
-    update_time?: string;
+    update_time?: Date;
     /**
      * Post slug.
      */
@@ -1003,7 +1003,7 @@ export type PostUpdate = {
      * Post content in Markdown.
      */
     content?: string;
-    published_at?: string;
+    published_at?: Date;
     /**
      * Whether the post is public or not.
      */
@@ -1024,11 +1024,11 @@ export type User = {
     /**
      * Time the entity was created.
      */
-    create_time: string;
+    create_time: Date;
     /**
      * Time the entity was last updated.
      */
-    update_time: string;
+    update_time: Date;
     /**
      * Users GitHub ID.
      */
@@ -1146,17 +1146,17 @@ export type VersionLink = {
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type EdgeAssetAssetIdeq = number;
+export type EdgeAssetAssetIdeq = BigInt;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type EdgeAssetAssetIdneq = number;
+export type EdgeAssetAssetIdneq = BigInt;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type EdgeAssetCreatedAtEq = string;
+export type EdgeAssetCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -1171,7 +1171,7 @@ export type EdgeAssetCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type EdgeAssetCreatedAtNeq = string;
+export type EdgeAssetCreatedAtNeq = Date;
 
 /**
  * Filters field "download_count" to be greater than the provided value.
@@ -1291,7 +1291,7 @@ export type EdgeAssetSizeLt = number;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type EdgeAssetUpdatedAtEq = string;
+export type EdgeAssetUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -1311,12 +1311,12 @@ export type EdgeAssetUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type EdgeAssetUpdatedAtNeq = string;
+export type EdgeAssetUpdatedAtNeq = Date;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type EdgeAuthorCreateTimeEq = string;
+export type EdgeAuthorCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -1331,7 +1331,7 @@ export type EdgeAuthorCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type EdgeAuthorCreateTimeNeq = string;
+export type EdgeAuthorCreateTimeNeq = Date;
 
 /**
  * Filters field "email" to contain the provided value.
@@ -1531,7 +1531,7 @@ export type EdgeAuthorNameNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type EdgeAuthorUpdateTimeEq = string;
+export type EdgeAuthorUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -1546,7 +1546,7 @@ export type EdgeAuthorUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type EdgeAuthorUpdateTimeNeq = string;
+export type EdgeAuthorUpdateTimeNeq = Date;
 
 /**
  * Filters field "user_id" to be equal to the provided value.
@@ -1576,7 +1576,7 @@ export type EdgeGithubRepositoryArchivedEq = boolean;
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type EdgeGithubRepositoryCreatedAtEq = string;
+export type EdgeGithubRepositoryCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -1591,7 +1591,7 @@ export type EdgeGithubRepositoryCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type EdgeGithubRepositoryCreatedAtNeq = string;
+export type EdgeGithubRepositoryCreatedAtNeq = Date;
 
 /**
  * Filters field "default_branch" to contain the provided value.
@@ -1811,22 +1811,22 @@ export type EdgeGithubRepositoryPublicEq = boolean;
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type EdgeGithubRepositoryPushedAtIn = Array<string>;
+export type EdgeGithubRepositoryPushedAtIn = Array<Date>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type EdgeGithubRepositoryPushedAtNotIn = Array<string>;
+export type EdgeGithubRepositoryPushedAtNotIn = Array<Date>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type EdgeGithubRepositoryRepoIdeq = number;
+export type EdgeGithubRepositoryRepoIdeq = BigInt;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type EdgeGithubRepositoryRepoIdneq = number;
+export type EdgeGithubRepositoryRepoIdneq = BigInt;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -1841,7 +1841,7 @@ export type EdgeGithubRepositoryStarCountLt = number;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type EdgeGithubRepositoryUpdatedAtEq = string;
+export type EdgeGithubRepositoryUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -1861,7 +1861,7 @@ export type EdgeGithubRepositoryUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type EdgeGithubRepositoryUpdatedAtNeq = string;
+export type EdgeGithubRepositoryUpdatedAtNeq = Date;
 
 /**
  * If true, only return entities that have a asset edge.
@@ -1901,7 +1901,7 @@ export type EdgeHasRepository = boolean;
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type EdgeLabelCreateTimeEq = string;
+export type EdgeLabelCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -1916,7 +1916,7 @@ export type EdgeLabelCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type EdgeLabelCreateTimeNeq = string;
+export type EdgeLabelCreateTimeNeq = Date;
 
 /**
  * Filters field "name" to contain the provided value.
@@ -1966,7 +1966,7 @@ export type EdgeLabelNameNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type EdgeLabelUpdateTimeEq = string;
+export type EdgeLabelUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -1981,7 +1981,7 @@ export type EdgeLabelUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type EdgeLabelUpdateTimeNeq = string;
+export type EdgeLabelUpdateTimeNeq = Date;
 
 /**
  * Filters field "content" to contain the provided value.
@@ -2006,7 +2006,7 @@ export type EdgePostContentHtmlContainsFold = string;
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type EdgePostCreateTimeEq = string;
+export type EdgePostCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -2021,7 +2021,7 @@ export type EdgePostCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type EdgePostCreateTimeNeq = string;
+export type EdgePostCreateTimeNeq = Date;
 
 /**
  * Filters field "public" to be equal to the provided value.
@@ -2031,7 +2031,7 @@ export type EdgePostPublicEq = boolean;
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type EdgePostPublishedAtEq = string;
+export type EdgePostPublishedAtEq = Date;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
@@ -2046,7 +2046,7 @@ export type EdgePostPublishedAtLt = number;
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type EdgePostPublishedAtNeq = string;
+export type EdgePostPublishedAtNeq = Date;
 
 /**
  * Filters field "slug" to be equal to the provided value.
@@ -2111,7 +2111,7 @@ export type EdgePostTitleNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type EdgePostUpdateTimeEq = string;
+export type EdgePostUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -2126,7 +2126,7 @@ export type EdgePostUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type EdgePostUpdateTimeNeq = string;
+export type EdgePostUpdateTimeNeq = Date;
 
 /**
  * Filters field "view_count" to be equal to the provided value.
@@ -2151,7 +2151,7 @@ export type EdgePostViewCountNeq = number;
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type EdgeReleaseCreatedAtEq = string;
+export type EdgeReleaseCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -2166,7 +2166,7 @@ export type EdgeReleaseCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type EdgeReleaseCreatedAtNeq = string;
+export type EdgeReleaseCreatedAtNeq = Date;
 
 /**
  * Filters field "draft" to be equal to the provided value.
@@ -2231,7 +2231,7 @@ export type EdgeReleasePrereleaseEq = boolean;
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type EdgeReleasePublishedAtEq = string;
+export type EdgeReleasePublishedAtEq = Date;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
@@ -2246,17 +2246,17 @@ export type EdgeReleasePublishedAtLt = number;
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type EdgeReleasePublishedAtNeq = string;
+export type EdgeReleasePublishedAtNeq = Date;
 
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type EdgeReleaseReleaseIdeq = number;
+export type EdgeReleaseReleaseIdeq = BigInt;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type EdgeReleaseReleaseIdneq = number;
+export type EdgeReleaseReleaseIdneq = BigInt;
 
 /**
  * Filters field "tag_name" to contain the provided value.
@@ -2356,7 +2356,7 @@ export type EdgeRepositoryArchivedEq = boolean;
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type EdgeRepositoryCreatedAtEq = string;
+export type EdgeRepositoryCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -2371,7 +2371,7 @@ export type EdgeRepositoryCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type EdgeRepositoryCreatedAtNeq = string;
+export type EdgeRepositoryCreatedAtNeq = Date;
 
 /**
  * Filters field "default_branch" to contain the provided value.
@@ -2591,22 +2591,22 @@ export type EdgeRepositoryPublicEq = boolean;
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type EdgeRepositoryPushedAtIn = Array<string>;
+export type EdgeRepositoryPushedAtIn = Array<Date>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type EdgeRepositoryPushedAtNotIn = Array<string>;
+export type EdgeRepositoryPushedAtNotIn = Array<Date>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type EdgeRepositoryRepoIdeq = number;
+export type EdgeRepositoryRepoIdeq = BigInt;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type EdgeRepositoryRepoIdneq = number;
+export type EdgeRepositoryRepoIdneq = BigInt;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -2621,7 +2621,7 @@ export type EdgeRepositoryStarCountLt = number;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type EdgeRepositoryUpdatedAtEq = string;
+export type EdgeRepositoryUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -2641,7 +2641,7 @@ export type EdgeRepositoryUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type EdgeRepositoryUpdatedAtNeq = string;
+export type EdgeRepositoryUpdatedAtNeq = Date;
 
 /**
  * Filter operation to use.
@@ -2651,17 +2651,17 @@ export type FilterOperation2 = FilterOperation;
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type GithubAssetAssetIdeq = number;
+export type GithubAssetAssetIdeq = BigInt;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type GithubAssetAssetIdneq = number;
+export type GithubAssetAssetIdneq = BigInt;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type GithubAssetCreatedAtEq = string;
+export type GithubAssetCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -2676,7 +2676,7 @@ export type GithubAssetCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type GithubAssetCreatedAtNeq = string;
+export type GithubAssetCreatedAtNeq = Date;
 
 /**
  * Filters field "download_count" to be greater than the provided value.
@@ -2801,7 +2801,7 @@ export type GithubAssetSizeLt = number;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type GithubAssetUpdatedAtEq = string;
+export type GithubAssetUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -2821,22 +2821,22 @@ export type GithubAssetUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type GithubAssetUpdatedAtNeq = string;
+export type GithubAssetUpdatedAtNeq = Date;
 
 /**
  * Filters field "actor_id" to be equal to the provided value.
  */
-export type GithubEventActorIdeq = number;
+export type GithubEventActorIdeq = BigInt;
 
 /**
  * Filters field "actor_id" to be not equal to the provided value.
  */
-export type GithubEventActorIdneq = number;
+export type GithubEventActorIdneq = BigInt;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type GithubEventCreatedAtEq = string;
+export type GithubEventCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -2851,7 +2851,7 @@ export type GithubEventCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type GithubEventCreatedAtNeq = string;
+export type GithubEventCreatedAtNeq = Date;
 
 /**
  * Filters field "event_id" to be equal to the provided value.
@@ -2926,12 +2926,12 @@ export type GithubEventPublicEq = boolean;
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type GithubEventRepoIdeq = number;
+export type GithubEventRepoIdeq = BigInt;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type GithubEventRepoIdneq = number;
+export type GithubEventRepoIdneq = BigInt;
 
 /**
  * Filters field "content" to contain the provided value.
@@ -2946,7 +2946,7 @@ export type GithubGistContentContainsFold = string;
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type GithubGistCreatedAtEq = string;
+export type GithubGistCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -2961,7 +2961,7 @@ export type GithubGistCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type GithubGistCreatedAtNeq = string;
+export type GithubGistCreatedAtNeq = Date;
 
 /**
  * Filters field "description" to contain the provided value.
@@ -3101,12 +3101,12 @@ export type GithubGistPublicEq = boolean;
 /**
  * Filters field "size" to be equal to the provided value.
  */
-export type GithubGistSizeEq = number;
+export type GithubGistSizeEq = BigInt;
 
 /**
  * Filters field "size" to be not equal to the provided value.
  */
-export type GithubGistSizeNeq = number;
+export type GithubGistSizeNeq = BigInt;
 
 /**
  * Filters field "type" to contain the provided value.
@@ -3156,7 +3156,7 @@ export type GithubGistTypeNotIn = Array<string>;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type GithubGistUpdatedAtEq = string;
+export type GithubGistUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -3171,12 +3171,12 @@ export type GithubGistUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type GithubGistUpdatedAtNeq = string;
+export type GithubGistUpdatedAtNeq = Date;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type GithubReleaseCreatedAtEq = string;
+export type GithubReleaseCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -3191,7 +3191,7 @@ export type GithubReleaseCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type GithubReleaseCreatedAtNeq = string;
+export type GithubReleaseCreatedAtNeq = Date;
 
 /**
  * Filters field "draft" to be equal to the provided value.
@@ -3261,7 +3261,7 @@ export type GithubReleasePrereleaseEq = boolean;
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type GithubReleasePublishedAtEq = string;
+export type GithubReleasePublishedAtEq = Date;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
@@ -3276,17 +3276,17 @@ export type GithubReleasePublishedAtLt = number;
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type GithubReleasePublishedAtNeq = string;
+export type GithubReleasePublishedAtNeq = Date;
 
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type GithubReleaseReleaseIdeq = number;
+export type GithubReleaseReleaseIdeq = BigInt;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type GithubReleaseReleaseIdneq = number;
+export type GithubReleaseReleaseIdneq = BigInt;
 
 /**
  * Filters field "tag_name" to contain the provided value.
@@ -3386,7 +3386,7 @@ export type GithubRepositoryArchivedEq = boolean;
 /**
  * Filters field "created_at" to be equal to the provided value.
  */
-export type GithubRepositoryCreatedAtEq = string;
+export type GithubRepositoryCreatedAtEq = Date;
 
 /**
  * Filters field "created_at" to be greater than the provided value.
@@ -3401,7 +3401,7 @@ export type GithubRepositoryCreatedAtLt = number;
 /**
  * Filters field "created_at" to be not equal to the provided value.
  */
-export type GithubRepositoryCreatedAtNeq = string;
+export type GithubRepositoryCreatedAtNeq = Date;
 
 /**
  * Filters field "default_branch" to contain the provided value.
@@ -3626,22 +3626,22 @@ export type GithubRepositoryPublicEq = boolean;
 /**
  * Filters field "pushed_at" to be within the provided values.
  */
-export type GithubRepositoryPushedAtIn = Array<string>;
+export type GithubRepositoryPushedAtIn = Array<Date>;
 
 /**
  * Filters field "pushed_at" to be not within the provided values.
  */
-export type GithubRepositoryPushedAtNotIn = Array<string>;
+export type GithubRepositoryPushedAtNotIn = Array<Date>;
 
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type GithubRepositoryRepoIdeq = number;
+export type GithubRepositoryRepoIdeq = BigInt;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type GithubRepositoryRepoIdneq = number;
+export type GithubRepositoryRepoIdneq = BigInt;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -3656,7 +3656,7 @@ export type GithubRepositoryStarCountLt = number;
 /**
  * Filters field "updated_at" to be equal to the provided value.
  */
-export type GithubRepositoryUpdatedAtEq = string;
+export type GithubRepositoryUpdatedAtEq = Date;
 
 /**
  * Filters field "updated_at" to be greater than the provided value.
@@ -3676,12 +3676,12 @@ export type GithubRepositoryUpdatedAtLt = number;
 /**
  * Filters field "updated_at" to be not equal to the provided value.
  */
-export type GithubRepositoryUpdatedAtNeq = string;
+export type GithubRepositoryUpdatedAtNeq = Date;
 
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type LabelCreateTimeEq = string;
+export type LabelCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -3696,7 +3696,7 @@ export type LabelCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type LabelCreateTimeNeq = string;
+export type LabelCreateTimeNeq = Date;
 
 /**
  * The ID of the Label to act upon.
@@ -3751,7 +3751,7 @@ export type LabelNameNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type LabelUpdateTimeEq = string;
+export type LabelUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -3766,7 +3766,7 @@ export type LabelUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type LabelUpdateTimeNeq = string;
+export type LabelUpdateTimeNeq = Date;
 
 /**
  * The page number to retrieve.
@@ -3796,7 +3796,7 @@ export type PostContentHtmlContainsFold = string;
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type PostCreateTimeEq = string;
+export type PostCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -3811,7 +3811,7 @@ export type PostCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type PostCreateTimeNeq = string;
+export type PostCreateTimeNeq = Date;
 
 /**
  * The ID of the Post to act upon.
@@ -3826,7 +3826,7 @@ export type PostPublicEq = boolean;
 /**
  * Filters field "published_at" to be equal to the provided value.
  */
-export type PostPublishedAtEq = string;
+export type PostPublishedAtEq = Date;
 
 /**
  * Filters field "published_at" to be greater than the provided value.
@@ -3841,7 +3841,7 @@ export type PostPublishedAtLt = number;
 /**
  * Filters field "published_at" to be not equal to the provided value.
  */
-export type PostPublishedAtNeq = string;
+export type PostPublishedAtNeq = Date;
 
 /**
  * Filters field "slug" to be equal to the provided value.
@@ -3906,7 +3906,7 @@ export type PostTitleNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type PostUpdateTimeEq = string;
+export type PostUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -3921,7 +3921,7 @@ export type PostUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type PostUpdateTimeNeq = string;
+export type PostUpdateTimeNeq = Date;
 
 /**
  * Filters field "view_count" to be equal to the provided value.
@@ -4055,7 +4055,7 @@ export type SvgWidth = number;
 /**
  * Filters field "create_time" to be equal to the provided value.
  */
-export type UserCreateTimeEq = string;
+export type UserCreateTimeEq = Date;
 
 /**
  * Filters field "create_time" to be greater than the provided value.
@@ -4070,7 +4070,7 @@ export type UserCreateTimeLt = number;
 /**
  * Filters field "create_time" to be not equal to the provided value.
  */
-export type UserCreateTimeNeq = string;
+export type UserCreateTimeNeq = Date;
 
 /**
  * Filters field "email" to contain the provided value.
@@ -4275,7 +4275,7 @@ export type UserNameNotIn = Array<string>;
 /**
  * Filters field "update_time" to be equal to the provided value.
  */
-export type UserUpdateTimeEq = string;
+export type UserUpdateTimeEq = Date;
 
 /**
  * Filters field "update_time" to be greater than the provided value.
@@ -4290,7 +4290,7 @@ export type UserUpdateTimeLt = number;
 /**
  * Filters field "update_time" to be not equal to the provided value.
  */
-export type UserUpdateTimeNeq = string;
+export type UserUpdateTimeNeq = Date;
 
 /**
  * Filters field "user_id" to be equal to the provided value.
@@ -4565,11 +4565,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'assetID.eq'?: number;
+        'assetID.eq'?: BigInt;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'assetID.neq'?: number;
+        'assetID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -4665,11 +4665,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -4681,11 +4681,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'updatedAt.eq'?: string;
+        'updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'updatedAt.neq'?: string;
+        'updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -4705,11 +4705,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: number;
+        'release.releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: number;
+        'release.releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -4833,11 +4833,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
+        'release.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'release.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -4849,11 +4849,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'release.publishedAt.eq'?: string;
+        'release.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'release.publishedAt.neq'?: string;
+        'release.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -5107,11 +5107,11 @@ export type ListGithubEventsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -5127,19 +5127,19 @@ export type ListGithubEventsData = {
         /**
          * Filters field "actor_id" to be equal to the provided value.
          */
-        'actorID.eq'?: number;
+        'actorID.eq'?: BigInt;
         /**
          * Filters field "actor_id" to be not equal to the provided value.
          */
-        'actorID.neq'?: number;
+        'actorID.neq'?: BigInt;
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: number;
+        'repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: number;
+        'repoID.neq'?: BigInt;
     };
     url: '/github-events';
 };
@@ -5292,11 +5292,11 @@ export type ListGithubGistsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -5308,11 +5308,11 @@ export type ListGithubGistsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'updatedAt.eq'?: string;
+        'updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'updatedAt.neq'?: string;
+        'updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -5448,11 +5448,11 @@ export type ListGithubGistsData = {
         /**
          * Filters field "size" to be equal to the provided value.
          */
-        'size.eq'?: number;
+        'size.eq'?: BigInt;
         /**
          * Filters field "size" to be not equal to the provided value.
          */
-        'size.neq'?: number;
+        'size.neq'?: BigInt;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -5597,11 +5597,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'releaseID.eq'?: number;
+        'releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'releaseID.neq'?: number;
+        'releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -5725,11 +5725,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -5741,11 +5741,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'publishedAt.eq'?: string;
+        'publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'publishedAt.neq'?: string;
+        'publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -5761,11 +5761,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repository.repoID.eq'?: number;
+        'repository.repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repository.repoID.neq'?: number;
+        'repository.repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -5953,19 +5953,19 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'repository.pushedAt.in'?: Array<string>;
+        'repository.pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'repository.pushedAt.notIn'?: Array<string>;
+        'repository.pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'repository.createdAt.eq'?: string;
+        'repository.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'repository.createdAt.neq'?: string;
+        'repository.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -5977,11 +5977,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'repository.updatedAt.eq'?: string;
+        'repository.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'repository.updatedAt.neq'?: string;
+        'repository.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -6001,11 +6001,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'asset.assetID.eq'?: number;
+        'asset.assetID.eq'?: BigInt;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'asset.assetID.neq'?: number;
+        'asset.assetID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6101,11 +6101,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'asset.createdAt.eq'?: string;
+        'asset.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'asset.createdAt.neq'?: string;
+        'asset.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -6117,11 +6117,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'asset.updatedAt.eq'?: string;
+        'asset.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'asset.updatedAt.neq'?: string;
+        'asset.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -6311,11 +6311,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'assetID.eq'?: number;
+        'assetID.eq'?: BigInt;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'assetID.neq'?: number;
+        'assetID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6411,11 +6411,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -6427,11 +6427,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'updatedAt.eq'?: string;
+        'updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'updatedAt.neq'?: string;
+        'updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -6451,11 +6451,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: number;
+        'release.releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: number;
+        'release.releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -6579,11 +6579,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
+        'release.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'release.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -6595,11 +6595,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'release.publishedAt.eq'?: string;
+        'release.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'release.publishedAt.neq'?: string;
+        'release.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -6744,11 +6744,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: number;
+        'repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: number;
+        'repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6936,19 +6936,19 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'pushedAt.in'?: Array<string>;
+        'pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'pushedAt.notIn'?: Array<string>;
+        'pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -6960,11 +6960,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'updatedAt.eq'?: string;
+        'updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'updatedAt.neq'?: string;
+        'updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -6984,11 +6984,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'label.createTime.eq'?: string;
+        'label.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'label.createTime.neq'?: string;
+        'label.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -7000,11 +7000,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'label.updateTime.eq'?: string;
+        'label.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'label.updateTime.neq'?: string;
+        'label.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -7056,11 +7056,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: number;
+        'release.releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: number;
+        'release.releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -7184,11 +7184,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
+        'release.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'release.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -7200,11 +7200,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'release.publishedAt.eq'?: string;
+        'release.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'release.publishedAt.neq'?: string;
+        'release.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -7346,11 +7346,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -7362,11 +7362,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -7418,11 +7418,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'post.createTime.eq'?: string;
+        'post.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'post.createTime.neq'?: string;
+        'post.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -7434,11 +7434,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'post.updateTime.eq'?: string;
+        'post.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'post.updateTime.neq'?: string;
+        'post.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -7514,11 +7514,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'post.publishedAt.eq'?: string;
+        'post.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'post.publishedAt.neq'?: string;
+        'post.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -7554,11 +7554,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: number;
+        'githubRepository.repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: number;
+        'githubRepository.repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -7746,19 +7746,19 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'githubRepository.pushedAt.in'?: Array<string>;
+        'githubRepository.pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'githubRepository.pushedAt.notIn'?: Array<string>;
+        'githubRepository.pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'githubRepository.createdAt.eq'?: string;
+        'githubRepository.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'githubRepository.createdAt.neq'?: string;
+        'githubRepository.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -7770,11 +7770,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'githubRepository.updatedAt.eq'?: string;
+        'githubRepository.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'githubRepository.updatedAt.neq'?: string;
+        'githubRepository.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -7867,11 +7867,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'releaseID.eq'?: number;
+        'releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'releaseID.neq'?: number;
+        'releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -7995,11 +7995,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -8011,11 +8011,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'publishedAt.eq'?: string;
+        'publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'publishedAt.neq'?: string;
+        'publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -8031,11 +8031,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repository.repoID.eq'?: number;
+        'repository.repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repository.repoID.neq'?: number;
+        'repository.repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -8223,19 +8223,19 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'repository.pushedAt.in'?: Array<string>;
+        'repository.pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'repository.pushedAt.notIn'?: Array<string>;
+        'repository.pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'repository.createdAt.eq'?: string;
+        'repository.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'repository.createdAt.neq'?: string;
+        'repository.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -8247,11 +8247,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'repository.updatedAt.eq'?: string;
+        'repository.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'repository.updatedAt.neq'?: string;
+        'repository.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -8271,11 +8271,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'asset.assetID.eq'?: number;
+        'asset.assetID.eq'?: BigInt;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'asset.assetID.neq'?: number;
+        'asset.assetID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -8371,11 +8371,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'asset.createdAt.eq'?: string;
+        'asset.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'asset.createdAt.neq'?: string;
+        'asset.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -8387,11 +8387,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'asset.updatedAt.eq'?: string;
+        'asset.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'asset.updatedAt.neq'?: string;
+        'asset.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -8530,11 +8530,11 @@ export type ListLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -8546,11 +8546,11 @@ export type ListLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -8602,11 +8602,11 @@ export type ListLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'post.createTime.eq'?: string;
+        'post.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'post.createTime.neq'?: string;
+        'post.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -8618,11 +8618,11 @@ export type ListLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'post.updateTime.eq'?: string;
+        'post.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'post.updateTime.neq'?: string;
+        'post.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -8698,11 +8698,11 @@ export type ListLabelsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'post.publishedAt.eq'?: string;
+        'post.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'post.publishedAt.neq'?: string;
+        'post.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -8738,11 +8738,11 @@ export type ListLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: number;
+        'githubRepository.repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: number;
+        'githubRepository.repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -8930,19 +8930,19 @@ export type ListLabelsData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'githubRepository.pushedAt.in'?: Array<string>;
+        'githubRepository.pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'githubRepository.pushedAt.notIn'?: Array<string>;
+        'githubRepository.pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'githubRepository.createdAt.eq'?: string;
+        'githubRepository.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'githubRepository.createdAt.neq'?: string;
+        'githubRepository.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -8954,11 +8954,11 @@ export type ListLabelsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'githubRepository.updatedAt.eq'?: string;
+        'githubRepository.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'githubRepository.updatedAt.neq'?: string;
+        'githubRepository.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -9349,11 +9349,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: number;
+        'repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: number;
+        'repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -9541,19 +9541,19 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'pushedAt.in'?: Array<string>;
+        'pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'pushedAt.notIn'?: Array<string>;
+        'pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'createdAt.eq'?: string;
+        'createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'createdAt.neq'?: string;
+        'createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -9565,11 +9565,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'updatedAt.eq'?: string;
+        'updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'updatedAt.neq'?: string;
+        'updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -9589,11 +9589,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'label.createTime.eq'?: string;
+        'label.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'label.createTime.neq'?: string;
+        'label.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -9605,11 +9605,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'label.updateTime.eq'?: string;
+        'label.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'label.updateTime.neq'?: string;
+        'label.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -9661,11 +9661,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: number;
+        'release.releaseID.eq'?: BigInt;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: number;
+        'release.releaseID.neq'?: BigInt;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -9789,11 +9789,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'release.createdAt.eq'?: string;
+        'release.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'release.createdAt.neq'?: string;
+        'release.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -9805,11 +9805,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'release.publishedAt.eq'?: string;
+        'release.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'release.publishedAt.neq'?: string;
+        'release.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -9898,11 +9898,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -9914,11 +9914,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -9994,11 +9994,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'publishedAt.eq'?: string;
+        'publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'publishedAt.neq'?: string;
+        'publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -10034,11 +10034,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'author.createTime.eq'?: string;
+        'author.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'author.createTime.neq'?: string;
+        'author.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10050,11 +10050,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'author.updateTime.eq'?: string;
+        'author.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'author.updateTime.neq'?: string;
+        'author.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -10242,11 +10242,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'label.createTime.eq'?: string;
+        'label.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'label.createTime.neq'?: string;
+        'label.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10258,11 +10258,11 @@ export type ListLabelPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'label.updateTime.eq'?: string;
+        'label.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'label.updateTime.neq'?: string;
+        'label.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -10435,11 +10435,11 @@ export type ListPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10451,11 +10451,11 @@ export type ListPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -10531,11 +10531,11 @@ export type ListPostsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'publishedAt.eq'?: string;
+        'publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'publishedAt.neq'?: string;
+        'publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -10571,11 +10571,11 @@ export type ListPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'author.createTime.eq'?: string;
+        'author.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'author.createTime.neq'?: string;
+        'author.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10587,11 +10587,11 @@ export type ListPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'author.updateTime.eq'?: string;
+        'author.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'author.updateTime.neq'?: string;
+        'author.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -10779,11 +10779,11 @@ export type ListPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'label.createTime.eq'?: string;
+        'label.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'label.createTime.neq'?: string;
+        'label.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -10795,11 +10795,11 @@ export type ListPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'label.updateTime.eq'?: string;
+        'label.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'label.updateTime.neq'?: string;
+        'label.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -11273,11 +11273,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -11289,11 +11289,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -11345,11 +11345,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'post.createTime.eq'?: string;
+        'post.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'post.createTime.neq'?: string;
+        'post.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -11361,11 +11361,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'post.updateTime.eq'?: string;
+        'post.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'post.updateTime.neq'?: string;
+        'post.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -11441,11 +11441,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'post.publishedAt.eq'?: string;
+        'post.publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'post.publishedAt.neq'?: string;
+        'post.publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -11481,11 +11481,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: number;
+        'githubRepository.repoID.eq'?: BigInt;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: number;
+        'githubRepository.repoID.neq'?: BigInt;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -11673,19 +11673,19 @@ export type ListPostLabelsData = {
         /**
          * Filters field "pushed_at" to be within the provided values.
          */
-        'githubRepository.pushedAt.in'?: Array<string>;
+        'githubRepository.pushedAt.in'?: Array<Date>;
         /**
          * Filters field "pushed_at" to be not within the provided values.
          */
-        'githubRepository.pushedAt.notIn'?: Array<string>;
+        'githubRepository.pushedAt.notIn'?: Array<Date>;
         /**
          * Filters field "created_at" to be equal to the provided value.
          */
-        'githubRepository.createdAt.eq'?: string;
+        'githubRepository.createdAt.eq'?: Date;
         /**
          * Filters field "created_at" to be not equal to the provided value.
          */
-        'githubRepository.createdAt.neq'?: string;
+        'githubRepository.createdAt.neq'?: Date;
         /**
          * Filters field "created_at" to be greater than the provided value.
          */
@@ -11697,11 +11697,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "updated_at" to be equal to the provided value.
          */
-        'githubRepository.updatedAt.eq'?: string;
+        'githubRepository.updatedAt.eq'?: Date;
         /**
          * Filters field "updated_at" to be not equal to the provided value.
          */
-        'githubRepository.updatedAt.neq'?: string;
+        'githubRepository.updatedAt.neq'?: Date;
         /**
          * Filters field "updated_at" to be greater than the provided value.
          */
@@ -11942,11 +11942,11 @@ export type ListUsersData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -11958,11 +11958,11 @@ export type ListUsersData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -12284,11 +12284,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'createTime.eq'?: string;
+        'createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'createTime.neq'?: string;
+        'createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -12300,11 +12300,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'updateTime.eq'?: string;
+        'updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'updateTime.neq'?: string;
+        'updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -12380,11 +12380,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "published_at" to be equal to the provided value.
          */
-        'publishedAt.eq'?: string;
+        'publishedAt.eq'?: Date;
         /**
          * Filters field "published_at" to be not equal to the provided value.
          */
-        'publishedAt.neq'?: string;
+        'publishedAt.neq'?: Date;
         /**
          * Filters field "published_at" to be greater than the provided value.
          */
@@ -12420,11 +12420,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'author.createTime.eq'?: string;
+        'author.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'author.createTime.neq'?: string;
+        'author.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -12436,11 +12436,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'author.updateTime.eq'?: string;
+        'author.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'author.updateTime.neq'?: string;
+        'author.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */
@@ -12628,11 +12628,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "create_time" to be equal to the provided value.
          */
-        'label.createTime.eq'?: string;
+        'label.createTime.eq'?: Date;
         /**
          * Filters field "create_time" to be not equal to the provided value.
          */
-        'label.createTime.neq'?: string;
+        'label.createTime.neq'?: Date;
         /**
          * Filters field "create_time" to be greater than the provided value.
          */
@@ -12644,11 +12644,11 @@ export type ListUserPostsData = {
         /**
          * Filters field "update_time" to be equal to the provided value.
          */
-        'label.updateTime.eq'?: string;
+        'label.updateTime.eq'?: Date;
         /**
          * Filters field "update_time" to be not equal to the provided value.
          */
-        'label.updateTime.neq'?: string;
+        'label.updateTime.neq'?: Date;
         /**
          * Filters field "update_time" to be greater than the provided value.
          */

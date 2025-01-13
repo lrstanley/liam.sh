@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from "@vueuse/components"
-import { listGithubEvents } from "@/utils/http/services.gen"
+import { listGithubEvents } from "@/utils/http/sdk.gen"
 
 import EventCreate from "@/components/events/objects/event-create.vue"
 import EventDelete from "@/components/events/objects/event-delete.vue"
@@ -16,6 +16,7 @@ import EventPullRequest from "@/components/events/objects/event-pull-request.vue
 import EventPush from "@/components/events/objects/event-push.vue"
 import EventRelease from "@/components/events/objects/event-release.vue"
 import EventWatch from "@/components/events/objects/event-watch.vue"
+import type { GithubEvent } from "~/utils/http/types.gen"
 
 const eventMap: Record<string, any> = {
   CreateEvent: EventCreate,
@@ -38,47 +39,38 @@ const emit = defineEmits<{
   eventCount: [value: number]
 }>()
 
-const {
-  data: events,
-  hasNextPage,
-  fetchNextPage,
-  isFetchingNextPage,
-  error,
-  suspense,
-} = useInfiniteQuery({
-  queryKey: ["events", "infinite"],
-  queryFn: ({ pageParam }) =>
-    listGithubEvents({
-      query: {
-        page: pageParam || 1,
-        per_page: 50,
-        "public.eq": true,
-        sort: "created_at",
-        order: "desc",
-      },
-    }).then((resp) => {
-      if (resp.error) throw resp.error
-      return resp.data
-    }),
-  initialPageParam: 1,
-  getNextPageParam: (lastPage) => (lastPage.is_last_page ? undefined : lastPage.page + 1),
-})
-onServerPrefetch(async () => {
-  await suspense()
+const page = ref(1)
+const events = ref<GithubEvent[]>([])
+
+const githubEvents = await listGithubEvents({
+  composable: "useAsyncData",
+  query: computed(() => ({
+    page: page.value,
+    per_page: 50,
+    "public.eq": true,
+    sort: "created_at",
+    order: "desc",
+  })),
+  asyncDataOptions: {
+    watch: [page],
+  },
 })
 
-const allEvents = computed(() => {
-  const results = events.value?.pages.flatMap((page) => page.content) ?? []
-  emit("eventCount", results.length)
-  return results
+// TODO: throwing header error.
+console.log(githubEvents.error.value)
+
+watch(githubEvents.data, () => {
+  if (githubEvents.status.value != "success") return
+  events.value.push(...(githubEvents.data.value?.content ?? []))
+  emit("eventCount", events.value.length)
 })
 
 const scrollContainer = ref(null)
 
 function fetchMoreEvents() {
-  if (!hasNextPage.value || isFetchingNextPage.value) return
+  if (githubEvents.status.value != "success" || githubEvents.data.value?.is_last_page) return
   document.getElementById("status")?.scrollIntoView({ behavior: "smooth" })
-  fetchNextPage()
+  page.value += 1
 }
 </script>
 
@@ -86,9 +78,9 @@ function fetchMoreEvents() {
   <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchMoreEvents, { distance: 40 }]">
     <TransitionGroup name="stepped" appear>
       <div
-        v-for="(e, i) in allEvents"
+        v-for="(e, i) in events"
         :key="e.id"
-        :style="{ '--i': allEvents.length - i, '--total': allEvents.length }"
+        :style="{ '--i': events.length - i, '--total': events.length }"
         class="flex flex-row items-center flex-auto px-1 transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
       >
         <a :href="'https://github.com/' + e.actor.login" target="_blank">
@@ -111,14 +103,20 @@ function fetchMoreEvents() {
         </div>
       </div>
       <div
-        v-show="hasNextPage || error"
+        v-show="githubEvents.status.value != 'success' || githubEvents.error.value"
         id="status"
         key="status"
         class="flex flex-row items-center flex-auto px-1 transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
       >
         <Icon name="mdi:loading" class="mr-1 align-middle animate-spin" />
         <div class="flex items-center gap-2 truncate grow">
-          {{ error ? "error loading events: " + error.message : "loading..." }}
+          <!--
+            {{
+              githubEvents.error.value
+                ? "error loading events: " + githubEvents.error.value?.message
+                : "loading..."
+            }}
+          -->
         </div>
       </div>
     </TransitionGroup>

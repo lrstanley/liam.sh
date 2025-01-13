@@ -1,12 +1,8 @@
 <script setup lang="ts">
 import { version as vueVersion } from "vue"
-import { getServiceVersion } from "@/utils/http/services.gen"
+import { getServiceVersion } from "@/utils/http/sdk.gen"
 
-const { data: version, suspense } = useQuery({
-  queryKey: ["version"],
-  queryFn: () => unwrapErrors(getServiceVersion()),
-})
-await suspense()
+const version = await getServiceVersion({ composable: "$fetch" })
 </script>
 
 <template>

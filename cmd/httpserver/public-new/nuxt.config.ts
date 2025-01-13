@@ -41,14 +41,6 @@ export default defineNuxtConfig({
     server: {
       open: false,
       strictPort: true,
-      proxy: {
-        // TODO: can this be removed with the usage of nuxt request logic?
-        "^/(-|security\\.txt|robots\\.txt)(/.*|$)": {
-          target: "http://localhost:8080",
-          xfwd: true,
-          ws: true,
-        },
-      },
     },
     plugins: [
       Components({

@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import { getGithubStats } from "@/utils/http/services.gen"
+import { getGithubStats } from "@/utils/http/sdk.gen"
 
-const { data: githubStats, suspense } = useQuery({
-  queryKey: ["stats", "github"],
-  queryFn: () => unwrapErrors(getGithubStats()),
-})
-onServerPrefetch(async () => {
-  await suspense()
-})
+const githubStats = await getGithubStats({ composable: "$fetch" })
 
 const gh = useGithubUser()
 const year = new Date().getFullYear()
