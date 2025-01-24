@@ -12,8 +12,8 @@ const props = defineProps<{
     <template v-if="props.event.payload.ref">
       <EventHoverItem :value="props.event.payload.ref as string" class="truncate text-zinc-200">
         <template #icon>
-          <Icon name="mdi:source-branch" v-if="props.event.payload.ref_type == 'branch'" />
-          <Icon name="mdi:tag" v-else />
+          <UIcon name="mdi:source-branch" v-if="props.event.payload.ref_type == 'branch'" />
+          <UIcon name="mdi:tag" v-else />
         </template>
 
         {{ props.event.payload.ref }}

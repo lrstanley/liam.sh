@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { darkTheme } from "naive-ui"
-import { client } from "./utils/http/sdk.gen"
-
 useHead({
   titleTemplate: (chunk) => (chunk ? `${chunk} · Liam Stanley` : "Liam Stanley"),
+  htmlAttrs: { lang: "en" },
   meta: [
     { name: "revisit-after", content: "10" },
     { name: "language", content: "en" },
@@ -15,8 +13,8 @@ useHead({
 
 useSeoMeta({
   author: "Liam Stanley",
-  title: "Personal Website & Blog - Liam Stanley",
-  ogTitle: "Personal Website & Blog - Liam Stanley",
+  title: "Personal Website & Blog",
+  ogTitle: "Personal Website & Blog",
   description: "Personal website, including blog posts, Git repositories, and more",
   ogDescription: "Personal website, including blog posts, Git repositories, and more",
   robots: "index, follow",
@@ -26,25 +24,13 @@ useSeoMeta({
   },
 })
 
-const runtime = useRuntimeConfig()
-
-let url: string
-if (runtime.API_URL) {
-  url = runtime.API_URL as string
-} else if (runtime.public.API_URL) {
-  url = runtime.public.API_URL as string
-} else {
-  url = `${useRequestURL().origin}/-`
-}
-
-client.setConfig({ baseURL: url })
+setHTTPClientBaseURL()
 </script>
 
 <template>
-  <n-config-provider :theme="darkTheme" abstract preflight-style-disabled inline-theme-disabled>
-    <NuxtRouteAnnouncer />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </n-config-provider>
+  <NuxtRouteAnnouncer />
+  <NuxtLoadingIndicator />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>

@@ -6,8 +6,4 @@
 
 import type { GithubUser } from "@/utils/http/types.gen"
 
-const user = ref<GithubUser | null>(null)
-
-export const useGithubUser = () => {
-  return user
-}
+export const useGithubUser = () => useState<GithubUser | null | undefined>("githubUser", undefined)

@@ -1,14 +1,30 @@
 <script setup lang="ts">
-// const route = useRoute()
+definePageMeta({
+  layout: "terminal",
+})
+
+const eventCount = ref<number>()
 </script>
 
 <template>
-  <div>
-    <!-- <NuxtLink href="/foo">Foo</NuxtLink> -->
-    <!-- <h1 class="text-red-500">Nuxt Routing set up successfully!</h1> -->
-    <!--
-    <p>Current route: {{ route.path }}</p>
-    <a href="https://nuxt.com/docs/getting-started/routing" target="_blank">Learn more about Nuxt Routing</a> -->
-    <NuxtWelcome />
-  </div>
+  <ContainerIde>
+    <EventsRender
+      class="relative overflow-x-hidden size-full grow basis-0"
+      @event-count="(e) => (eventCount = e)"
+    />
+    <!-- <div
+      style="height: 1300px"
+      class="relative overflow-x-hidden overflow-y-scroll size-full grow basis-0"
+    >
+      TODO
+    </div> -->
+
+    <template #footer>
+      <CodingStats placement="top-start" />
+
+      <span class="ml-auto" />
+
+      <span v-if="eventCount && eventCount > 0" class="bar-item misc">ln:{{ eventCount }}</span>
+    </template>
+  </ContainerIde>
 </template>

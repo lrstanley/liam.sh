@@ -20,7 +20,7 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
         style="max-width: 350px"
       >
         <p v-for="commit in commits" :key="commit.sha" class="truncate" :title="commit.message">
-          <Icon name="mdi:source-commit" />
+          <UIcon name="mdi:source-commit" />
           {{ commit.sha.slice(0, 7) }}:
           {{ commit.message.split("\n")[0] }}
         </p>
@@ -31,7 +31,7 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
         :href="repo.name + '/commit/' + commits[0].sha"
         :value="commits[0].sha.slice(0, 7)"
       >
-        <Icon name="mdi:source-commit" />
+        <UIcon name="mdi:source-commit" />
         {{ commits[0].sha.slice(0, 7) }}:
         {{ commits[0].message.split("\n")[0] }}
       </EventHoverItem>

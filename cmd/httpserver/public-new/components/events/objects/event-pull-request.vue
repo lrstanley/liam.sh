@@ -34,7 +34,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
 
       <EventHoverItem :value="pr.head.ref" class="truncate text-zinc-200">
         <template #icon>
-          <Icon name="mdi:source-pull" />
+          <UIcon name="mdi:source-pull" />
         </template>
 
         {{ pr.head.ref }}

@@ -12,8 +12,8 @@ export const client = createClient(createConfig());
  */
 export const getGithubSvg = <TComposable extends Composable>(options: Options<TComposable, GetGithubSvgData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubSvgResponse, GetGithubSvgError>({
-        ...options,
-        url: '/gh/svg'
+        url: '/gh/svg',
+        ...options
     });
 };
 
@@ -23,8 +23,8 @@ export const getGithubSvg = <TComposable extends Composable>(options: Options<TC
  */
 export const getGithubRepoSvg = <TComposable extends Composable>(options: Options<TComposable, GetGithubRepoSvgData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubRepoSvgResponse, GetGithubRepoSvgError>({
-        ...options,
-        url: '/gh/svg/{ownerID}/{repoID}'
+        url: '/gh/svg/{ownerID}/{repoID}',
+        ...options
     });
 };
 
@@ -34,9 +34,9 @@ export const getGithubRepoSvg = <TComposable extends Composable>(options: Option
  */
 export const listGithubAssets = <TComposable extends Composable>(options: Options<TComposable, ListGithubAssetsData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubAssetsResponse, ListGithubAssetsError>({
-        ...options,
         responseTransformer: listGithubAssetsResponseTransformer,
-        url: '/github-assets'
+        url: '/github-assets',
+        ...options
     });
 };
 
@@ -46,9 +46,9 @@ export const listGithubAssets = <TComposable extends Composable>(options: Option
  */
 export const getGithubAsset = <TComposable extends Composable>(options: Options<TComposable, GetGithubAssetData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubAssetResponse, GetGithubAssetError>({
-        ...options,
         responseTransformer: getGithubAssetResponseTransformer,
-        url: '/github-assets/{githubassetID}'
+        url: '/github-assets/{githubassetID}',
+        ...options
     });
 };
 
@@ -58,9 +58,9 @@ export const getGithubAsset = <TComposable extends Composable>(options: Options<
  */
 export const getGithubAssetRelease = <TComposable extends Composable>(options: Options<TComposable, GetGithubAssetReleaseData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubAssetReleaseResponse, GetGithubAssetReleaseError>({
-        ...options,
         responseTransformer: getGithubAssetReleaseResponseTransformer,
-        url: '/github-assets/{githubassetID}/release'
+        url: '/github-assets/{githubassetID}/release',
+        ...options
     });
 };
 
@@ -70,9 +70,9 @@ export const getGithubAssetRelease = <TComposable extends Composable>(options: O
  */
 export const listGithubEvents = <TComposable extends Composable>(options: Options<TComposable, ListGithubEventsData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubEventsResponse, ListGithubEventsError>({
-        ...options,
         responseTransformer: listGithubEventsResponseTransformer,
-        url: '/github-events'
+        url: '/github-events',
+        ...options
     });
 };
 
@@ -82,9 +82,9 @@ export const listGithubEvents = <TComposable extends Composable>(options: Option
  */
 export const getGithubEvent = <TComposable extends Composable>(options: Options<TComposable, GetGithubEventData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubEventResponse, GetGithubEventError>({
-        ...options,
         responseTransformer: getGithubEventResponseTransformer,
-        url: '/github-events/{githubeventID}'
+        url: '/github-events/{githubeventID}',
+        ...options
     });
 };
 
@@ -94,9 +94,9 @@ export const getGithubEvent = <TComposable extends Composable>(options: Options<
  */
 export const listGithubGists = <TComposable extends Composable>(options: Options<TComposable, ListGithubGistsData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubGistsResponse, ListGithubGistsError>({
-        ...options,
         responseTransformer: listGithubGistsResponseTransformer,
-        url: '/github-gists'
+        url: '/github-gists',
+        ...options
     });
 };
 
@@ -106,9 +106,9 @@ export const listGithubGists = <TComposable extends Composable>(options: Options
  */
 export const getGithubGist = <TComposable extends Composable>(options: Options<TComposable, GetGithubGistData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubGistResponse, GetGithubGistError>({
-        ...options,
         responseTransformer: getGithubGistResponseTransformer,
-        url: '/github-gists/{githubgistID}'
+        url: '/github-gists/{githubgistID}',
+        ...options
     });
 };
 
@@ -118,9 +118,9 @@ export const getGithubGist = <TComposable extends Composable>(options: Options<T
  */
 export const listGithubReleases = <TComposable extends Composable>(options: Options<TComposable, ListGithubReleasesData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubReleasesResponse, ListGithubReleasesError>({
-        ...options,
         responseTransformer: listGithubReleasesResponseTransformer,
-        url: '/github-releases'
+        url: '/github-releases',
+        ...options
     });
 };
 
@@ -130,9 +130,9 @@ export const listGithubReleases = <TComposable extends Composable>(options: Opti
  */
 export const listOutdatedGithubReleases = <TComposable extends Composable>(options: Options<TComposable, ListOutdatedGithubReleasesData>) => {
     return (options?.client ?? client).get<TComposable, ListOutdatedGithubReleasesResponse, ListOutdatedGithubReleasesError>({
-        ...options,
         responseTransformer: listOutdatedGithubReleasesResponseTransformer,
-        url: '/github-releases/outdated'
+        url: '/github-releases/outdated',
+        ...options
     });
 };
 
@@ -142,9 +142,9 @@ export const listOutdatedGithubReleases = <TComposable extends Composable>(optio
  */
 export const getGithubRelease = <TComposable extends Composable>(options: Options<TComposable, GetGithubReleaseData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubReleaseResponse, GetGithubReleaseError>({
-        ...options,
         responseTransformer: getGithubReleaseResponseTransformer,
-        url: '/github-releases/{githubreleaseID}'
+        url: '/github-releases/{githubreleaseID}',
+        ...options
     });
 };
 
@@ -154,9 +154,9 @@ export const getGithubRelease = <TComposable extends Composable>(options: Option
  */
 export const listGithubReleaseAssets = <TComposable extends Composable>(options: Options<TComposable, ListGithubReleaseAssetsData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubReleaseAssetsResponse, ListGithubReleaseAssetsError>({
-        ...options,
         responseTransformer: listGithubReleaseAssetsResponseTransformer,
-        url: '/github-releases/{githubreleaseID}/assets'
+        url: '/github-releases/{githubreleaseID}/assets',
+        ...options
     });
 };
 
@@ -166,9 +166,9 @@ export const listGithubReleaseAssets = <TComposable extends Composable>(options:
  */
 export const getGithubReleaseRepository = <TComposable extends Composable>(options: Options<TComposable, GetGithubReleaseRepositoryData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubReleaseRepositoryResponse, GetGithubReleaseRepositoryError>({
-        ...options,
         responseTransformer: getGithubReleaseRepositoryResponseTransformer,
-        url: '/github-releases/{githubreleaseID}/repository'
+        url: '/github-releases/{githubreleaseID}/repository',
+        ...options
     });
 };
 
@@ -178,9 +178,9 @@ export const getGithubReleaseRepository = <TComposable extends Composable>(optio
  */
 export const listGithubRepositories = <TComposable extends Composable>(options: Options<TComposable, ListGithubRepositoriesData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubRepositoriesResponse, ListGithubRepositoriesError>({
-        ...options,
         responseTransformer: listGithubRepositoriesResponseTransformer,
-        url: '/github-repositories'
+        url: '/github-repositories',
+        ...options
     });
 };
 
@@ -190,9 +190,9 @@ export const listGithubRepositories = <TComposable extends Composable>(options: 
  */
 export const getGithubRepository = <TComposable extends Composable>(options: Options<TComposable, GetGithubRepositoryData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubRepositoryResponse, GetGithubRepositoryError>({
-        ...options,
         responseTransformer: getGithubRepositoryResponseTransformer,
-        url: '/github-repositories/{githubrepositoryID}'
+        url: '/github-repositories/{githubrepositoryID}',
+        ...options
     });
 };
 
@@ -202,9 +202,9 @@ export const getGithubRepository = <TComposable extends Composable>(options: Opt
  */
 export const listGithubRepositoryLabels = <TComposable extends Composable>(options: Options<TComposable, ListGithubRepositoryLabelsData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubRepositoryLabelsResponse, ListGithubRepositoryLabelsError>({
-        ...options,
         responseTransformer: listGithubRepositoryLabelsResponseTransformer,
-        url: '/github-repositories/{githubrepositoryID}/labels'
+        url: '/github-repositories/{githubrepositoryID}/labels',
+        ...options
     });
 };
 
@@ -214,9 +214,9 @@ export const listGithubRepositoryLabels = <TComposable extends Composable>(optio
  */
 export const listGithubRepositoryReleases = <TComposable extends Composable>(options: Options<TComposable, ListGithubRepositoryReleasesData>) => {
     return (options?.client ?? client).get<TComposable, ListGithubRepositoryReleasesResponse, ListGithubRepositoryReleasesError>({
-        ...options,
         responseTransformer: listGithubRepositoryReleasesResponseTransformer,
-        url: '/github-repositories/{githubrepositoryID}/releases'
+        url: '/github-repositories/{githubrepositoryID}/releases',
+        ...options
     });
 };
 
@@ -226,8 +226,8 @@ export const listGithubRepositoryReleases = <TComposable extends Composable>(opt
  */
 export const getGithubUser = <TComposable extends Composable>(options: Options<TComposable, GetGithubUserData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubUserResponse, GetGithubUserError>({
-        ...options,
-        url: '/github-user'
+        url: '/github-user',
+        ...options
     });
 };
 
@@ -237,9 +237,9 @@ export const getGithubUser = <TComposable extends Composable>(options: Options<T
  */
 export const listLabels = <TComposable extends Composable>(options: Options<TComposable, ListLabelsData>) => {
     return (options?.client ?? client).get<TComposable, ListLabelsResponse, ListLabelsError>({
-        ...options,
         responseTransformer: listLabelsResponseTransformer,
-        url: '/labels'
+        url: '/labels',
+        ...options
     });
 };
 
@@ -249,13 +249,13 @@ export const listLabels = <TComposable extends Composable>(options: Options<TCom
  */
 export const createLabel = <TComposable extends Composable>(options: Options<TComposable, CreateLabelData>) => {
     return (options?.client ?? client).post<TComposable, CreateLabelResponse, CreateLabelError>({
+        responseTransformer: createLabelResponseTransformer,
+        url: '/labels',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        responseTransformer: createLabelResponseTransformer,
-        url: '/labels'
+        }
     });
 };
 
@@ -265,9 +265,9 @@ export const createLabel = <TComposable extends Composable>(options: Options<TCo
  */
 export const getLabelsCount = <TComposable extends Composable>(options: Options<TComposable, GetLabelsCountData>) => {
     return (options?.client ?? client).get<TComposable, GetLabelsCountResponse, GetLabelsCountError>({
-        ...options,
         responseTransformer: getLabelsCountResponseTransformer,
-        url: '/labels/count'
+        url: '/labels/count',
+        ...options
     });
 };
 
@@ -277,8 +277,8 @@ export const getLabelsCount = <TComposable extends Composable>(options: Options<
  */
 export const deleteLabel = <TComposable extends Composable>(options: Options<TComposable, DeleteLabelData>) => {
     return (options?.client ?? client).delete<TComposable, DeleteLabelResponse, DeleteLabelError>({
-        ...options,
-        url: '/labels/{labelID}'
+        url: '/labels/{labelID}',
+        ...options
     });
 };
 
@@ -288,9 +288,9 @@ export const deleteLabel = <TComposable extends Composable>(options: Options<TCo
  */
 export const getLabel = <TComposable extends Composable>(options: Options<TComposable, GetLabelData>) => {
     return (options?.client ?? client).get<TComposable, GetLabelResponse, GetLabelError>({
-        ...options,
         responseTransformer: getLabelResponseTransformer,
-        url: '/labels/{labelID}'
+        url: '/labels/{labelID}',
+        ...options
     });
 };
 
@@ -300,13 +300,13 @@ export const getLabel = <TComposable extends Composable>(options: Options<TCompo
  */
 export const updateLabel = <TComposable extends Composable>(options: Options<TComposable, UpdateLabelData>) => {
     return (options?.client ?? client).patch<TComposable, UpdateLabelResponse, UpdateLabelError>({
+        responseTransformer: updateLabelResponseTransformer,
+        url: '/labels/{labelID}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        responseTransformer: updateLabelResponseTransformer,
-        url: '/labels/{labelID}'
+        }
     });
 };
 
@@ -316,9 +316,9 @@ export const updateLabel = <TComposable extends Composable>(options: Options<TCo
  */
 export const listLabelGithubRepositories = <TComposable extends Composable>(options: Options<TComposable, ListLabelGithubRepositoriesData>) => {
     return (options?.client ?? client).get<TComposable, ListLabelGithubRepositoriesResponse, ListLabelGithubRepositoriesError>({
-        ...options,
         responseTransformer: listLabelGithubRepositoriesResponseTransformer,
-        url: '/labels/{labelID}/github-repositories'
+        url: '/labels/{labelID}/github-repositories',
+        ...options
     });
 };
 
@@ -328,9 +328,9 @@ export const listLabelGithubRepositories = <TComposable extends Composable>(opti
  */
 export const listLabelPosts = <TComposable extends Composable>(options: Options<TComposable, ListLabelPostsData>) => {
     return (options?.client ?? client).get<TComposable, ListLabelPostsResponse, ListLabelPostsError>({
-        ...options,
         responseTransformer: listLabelPostsResponseTransformer,
-        url: '/labels/{labelID}/posts'
+        url: '/labels/{labelID}/posts',
+        ...options
     });
 };
 
@@ -340,8 +340,8 @@ export const listLabelPosts = <TComposable extends Composable>(options: Options<
  */
 export const getOpenApi = <TComposable extends Composable>(options: Options<TComposable, GetOpenApiData>) => {
     return (options?.client ?? client).get<TComposable, GetOpenApiResponse, GetOpenApiError>({
-        ...options,
-        url: '/openapi.json'
+        url: '/openapi.json',
+        ...options
     });
 };
 
@@ -351,9 +351,9 @@ export const getOpenApi = <TComposable extends Composable>(options: Options<TCom
  */
 export const listPosts = <TComposable extends Composable>(options: Options<TComposable, ListPostsData>) => {
     return (options?.client ?? client).get<TComposable, ListPostsResponse, ListPostsError>({
-        ...options,
         responseTransformer: listPostsResponseTransformer,
-        url: '/posts'
+        url: '/posts',
+        ...options
     });
 };
 
@@ -363,13 +363,13 @@ export const listPosts = <TComposable extends Composable>(options: Options<TComp
  */
 export const createPost = <TComposable extends Composable>(options: Options<TComposable, CreatePostData>) => {
     return (options?.client ?? client).post<TComposable, CreatePostResponse, CreatePostError>({
+        responseTransformer: createPostResponseTransformer,
+        url: '/posts',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        responseTransformer: createPostResponseTransformer,
-        url: '/posts'
+        }
     });
 };
 
@@ -379,8 +379,8 @@ export const createPost = <TComposable extends Composable>(options: Options<TCom
  */
 export const regeneratePosts = <TComposable extends Composable>(options: Options<TComposable, RegeneratePostsData>) => {
     return (options?.client ?? client).post<TComposable, unknown, RegeneratePostsError>({
-        ...options,
-        url: '/posts/regenerate'
+        url: '/posts/regenerate',
+        ...options
     });
 };
 
@@ -390,8 +390,8 @@ export const regeneratePosts = <TComposable extends Composable>(options: Options
  */
 export const deletePost = <TComposable extends Composable>(options: Options<TComposable, DeletePostData>) => {
     return (options?.client ?? client).delete<TComposable, DeletePostResponse, DeletePostError>({
-        ...options,
-        url: '/posts/{postID}'
+        url: '/posts/{postID}',
+        ...options
     });
 };
 
@@ -401,9 +401,9 @@ export const deletePost = <TComposable extends Composable>(options: Options<TCom
  */
 export const getPost = <TComposable extends Composable>(options: Options<TComposable, GetPostData>) => {
     return (options?.client ?? client).get<TComposable, GetPostResponse, GetPostError>({
-        ...options,
         responseTransformer: getPostResponseTransformer,
-        url: '/posts/{postID}'
+        url: '/posts/{postID}',
+        ...options
     });
 };
 
@@ -413,13 +413,13 @@ export const getPost = <TComposable extends Composable>(options: Options<TCompos
  */
 export const updatePost = <TComposable extends Composable>(options: Options<TComposable, UpdatePostData>) => {
     return (options?.client ?? client).patch<TComposable, UpdatePostResponse, UpdatePostError>({
+        responseTransformer: updatePostResponseTransformer,
+        url: '/posts/{postID}',
         ...options,
         headers: {
             'Content-Type': 'application/json',
             ...options?.headers
-        },
-        responseTransformer: updatePostResponseTransformer,
-        url: '/posts/{postID}'
+        }
     });
 };
 
@@ -429,9 +429,9 @@ export const updatePost = <TComposable extends Composable>(options: Options<TCom
  */
 export const getPostAuthor = <TComposable extends Composable>(options: Options<TComposable, GetPostAuthorData>) => {
     return (options?.client ?? client).get<TComposable, GetPostAuthorResponse, GetPostAuthorError>({
-        ...options,
         responseTransformer: getPostAuthorResponseTransformer,
-        url: '/posts/{postID}/author'
+        url: '/posts/{postID}/author',
+        ...options
     });
 };
 
@@ -441,9 +441,9 @@ export const getPostAuthor = <TComposable extends Composable>(options: Options<T
  */
 export const listPostLabels = <TComposable extends Composable>(options: Options<TComposable, ListPostLabelsData>) => {
     return (options?.client ?? client).get<TComposable, ListPostLabelsResponse, ListPostLabelsError>({
-        ...options,
         responseTransformer: listPostLabelsResponseTransformer,
-        url: '/posts/{postID}/labels'
+        url: '/posts/{postID}/labels',
+        ...options
     });
 };
 
@@ -453,9 +453,9 @@ export const listPostLabels = <TComposable extends Composable>(options: Options<
  */
 export const getSelf = <TComposable extends Composable>(options: Options<TComposable, GetSelfData>) => {
     return (options?.client ?? client).get<TComposable, GetSelfResponse, GetSelfError>({
-        ...options,
         responseTransformer: getSelfResponseTransformer,
-        url: '/self'
+        url: '/self',
+        ...options
     });
 };
 
@@ -465,8 +465,8 @@ export const getSelf = <TComposable extends Composable>(options: Options<TCompos
  */
 export const getCodingStats = <TComposable extends Composable>(options: Options<TComposable, GetCodingStatsData>) => {
     return (options?.client ?? client).get<TComposable, GetCodingStatsResponse, GetCodingStatsError>({
-        ...options,
-        url: '/stats/coding'
+        url: '/stats/coding',
+        ...options
     });
 };
 
@@ -476,8 +476,8 @@ export const getCodingStats = <TComposable extends Composable>(options: Options<
  */
 export const getGithubStats = <TComposable extends Composable>(options: Options<TComposable, GetGithubStatsData>) => {
     return (options?.client ?? client).get<TComposable, GetGithubStatsResponse, GetGithubStatsError>({
-        ...options,
-        url: '/stats/github'
+        url: '/stats/github',
+        ...options
     });
 };
 
@@ -487,9 +487,9 @@ export const getGithubStats = <TComposable extends Composable>(options: Options<
  */
 export const listUsers = <TComposable extends Composable>(options: Options<TComposable, ListUsersData>) => {
     return (options?.client ?? client).get<TComposable, ListUsersResponse, ListUsersError>({
-        ...options,
         responseTransformer: listUsersResponseTransformer,
-        url: '/users'
+        url: '/users',
+        ...options
     });
 };
 
@@ -499,9 +499,9 @@ export const listUsers = <TComposable extends Composable>(options: Options<TComp
  */
 export const getUser = <TComposable extends Composable>(options: Options<TComposable, GetUserData>) => {
     return (options?.client ?? client).get<TComposable, GetUserResponse, GetUserError>({
-        ...options,
         responseTransformer: getUserResponseTransformer,
-        url: '/users/{userID}'
+        url: '/users/{userID}',
+        ...options
     });
 };
 
@@ -511,9 +511,9 @@ export const getUser = <TComposable extends Composable>(options: Options<TCompos
  */
 export const listUserPosts = <TComposable extends Composable>(options: Options<TComposable, ListUserPostsData>) => {
     return (options?.client ?? client).get<TComposable, ListUserPostsResponse, ListUserPostsError>({
-        ...options,
         responseTransformer: listUserPostsResponseTransformer,
-        url: '/users/{userID}/posts'
+        url: '/users/{userID}/posts',
+        ...options
     });
 };
 
@@ -523,7 +523,7 @@ export const listUserPosts = <TComposable extends Composable>(options: Options<T
  */
 export const getServiceVersion = <TComposable extends Composable>(options: Options<TComposable, GetServiceVersionData>) => {
     return (options?.client ?? client).get<TComposable, GetServiceVersionResponse, GetServiceVersionError>({
-        ...options,
-        url: '/version'
+        url: '/version',
+        ...options
     });
 };

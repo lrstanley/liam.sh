@@ -1,12 +1,11 @@
-import { NaiveUiResolver } from "unplugin-vue-components/resolvers"
-import Components from "unplugin-vue-components/vite"
+import defaultTheme from "tailwindcss/defaultTheme"
 
 export default defineNuxtConfig({
-  $production: {},
-  compatibilityDate: "2024-04-03",
+  extends: ["@nuxt/ui-pro"],
+  modules: ["@vueuse/nuxt", "@formkit/auto-animate", "@nuxt/ui", "@nuxtjs/html-validator"],
+  compatibilityDate: "2025-01-13",
   devtools: {
-    enabled: true,
-    // NaiveUI causes 10K LOC to be spammed in the console.
+    viteInspect: false,
     componentInspector: false,
   },
   ssr: true,
@@ -28,7 +27,6 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  app: {},
   css: ["~/assets/css/main.css"],
   devServer: {
     port: 8081,
@@ -37,39 +35,22 @@ export default defineNuxtConfig({
     typedPages: true,
   },
   telemetry: false,
+  routeRules: {
+    "/admin/**": {
+      ssr: false,
+    },
+  },
   vite: {
     server: {
       open: false,
       strictPort: true,
     },
-    plugins: [
-      Components({
-        resolvers: [NaiveUiResolver()],
-      }),
-    ],
   },
-  tailwindcss: {
-    cssPath: "~/assets/css/main.css",
-    config: {
-      corePlugins: {
-        preflight: false,
-      },
-      safelist: ["flex flex-row w-6 h-6 rounded-full ml-2 text-red-500"], // /admin/repo-needs-release
-    },
+  ui: {
+    primary: "green",
+    grey: "neutral",
   },
-  imports: {
-    presets: [
-      {
-        from: "naiveui",
-        imports: ["useDialog", "useMessage", "useNotification", "useLoadingBar"],
-      },
-    ],
+  uiPro: {
+    customScrollbars: false,
   },
-  modules: [
-    "@nuxtjs/tailwindcss",
-    "@vueuse/nuxt",
-    "@nuxt/icon",
-    "nuxtjs-naive-ui",
-    "@formkit/auto-animate",
-  ],
 })

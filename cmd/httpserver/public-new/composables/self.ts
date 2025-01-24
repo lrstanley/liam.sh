@@ -6,8 +6,4 @@
 
 import type { User } from "@/utils/http/types.gen"
 
-const self = ref<User | null | undefined>(undefined) // undefined == not fetched yet, null == error
-
-export const useSelf = () => {
-  return self
-}
+export const useSelf = () => useState<User | null | undefined>("self", undefined) // undefined == not fetched yet, null == error

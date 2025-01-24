@@ -49,7 +49,7 @@ const drawerActive = ref(false)
         <a v-if="repo.homepage" :href="repo.homepage" target="_blank">
           <n-tag type="success" size="small" class="cursor-pointer">
             <template #icon>
-              <n-icon><Icon name="mdi:link" /></n-icon>
+              <UIcon name="mdi:link" />
             </template>
             homepage
           </n-tag>
@@ -60,9 +60,7 @@ const drawerActive = ref(false)
           <n-popover>
             <template #trigger>
               <span class="inline-flex">
-                <n-icon class="mr-1 text-purple-400">
-                  <Icon name="mdi:update" />
-                </n-icon>
+                <UIcon name="mdi:update" class="mr-1 text-purple-400" />
                 <i class="text-zinc-400">
                   {{ useTimeAgo(repo.pushed_at).value }}
                 </i>
@@ -74,9 +72,7 @@ const drawerActive = ref(false)
           <n-popover>
             <template #trigger>
               <span class="hidden mr-auto md:inline-flex">
-                <n-icon class="mr-1 text-lime-400 ml-1ch">
-                  <Icon name="mdi:rocket-launch-outline" />
-                </n-icon>
+                <UIcon name="mdi:rocket-launch-outline" class="mr-1 text-lime-400 ml-1ch" />
                 <i class="text-zinc-400">
                   {{ useTimeAgo(repo.created_at).value }}
                 </i>

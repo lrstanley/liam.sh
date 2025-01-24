@@ -12,6 +12,12 @@ export const CodingStatsSchema = {
                 '$ref': '#/components/schemas/LanguageStat'
             }
         },
+        summary: {
+            type: 'array',
+            items: {
+                '$ref': '#/components/schemas/CodingStatsSummary'
+            }
+        },
         total_duration: {
             type: 'string',
             example: '95 hrs 19 mins'
@@ -25,7 +31,39 @@ export const CodingStatsSchema = {
             minimum: 0
         }
     },
-    required: ['calculated_days', 'languages', 'total_duration', 'total_duration_short', 'total_seconds']
+    required: ['calculated_days', 'languages', 'summary', 'total_duration', 'total_duration_short', 'total_seconds']
+} as const;
+
+export const CodingStatsSummarySchema = {
+    type: 'object',
+    properties: {
+        hex_color: {
+            type: 'string',
+            example: '#ff0000'
+        },
+        key: {
+            type: 'string',
+            example: 'Go'
+        },
+        percentage: {
+            type: 'integer',
+            maximum: 100,
+            minimum: 0
+        },
+        title_length: {
+            type: 'integer',
+            minimum: 0
+        },
+        total_duration: {
+            type: 'string',
+            example: '95 hrs 19 mins'
+        },
+        total_seconds: {
+            type: 'integer',
+            minimum: 0
+        }
+    },
+    required: ['hex_color', 'key', 'percentage', 'total_duration', 'total_seconds', 'title_length']
 } as const;
 
 export const ErrorBadRequestSchema = {

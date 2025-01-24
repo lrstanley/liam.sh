@@ -28,21 +28,6 @@ watch(
         value="Hello!"
       />
 
-      <!-- TODO: this is broken -- has to use slot -->
-      <!-- <router-view v-slot="{ Component, route: r }">
-        <transition name="fade" mode="out-in" appear>
-          <CoreError v-if="error" :error="error" />
-          <Suspense v-else>
-            <component :is="Component" :key="r.path" />
-
-            <template #fallback>
-              <n-spin class="flex flex-auto h-full gap-4 mx-auto place-content-center">
-                <template #description>Loading...</template>
-              </n-spin>
-            </template>
-          </Suspense>
-        </transition>
-      </router-view> -->
       <slot />
     </div>
   </div>

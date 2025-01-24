@@ -192,6 +192,12 @@
                         },
                         "type": "array"
                     },
+                    "summary": {
+                        "items": {
+                            "$ref": "#/components/schemas/CodingStatsSummary"
+                        },
+                        "type": "array"
+                    },
                     "total_duration": {
                         "example": "95 hrs 19 mins",
                         "type": "string"
@@ -208,10 +214,49 @@
                 "required": [
                     "calculated_days",
                     "languages",
+                    "summary",
                     "total_duration",
                     "total_duration_short",
                     "total_seconds"
                 ]
+            },
+            "CodingStatsSummary": {
+                "properties": {
+                    "hex_color": {
+                        "example": "#ff0000",
+                        "type": "string"
+                    },
+                    "key": {
+                        "example": "Go",
+                        "type": "string"
+                    },
+                    "percentage": {
+                        "maximum": 100,
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "title_length": {
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "total_duration": {
+                        "example": "95 hrs 19 mins",
+                        "type": "string"
+                    },
+                    "total_seconds": {
+                        "minimum": 0,
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "hex_color",
+                    "key",
+                    "percentage",
+                    "total_duration",
+                    "total_seconds",
+                    "title_length"
+                ],
+                "type": "object"
             },
             "GithubStats": {
                 "properties": {

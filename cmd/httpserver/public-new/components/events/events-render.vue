@@ -1,21 +1,40 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from "@vueuse/components"
+
 import { listGithubEvents } from "@/utils/http/sdk.gen"
 
-import EventCreate from "@/components/events/objects/event-create.vue"
-import EventDelete from "@/components/events/objects/event-delete.vue"
-import EventFork from "@/components/events/objects/event-fork.vue"
-import EventIssueComment from "@/components/events/objects/event-issue-comment.vue"
-import EventIssues from "@/components/events/objects/event-issues.vue"
-import EventMember from "@/components/events/objects/event-member.vue"
-import EventPublic from "@/components/events/objects/event-public.vue"
-import EventPullRequestReviewComment from "@/components/events/objects/event-pull-request-review-comment.vue"
-import EventPullRequestReviewThread from "@/components/events/objects/event-pull-request-review-thread.vue"
-import EventPullRequestReview from "@/components/events/objects/event-pull-request-review.vue"
-import EventPullRequest from "@/components/events/objects/event-pull-request.vue"
-import EventPush from "@/components/events/objects/event-push.vue"
-import EventRelease from "@/components/events/objects/event-release.vue"
-import EventWatch from "@/components/events/objects/event-watch.vue"
+import {
+  EventCreate,
+  EventDelete,
+  EventFork,
+  EventIssueComment,
+  EventIssues,
+  EventMember,
+  EventPublic,
+  EventPullRequestReviewComment,
+  EventPullRequestReviewThread,
+  EventPullRequestReview,
+  EventPullRequest,
+  EventPush,
+  EventRelease,
+  EventWatch,
+} from "#components"
+
+// import EventCreate from "@/components/events/objects/event-create.vue"
+// import EventDelete from "@/components/events/objects/event-delete.vue"
+// import EventFork from "@/components/events/objects/event-fork.vue"
+// import EventIssueComment from "@/components/events/objects/event-issue-comment.vue"
+// import EventIssues from "@/components/events/objects/event-issues.vue"
+// import EventMember from "@/components/events/objects/event-member.vue"
+// import EventPublic from "@/components/events/objects/event-public.vue"
+// import EventPullRequestReviewComment from "@/components/events/objects/event-pull-request-review-comment.vue"
+// import EventPullRequestReviewThread from "@/components/events/objects/event-pull-request-review-thread.vue"
+// import EventPullRequestReview from "@/components/events/objects/event-pull-request-review.vue"
+// import EventPullRequest from "@/components/events/objects/event-pull-request.vue"
+// import EventPush from "@/components/events/objects/event-push.vue"
+// import EventRelease from "@/components/events/objects/event-release.vue"
+// import EventWatch from "@/components/events/objects/event-watch.vue"
+
 import type { GithubEvent } from "~/utils/http/types.gen"
 
 const eventMap: Record<string, any> = {
@@ -40,51 +59,60 @@ const emit = defineEmits<{
 }>()
 
 const page = ref(1)
-const events = ref<GithubEvent[]>([])
 
-const githubEvents = await listGithubEvents({
-  composable: "useAsyncData",
-  query: computed(() => ({
-    page: page.value,
+const {
+  data: githubEvents,
+  error,
+  status,
+} = await listGithubEvents({
+  composable: "useFetch",
+  query: {
+    page: page,
     per_page: 50,
     "public.eq": true,
     sort: "created_at",
     order: "desc",
-  })),
-  asyncDataOptions: {
-    watch: [page],
   },
 })
 
-// TODO: throwing header error.
-console.log(githubEvents.error.value)
+const events = ref<GithubEvent[]>([])
 
-watch(githubEvents.data, () => {
-  if (githubEvents.status.value != "success") return
-  events.value.push(...(githubEvents.data.value?.content ?? []))
-  emit("eventCount", events.value.length)
-})
+watch(
+  githubEvents,
+  () => {
+    if (status.value != "success") return
+    // events.value.push(...(githubEvents.value?.content ?? []))
+    events.value = [...events.value, ...(githubEvents.value?.content ?? [])]
+    emit("eventCount", events.value.length)
+  },
+  { immediate: true }
+)
 
 const scrollContainer = ref(null)
 
 function fetchMoreEvents() {
-  if (githubEvents.status.value != "success" || githubEvents.data.value?.is_last_page) return
+  if (status.value != "success" || githubEvents.value?.is_last_page) return
   document.getElementById("status")?.scrollIntoView({ behavior: "smooth" })
   page.value += 1
 }
 </script>
 
 <template>
-  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchMoreEvents, { distance: 40 }]">
+  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchMoreEvents, { distance: 10 }]">
     <TransitionGroup name="stepped" appear>
       <div
         v-for="(e, i) in events"
         :key="e.id"
         :style="{ '--i': events.length - i, '--total': events.length }"
-        class="flex flex-row items-center flex-auto px-1 transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
+        class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
       >
         <a :href="'https://github.com/' + e.actor.login" target="_blank">
-          <n-avatar round :size="15" :src="e.actor.avatar_url + '&s=40'" class="mr-1 align-middle" />
+          <UAvatar
+            size="3xs"
+            :src="e.actor.avatar_url + '&s=40'"
+            class="mr-1 align-middle"
+            :alt="e.actor.login"
+          />
         </a>
 
         <component
@@ -95,7 +123,7 @@ function fetchMoreEvents() {
         <div class="flex-none">
           <EventHoverItem placement="left">
             <template #value>
-              <Icon name="mdi:clock-time-two-outline" class="timestamp" />
+              <UIcon name="mdi:clock-time-two-outline" class="timestamp" />
             </template>
 
             {{ useTimeAgo(e.created_at).value }}
@@ -103,20 +131,14 @@ function fetchMoreEvents() {
         </div>
       </div>
       <div
-        v-show="githubEvents.status.value != 'success' || githubEvents.error.value"
+        v-show="status != 'success' || error"
         id="status"
         key="status"
-        class="flex flex-row items-center flex-auto px-1 transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
+        class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
       >
-        <Icon name="mdi:loading" class="mr-1 align-middle animate-spin" />
+        <UIcon name="heroicons:arrow-path-16-solid" class="mr-1 align-middle animate-spin" />
         <div class="flex items-center gap-2 truncate grow">
-          <!--
-            {{
-              githubEvents.error.value
-                ? "error loading events: " + githubEvents.error.value?.message
-                : "loading..."
-            }}
-          -->
+          {{ error ? "error loading events: " + error.error : "loading..." }}
         </div>
       </div>
     </TransitionGroup>

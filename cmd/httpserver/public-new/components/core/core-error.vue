@@ -19,11 +19,17 @@ const props = defineProps<{
 </script>
 
 <template>
-  <n-alert v-if="props.error" v-motion-fade title="An error occurred" type="error" class="m-2 md:m-6">
-    {{
+  <UAlert
+    v-if="props.error"
+    v-motion-fade
+    icon="i-heroicons-exclamation-circle"
+    title="An error occurred"
+    :description="
       props.error instanceof Error
         ? props.error.message
-        : props.error.error + " (" + props.error.code + ")"
-    }}
-  </n-alert>
+        : props.error.error + ' (' + props.error.code + ')'
+    "
+    color="red"
+    variant="subtle"
+  />
 </template>

@@ -5,11 +5,21 @@
 package models
 
 type CodingStats struct {
-	Languages          []LanguageStat `json:"languages"`
-	TotalSeconds       int            `json:"total_seconds"`
-	TotalDuration      string         `json:"total_duration"`
-	TotalDurationShort string         `json:"total_duration_short"`
-	CalculatedDays     int            `json:"calculated_days"`
+	Languages          []LanguageStat        `json:"languages"`
+	TotalSeconds       int                   `json:"total_seconds"`
+	TotalDuration      string                `json:"total_duration"`
+	TotalDurationShort string                `json:"total_duration_short"`
+	CalculatedDays     int                   `json:"calculated_days"`
+	Summary            []*CodingStatsSummary `json:"summary"`
+}
+
+type CodingStatsSummary struct {
+	Key           string `json:"key"`
+	HexColor      string `json:"hex_color"`
+	TotalSeconds  int    `json:"total_seconds"`
+	TotalDuration string `json:"total_duration"`
+	TitleLength   int    `json:"title_length"`
+	Percentage    int    `json:"percentage"`
 }
 
 type LanguageStat struct {

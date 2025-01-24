@@ -27,8 +27,8 @@ function toggle(field: string) {
       @click="toggle(id)"
     >
       <template #avatar v-if="sort == id">
-        <Icon name="mdi:arrow-up" v-if="order == 'asc'" />
-        <Icon name="mdi:arrow-down" v-else />
+        <UIcon name="mdi:arrow-up" v-if="order == 'asc'" />
+        <UIcon name="mdi:arrow-down" v-else />
       </template>
 
       {{ displayName }}

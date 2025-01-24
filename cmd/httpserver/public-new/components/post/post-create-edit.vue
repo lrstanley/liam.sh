@@ -79,7 +79,7 @@ const datetime = computed({
           <LabelInput v-model="labelIDs" :suggest="post.content" />
 
           <n-button block type="primary" @click="emit('update:post', post, labelIDs)">
-            <n-icon class="mr-1"><Icon name="mdi:content-save" /></n-icon>
+            <UIcon name="mdi:content-save" class="mr-1" />
             Save post
           </n-button>
         </div>

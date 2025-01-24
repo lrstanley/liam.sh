@@ -8,13 +8,15 @@ import { client } from "@/utils/http/sdk.gen"
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.hook("app:beforeMount", () => {
+    const loading = useLoadingIndicator()
+
     client.setConfig({
       onRequest(config) {
-        loadingBar.start()
+        loading.start()
         return config
       },
       onResponse(ctx) {
-        ctx.response.status < 300 ? loadingBar.finish() : loadingBar.error()
+        ctx.response.status < 300 ? loading.finish() : loading.finish({ error: true })
         return ctx
       },
     })

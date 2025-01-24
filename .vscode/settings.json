@@ -71,5 +71,5 @@
     "editor.quickSuggestions": {
         "strings": true
     },
-    "tailwindCSS.experimental.configFile": "cmd/httpserver/public-new/.nuxt/tailwind.config.cjs"
+    "tailwindCSS.experimental.configFile": "cmd/httpserver/public-new/tailwind.config.ts"
 }

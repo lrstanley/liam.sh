@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { UPopover } from "#components"
+
 const props = withDefaults(
   defineProps<{
     value?: string
     href?: string
-    placement?: "top" | "bottom" | "left" | "right"
+    placement?: Exclude<InstanceType<typeof UPopover>["$props"]["popper"], undefined>["placement"]
   }>(),
   {
     value: "",
@@ -14,20 +16,26 @@ const props = withDefaults(
 </script>
 
 <template>
-  <n-popover trigger="hover" style="padding: 2px 6px" :to="false" :placement="props.placement">
-    <template #trigger>
-      <span v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
-        <EventLink :href="props.href">
-          <slot name="icon" />
-          <slot name="value">{{ props.value }}</slot>
-        </EventLink>
-      </span>
-      <span v-else class="align-middle max-w-[24ch]" v-bind="$attrs">
+  <UPopover
+    mode="hover"
+    :popper="{ placement: props.placement }"
+    :ui="{ background: 'dark:bg-zinc-800', base: 'text-white', rounded: 'rounded' }"
+  >
+    <div v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
+      <EventLink :href="props.href">
         <slot name="icon" />
         <slot name="value">{{ props.value }}</slot>
-      </span>
-    </template>
+      </EventLink>
+    </div>
+    <div v-else class="align-middle max-w-[24ch]" v-bind="$attrs">
+      <slot name="icon" />
+      <slot name="value">{{ props.value }}</slot>
+    </div>
 
-    <slot />
-  </n-popover>
+    <template #panel>
+      <div class="p-[2px] text-wrap max-w-96">
+        <slot />
+      </div>
+    </template>
+  </UPopover>
 </template>

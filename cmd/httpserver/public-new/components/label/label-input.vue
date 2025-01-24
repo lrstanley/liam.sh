@@ -39,7 +39,7 @@ const { mutate, isPending, error } = useMutation({
       @keyup.enter="mutate({ name: newLabelInput })"
     >
       <template #prefix>
-        <Icon name="mdi:tag" />
+        <UIcon name="mdi:tag" />
       </template>
     </n-input>
   </div>

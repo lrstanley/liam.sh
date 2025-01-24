@@ -4,7 +4,7 @@
  * the LICENSE file.
  */
 
-@import "reset.css";
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
@@ -33,25 +33,6 @@ a {
   @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text from-10% via-50% to-90%;
 }
 
-.icon {
-  @apply inline align-middle;
-  display: inline-flex;
-  align-self: center;
-  height: initial;
-  width: initial;
-  line-height: 1em;
-  font-size: 1.1em;
-}
-
-.n-dropdown-menu,
-.n-popover,
-.n-popover:not(.n-popover--raw),
-.n-tooltip,
-.n-popover-shared .n-popover-arrow-wrapper .n-popover-arrow,
-.n-base-select-menu {
-  @apply bg-zinc-800;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   @apply transition-opacity duration-200 transform;
@@ -71,22 +52,6 @@ a {
 .stepped-enter-from,
 .stepped-leave-to {
   @apply opacity-0;
-}
-
-.grid-sidebar {
-  @apply grid grid-cols-1 md:grid-cols-[1fr,240px] gap-5 md:gap-10 lg:gap-[6rem];
-}
-
-.grid-sidebar > *:first-child {
-  @apply order-last md:order-first;
-}
-
-.grid-sidebar > *:last-child {
-  @apply flex flex-col flex-auto gap-4;
-}
-
-.grid-sidebar > *:last-child > *:first-child {
-  @apply md:sticky md:left-0 md:top-10;
 }
 
 *::-webkit-scrollbar {

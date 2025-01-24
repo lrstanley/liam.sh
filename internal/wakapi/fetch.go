@@ -9,6 +9,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"strings"
 	"sync/atomic"
@@ -18,7 +19,10 @@ import (
 	"github.com/lrstanley/liam.sh/internal/models"
 )
 
-const fetchInterval = 30 * time.Minute
+const (
+	fetchInterval    = 30 * time.Minute
+	maxSummaryLength = 5
+)
 
 var Statistics atomic.Pointer[models.CodingStats]
 
@@ -97,6 +101,30 @@ func (r *Runner) fetch(ctx context.Context) error {
 	stats.TotalDuration = formatDuration(stats.TotalSeconds)
 	stats.TotalDurationShort = formatDurationShort(stats.TotalSeconds)
 	stats.CalculatedDays = 30
+
+	maxTitleLength := 5
+
+	for _, stat := range stats.Languages {
+		if len(stats.Summary) > maxSummaryLength {
+			stats.Summary[maxSummaryLength].Key = "Other"
+			stats.Summary[maxSummaryLength].HexColor = stat.HexColor
+			stats.Summary[maxSummaryLength].TotalSeconds = stat.TotalSeconds
+			continue
+		}
+
+		maxTitleLength = max(maxTitleLength, len(stat.Language))
+		stats.Summary = append(stats.Summary, &models.CodingStatsSummary{
+			Key:           stat.Language,
+			HexColor:      stat.HexColor,
+			TotalSeconds:  stat.TotalSeconds,
+			TotalDuration: stat.TotalDuration,
+			TitleLength:   len(stat.Language),
+		})
+	}
+
+	for _, stat := range stats.Summary {
+		stat.Percentage = int(math.Round(float64(stat.TotalSeconds) / float64(stats.TotalSeconds) * 100))
+	}
 
 	Statistics.Store(&stats)
 	return nil

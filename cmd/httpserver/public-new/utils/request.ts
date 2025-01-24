@@ -5,46 +5,23 @@
  */
 
 import { shallowEqual } from "@/utils/equal"
-import type { RequestResult } from "@hey-api/client-fetch"
-import type {
-  ErrorBadRequest,
-  ErrorForbidden,
-  ErrorInternalServerError,
-  ErrorTooManyRequests,
-  ErrorUnauthorized,
-  ErrorNotFound,
-} from "@/utils/http/types.gen"
 import { useRouteQuery } from "@vueuse/router"
 import type { WatchStopHandle } from "vue"
+import { client } from "@/utils/http/sdk.gen"
 
-type ErrorResponse =
-  | ErrorBadRequest
-  | ErrorUnauthorized
-  | ErrorForbidden
-  | ErrorTooManyRequests
-  | ErrorInternalServerError
-  | ErrorNotFound
+export function setHTTPClientBaseURL() {
+  const runtime = useRuntimeConfig()
 
-class ApiError extends Error {
-  constructor(public readonly response: ErrorResponse, options?: ErrorOptions) {
-    super(response.error, options)
+  let url: string
+  if (runtime.API_URL) {
+    url = runtime.API_URL as string
+  } else if (runtime.public.API_URL) {
+    url = runtime.public.API_URL as string
+  } else {
+    url = `${useRequestURL().origin}/-`
   }
-}
 
-// TODO: RequestResult<R, ErrorResponse, false>, "false" was originally ThrowOnError, but it's not working.
-export async function unwrapErrors<R, ThrowOnError extends boolean = false>(
-  prom: RequestResult<R, ErrorResponse, false>
-): Promise<R> {
-  const resp = await prom
-
-  if (resp.error) {
-    // it's a paginated response, which should be a 404, but has a regular body.
-    if ((resp.error as any).content !== undefined && (resp.error as any).page !== undefined) {
-      return resp.error as R
-    }
-    throw new ApiError(resp.error)
-  }
-  return resp.data
+  client.setConfig({ baseURL: url })
 }
 
 export type PaginationOptions<T> = {

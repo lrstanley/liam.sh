@@ -3,8 +3,18 @@
 export type CodingStats = {
     calculated_days: number;
     languages: Array<LanguageStat>;
+    summary: Array<CodingStatsSummary>;
     total_duration: string;
     total_duration_short: string;
+    total_seconds: number;
+};
+
+export type CodingStatsSummary = {
+    hex_color: string;
+    key: string;
+    percentage: number;
+    title_length: number;
+    total_duration: string;
     total_seconds: number;
 };
 
@@ -193,7 +203,7 @@ export type GithubAsset = {
     /**
      * The ID of the asset.
      */
-    asset_id: BigInt;
+    asset_id: bigint;
     /**
      * The URL of the asset.
      */
@@ -217,8 +227,8 @@ export type GithubAsset = {
     /**
      * The size of the asset in bytes.
      */
-    size: BigInt;
-    download_count: BigInt;
+    size: bigint;
+    download_count: bigint;
     /**
      * The date the asset was created.
      */
@@ -294,12 +304,12 @@ export type GithubEvent = {
     /**
      * The ID of the actor.
      */
-    actor_id: BigInt;
+    actor_id: bigint;
     actor: GithubUser;
     /**
      * The ID of the repository.
      */
-    repo_id: BigInt;
+    repo_id: bigint;
     /**
      * The repository of the event.
      */
@@ -390,7 +400,7 @@ export type GithubGist = {
     /**
      * The size of the file in bytes.
      */
-    size: BigInt;
+    size: bigint;
     /**
      * The raw URL of the file.
      */
@@ -442,7 +452,7 @@ export type GithubRelease = {
     /**
      * The ID of the release.
      */
-    release_id: BigInt;
+    release_id: bigint;
     /**
      * The URL of the release.
      */
@@ -555,7 +565,7 @@ export type GithubRepository = {
     /**
      * The ID of the repository.
      */
-    repo_id: BigInt;
+    repo_id: bigint;
     /**
      * The name of the repository.
      */
@@ -1146,12 +1156,12 @@ export type VersionLink = {
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type EdgeAssetAssetIdeq = BigInt;
+export type EdgeAssetAssetIdeq = bigint;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type EdgeAssetAssetIdneq = BigInt;
+export type EdgeAssetAssetIdneq = bigint;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
@@ -1821,12 +1831,12 @@ export type EdgeGithubRepositoryPushedAtNotIn = Array<Date>;
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type EdgeGithubRepositoryRepoIdeq = BigInt;
+export type EdgeGithubRepositoryRepoIdeq = bigint;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type EdgeGithubRepositoryRepoIdneq = BigInt;
+export type EdgeGithubRepositoryRepoIdneq = bigint;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -2251,12 +2261,12 @@ export type EdgeReleasePublishedAtNeq = Date;
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type EdgeReleaseReleaseIdeq = BigInt;
+export type EdgeReleaseReleaseIdeq = bigint;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type EdgeReleaseReleaseIdneq = BigInt;
+export type EdgeReleaseReleaseIdneq = bigint;
 
 /**
  * Filters field "tag_name" to contain the provided value.
@@ -2601,12 +2611,12 @@ export type EdgeRepositoryPushedAtNotIn = Array<Date>;
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type EdgeRepositoryRepoIdeq = BigInt;
+export type EdgeRepositoryRepoIdeq = bigint;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type EdgeRepositoryRepoIdneq = BigInt;
+export type EdgeRepositoryRepoIdneq = bigint;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -2651,12 +2661,12 @@ export type FilterOperation2 = FilterOperation;
 /**
  * Filters field "asset_id" to be equal to the provided value.
  */
-export type GithubAssetAssetIdeq = BigInt;
+export type GithubAssetAssetIdeq = bigint;
 
 /**
  * Filters field "asset_id" to be not equal to the provided value.
  */
-export type GithubAssetAssetIdneq = BigInt;
+export type GithubAssetAssetIdneq = bigint;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
@@ -2826,12 +2836,12 @@ export type GithubAssetUpdatedAtNeq = Date;
 /**
  * Filters field "actor_id" to be equal to the provided value.
  */
-export type GithubEventActorIdeq = BigInt;
+export type GithubEventActorIdeq = bigint;
 
 /**
  * Filters field "actor_id" to be not equal to the provided value.
  */
-export type GithubEventActorIdneq = BigInt;
+export type GithubEventActorIdneq = bigint;
 
 /**
  * Filters field "created_at" to be equal to the provided value.
@@ -2926,12 +2936,12 @@ export type GithubEventPublicEq = boolean;
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type GithubEventRepoIdeq = BigInt;
+export type GithubEventRepoIdeq = bigint;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type GithubEventRepoIdneq = BigInt;
+export type GithubEventRepoIdneq = bigint;
 
 /**
  * Filters field "content" to contain the provided value.
@@ -3101,12 +3111,12 @@ export type GithubGistPublicEq = boolean;
 /**
  * Filters field "size" to be equal to the provided value.
  */
-export type GithubGistSizeEq = BigInt;
+export type GithubGistSizeEq = bigint;
 
 /**
  * Filters field "size" to be not equal to the provided value.
  */
-export type GithubGistSizeNeq = BigInt;
+export type GithubGistSizeNeq = bigint;
 
 /**
  * Filters field "type" to contain the provided value.
@@ -3281,12 +3291,12 @@ export type GithubReleasePublishedAtNeq = Date;
 /**
  * Filters field "release_id" to be equal to the provided value.
  */
-export type GithubReleaseReleaseIdeq = BigInt;
+export type GithubReleaseReleaseIdeq = bigint;
 
 /**
  * Filters field "release_id" to be not equal to the provided value.
  */
-export type GithubReleaseReleaseIdneq = BigInt;
+export type GithubReleaseReleaseIdneq = bigint;
 
 /**
  * Filters field "tag_name" to contain the provided value.
@@ -3636,12 +3646,12 @@ export type GithubRepositoryPushedAtNotIn = Array<Date>;
 /**
  * Filters field "repo_id" to be equal to the provided value.
  */
-export type GithubRepositoryRepoIdeq = BigInt;
+export type GithubRepositoryRepoIdeq = bigint;
 
 /**
  * Filters field "repo_id" to be not equal to the provided value.
  */
-export type GithubRepositoryRepoIdneq = BigInt;
+export type GithubRepositoryRepoIdneq = bigint;
 
 /**
  * Filters field "star_count" to be greater than the provided value.
@@ -4565,11 +4575,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'assetID.eq'?: BigInt;
+        'assetID.eq'?: bigint;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'assetID.neq'?: BigInt;
+        'assetID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -4705,11 +4715,11 @@ export type ListGithubAssetsData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: BigInt;
+        'release.releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: BigInt;
+        'release.releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -5127,19 +5137,19 @@ export type ListGithubEventsData = {
         /**
          * Filters field "actor_id" to be equal to the provided value.
          */
-        'actorID.eq'?: BigInt;
+        'actorID.eq'?: bigint;
         /**
          * Filters field "actor_id" to be not equal to the provided value.
          */
-        'actorID.neq'?: BigInt;
+        'actorID.neq'?: bigint;
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: BigInt;
+        'repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: BigInt;
+        'repoID.neq'?: bigint;
     };
     url: '/github-events';
 };
@@ -5448,11 +5458,11 @@ export type ListGithubGistsData = {
         /**
          * Filters field "size" to be equal to the provided value.
          */
-        'size.eq'?: BigInt;
+        'size.eq'?: bigint;
         /**
          * Filters field "size" to be not equal to the provided value.
          */
-        'size.neq'?: BigInt;
+        'size.neq'?: bigint;
         /**
          * Filters field "content" to contain the provided value.
          */
@@ -5597,11 +5607,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'releaseID.eq'?: BigInt;
+        'releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'releaseID.neq'?: BigInt;
+        'releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -5761,11 +5771,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repository.repoID.eq'?: BigInt;
+        'repository.repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repository.repoID.neq'?: BigInt;
+        'repository.repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6001,11 +6011,11 @@ export type ListGithubReleasesData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'asset.assetID.eq'?: BigInt;
+        'asset.assetID.eq'?: bigint;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'asset.assetID.neq'?: BigInt;
+        'asset.assetID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6311,11 +6321,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'assetID.eq'?: BigInt;
+        'assetID.eq'?: bigint;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'assetID.neq'?: BigInt;
+        'assetID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -6451,11 +6461,11 @@ export type ListGithubReleaseAssetsData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: BigInt;
+        'release.releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: BigInt;
+        'release.releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -6744,11 +6754,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: BigInt;
+        'repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: BigInt;
+        'repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -7056,11 +7066,11 @@ export type ListGithubRepositoriesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: BigInt;
+        'release.releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: BigInt;
+        'release.releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -7554,11 +7564,11 @@ export type ListGithubRepositoryLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: BigInt;
+        'githubRepository.repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: BigInt;
+        'githubRepository.repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -7867,11 +7877,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'releaseID.eq'?: BigInt;
+        'releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'releaseID.neq'?: BigInt;
+        'releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -8031,11 +8041,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repository.repoID.eq'?: BigInt;
+        'repository.repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repository.repoID.neq'?: BigInt;
+        'repository.repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -8271,11 +8281,11 @@ export type ListGithubRepositoryReleasesData = {
         /**
          * Filters field "asset_id" to be equal to the provided value.
          */
-        'asset.assetID.eq'?: BigInt;
+        'asset.assetID.eq'?: bigint;
         /**
          * Filters field "asset_id" to be not equal to the provided value.
          */
-        'asset.assetID.neq'?: BigInt;
+        'asset.assetID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -8738,11 +8748,11 @@ export type ListLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: BigInt;
+        'githubRepository.repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: BigInt;
+        'githubRepository.repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -9349,11 +9359,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'repoID.eq'?: BigInt;
+        'repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'repoID.neq'?: BigInt;
+        'repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
@@ -9661,11 +9671,11 @@ export type ListLabelGithubRepositoriesData = {
         /**
          * Filters field "release_id" to be equal to the provided value.
          */
-        'release.releaseID.eq'?: BigInt;
+        'release.releaseID.eq'?: bigint;
         /**
          * Filters field "release_id" to be not equal to the provided value.
          */
-        'release.releaseID.neq'?: BigInt;
+        'release.releaseID.neq'?: bigint;
         /**
          * Filters field "tag_name" to be equal to the provided value.
          */
@@ -11481,11 +11491,11 @@ export type ListPostLabelsData = {
         /**
          * Filters field "repo_id" to be equal to the provided value.
          */
-        'githubRepository.repoID.eq'?: BigInt;
+        'githubRepository.repoID.eq'?: bigint;
         /**
          * Filters field "repo_id" to be not equal to the provided value.
          */
-        'githubRepository.repoID.neq'?: BigInt;
+        'githubRepository.repoID.neq'?: bigint;
         /**
          * Filters field "name" to be equal to the provided value.
          */
