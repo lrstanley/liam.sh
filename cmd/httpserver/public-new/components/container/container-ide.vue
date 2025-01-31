@@ -7,7 +7,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 
 <template>
   <div
-    class="flex flex-col flex-auto max-w-full max-h-full border rounded size-full bg-zinc-900 border-zinc-700/50"
+    class="flex flex-col flex-auto max-w-full max-h-full border rounded-sm size-full bg-zinc-900 border-zinc-700/50"
   >
     <slot />
 
@@ -25,7 +25,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
         placement="top-start"
         raw
         :show-arrow="false"
-        class="rounded border border-solid border-zinc-700 shadow-none !m-0"
+        class="rounded-sm border border-solid border-zinc-700 shadow-none !m-0"
       >
         <template #trigger>
           <span class="items-center bar-item">
@@ -44,7 +44,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
             >
               <a
                 :href="href"
-                class="flex items-center px-1 rounded hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"
+                class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"
                 :class="{ 'bg-zinc-900/50 text-zinc-300': isActive }"
                 @click="navigate"
               >
@@ -71,8 +71,9 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 
       <UTooltip
         text="... or just gofmt"
-        :popper="{ placement: 'top' }"
-        :ui="{ background: 'dark:bg-zinc-800' }"
+        :content="{ side: 'top' }"
+        :delay-duration="0"
+        :ui="{ content: 'dark:bg-zinc-800' }"
       >
         <span class="bar-item misc">spaces:4</span>
       </UTooltip>
@@ -83,6 +84,8 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 </template>
 
 <style>
+@reference "~/assets/css/main.css";
+
 .bottom-bar {
   line-height: 1.4;
   @apply text-[1.15rem] md:text-[0.95rem];

@@ -4,11 +4,8 @@
  * the LICENSE file.
  */
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@tailwind variants;
-@config "tailwind.config.ts";
+@import "tailwindcss";
+@import "@nuxt/ui-pro";
 
 :root {
   scrollbar-gutter: stable;
@@ -26,33 +23,36 @@ body,
   font-family: Consolas, monaco, monospace;
 }
 
-a {
-  @apply text-emerald-500 hover:text-emerald-600;
-}
+/* wrapping in @layer so it's lower in priority than the scoped stuff in individual components... */
+@layer components {
+  a {
+    @apply text-emerald-500 hover:text-emerald-600;
+  }
 
-.text-gradient {
-  @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text from-10% via-50% to-90%;
-}
+  .text-gradient {
+    @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text from-10% via-50% to-90%;
+  }
 
-.fade-enter-active,
-.fade-leave-active {
-  @apply transition-opacity duration-200 transform;
-}
+  .fade-enter-active,
+  .fade-leave-active {
+    @apply transition-opacity duration-200 transform;
+  }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
 
-.stepped-enter-active,
-.stepped-leave-active {
-  @apply transition-opacity duration-300 transform;
-  transition-delay: min(0.05s, calc(0.005s * (var(--total) - var(--i))));
-}
+  .stepped-enter-active,
+  .stepped-leave-active {
+    @apply transition-opacity duration-300 transform;
+    transition-delay: min(0.05s, calc(0.005s * (var(--total) - var(--i))));
+  }
 
-.stepped-enter-from,
-.stepped-leave-to {
-  @apply opacity-0;
+  .stepped-enter-from,
+  .stepped-leave-to {
+    @apply opacity-0;
+  }
 }
 
 *::-webkit-scrollbar {

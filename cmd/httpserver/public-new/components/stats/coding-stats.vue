@@ -13,22 +13,17 @@ const maxTitleLength = computed(
   <UPopover
     v-if="codingStats"
     mode="hover"
-    :popper="{ placement: 'top' }"
+    :open-delay="150"
+    :content="{ side: 'top', align: 'start', sideOffset: 0 }"
     v-bind="$attrs"
-    :ui="{
-      background: 'dark:bg-zinc-800',
-      rounded: 'rounded',
-      ring: 'ring-zinc-700',
-      shadow: 'shadow-none',
-      trigger: 'flex',
-    }"
+    :ui="{ content: 'dark:bg-zinc-800 rounded-sm ring-zinc-700 shadow-none flex' }"
   >
     <div class="items-center bar-item misc">
       <UIcon name="heroicons:clock" class="text-violet-400" />
       <span>{{ codingStats.total_duration }}</span>
     </div>
 
-    <template #panel>
+    <template #content>
       <div class="px-2 py-1">
         <p class="text-center text-violet-400">
           last {{ codingStats.calculated_days }} day coding stats
@@ -43,9 +38,9 @@ const maxTitleLength = computed(
             {{ stat.key }}
           </div>
 
-          <div class="w-full rounded o bg-zinc-900">
+          <div class="w-full rounded-sm bg-zinc-900">
             <div
-              class="h-2 rounded"
+              class="h-2 rounded-sm"
               :style="{ width: stat.percentage + '%', 'background-color': stat.hex_color }"
             />
           </div>

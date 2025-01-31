@@ -5,7 +5,7 @@ const props = withDefaults(
   defineProps<{
     value?: string
     href?: string
-    placement?: Exclude<InstanceType<typeof UPopover>["$props"]["popper"], undefined>["placement"]
+    placement?: Exclude<InstanceType<typeof UPopover>["$props"]["content"], undefined>["side"]
   }>(),
   {
     value: "",
@@ -18,8 +18,9 @@ const props = withDefaults(
 <template>
   <UPopover
     mode="hover"
-    :popper="{ placement: props.placement }"
-    :ui="{ background: 'dark:bg-zinc-800', base: 'text-white', rounded: 'rounded' }"
+    :open-delay="150"
+    :content="{ side: props.placement }"
+    :ui="{ content: 'dark:bg-zinc-800 text-white rounded-sm' }"
   >
     <div v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
       <EventLink :href="props.href">
@@ -32,7 +33,7 @@ const props = withDefaults(
       <slot name="value">{{ props.value }}</slot>
     </div>
 
-    <template #panel>
+    <template #content>
       <div class="p-[2px] text-wrap max-w-96">
         <slot />
       </div>

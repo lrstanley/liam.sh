@@ -34,12 +34,16 @@ const gh = useGithubUser()
 </template>
 
 <style scoped>
+@reference "~/assets/css/main.css";
+
 .cursor-wrap {
   @apply w-auto inline-flex;
 }
 .cursor {
   @apply whitespace-nowrap overflow-hidden inline-flex border-r-4 border-r-emerald-500 border-solid;
-  animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 1s steps(40, end),
+    blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {
@@ -54,10 +58,10 @@ const gh = useGithubUser()
 @keyframes blink-caret {
   from,
   to {
-    @apply border-transparent;
+    border-color: transparent;
   }
   50% {
-    @apply border-r-emerald-700;
+    border-right-color: var(--color-emerald-700);
   }
 }
 </style>

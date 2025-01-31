@@ -68,8 +68,13 @@
     "files.associations": {
         "*.css": "tailwindcss"
     },
+    "tailwindCSS.classAttributes": [
+        "class",
+        "className",
+        "ngClass",
+        "ui"
+    ],
     "editor.quickSuggestions": {
         "strings": true
     },
-    "tailwindCSS.experimental.configFile": "cmd/httpserver/public-new/tailwind.config.ts"
 }

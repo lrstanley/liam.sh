@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "@nuxt/ui-pro": "^1.7.0",
+    "@nuxt/ui-pro": "3.0.0-alpha.12",
+    "@tailwindcss/vite": "^4.0.1",
     "nuxt": "^3.15.4",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.0.1",
     "vue": "^3.5.4"
   },
   "devDependencies": {

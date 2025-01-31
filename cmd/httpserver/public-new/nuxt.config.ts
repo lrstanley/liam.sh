@@ -1,9 +1,10 @@
+import tailwindcss from "@tailwindcss/vite"
+
 export default defineNuxtConfig({
-  extends: ["@nuxt/ui-pro"],
   modules: [
     "@vueuse/nuxt",
     "@formkit/auto-animate",
-    "@nuxt/ui",
+    "@nuxt/ui-pro",
     // "@nuxtjs/html-validator"
   ],
   // future: {
@@ -54,12 +55,11 @@ export default defineNuxtConfig({
       open: false,
       strictPort: true,
     },
+    plugins: [tailwindcss()],
   },
   ui: {
     primary: "green",
     grey: "neutral",
   },
-  uiPro: {
-    customScrollbars: false,
-  },
+  uiPro: {},
 })

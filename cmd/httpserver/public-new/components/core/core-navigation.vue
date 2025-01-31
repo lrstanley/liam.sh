@@ -19,6 +19,8 @@ const self = useSelf()
 </template>
 
 <style scoped>
+@reference "~/assets/css/main.css";
+
 ul :deep(a) {
   position: relative;
   display: inline-flex;
