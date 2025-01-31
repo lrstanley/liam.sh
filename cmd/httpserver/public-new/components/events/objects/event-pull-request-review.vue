@@ -13,17 +13,17 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
 
 <template>
   <div>
-    <span v-if="review.state == 'approved'" class="text-lime-500">approved</span>
-    <span v-else-if="review.state == 'changes_requested'">
+    <div v-if="review.state == 'approved'" class="text-lime-500">approved</div>
+    <div v-else-if="review.state == 'changes_requested'">
       <span class="text-red-400">requested changes</span>
       on
-    </span>
-    <span v-else-if="review.state == 'commented'">
+    </div>
+    <div v-else-if="review.state == 'commented'">
       added a
       <span class="text-cyan-400">review comment</span>
       to
-    </span>
-    <span v-else>
+    </div>
+    <div v-else>
       <span v-if="action == 'created'">added</span>
       <span v-else-if="action == 'edited'">updated</span>
       <span v-if="action == 'deleted'">removed</span>
@@ -35,7 +35,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
         :value="'review ' + review.state"
       />
       to
-    </span>
+    </div>
 
     pr
     <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">

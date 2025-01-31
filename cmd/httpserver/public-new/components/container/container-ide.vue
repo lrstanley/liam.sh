@@ -7,7 +7,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 
 <template>
   <div
-    class="flex flex-col flex-auto max-h-full border rounded size-full max-w-fulkl bg-zinc-900 border-zinc-700/50"
+    class="flex flex-col flex-auto max-w-full max-h-full border rounded size-full bg-zinc-900 border-zinc-700/50"
   >
     <slot />
 

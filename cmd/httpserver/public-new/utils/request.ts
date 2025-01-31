@@ -7,7 +7,7 @@
 import { shallowEqual } from "@/utils/equal"
 import { useRouteQuery } from "@vueuse/router"
 import type { WatchStopHandle } from "vue"
-import { client } from "@/utils/http/sdk.gen"
+import { client } from "@/utils/http/client.gen"
 
 export function setHTTPClientBaseURL() {
   const runtime = useRuntimeConfig()

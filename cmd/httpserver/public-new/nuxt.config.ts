@@ -1,8 +1,17 @@
-import defaultTheme from "tailwindcss/defaultTheme"
-
 export default defineNuxtConfig({
   extends: ["@nuxt/ui-pro"],
-  modules: ["@vueuse/nuxt", "@formkit/auto-animate", "@nuxt/ui", "@nuxtjs/html-validator"],
+  modules: [
+    "@vueuse/nuxt",
+    "@formkit/auto-animate",
+    "@nuxt/ui",
+    // "@nuxtjs/html-validator"
+  ],
+  // future: {
+  //   compatibilityVersion: 4,
+  // },
+  features: {
+    inlineStyles: false,
+  },
   compatibilityDate: "2025-01-13",
   devtools: {
     viteInspect: false,

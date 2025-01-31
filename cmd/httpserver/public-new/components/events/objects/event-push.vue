@@ -13,7 +13,7 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
   <div>
     <span style="color: #d086ff">pushed</span>
 
-    <span v-if="commits.length > 1">
+    <div v-if="commits.length > 1">
       <EventHoverItem
         :href="repo.name + '/compare/' + commits[0].sha + '...' + props.event.payload.head"
         :value="commits.length + ' commits'"
@@ -25,8 +25,8 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
           {{ commit.message.split("\n")[0] }}
         </p>
       </EventHoverItem>
-    </span>
-    <span v-else>
+    </div>
+    <div v-else>
       <EventHoverItem
         :href="repo.name + '/commit/' + commits[0].sha"
         :value="commits[0].sha.slice(0, 7)"
@@ -35,7 +35,7 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
         {{ commits[0].sha.slice(0, 7) }}:
         {{ commits[0].message.split("\n")[0] }}
       </EventHoverItem>
-    </span>
+    </div>
     to
     <EventLink :href="repo.name as string" />
 

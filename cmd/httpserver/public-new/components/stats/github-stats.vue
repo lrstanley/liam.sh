@@ -22,8 +22,7 @@ const year = new Date().getFullYear()
     }"
   >
     <a
-      class="px-2 transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"
-      style="color: white !important"
+      class="px-2 transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current text-white"
       :href="gh.html_url"
     >
       <UIcon name="mdi:github" class="align-middle mt-[-3px] mr-[-7px]" />

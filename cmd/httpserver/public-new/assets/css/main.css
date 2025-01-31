@@ -8,6 +8,7 @@
 @tailwind components;
 @tailwind utilities;
 @tailwind variants;
+@config "tailwind.config.ts";
 
 :root {
   scrollbar-gutter: stable;
