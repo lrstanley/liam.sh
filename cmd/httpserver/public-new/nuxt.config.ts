@@ -6,13 +6,14 @@ export default defineNuxtConfig({
     "@formkit/auto-animate",
     "@nuxt/ui-pro",
     // "@nuxtjs/html-validator"
+    // "@nuxtjs/fontaine",
   ],
-  // future: {
-  //   compatibilityVersion: 4,
-  // },
-  features: {
-    inlineStyles: false,
+  future: {
+    compatibilityVersion: 4,
   },
+  // features: {
+  //   inlineStyles: false,
+  // },
   compatibilityDate: "2025-01-13",
   devtools: {
     viteInspect: false,
@@ -62,4 +63,8 @@ export default defineNuxtConfig({
     grey: "neutral",
   },
   uiPro: {},
+  build: {
+    // TODO: https://github.com/hey-api/openapi-ts/issues/1660
+    transpile: ["@hey-api/client-nuxt"],
+  },
 })
