@@ -12,16 +12,14 @@ bin/*
 .gitapicache
 
 # frontend-specific
-node_modules
+**/node_modules
 cmd/httpserver/public/src/lib/http
 cmd/httpserver/public-new/src/lib/http
-dist
-.eslintrc-auto-import.json
+**/dist
 **/*.d.ts
 !**/vue.d.ts
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
+**/.output
+**/.data
+**/.nuxt
+**/.nitro
+**/.cache
