@@ -63,7 +63,7 @@ export default defineNuxtConfig({
           path: "../../../internal/database/ent/rest/openapi.json",
         },
         output: {
-          path: "utils/http",
+          path: "app/utils/http",
         },
         plugins: [
           "@hey-api/client-nuxt",
@@ -83,7 +83,7 @@ export default defineNuxtConfig({
         ],
       })
 
-      unlinkSync("utils/http/index.ts")
+      unlinkSync("app/utils/http/index.ts")
     },
   },
 })

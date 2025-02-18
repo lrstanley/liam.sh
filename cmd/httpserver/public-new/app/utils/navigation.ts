@@ -38,8 +38,8 @@ export const menuOptions: Link[] = [
 ]
 
 export const branchMenuOptions: Link[] = [
-  { to: "index", name: "master" },
-  // { to: "/util/gists", name: "feature/list-gists" },
+  { to: "/", name: "master" },
+  { to: "/util/gists", name: "feature/list-gists" },
 ]
 
 // TODO: fix type.

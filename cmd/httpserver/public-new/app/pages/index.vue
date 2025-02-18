@@ -1,4 +1,5 @@
 <script setup lang="ts">
+useHead({ title: "Home" })
 definePageMeta({
   layout: "terminal",
 })

@@ -58,6 +58,33 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
         </ul>
       </n-popover> -->
 
+      <UPopover mode="hover" :open-delay="150" :content="{ side: 'top', align: 'start', sideOffset: 0 }">
+        <span class="items-center bar-item">
+          <UIcon name="mdi:source-branch" />
+          {{ branchMenuOptions.find((o) => o.to === $route.path)?.name }}
+        </span>
+
+        <template #content>
+          <div class="p-[1px]">
+            <ul class="flex flex-col flex-nowrap">
+              <li v-for="link in branchMenuOptions" :key="link.name">
+                <router-link v-slot="{ isActive, href, navigate }" :to="link.to" custom>
+                  <a
+                    :href="href"
+                    class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"
+                    :class="{ 'bg-zinc-900/50 text-zinc-300': isActive }"
+                    @click="navigate"
+                  >
+                    <UIcon name="mdi:source-branch" />
+                    <span>{{ link.name }}</span>
+                  </a>
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </template>
+      </UPopover>
+
       <div v-if="version" class="items-center bar-item misc" data-allow-mismatch>
         <UIcon name="logos:gopher" />
         <span>{{ version.go_version.replace(/^go/, "") }}</span>
