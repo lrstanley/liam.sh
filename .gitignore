@@ -14,7 +14,7 @@ bin/*
 # frontend-specific
 **/node_modules
 cmd/httpserver/public/src/lib/http
-cmd/httpserver/public-new/src/lib/http
+cmd/httpserver/public-new/app/utils/http
 **/dist
 **/*.d.ts
 !**/vue.d.ts
