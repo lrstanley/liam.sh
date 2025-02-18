@@ -8,9 +8,19 @@
 @import "@nuxt/ui-pro";
 
 :root {
+  --ui-radius: var(--radius-xs);
+
   scrollbar-gutter: stable;
-  scrollbar-width: thin;
-  scrollbar-color: rgb(16 185 129) rgb(38, 38, 38) !important; /* for firefox */
+  scrollbar-color: rgb(16 185 129) rgb(38, 38, 38) !important;
+  *::-webkit-scrollbar-thumb {
+    @apply rounded-md bg-emerald-500;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    @apply rounded-md bg-emerald-700;
+  }
+  *::-webkit-scrollbar-thumb:window-inactive {
+    @apply bg-gray-600;
+  }
 }
 
 html,
@@ -23,8 +33,11 @@ body,
   font-family: Consolas, monaco, monospace;
 }
 
-/* wrapping in @layer so it's lower in priority than the scoped stuff in individual components... */
-@layer components {
+/*
+  wrapping in @layer so it's lower in priority than the scoped stuff in individual components...
+  https://github.com/tailwindlabs/tailwindcss/issues/15850
+*/
+@layer base {
   a {
     @apply text-emerald-500 hover:text-emerald-600;
   }
@@ -53,27 +66,4 @@ body,
   .stepped-leave-to {
     @apply opacity-0;
   }
-}
-
-*::-webkit-scrollbar {
-  background-color: transparent;
-  width: 12px;
-  height: 12px;
-}
-*::-webkit-scrollbar-thumb {
-  transition: background 0.5s ease-in-out;
-  border: 3px solid transparent;
-  -webkit-background-clip: content-box;
-  background-clip: content-box;
-  @apply rounded-md bg-emerald-500;
-}
-*::-webkit-scrollbar-thumb:hover {
-  @apply rounded-md bg-emerald-700;
-}
-*::-webkit-scrollbar-thumb:window-inactive {
-  @apply bg-gray-600;
-}
-
-*::-webkit-scrollbar-corner {
-  background-color: transparent;
 }

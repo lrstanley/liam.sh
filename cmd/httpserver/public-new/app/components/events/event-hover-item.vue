@@ -20,7 +20,7 @@ const props = withDefaults(
     mode="hover"
     :open-delay="150"
     :content="{ side: props.placement }"
-    :ui="{ content: 'dark:bg-zinc-800 text-white rounded-sm' }"
+    :ui="{ content: 'px-1' }"
   >
     <div v-if="props.href?.length > 0" class="align-middle" v-bind="$attrs">
       <EventLink :href="props.href">

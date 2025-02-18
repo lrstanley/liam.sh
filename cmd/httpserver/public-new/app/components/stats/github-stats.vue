@@ -14,7 +14,6 @@ const year = new Date().getFullYear()
     :open-delay="150"
     :content="{ side: 'top', align: 'end', sideOffset: 0 }"
     v-bind="$attrs"
-    :ui="{ content: 'dark:bg-zinc-800 rounded-sm ring-zinc-700 shadow-none flex' }"
   >
     <a
       class="px-2 text-white transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"

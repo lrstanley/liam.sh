@@ -1,4 +1,6 @@
 import tailwindcss from "@tailwindcss/vite"
+import { createClient } from "@hey-api/openapi-ts"
+import { unlinkSync } from "node:fs"
 
 export default defineNuxtConfig({
   modules: [
@@ -11,21 +13,12 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4,
   },
-  // features: {
-  //   inlineStyles: false,
-  // },
   compatibilityDate: "2025-01-13",
   devtools: {
     viteInspect: false,
     componentInspector: false,
   },
   ssr: true,
-  appConfig: {
-    title: "liam.sh",
-    icon: {
-      class: "icon",
-    },
-  },
   runtimeConfig: {
     API_URL: "", // use $NUXT_API_URL
     public: {
@@ -58,13 +51,39 @@ export default defineNuxtConfig({
     },
     plugins: [tailwindcss()],
   },
-  ui: {
-    primary: "green",
-    grey: "neutral",
-  },
-  uiPro: {},
   build: {
     // TODO: https://github.com/hey-api/openapi-ts/issues/1660
     transpile: ["@hey-api/client-nuxt"],
+  },
+  hooks: {
+    "build:before": async () => {
+      await createClient({
+        experimentalParser: true,
+        input: {
+          path: "../../../internal/database/ent/rest/openapi.json",
+        },
+        output: {
+          path: "utils/http",
+        },
+        plugins: [
+          "@hey-api/client-nuxt",
+          "@hey-api/schemas",
+          {
+            name: "@hey-api/sdk",
+            transformer: true,
+          },
+          {
+            enums: "javascript",
+            name: "@hey-api/typescript",
+          },
+          {
+            name: "@hey-api/transformers",
+            dates: true,
+          },
+        ],
+      })
+
+      unlinkSync("utils/http/index.ts")
+    },
   },
 })

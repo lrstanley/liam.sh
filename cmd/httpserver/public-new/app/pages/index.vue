@@ -18,7 +18,7 @@ const eventCount = ref<number>()
 
       <div class="ml-auto" />
 
-      <div v-if="eventCount && eventCount > 0" class="bar-item misc">ln:{{ eventCount }}</div>
+      <div v-show="eventCount && eventCount > 0" class="bar-item misc">ln:{{ eventCount }}</div>
     </template>
   </ContainerIde>
 </template>

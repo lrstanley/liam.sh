@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from "@vueuse/components"
-
 import { listGithubEvents } from "@/utils/http/sdk.gen"
 
 import {
@@ -19,21 +18,6 @@ import {
   EventRelease,
   EventWatch,
 } from "#components"
-
-// import EventCreate from "@/components/events/objects/event-create.vue"
-// import EventDelete from "@/components/events/objects/event-delete.vue"
-// import EventFork from "@/components/events/objects/event-fork.vue"
-// import EventIssueComment from "@/components/events/objects/event-issue-comment.vue"
-// import EventIssues from "@/components/events/objects/event-issues.vue"
-// import EventMember from "@/components/events/objects/event-member.vue"
-// import EventPublic from "@/components/events/objects/event-public.vue"
-// import EventPullRequestReviewComment from "@/components/events/objects/event-pull-request-review-comment.vue"
-// import EventPullRequestReviewThread from "@/components/events/objects/event-pull-request-review-thread.vue"
-// import EventPullRequestReview from "@/components/events/objects/event-pull-request-review.vue"
-// import EventPullRequest from "@/components/events/objects/event-pull-request.vue"
-// import EventPush from "@/components/events/objects/event-push.vue"
-// import EventRelease from "@/components/events/objects/event-release.vue"
-// import EventWatch from "@/components/events/objects/event-watch.vue"
 
 import type { GithubEvent } from "~/utils/http/types.gen"
 

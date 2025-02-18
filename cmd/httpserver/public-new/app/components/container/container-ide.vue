@@ -12,14 +12,16 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
     <slot />
 
     <div class="box-border flex border-t bottom-bar border-zinc-700/50" v-auto-animate>
-      <!-- <n-tooltip v-if="version.data.value" trigger="hover">
-        <template #trigger>
-          <span class="items-center bar-item misc">
-            <UIcon name="logos:visual-studio-code" class="mr-1 align-middle" />
-          </span>
-        </template>
-        build date: {{ version.data.value.build_date }}
-      </n-tooltip> -->
+      <UTooltip
+        v-if="version"
+        :content="{ side: 'top' }"
+        :delay-duration="0"
+        :text="'build date: ' + version.build_date"
+      >
+        <span class="items-center bar-item misc">
+          <UIcon name="logos:visual-studio-code" class="mr-1 align-middle" />
+        </span>
+      </UTooltip>
 
       <!-- <n-popover
         placement="top-start"
@@ -69,12 +71,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
         <div class="ml-auto" />
       </slot>
 
-      <UTooltip
-        text="... or just gofmt"
-        :content="{ side: 'top' }"
-        :delay-duration="0"
-        :ui="{ content: 'dark:bg-zinc-800' }"
-      >
+      <UTooltip text="... or just gofmt" :content="{ side: 'top' }" :delay-duration="0">
         <span class="bar-item misc">spaces:4</span>
       </UTooltip>
 
@@ -92,11 +89,11 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 }
 
 .bar-item {
-  @apply px-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800;
+  @apply px-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800 text-sm;
 }
 
 .bar-item .iconify {
-  @apply align-middle text-sm mr-1;
+  @apply align-middle mr-1;
 }
 
 .bar-item.misc {

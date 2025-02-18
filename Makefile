@@ -65,12 +65,7 @@ node-upgrade-deps:
 		pnpm up -iL
 
 node-prepare: license node-fetch
-	cd cmd/httpserver/public-new && pnpm exec openapi-ts && rm -rf utils/http/index.ts
-	# cd cmd/httpserver/public-new && \
-	# 	pnpm exec prettier \
-	# 		--cache \
-	# 		--write \
-	# 		src/
+	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
 	cd cmd/httpserver/public-new && \

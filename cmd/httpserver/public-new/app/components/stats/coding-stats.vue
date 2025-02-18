@@ -16,7 +16,6 @@ const maxTitleLength = computed(
     :open-delay="150"
     :content="{ side: 'top', align: 'start', sideOffset: 0 }"
     v-bind="$attrs"
-    :ui="{ content: 'dark:bg-zinc-800 rounded-sm ring-zinc-700 shadow-none flex' }"
   >
     <div class="items-center bar-item misc">
       <UIcon name="heroicons:clock" class="text-violet-400" />
