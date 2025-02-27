@@ -7,6 +7,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"iter"
 	"net/url"
 	"sync"
 
@@ -17,9 +18,10 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
-	"iter"
 	sqlite "modernc.org/sqlite"
 )
+
+//go:generate go run -mod=readonly entc.go
 
 var defaultConnectionValues = url.Values{
 	"_pragma": {

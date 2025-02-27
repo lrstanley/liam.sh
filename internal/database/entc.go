@@ -24,7 +24,7 @@ func checkError(err error) {
 
 func main() {
 	rest, err := entrest.NewExtension(&entrest.Config{
-		SpecFromPath:          "../cmd/httpserver/base-openapi.json",
+		SpecFromPath:          "../../cmd/httpserver/base-openapi.json",
 		MaxItemsPerPage:       1000,
 		Handler:               entrest.HandlerChi,
 		StrictMutate:          true,
@@ -34,9 +34,9 @@ func main() {
 	checkError(err)
 
 	err = entc.Generate(
-		"./database/schema",
+		"./schema",
 		&gen.Config{
-			Target:  "./database/ent/",
+			Target:  "./ent/",
 			Schema:  "github.com/lrstanley/liam.sh/internal/database/schema",
 			Package: "github.com/lrstanley/liam.sh/internal/database/ent",
 			Header:  header,
