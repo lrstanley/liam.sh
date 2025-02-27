@@ -36,7 +36,10 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }),
   ])
 
-  if (to.meta.auth == true && self.value == null) {
-    return navigateTo(`/-/auth/providers/github?next=${window.location.origin + to.path}`)
+  if (to.path.startsWith("/admin") && self.value == null) {
+    return navigateTo(
+      `${getBackendURL()}/auth/providers/github?next=${window.location.origin + to.path}`,
+      { external: true }
+    )
   }
 })

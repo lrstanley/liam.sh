@@ -69,7 +69,21 @@ func httpServer(ctx context.Context) *http.Server {
 		r.Use(middleware.SetHeader("Strict-Transport-Security", "max-age=31536000"))
 	}
 	r.Use(
-		cors.AllowAll().Handler,
+		cors.New(cors.Options{
+			AllowOriginFunc: func(r *http.Request, origin string) bool { return true },
+			AllowedMethods: []string{
+				http.MethodGet,
+				http.MethodHead,
+				http.MethodPost,
+				http.MethodPut,
+				http.MethodPatch,
+				http.MethodDelete,
+				http.MethodOptions,
+			},
+			AllowedHeaders:   []string{"*"},
+			MaxAge:           300,
+			AllowCredentials: true,
+		}).Handler,
 		chix.UseHeaders(map[string]string{
 			"Content-Security-Policy": "default-src 'self'; img-src * data:; media-src * data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
 			"X-Frame-Options":         "DENY",

@@ -138,8 +138,8 @@ github.com/kylelemons/godebug v1.1.0 h1:RPNrshWIDI6G2gRW9EHilWtl7Z6Sb1BR0xunSBf0
 github.com/kylelemons/godebug v1.1.0/go.mod h1:9/0rRGxNHcop5bhtWyNeEfOS8JIWk580+fNqagV/RAw=
 github.com/leodido/go-urn v1.4.0 h1:WT9HwE9SGECu3lg4d/dIA+jxlljEa1/ffXKmRjqdmIQ=
 github.com/leodido/go-urn v1.4.0/go.mod h1:bvxc+MVxLKB4z00jd1z+Dvzr47oO32F/QSNjSBOlFxI=
-github.com/lrstanley/chix v1.0.4 h1:IGp3INAxMhmsuAvQU3kbFpjfSeRV0cSSs/UR5KMrrLU=
-github.com/lrstanley/chix v1.0.4/go.mod h1:ZE5XlsU4P2Cjpmm64ErraS5xYcNRPeJyOmvFB/bokRc=
+github.com/lrstanley/chix v1.0.5 h1:EYzi2M1gOJ5Q/iExkv0FC/b9+bOb9hYCnWhO1QwoGno=
+github.com/lrstanley/chix v1.0.5/go.mod h1:A27BTzO6dSfzYtLiyMaaCC8Zm7G7pE8/ivWY7uBzyAg=
 github.com/lrstanley/clix v1.0.7 h1:LwD3hlSvERc5Q0dtZUqD3DRY4VJnm9SitLEqnkXg5lk=
 github.com/lrstanley/clix v1.0.7/go.mod h1:t8+YqT94ijWLNvnohkozZu/5jrbuUJTyQR1fU5hfTjg=
 github.com/lrstanley/entrest v0.0.0-20250219025856-73a3acbd6aee h1:gZJ7t2tF9tFxUCMgirslyEtSXVQ2AVRp2UZRhOxPkQc=

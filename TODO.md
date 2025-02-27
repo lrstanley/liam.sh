@@ -10,3 +10,4 @@
 - remove relay connection from some results?
 - date transformer through hey-api
 - <https://github.com/hey-api/openapi-ts/issues/680>
+- upgrade gorilla deps: <https://github.com/markbates/goth/issues/549>

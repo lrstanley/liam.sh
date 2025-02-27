@@ -1,6 +1,5 @@
 import tailwindcss from "@tailwindcss/vite"
 import { createClient } from "@hey-api/openapi-ts"
-import { unlinkSync } from "node:fs"
 
 export default defineNuxtConfig({
   modules: [
@@ -8,7 +7,6 @@ export default defineNuxtConfig({
     "@formkit/auto-animate",
     "@nuxt/ui-pro",
     // "@nuxtjs/html-validator"
-    // "@nuxtjs/fontaine",
   ],
   future: {
     compatibilityVersion: 4,
@@ -64,6 +62,8 @@ export default defineNuxtConfig({
         },
         output: {
           path: "app/utils/http",
+          clean: true,
+          indexFile: false,
         },
         plugins: [
           "@hey-api/client-nuxt",
@@ -82,8 +82,6 @@ export default defineNuxtConfig({
           },
         ],
       })
-
-      unlinkSync("app/utils/http/index.ts")
     },
   },
 })

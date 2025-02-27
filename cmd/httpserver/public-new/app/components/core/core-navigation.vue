@@ -5,9 +5,9 @@ const self = useSelf()
 
 <template>
   <ul class="flex flex-wrap justify-center md:justify-start gap-x-2">
-    <li v-for="link in menuOptions" :key="link.name">
-      <router-link :to="link.to" active-class="active">
-        {{ link.alias }}
+    <li v-for="link in menuOptions" :key="link.label">
+      <router-link v-if="link.to" :to="link.to" active-class="active">
+        {{ link.functionAlias || link.label?.toLowerCase() }}
       </router-link>
     </li>
     <li><a :href="gh?.html_url">github</a></li>

@@ -9,19 +9,20 @@ import { useRouteQuery } from "@vueuse/router"
 import type { WatchStopHandle } from "vue"
 import { client } from "@/utils/http/client.gen"
 
-export function setHTTPClientBaseURL() {
+export function getBackendURL(): string {
   const runtime = useRuntimeConfig()
 
-  let url: string
   if (runtime.API_URL) {
-    url = runtime.API_URL as string
+    return (runtime.API_URL as string).replace(/\/$/, "")
   } else if (runtime.public.API_URL) {
-    url = runtime.public.API_URL as string
-  } else {
-    url = `${useRequestURL().origin}/-`
+    return (runtime.public.API_URL as string).replace(/\/$/, "")
   }
 
-  client.setConfig({ baseURL: url })
+  return `${useRequestURL().origin}/-`
+}
+
+export function setHTTPClientBaseURL() {
+  client.setConfig({ baseURL: getBackendURL(), credentials: "include" })
 }
 
 export type PaginationOptions<T> = {

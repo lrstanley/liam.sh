@@ -2,10 +2,7 @@ module github.com/lrstanley/liam.sh
 
 go 1.24.0
 
-tool (
-	entgo.io/ent/entc/gen
-	github.com/lrstanley/entrest
-)
+tool github.com/lrstanley/entrest
 
 require (
 	entgo.io/ent v0.14.2
@@ -19,7 +16,7 @@ require (
 	github.com/go-playground/form/v4 v4.2.1
 	github.com/google/go-github/v63 v63.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
-	github.com/lrstanley/chix v1.0.4
+	github.com/lrstanley/chix v1.0.5
 	github.com/lrstanley/clix v1.0.7
 	github.com/lrstanley/entrest v0.0.0-20250219025856-73a3acbd6aee
 	github.com/markbates/goth v1.80.0

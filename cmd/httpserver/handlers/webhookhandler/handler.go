@@ -6,7 +6,6 @@ package webhookhandler
 
 import (
 	"bytes"
-	"fmt"
 	"io"
 	"net/http"
 	"reflect"
@@ -28,7 +27,7 @@ func (h *handler) Route(r chi.Router) {
 }
 
 func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
-	url := fmt.Sprintf("https://discord.com/api/webhooks/%s", chi.URLParam(r, "*"))
+	url := "https://discord.com/api/webhooks/" + chi.URLParam(r, "*")
 
 	payload, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -57,7 +56,7 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 	}
 
 	chix.Log(r).WithField("event_type", github.WebHookType(r)).Info("forwarding webhook to discord")
-	req, err := http.NewRequestWithContext(r.Context(), "POST", url, bytes.NewBuffer(payload))
+	req, err := http.NewRequestWithContext(r.Context(), http.MethodPost, url, bytes.NewBuffer(payload))
 	if err != nil {
 		chix.Error(w, r, err)
 		return

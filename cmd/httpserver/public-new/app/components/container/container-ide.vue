@@ -23,51 +23,16 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
         </span>
       </UTooltip>
 
-      <!-- <n-popover
-        placement="top-start"
-        raw
-        :show-arrow="false"
-        class="rounded-sm border border-solid border-zinc-700 shadow-none !m-0"
-      >
-        <template #trigger>
-          <span class="items-center bar-item">
-            <UIcon name="mdi:source-branch" />
-            {{ branchMenuOptions.find((o) => o.to === $route.name)?.name }}
-          </span>
-        </template>
-
-        <ul class="flex flex-col flex-nowrap">
-          <li v-for="link in branchMenuOptions" :key="link.name">
-            <router-link
-              v-slot="{ isActive, href, navigate }"
-              :to="link.to"
-              active-class="bg:zinc-900/50"
-              custom
-            >
-              <a
-                :href="href"
-                class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"
-                :class="{ 'bg-zinc-900/50 text-zinc-300': isActive }"
-                @click="navigate"
-              >
-                <UIcon name="mdi:source-branch" />
-                <span>{{ link.name }}</span>
-              </a>
-            </router-link>
-          </li>
-        </ul>
-      </n-popover> -->
-
       <UPopover mode="hover" :open-delay="150" :content="{ side: 'top', align: 'start', sideOffset: 0 }">
         <span class="items-center bar-item">
           <UIcon name="mdi:source-branch" />
-          {{ branchMenuOptions.find((o) => o.to === $route.path)?.name }}
+          {{ branchMenuOptions.find((o) => o.to === $route.path)?.label }}
         </span>
 
         <template #content>
           <div class="p-[1px]">
             <ul class="flex flex-col flex-nowrap">
-              <li v-for="link in branchMenuOptions" :key="link.name">
+              <li v-for="link in branchMenuOptions" :key="link.label">
                 <router-link v-slot="{ isActive, href, navigate }" :to="link.to" custom>
                   <a
                     :href="href"
@@ -76,7 +41,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
                     @click="navigate"
                   >
                     <UIcon name="mdi:source-branch" />
-                    <span>{{ link.name }}</span>
+                    <span>{{ link.label }}</span>
                   </a>
                 </router-link>
               </li>
