@@ -9,6 +9,7 @@ package rest
 import (
 	"bytes"
 	_ "embed"
+	"encoding"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -96,6 +97,25 @@ func IsMethodNotAllowed(err error) bool {
 	return errors.Is(err, ErrMethodNotAllowed)
 }
 
+type ErrInvalidID struct {
+	ID  string
+	Err error
+}
+
+func (e ErrInvalidID) Error() string {
+	return fmt.Sprintf("invalid ID provided: %q: %v", e.ID, e.Err)
+}
+
+func (e ErrInvalidID) Unwrap() error {
+	return e.Err
+}
+
+// IsInvalidID returns true if the unwrapped/underlying error is of type ErrInvalidID.
+func IsInvalidID(err error) bool {
+	var target *ErrInvalidID
+	return errors.As(err, &target)
+}
+
 // JSON marshals 'v' to JSON, and setting the Content-Type as application/json.
 // Note that this does NOT auto-escape HTML. If 'v' cannot be marshalled to JSON,
 // this will panic.
@@ -176,11 +196,51 @@ func Req[Resp any](s *Server, op Operation, fn func(*http.Request) (*Resp, error
 	}
 }
 
+// resolveID resolves the ID from the request path, and unmarshals it into the provided type.
+// Only supports string, int, and types that support UnmarshalText, UnmarshalJSON, or UnmarshalBinary
+// (in that order).
+func resolveID[T any](r *http.Request) (id T, err error) {
+	value := r.PathValue("id")
+
+	switch any(id).(type) {
+	case string:
+		id = any(value).(T)
+	case int:
+		rid, err := strconv.Atoi(value)
+		if err == nil {
+			id = any(rid).(T)
+		}
+	default:
+		hasUnmarshal := false
+
+		// Check if the underlying type supports UnmarshalText, UnmarshalJSON, or UnmarshalBinary.
+		if u, ok := any(&id).(encoding.TextUnmarshaler); ok {
+			hasUnmarshal = true
+			err = u.UnmarshalText([]byte(value))
+		} else if u, ok := any(&id).(json.Unmarshaler); ok {
+			hasUnmarshal = true
+			err = u.UnmarshalJSON([]byte(value))
+		} else if u, ok := any(&id).(encoding.BinaryUnmarshaler); ok {
+			hasUnmarshal = true
+			err = u.UnmarshalBinary([]byte(value))
+		}
+
+		if !hasUnmarshal {
+			panic(fmt.Sprintf("unsupported ID type (cannot unmarshal): %T", id))
+		}
+	}
+
+	if err != nil {
+		return id, &ErrInvalidID{ID: value, Err: err}
+	}
+	return id, nil
+}
+
 // ReqID is similar to Req, but also processes an "id" path parameter and provides it to the
 // handler function.
-func ReqID[Resp any](s *Server, op Operation, fn func(*http.Request, int) (*Resp, error)) http.HandlerFunc {
+func ReqID[Resp, I any](s *Server, op Operation, fn func(*http.Request, I) (*Resp, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(r.PathValue("id"))
+		id, err := resolveID[I](r)
 		if err != nil {
 			handleResponse[Resp](s, w, r, op, nil, err)
 			return
@@ -206,9 +266,9 @@ func ReqParam[Params, Resp any](s *Server, op Operation, fn func(*http.Request, 
 
 // ReqIDParam is similar to ReqParam, but also processes an "id" path parameter and request
 // body/query params, and provides it to the handler function.
-func ReqIDParam[Params, Resp any](s *Server, op Operation, fn func(*http.Request, int, *Params) (*Resp, error)) http.HandlerFunc {
+func ReqIDParam[Params, Resp, I any](s *Server, op Operation, fn func(*http.Request, I, *Params) (*Resp, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		id, err := strconv.Atoi(r.PathValue("id"))
+		id, err := resolveID[I](r)
 		if err != nil {
 			handleResponse[Resp](s, w, r, op, nil, err)
 			return
@@ -299,8 +359,8 @@ var scalarTemplate = template.Must(template.New("docs").Parse(`<!DOCTYPE html>
       });
     </script>
     <script
-      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.25.90"
-      integrity="sha256-++YJpNWmH8Qh3qcTB07t45rwT6wywwfvfBpMayejvbo="
+      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.25.99"
+      integrity="sha256-uuOSJ5AN5uhftgJPc4yYZ3PZpdYcsolIRamzCKTiJnE="
       crossorigin="anonymous"
     ></script>
   </body>
@@ -423,6 +483,8 @@ func (s *Server) DefaultErrorHandler(w http.ResponseWriter, r *http.Request, op 
 		resp.Code = http.StatusMethodNotAllowed
 	case IsBadRequest(err):
 		resp.Code = http.StatusBadRequest
+	case IsInvalidID(err):
+		resp.Code = http.StatusBadRequest
 	case errors.Is(err, privacy.Deny):
 		resp.Code = http.StatusForbidden
 	case ent.IsNotFound(err):
@@ -524,46 +586,43 @@ func UseEntContext(db *ent.Client) func(next http.Handler) http.Handler {
 func (s *Server) Handler(r chi.Router) {
 	r.Use(UseEntContext(s.db))
 	r.Get("/github-assets", ReqParam(s, OperationList, s.ListGithubAssets))
-	r.Get("/github-assets/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubAsset))
-	r.Get("/github-assets/{id:^[0-9]{1,50}$}/release", ReqID(s, OperationRead, s.GetGithubAssetRelease))
+	r.Get("/github-assets/{id}", ReqID(s, OperationRead, s.GetGithubAsset))
+	r.Get("/github-assets/{id}/release", ReqID(s, OperationRead, s.GetGithubAssetRelease))
 	r.Get("/github-events", ReqParam(s, OperationList, s.ListGithubEvents))
-	r.Get("/github-events/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubEvent))
+	r.Get("/github-events/{id}", ReqID(s, OperationRead, s.GetGithubEvent))
 	r.Get("/github-gists", ReqParam(s, OperationList, s.ListGithubGists))
-	r.Get("/github-gists/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubGist))
+	r.Get("/github-gists/{id}", ReqID(s, OperationRead, s.GetGithubGist))
 	r.Get("/github-releases", ReqParam(s, OperationList, s.ListGithubReleases))
-	r.Get("/github-releases/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubRelease))
-	r.Get("/github-releases/{id:^[0-9]{1,50}$}/repository", ReqID(s, OperationRead, s.GetGithubReleaseRepository))
-	r.Get("/github-releases/{id:^[0-9]{1,50}$}/assets", ReqIDParam(s, OperationList, s.ListGithubReleaseAssets))
+	r.Get("/github-releases/{id}", ReqID(s, OperationRead, s.GetGithubRelease))
+	r.Get("/github-releases/{id}/repository", ReqID(s, OperationRead, s.GetGithubReleaseRepository))
+	r.Get("/github-releases/{id}/assets", ReqIDParam(s, OperationList, s.ListGithubReleaseAssets))
 	r.Get("/github-repositories", ReqParam(s, OperationList, s.ListGithubRepositories))
-	r.Get("/github-repositories/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetGithubRepository))
-	r.Get("/github-repositories/{id:^[0-9]{1,50}$}/labels", ReqIDParam(s, OperationList, s.ListGithubRepositoryLabels))
-	r.Get("/github-repositories/{id:^[0-9]{1,50}$}/releases", ReqIDParam(s, OperationList, s.ListGithubRepositoryReleases))
+	r.Get("/github-repositories/{id}", ReqID(s, OperationRead, s.GetGithubRepository))
+	r.Get("/github-repositories/{id}/labels", ReqIDParam(s, OperationList, s.ListGithubRepositoryLabels))
+	r.Get("/github-repositories/{id}/releases", ReqIDParam(s, OperationList, s.ListGithubRepositoryReleases))
 	r.Get("/labels", ReqParam(s, OperationList, s.ListLabels))
-	r.Get("/labels/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetLabel))
-	r.Get("/labels/{id:^[0-9]{1,50}$}/posts", ReqIDParam(s, OperationList, s.ListLabelPosts))
-	r.Get("/labels/{id:^[0-9]{1,50}$}/github-repositories", ReqIDParam(s, OperationList, s.ListLabelGithubRepositories))
+	r.Get("/labels/{id}", ReqID(s, OperationRead, s.GetLabel))
+	r.Get("/labels/{id}/posts", ReqIDParam(s, OperationList, s.ListLabelPosts))
+	r.Get("/labels/{id}/github-repositories", ReqIDParam(s, OperationList, s.ListLabelGithubRepositories))
 	r.Post("/labels", ReqParam(s, OperationCreate, s.CreateLabel))
-	r.Patch("/labels/{id:^[0-9]{1,50}$}", ReqIDParam(s, OperationUpdate, s.UpdateLabel))
-	r.Delete("/labels/{id:^[0-9]{1,50}$}", ReqID(s, OperationDelete, s.DeleteLabel))
+	r.Patch("/labels/{id}", ReqIDParam(s, OperationUpdate, s.UpdateLabel))
+	r.Delete("/labels/{id}", ReqID(s, OperationDelete, s.DeleteLabel))
 	r.Get("/posts", ReqParam(s, OperationList, s.ListPosts))
-	r.Get("/posts/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetPost))
-	r.Get("/posts/{id:^[0-9]{1,50}$}/author", ReqID(s, OperationRead, s.GetPostAuthor))
-	r.Get("/posts/{id:^[0-9]{1,50}$}/labels", ReqIDParam(s, OperationList, s.ListPostLabels))
+	r.Get("/posts/{id}", ReqID(s, OperationRead, s.GetPost))
+	r.Get("/posts/{id}/author", ReqID(s, OperationRead, s.GetPostAuthor))
+	r.Get("/posts/{id}/labels", ReqIDParam(s, OperationList, s.ListPostLabels))
 	r.Post("/posts", ReqParam(s, OperationCreate, s.CreatePost))
-	r.Patch("/posts/{id:^[0-9]{1,50}$}", ReqIDParam(s, OperationUpdate, s.UpdatePost))
-	r.Delete("/posts/{id:^[0-9]{1,50}$}", ReqID(s, OperationDelete, s.DeletePost))
+	r.Patch("/posts/{id}", ReqIDParam(s, OperationUpdate, s.UpdatePost))
+	r.Delete("/posts/{id}", ReqID(s, OperationDelete, s.DeletePost))
 	r.Get("/users", ReqParam(s, OperationList, s.ListUsers))
-	r.Get("/users/{id:^[0-9]{1,50}$}", ReqID(s, OperationRead, s.GetUser))
-	r.Get("/users/{id:^[0-9]{1,50}$}/posts", ReqIDParam(s, OperationList, s.ListUserPosts))
+	r.Get("/users/{id}", ReqID(s, OperationRead, s.GetUser))
+	r.Get("/users/{id}/posts", ReqIDParam(s, OperationList, s.ListUserPosts))
 
 	if !s.config.DisableSpecHandler {
 		r.Get("/openapi.json", s.Spec)
 	}
 
 	if !s.config.DisableSpecHandler && !s.config.DisableDocsHandler {
-		// If specs are enabled, it's safe to provide documentation, and if they don't override the
-		// root endpoint, we can redirect to the docs.
-		r.Get("/", http.RedirectHandler(s.config.BasePath+"/docs", http.StatusTemporaryRedirect).ServeHTTP)
 		r.Get("/docs", s.Docs)
 	}
 

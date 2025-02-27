@@ -9491,6 +9491,7 @@
                 "description": "Filters field \"asset_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9501,6 +9502,7 @@
                 "description": "Filters field \"asset_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9510,7 +9512,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetCreatedAtGT": {
@@ -9518,7 +9521,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetCreatedAtLT": {
@@ -9526,7 +9530,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetCreatedAtNEQ": {
@@ -9534,7 +9539,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetDownloadCountGT": {
@@ -9543,6 +9549,7 @@
                 "description": "Filters field \"download_count\" to be greater than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9553,6 +9560,7 @@
                 "description": "Filters field \"download_count\" to be less than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9727,6 +9735,7 @@
                 "description": "Filters field \"size\" to be greater than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9737,6 +9746,7 @@
                 "description": "Filters field \"size\" to be less than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -9746,7 +9756,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetUpdatedAtGT": {
@@ -9754,7 +9765,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetUpdatedAtIsNil": {
@@ -9770,7 +9782,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAssetUpdatedAtNEQ": {
@@ -9778,7 +9791,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorCreateTimeEQ": {
@@ -9786,7 +9800,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorCreateTimeGT": {
@@ -9794,7 +9809,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorCreateTimeLT": {
@@ -9802,7 +9818,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorCreateTimeNEQ": {
@@ -9810,7 +9827,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorEmailContains": {
@@ -10154,7 +10172,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorUpdateTimeGT": {
@@ -10162,7 +10181,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorUpdateTimeLT": {
@@ -10170,7 +10190,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorUpdateTimeNEQ": {
@@ -10178,7 +10199,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeAuthorUserIDEQ": {
@@ -10232,7 +10254,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryCreatedAtGT": {
@@ -10240,7 +10263,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryCreatedAtLT": {
@@ -10248,7 +10272,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryCreatedAtNEQ": {
@@ -10256,7 +10281,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryDefaultBranchContains": {
@@ -10634,7 +10660,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -10645,7 +10672,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -10655,6 +10683,7 @@
                 "description": "Filters field \"repo_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -10665,6 +10694,7 @@
                 "description": "Filters field \"repo_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -10690,7 +10720,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryUpdatedAtGT": {
@@ -10698,7 +10729,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryUpdatedAtIsNil": {
@@ -10714,7 +10746,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeGithubRepositoryUpdatedAtNEQ": {
@@ -10722,7 +10755,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeHasAsset": {
@@ -10786,7 +10820,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelCreateTimeGT": {
@@ -10794,7 +10829,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelCreateTimeLT": {
@@ -10802,7 +10838,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelCreateTimeNEQ": {
@@ -10810,7 +10847,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelNameContains": {
@@ -10896,7 +10934,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelUpdateTimeGT": {
@@ -10904,7 +10943,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelUpdateTimeLT": {
@@ -10912,7 +10952,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeLabelUpdateTimeNEQ": {
@@ -10920,7 +10961,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostContentContains": {
@@ -10960,7 +11002,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostCreateTimeGT": {
@@ -10968,7 +11011,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostCreateTimeLT": {
@@ -10976,7 +11020,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostCreateTimeNEQ": {
@@ -10984,7 +11029,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostPublicEQ": {
@@ -11000,7 +11046,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostPublishedAtGT": {
@@ -11008,7 +11055,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostPublishedAtLT": {
@@ -11016,7 +11064,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostPublishedAtNEQ": {
@@ -11024,7 +11073,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostSlugEQ": {
@@ -11134,7 +11184,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostUpdateTimeGT": {
@@ -11142,7 +11193,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostUpdateTimeLT": {
@@ -11150,7 +11202,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostUpdateTimeNEQ": {
@@ -11158,7 +11211,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgePostViewCountEQ": {
@@ -11198,7 +11252,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleaseCreatedAtGT": {
@@ -11206,7 +11261,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleaseCreatedAtLT": {
@@ -11214,7 +11270,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleaseCreatedAtNEQ": {
@@ -11222,7 +11279,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleaseDraftEQ": {
@@ -11332,7 +11390,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleasePublishedAtGT": {
@@ -11340,7 +11399,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleasePublishedAtLT": {
@@ -11348,7 +11408,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleasePublishedAtNEQ": {
@@ -11356,7 +11417,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeReleaseReleaseIDEQ": {
@@ -11365,6 +11427,7 @@
                 "description": "Filters field \"release_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -11375,6 +11438,7 @@
                 "description": "Filters field \"release_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -11548,7 +11612,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryCreatedAtGT": {
@@ -11556,7 +11621,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryCreatedAtLT": {
@@ -11564,7 +11630,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryCreatedAtNEQ": {
@@ -11572,7 +11639,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryDefaultBranchContains": {
@@ -11950,7 +12018,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -11961,7 +12030,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -11971,6 +12041,7 @@
                 "description": "Filters field \"repo_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -11981,6 +12052,7 @@
                 "description": "Filters field \"repo_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12006,7 +12078,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryUpdatedAtGT": {
@@ -12014,7 +12087,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryUpdatedAtIsNil": {
@@ -12030,7 +12104,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "EdgeRepositoryUpdatedAtNEQ": {
@@ -12038,7 +12113,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "FilterOperation": {
@@ -12055,6 +12131,7 @@
                 "description": "Filters field \"asset_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12065,6 +12142,7 @@
                 "description": "Filters field \"asset_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12074,7 +12152,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetCreatedAtGT": {
@@ -12082,7 +12161,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetCreatedAtLT": {
@@ -12090,7 +12170,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetCreatedAtNEQ": {
@@ -12098,7 +12179,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetDownloadCountGT": {
@@ -12107,6 +12189,7 @@
                 "description": "Filters field \"download_count\" to be greater than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12117,6 +12200,7 @@
                 "description": "Filters field \"download_count\" to be less than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12300,6 +12384,7 @@
                 "description": "Filters field \"size\" to be greater than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12310,6 +12395,7 @@
                 "description": "Filters field \"size\" to be less than the provided value.",
                 "schema": {
                     "type": "number",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12319,7 +12405,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetUpdatedAtGT": {
@@ -12327,7 +12414,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetUpdatedAtIsNil": {
@@ -12343,7 +12431,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubAssetUpdatedAtNEQ": {
@@ -12351,7 +12440,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubEventActorIDEQ": {
@@ -12360,6 +12450,7 @@
                 "description": "Filters field \"actor_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12370,6 +12461,7 @@
                 "description": "Filters field \"actor_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12379,7 +12471,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubEventCreatedAtGT": {
@@ -12387,7 +12480,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubEventCreatedAtLT": {
@@ -12395,7 +12489,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubEventCreatedAtNEQ": {
@@ -12403,7 +12498,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubEventEventIDEQ": {
@@ -12531,6 +12627,7 @@
                 "description": "Filters field \"repo_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12541,6 +12638,7 @@
                 "description": "Filters field \"repo_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12566,7 +12664,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistCreatedAtGT": {
@@ -12574,7 +12673,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistCreatedAtLT": {
@@ -12582,7 +12682,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistCreatedAtNEQ": {
@@ -12590,7 +12691,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistDescriptionContains": {
@@ -12828,6 +12930,7 @@
                 "description": "Filters field \"size\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12838,6 +12941,7 @@
                 "description": "Filters field \"size\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -12925,7 +13029,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistUpdatedAtGT": {
@@ -12933,7 +13038,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistUpdatedAtLT": {
@@ -12941,7 +13047,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubGistUpdatedAtNEQ": {
@@ -12949,7 +13056,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseCreatedAtEQ": {
@@ -12957,7 +13065,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseCreatedAtGT": {
@@ -12965,7 +13074,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseCreatedAtLT": {
@@ -12973,7 +13083,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseCreatedAtNEQ": {
@@ -12981,7 +13092,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseDraftEQ": {
@@ -13100,7 +13212,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleasePublishedAtGT": {
@@ -13108,7 +13221,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleasePublishedAtLT": {
@@ -13116,7 +13230,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleasePublishedAtNEQ": {
@@ -13124,7 +13239,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubReleaseReleaseIDEQ": {
@@ -13133,6 +13249,7 @@
                 "description": "Filters field \"release_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -13143,6 +13260,7 @@
                 "description": "Filters field \"release_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -13316,7 +13434,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryCreatedAtGT": {
@@ -13324,7 +13443,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryCreatedAtLT": {
@@ -13332,7 +13452,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryCreatedAtNEQ": {
@@ -13340,7 +13461,8 @@
                 "in": "query",
                 "description": "Filters field \"created_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryDefaultBranchContains": {
@@ -13727,7 +13849,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -13738,7 +13861,8 @@
                 "schema": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "type": "string",
+                        "format": "date-time"
                     }
                 }
             },
@@ -13748,6 +13872,7 @@
                 "description": "Filters field \"repo_id\" to be equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -13758,6 +13883,7 @@
                 "description": "Filters field \"repo_id\" to be not equal to the provided value.",
                 "schema": {
                     "type": "integer",
+                    "format": "int64",
                     "maximum": 9223372036854775807,
                     "minimum": -9223372036854775808
                 }
@@ -13783,7 +13909,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryUpdatedAtGT": {
@@ -13791,7 +13918,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryUpdatedAtIsNil": {
@@ -13807,7 +13935,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "GithubRepositoryUpdatedAtNEQ": {
@@ -13815,7 +13944,8 @@
                 "in": "query",
                 "description": "Filters field \"updated_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelCreateTimeEQ": {
@@ -13823,7 +13953,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelCreateTimeGT": {
@@ -13831,7 +13962,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelCreateTimeLT": {
@@ -13839,7 +13971,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelCreateTimeNEQ": {
@@ -13847,7 +13980,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelID": {
@@ -13942,7 +14076,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelUpdateTimeGT": {
@@ -13950,7 +14085,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelUpdateTimeLT": {
@@ -13958,7 +14094,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "LabelUpdateTimeNEQ": {
@@ -13966,7 +14103,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "Page": {
@@ -14016,7 +14154,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostCreateTimeGT": {
@@ -14024,7 +14163,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostCreateTimeLT": {
@@ -14032,7 +14172,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostCreateTimeNEQ": {
@@ -14040,7 +14181,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostID": {
@@ -14065,7 +14207,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostPublishedAtGT": {
@@ -14073,7 +14216,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostPublishedAtLT": {
@@ -14081,7 +14225,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostPublishedAtNEQ": {
@@ -14089,7 +14234,8 @@
                 "in": "query",
                 "description": "Filters field \"published_at\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostSlugEQ": {
@@ -14199,7 +14345,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostUpdateTimeGT": {
@@ -14207,7 +14354,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostUpdateTimeLT": {
@@ -14215,7 +14363,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostUpdateTimeNEQ": {
@@ -14223,7 +14372,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "PostViewCountEQ": {
@@ -14261,7 +14411,7 @@
             "PrettyResponse": {
                 "name": "pretty",
                 "in": "query",
-                "description": "If set to true, any JSON response will be indented. Not recommended for best performance.",
+                "description": "If set to true, any JSON response will be indented.",
                 "schema": {
                     "type": "boolean"
                 }
@@ -14424,7 +14574,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserCreateTimeGT": {
@@ -14432,7 +14583,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserCreateTimeLT": {
@@ -14440,7 +14592,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserCreateTimeNEQ": {
@@ -14448,7 +14601,8 @@
                 "in": "query",
                 "description": "Filters field \"create_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserEmailContains": {
@@ -14801,7 +14955,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserUpdateTimeGT": {
@@ -14809,7 +14964,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be greater than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserUpdateTimeLT": {
@@ -14817,7 +14973,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be less than the provided value.",
                 "schema": {
-                    "type": "number"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserUpdateTimeNEQ": {
@@ -14825,7 +14982,8 @@
                 "in": "query",
                 "description": "Filters field \"update_time\" to be not equal to the provided value.",
                 "schema": {
-                    "type": "string"
+                    "type": "string",
+                    "format": "date-time"
                 }
             },
             "UserUserIDEQ": {
