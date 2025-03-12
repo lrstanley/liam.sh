@@ -112,7 +112,7 @@ const drawerActive = ref(false)
 </template>
 
 <style scoped>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .repo-name {
   @apply text-[1.4em] md:text-[1.5em] truncate;

@@ -9,6 +9,7 @@
       :ui="{ footer: 'lg:border-t lg:border-(--ui-border)' }"
     >
       <template #default="{ collapsed }">
+        <Ubutton color="neutral" variant="ghost" block :square="collapsed">Test</Ubutton>
         <UNavigationMenu :collapsed="collapsed" :items="adminSidebarOptions" orientation="vertical" />
 
         <!-- TODO: show user on bottom, similar to dashboard template -->

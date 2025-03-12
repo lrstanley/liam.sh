@@ -73,7 +73,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 </template>
 
 <style>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .bottom-bar {
   line-height: 1.4;

@@ -135,7 +135,7 @@ function fetchMoreEvents() {
 </template>
 
 <style scoped>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 #main {
   font-size: 1.05em;

@@ -34,16 +34,14 @@ const gh = useGithubUser()
 </template>
 
 <style scoped>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .cursor-wrap {
   @apply w-auto inline-flex;
 }
 .cursor {
   @apply whitespace-nowrap overflow-hidden inline-flex border-r-4 border-r-emerald-500 border-solid;
-  animation:
-    typing 1s steps(40, end),
-    blink-caret 0.75s step-end infinite;
+  animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {

@@ -64,5 +64,5 @@ const gists = computed(() => data.value?.content ?? [])
 </template>
 
 <style scoped>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 </style>

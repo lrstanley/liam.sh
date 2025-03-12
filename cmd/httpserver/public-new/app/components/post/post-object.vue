@@ -55,7 +55,7 @@ const post = ref(props.value)
 </template>
 
 <style scoped>
-@reference "~/assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .post-title {
   @apply text-[1.5em];
