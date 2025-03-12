@@ -4,6 +4,4 @@
  * the LICENSE file.
  */
 
-import type { GithubUser } from "@/utils/http/types.gen"
-
 export const useGithubUser = () => useState<GithubUser | null | undefined>("githubUser", undefined)

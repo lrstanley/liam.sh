@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { version as vueVersion } from "vue"
-import { getServiceVersion } from "@/utils/http/sdk.gen"
 
 const { data: version } = await getServiceVersion({ composable: "useFetch" })
 </script>

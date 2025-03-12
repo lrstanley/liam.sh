@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
-import { listGithubGists } from "@/utils/http/sdk.gen"
 
 useHead({ title: "Gists" })
 definePageMeta({

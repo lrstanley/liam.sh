@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Label } from "@/utils/http/types.gen"
-
 const props = withDefaults(
   defineProps<{
     linkable?: boolean

@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { h } from "vue"
 import { NBadge } from "naive-ui"
-import { getLabelsCount } from "@/utils/http/services.gen"
-import type { Label, LabelCount } from "@/utils/http/types.gen"
 import type { ComponentProps } from "@/lib/util/vueprops"
 
 const props = withDefaults(

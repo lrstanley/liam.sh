@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { createLabel } from "@/utils/http/services.gen"
-import type { LabelCreate } from "@/utils/http/types.gen"
 import LabelSelect from "@/components/label/label-select.vue"
 
 const props = defineProps<{

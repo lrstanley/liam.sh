@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getGithubStats } from "@/utils/http/sdk.gen"
-
 const githubStats = await getGithubStats({ composable: "$fetch" })
 
 const gh = useGithubUser()

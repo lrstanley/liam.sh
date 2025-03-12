@@ -3,7 +3,6 @@ import { EditorView } from "codemirror"
 import { Codemirror } from "vue-codemirror"
 import { markdown } from "@codemirror/lang-markdown"
 import { oneDark } from "@codemirror/theme-one-dark"
-import type { PostRead } from "@/utils/http/types.gen"
 
 const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
 

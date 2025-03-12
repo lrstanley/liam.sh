@@ -3,9 +3,6 @@
  * this source code is governed by the MIT license that can be found in
  * the LICENSE file.
  */
-import { getSelf, getGithubUser } from "@/utils/http/sdk.gen"
-import type { ErrorUnauthorized } from "@/utils/http/types.gen"
-
 export default defineNuxtRouteMiddleware(async (to, from) => {
   setHTTPClientBaseURL()
 

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { GithubRepositoryRead } from "@/utils/http/types.gen"
-
 const props = defineProps<{
   value: GithubRepositoryRead
 }>()

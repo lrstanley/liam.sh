@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getCodingStats } from "@/utils/http/sdk.gen"
-
 const { data: codingStats, error } = await getCodingStats({ composable: "useFetch" })
 if (error.value) throw error.value
 

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from "@vueuse/components"
-import { listGithubEvents } from "@/utils/http/sdk.gen"
 
 import {
   EventCreate,

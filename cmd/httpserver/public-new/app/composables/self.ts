@@ -4,6 +4,4 @@
  * the LICENSE file.
  */
 
-import type { User } from "@/utils/http/types.gen"
-
 export const useSelf = () => useState<User | null | undefined>("self", undefined) // undefined == not fetched yet, null == error

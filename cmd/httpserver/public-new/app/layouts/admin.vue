@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+console.log(import.meta.env.MODE)
+</script>
 
 <template>
   <UDashboardGroup>

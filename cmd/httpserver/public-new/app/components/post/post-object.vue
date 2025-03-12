@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
-import type { PostRead } from "@/utils/http/types.gen"
 
 const props = defineProps<{
   value: PostRead

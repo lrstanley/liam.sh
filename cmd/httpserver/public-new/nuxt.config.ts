@@ -1,8 +1,8 @@
 import tailwindcss from "@tailwindcss/vite"
-import { createClient } from "@hey-api/openapi-ts"
 
 export default defineNuxtConfig({
   modules: [
+    "@hey-api/nuxt",
     "@vueuse/nuxt",
     "@formkit/auto-animate",
     "@nuxt/ui-pro",
@@ -49,39 +49,33 @@ export default defineNuxtConfig({
     },
     plugins: [tailwindcss()],
   },
-  build: {
-    // TODO: https://github.com/hey-api/openapi-ts/issues/1660
-    transpile: ["@hey-api/client-nuxt"],
-  },
-  hooks: {
-    "build:before": async () => {
-      await createClient({
-        experimentalParser: true,
-        input: {
-          path: "../../../internal/database/ent/rest/openapi.json",
+  heyApi: {
+    config: {
+      experimentalParser: true,
+      input: {
+        path: "../../../internal/database/ent/rest/openapi.json",
+      },
+      output: {
+        path: "app/utils/http",
+        clean: true,
+        indexFile: true,
+      },
+      plugins: [
+        "@hey-api/client-nuxt",
+        "@hey-api/schemas",
+        {
+          name: "@hey-api/sdk",
+          transformer: true,
         },
-        output: {
-          path: "app/utils/http",
-          clean: true,
-          indexFile: false,
+        {
+          enums: "javascript",
+          name: "@hey-api/typescript",
         },
-        plugins: [
-          "@hey-api/client-nuxt",
-          "@hey-api/schemas",
-          {
-            name: "@hey-api/sdk",
-            transformer: true,
-          },
-          {
-            enums: "javascript",
-            name: "@hey-api/typescript",
-          },
-          {
-            name: "@hey-api/transformers",
-            dates: true,
-          },
-        ],
-      })
+        {
+          name: "@hey-api/transformers",
+          dates: true,
+        },
+      ],
     },
   },
 })

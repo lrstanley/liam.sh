@@ -3,7 +3,6 @@ import { h } from "vue"
 import PostObject from "@/components/post/post-object.vue"
 import LabelObject from "@/components/label/label-object.vue"
 import RepoObject from "@/components/repo/repo-object.vue"
-import type { PostRead, LabelRead, GithubRepositoryRead } from "@/utils/http/types.gen"
 
 type MaybeArray<T> = T | T[]
 type Value = PostRead | LabelRead | GithubRepositoryRead
