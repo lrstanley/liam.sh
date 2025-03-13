@@ -4,7 +4,7 @@
  * the LICENSE file.
  */
 
-import { client } from "@/utils/http/client.gen"
+import { client } from "#hey-api/client.gen"
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.hook("app:beforeMount", () => {

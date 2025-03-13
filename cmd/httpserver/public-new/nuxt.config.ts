@@ -51,14 +51,8 @@ export default defineNuxtConfig({
   },
   heyApi: {
     config: {
-      experimentalParser: true,
       input: {
         path: "../../../internal/database/ent/rest/openapi.json",
-      },
-      output: {
-        path: "app/utils/http",
-        clean: true,
-        indexFile: true,
       },
       plugins: [
         "@hey-api/client-nuxt",

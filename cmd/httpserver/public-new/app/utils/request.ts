@@ -7,7 +7,7 @@
 import { shallowEqual } from "@/utils/equal"
 import { useRouteQuery } from "@vueuse/router"
 import type { WatchStopHandle } from "vue"
-import { client } from "@/utils/http/client.gen"
+import { client } from "#hey-api/client.gen"
 
 export function getBackendURL(): string {
   const runtime = useRuntimeConfig()
