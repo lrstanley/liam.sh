@@ -1,138 +1,116 @@
 <script setup lang="ts">
-import { useTimeAgo } from "@vueuse/core"
-
-const props = defineProps<{
+const { value: repo, linkable = false } = defineProps<{
   value: GithubRepositoryRead
   linkable?: boolean
 }>()
 
-const state = useState()
-const repo = ref(props.value)
-
 const drawerActive = ref(false)
+const gh = useGithubUser()
 </script>
 
 <template>
-  <a :href="props.linkable ? repo.html_url : ''" target="_blank">
-    <n-drawer
-      v-model:show="drawerActive"
-      :auto-focus="false"
-      :height="200"
-      placement="bottom"
-      class="bg-dark-400"
-    >
-      <n-drawer-content title="repo labels">
-        <div class="inline-flex flex-wrap flex-auto gap-1">
-          <LabelObject
-            v-for="label in repo.edges.labels"
-            :key="label.id"
-            :value="label"
-            route="/repos"
-            linkable
-            @click="drawerActive = false"
-          />
-        </div>
-      </n-drawer-content>
-    </n-drawer>
+  <div>
+    <div class="flex flex-row gap-4 my-6">
+      <UAvatar :src="repo.owner.avatar_url + '&s=40'" class="mt-1" />
+      <div class="flex flex-col w-full gap-1">
+        <div class="flex flex-row">
+          <a
+            class="text-[1.4em] md:text-[1.5em] truncate text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+            :href="repo.html_url"
+            target="_blank"
+          >
+            {{ repo.owner.login == gh?.login ? repo.name : repo.full_name }}
+          </a>
 
-    <n-thing class="mb-7" content-indented v-bind="$attrs">
-      <template #avatar>
-        <n-avatar :src="repo.owner.avatar_url + '&s=40'" round />
-      </template>
-      <template #header>
-        <div class="repo-name text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-          {{ repo.owner.login == state.githubUser.login ? repo.name : repo.full_name }}
+          <a v-if="repo.homepage" :href="repo.homepage" target="_blank" class="ml-auto">
+            <UButton color="primary" variant="outline" size="xs" class="cursor-pointer">
+              <template #icon>
+                <UIcon name="mdi:link" />
+              </template>
+              homepage
+            </UButton>
+          </a>
         </div>
-      </template>
-      <template #header-extra>
-        <a v-if="repo.homepage" :href="repo.homepage" target="_blank">
-          <n-tag type="success" size="small" class="cursor-pointer">
-            <template #icon>
-              <UIcon name="mdi:link" />
-            </template>
-            homepage
-          </n-tag>
-        </a>
-      </template>
-      <template #description>
-        <span class="flex gap-1">
-          <n-popover>
-            <template #trigger>
-              <span class="inline-flex">
-                <UIcon name="mdi:update" class="mr-1 text-purple-400" />
-                <i class="text-zinc-400">
-                  {{ useTimeAgo(repo.pushed_at).value }}
-                </i>
-              </span>
-            </template>
-            last updated
-          </n-popover>
 
-          <n-popover>
-            <template #trigger>
-              <span class="hidden mr-auto md:inline-flex">
-                <UIcon name="mdi:rocket-launch-outline" class="mr-1 text-lime-400 ml-1ch" />
-                <i class="text-zinc-400">
-                  {{ useTimeAgo(repo.created_at).value }}
-                </i>
+        <div class="flex flex-row gap-2 text-sm">
+          <UTooltip
+            v-if="repo.pushed_at"
+            :delay-duration="50"
+            :content="{ side: 'top' }"
+            text="last updated"
+          >
+            <div class="inline-flex flex-row items-center">
+              <UIcon name="mdi:update" class="mr-1 text-purple-400" />
+              <span class="italic text-zinc-400">
+                {{ useTimeAgo(repo.pushed_at).value }}
               </span>
-            </template>
-            created
-          </n-popover>
+            </div>
+          </UTooltip>
+
+          <UTooltip :delay-duration="50" :content="{ side: 'top' }" text="created">
+            <div class="flex-row items-center hidden mr-auto md:inline-flex">
+              <UIcon name="mdi:rocket-launch-outline" class="mr-1 text-lime-400 ml-1ch" />
+              <span class="italic text-zinc-400">
+                {{ useTimeAgo(repo.created_at).value }}
+              </span>
+            </div>
+          </UTooltip>
+
           <RepoStatus :value="repo" class="inline-flex gap-1 ml-auto" />
-        </span>
-      </template>
+        </div>
 
-      <span v-html="repo.description || 'No description available'" />
+        <div v-html="repo.description || 'No description available'" class="my-2" />
 
-      <template v-if="repo.edges.labels" #action>
-        <div class="flex justify-between flex-auto">
-          <div class="flex-wrap flex-auto hidden gap-1 md:inline-flex">
+        <div class="flex flex-row gap-2">
+          <div v-if="repo.edges.labels" class="flex flex-row flex-wrap gap-1">
             <LabelObject
               v-for="label in repo.edges.labels"
               :key="label.id"
               :value="label"
               route="/repos"
               linkable
+              class="hidden md:flex"
             />
-          </div>
-          <div class="inline-flex flex-wrap flex-auto gap-1 md:hidden">
-            <n-button href="#" @click.prevent="drawerActive = true">repo labels</n-button>
+
+            <UDrawer v-model:open="drawerActive" direction="bottom">
+              <UButton
+                label="Repo labels"
+                color="neutral"
+                variant="subtle"
+                size="xs"
+                trailing-icon="lucide:chevron-up"
+                class="flex md:hidden"
+              />
+
+              <template #content>
+                <div class="flex flex-wrap flex-auto gap-1 p-4">
+                  <LabelObject
+                    v-for="label in repo.edges.labels"
+                    :key="label.id"
+                    :value="label"
+                    route="/repos"
+                    linkable
+                    @click="drawerActive = false"
+                  />
+                </div>
+              </template>
+            </UDrawer>
           </div>
 
-          <n-tag class="ml-3 text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500">
-            {{ repo.star_count.toLocaleString() }}
-            {{ repo.star_count === 1 ? "star" : "stars" }}
-          </n-tag>
+          <!-- views -->
+          <div class="flex flex-col ml-auto shrink-0">
+            <UBadge
+              class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+              color="neutral"
+              variant="outline"
+              size="lg"
+            >
+              {{ repo.star_count.toLocaleString() }}
+              {{ repo.star_count === 1 ? "star" : "stars" }}
+            </UBadge>
+          </div>
         </div>
-      </template>
-    </n-thing>
-  </a>
+      </div>
+    </div>
+  </div>
 </template>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.repo-name {
-  @apply text-[1.4em] md:text-[1.5em] truncate;
-}
-
-.n-thing,
-.n-thing :deep(.n-thing-main),
-.n-thing :deep(.n-thing-header),
-.n-thing :deep(.n-thing-header__title) {
-  display: flex;
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: 0;
-  width: 100%;
-}
-
-.n-thing :deep(.n-thing-avatar) {
-  @apply hidden md:inline-flex;
-}
-
-.n-thing :deep(.n-thing-main) {
-  flex-direction: column;
-}
-</style>

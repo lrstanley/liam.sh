@@ -7,7 +7,7 @@
 import type { RouteNamedMap } from "vue-router/auto-routes"
 import type { NavigationMenuItem } from "#ui/types"
 
-type Route = keyof RouteNamedMap | RouteNamedMap[keyof RouteNamedMap]["path"]
+type Route = RouteNamedMap[keyof RouteNamedMap]["path"]
 
 export type Link = NavigationMenuItem & {
   to?: Route
@@ -15,9 +15,9 @@ export type Link = NavigationMenuItem & {
 }
 
 export const menuOptions: Link[] = [
-  { to: "/", label: "Home", functionAlias: "main", icon: "i-lucide-home" },
+  { to: "/", label: "Home", functionAlias: "main", icon: "lucide:home" },
   // { to: "/posts", label: "Posts" },
-  // { to: "/repos", label: "Repos" },
+  { to: "/repos", label: "Repos", functionAlias: "repos", icon: "lucide:git-pull-request" },
 ]
 
 export const branchMenuOptions: Link[] = [
@@ -28,27 +28,27 @@ export const branchMenuOptions: Link[] = [
 // TODO: use badges here -- show post count, and other things like that?
 export const adminSidebarOptions: Link[] = [
   {
-    to: "/admin",
-    icon: "i-lucide-lock",
     label: "Home",
+    to: "/admin",
+    icon: "lucide:lock",
   },
   // {
   //   to: "/admin/posts",
-  //   icon: "i-lucide-book-open-page-variant-outline",
+  //   icon: "lucide:book-open-page-variant-outline",
   //   label: "Blog Posts",
   // },
   // {
   //   to: "/admin/banner-builder",
-  //   icon: "i-lucide-image-edit-outline",
+  //   icon: "lucide:image-edit-outline",
   //   label: "Banner Builder",
   // },
+  {
+    label: "Repository Releases",
+    to: "/admin/repository-releases",
+    icon: "mdi:history",
+  },
   // {
-  //   to: "/admin/repo-needs-release",
-  //   icon: "i-lucide-history",
-  //   label: "Repo Releases",
-  // },
-  // {
-  //   icon: "i-lucide-log-out",
+  //   icon: "lucide:log-out",
   //   label: "Logout",
   //   onSelect() {
   //     window.location.href = "/-/auth/logout"
@@ -56,7 +56,7 @@ export const adminSidebarOptions: Link[] = [
   // },
   {
     label: "User Facing Pages",
-    icon: "i-lucide-user",
+    icon: "lucide:user",
     defaultOpen: true,
     children: menuOptions,
   },

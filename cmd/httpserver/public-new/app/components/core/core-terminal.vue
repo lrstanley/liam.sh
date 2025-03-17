@@ -1,15 +1,13 @@
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    path?: string
-    prefix?: string
-    value: string
-  }>(),
-  {
-    path: "~",
-    prefix: "#",
-  }
-)
+const {
+  path = "~",
+  prefix = "#",
+  value,
+} = defineProps<{
+  path?: string
+  prefix?: string
+  value: string
+}>()
 
 const gh = useGithubUser()
 </script>
@@ -17,17 +15,17 @@ const gh = useGithubUser()
 <template>
   <div v-bind="$attrs">
     <span class="inline-flex mr-[10px] text-emerald-600">
-      {{ gh?.name.split(" ")[0].toLowerCase() }}
+      {{ gh?.name.split(" ")[0]?.toLowerCase() }}
       <span class="text-zinc-500">:</span>
-      {{ props.path }}
+      {{ path }}
       <span class="text-zinc-500">$</span>
-      <span v-if="props.prefix" class="mr-4" />
+      <span v-if="prefix" class="mr-4" />
       <span v-else class="mr-2" />
-      {{ props.prefix }}
+      {{ prefix }}
     </span>
     <span class="cursor-wrap">
       <span class="text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor">
-        {{ props.value }}
+        {{ value }}
       </span>
     </span>
   </div>

@@ -1,5 +1,36 @@
 <script setup lang="ts">
-console.log(import.meta.env.MODE)
+import type { DropdownMenuItem } from "#ui/types"
+
+const self = useSelf()
+
+const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
+  [
+    {
+      type: "label",
+      label: self.value?.login,
+      avatar: {
+        src: self.value?.avatar_url,
+        alt: self.value?.login,
+      },
+    },
+  ],
+  // [
+  //   {
+  //     label: "Settings",
+  //     icon: "lucide:settings",
+  //     to: "/settings",
+  //   },
+  // ],
+  [
+    {
+      label: "Log out",
+      icon: "lucide:log-out",
+      onSelect() {
+        window.location.href = "/-/auth/logout"
+      },
+    },
+  ],
+])
 </script>
 
 <template>
@@ -7,14 +38,50 @@ console.log(import.meta.env.MODE)
     <UDashboardSidebar
       resizable
       collapsible
-      class="bg-(--ui-bg-elevated)/25"
+      class="bg-(--ui-bg-elevated)/25 mt-2"
       :ui="{ footer: 'lg:border-t lg:border-(--ui-border)' }"
     >
       <template #default="{ collapsed }">
-        <Ubutton color="neutral" variant="ghost" block :square="collapsed">Test</Ubutton>
+        <router-link to="/admin">
+          <UButton color="primary" variant="subtle" block :square="collapsed">
+            {{ collapsed ? "LS" : "Admin Dashboard" }}
+          </UButton>
+        </router-link>
         <UNavigationMenu :collapsed="collapsed" :items="adminSidebarOptions" orientation="vertical" />
+      </template>
 
-        <!-- TODO: show user on bottom, similar to dashboard template -->
+      <template #footer="{ collapsed }">
+        <UDropdownMenu
+          :items="userDropdownItems"
+          :content="{ align: 'center', collisionPadding: 12 }"
+          :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
+        >
+          <UButton
+            v-bind="{
+              avatar: {
+                src: self?.avatar_url,
+                alt: self?.login,
+              },
+              label: collapsed ? undefined : self?.name,
+              trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down',
+            }"
+            color="neutral"
+            variant="ghost"
+            block
+            :square="collapsed"
+            class="data-[state=open]:bg-(--ui-bg-elevated) mb-2"
+            :ui="{
+              trailingIcon: 'text-(--ui-text-dimmed)',
+            }"
+          />
+
+          <template #chip-leading="{ item }">
+            <span
+              :style="{ '--chip': `var(--color-${(item as any).chip}-400)` }"
+              class="ms-0.5 size-2 rounded-full bg-(--chip)"
+            />
+          </template>
+        </UDropdownMenu>
       </template>
     </UDashboardSidebar>
 

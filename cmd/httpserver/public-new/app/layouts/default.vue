@@ -1,5 +1,39 @@
+<script setup lang="ts">
+const route = useRoute()
+const error = ref<Error | null>(null)
+
+const githubUser = useGithubUser()
+
+onErrorCaptured((err) => {
+  error.value = err
+  return false
+})
+
+watch(
+  () => route.path,
+  () => {
+    error.value = null
+  }
+)
+</script>
+
 <template>
-  <div class="text-white bg-slate-900">
-    <slot />
+  <div class="z-[1] relative flex flex-auto flex-col">
+    <div
+      class="sm:container flex flex-auto flex-col pt-[15px] lg:pt-[70px] pb-[60px] max-w-[100vw] px-4 md:px-0 xl:px-[200px] sm:mx-auto"
+    >
+      <CoreNavigation />
+
+      <main class="size-full">
+        <slot />
+      </main>
+    </div>
+
+    <span class="p-2 text-center">
+      Made with
+      <UIcon name="mdi:heart" class="align-middle text-emerald-600" />
+      by
+      <a :href="githubUser?.html_url" target="_blank">{{ githubUser?.login }}</a>
+    </span>
   </div>
 </template>

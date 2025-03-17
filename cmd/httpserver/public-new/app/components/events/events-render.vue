@@ -18,8 +18,6 @@ import {
   EventWatch,
 } from "#components"
 
-import type { GithubEvent } from "~/utils/http/types.gen"
-
 const eventMap: Record<string, any> = {
   CreateEvent: EventCreate,
   DeleteEvent: EventDelete,

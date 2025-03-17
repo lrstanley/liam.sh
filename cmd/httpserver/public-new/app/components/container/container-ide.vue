@@ -32,7 +32,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
           <div class="p-[1px]">
             <ul class="flex flex-col flex-nowrap">
               <li v-for="link in branchMenuOptions" :key="link.label">
-                <router-link v-slot="{ isActive, href, navigate }" :to="link.to" custom>
+                <router-link v-if="link.to" v-slot="{ isActive, href, navigate }" :to="link.to" custom>
                   <a
                     :href="href"
                     class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"

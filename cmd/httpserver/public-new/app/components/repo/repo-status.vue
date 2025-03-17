@@ -1,32 +1,20 @@
 <script setup lang="ts">
-const props = defineProps<{
+const { value: repo } = defineProps<{
   value: GithubRepositoryRead
 }>()
 
-const state = useState()
-const repo = ref(props.value)
+const gh = useGithubUser()
 </script>
 
 <template>
-  <span>
-    <n-tag v-if="repo.owner.login != state.githubUser?.login" type="info" size="small">maintainer</n-tag>
-    <n-tag v-if="repo.fork" type="error" size="small">
-      <template #icon>
-        <UIcon name="mdi:source-fork" />
-      </template>
-      fork
-    </n-tag>
-    <n-tag v-if="repo.archived" type="warning" size="small">
-      <template #icon>
-        <UIcon name="mdi:archive-outline" />
-      </template>
+  <div class="inline-flex flex-row gap-1">
+    <UBadge v-if="repo.owner.login != gh?.login" color="info" variant="outline">maintainer</UBadge>
+    <UBadge v-if="repo.fork" color="error" variant="outline" icon="mdi:source-fork">fork</UBadge>
+    <UBadge v-if="repo.archived" color="info" variant="outline" icon="mdi:archive-outline">
       archived
-    </n-tag>
-    <n-tag v-if="repo.license" size="small" :title="repo.license.name">
-      <template #icon>
-        <UIcon name="mdi:scale-balance" />
-      </template>
+    </UBadge>
+    <UBadge v-if="repo.license" variant="outline" :title="repo.license.name" icon="mdi:scale-balance">
       {{ repo.license.key }}
-    </n-tag>
-  </span>
+    </UBadge>
+  </div class="inline-flex flex-row gap-1">
 </template>

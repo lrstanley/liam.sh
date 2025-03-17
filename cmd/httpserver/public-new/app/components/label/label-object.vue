@@ -1,27 +1,24 @@
 <script setup lang="ts">
-const props = withDefaults(
-  defineProps<{
-    linkable?: boolean
-    value: Label
-    route?: string
-    query?: string
-  }>(),
-  {
-    route: "/posts",
-    query: "label",
-  }
-)
+import { NuxtLink } from "#components"
+import type { RouteNamedMap } from "vue-router/auto-routes"
 
-const label = ref(props.value)
+const {
+  linkable,
+  value: label,
+  route = "/posts",
+  query = "label",
+} = defineProps<{
+  linkable?: boolean
+  value: Label
+  route?: RouteNamedMap[keyof RouteNamedMap]["path"]
+  query?: string
+}>()
 </script>
 
 <template>
-  <component
-    :is="props.linkable ? 'router-link' : 'span'"
-    :to="{ name: props.route, query: { [props.query]: label.name } }"
-  >
-    <n-tag v-bind="$attrs" class="cursor-pointer hover:bg-emerald-700">
+  <component :is="linkable ? NuxtLink : 'span'" :to="{ path: route, query: { [query]: label.name } }">
+    <UButton color="neutral" variant="outline" size="xs" v-bind="$attrs" class="cursor-pointer">
       {{ label.name }}
-    </n-tag>
+    </UButton>
   </component>
 </template>

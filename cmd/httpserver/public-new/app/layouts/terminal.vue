@@ -2,6 +2,7 @@
 const route = useRoute()
 const error = ref<Error | null>(null)
 
+// TODO: not doing anything with error right now?
 onErrorCaptured((err) => {
   error.value = err
   return false

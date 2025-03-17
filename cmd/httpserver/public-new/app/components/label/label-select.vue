@@ -3,23 +3,20 @@ import { h } from "vue"
 import { NBadge } from "naive-ui"
 import type { ComponentProps } from "@/lib/util/vueprops"
 
-const props = withDefaults(
-  defineProps<{
-    modelValue: Label[keyof Label] | Label[keyof Label][]
-    field?: keyof Label
-    suggest?: string
-  }>(),
-  {
-    modelValue: () => [],
-    field: "name",
-    suggest: "",
-  }
-)
+const {
+  modelValue = () => [],
+  field = "name",
+  suggest = "",
+} = defineProps<{
+  modelValue: Label[keyof Label] | Label[keyof Label][]
+  field?: keyof Label
+  suggest?: string
+}>()
 
 const emit = defineEmits(["update:modelValue"])
 
 const selected = computed<Label[keyof Label][]>({
-  get: () => (Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue]),
+  get: () => (Array.isArray(modelValue) ? modelValue : [modelValue]),
   set: (val) => emit("update:modelValue", val),
 })
 
@@ -44,7 +41,7 @@ type RenderedLabel = {
 const options = computed<RenderedLabel[]>(() => {
   return labels.value?.map((label) => ({
     label: label.name,
-    value: label[props.field],
+    value: label[field],
     popularity: label.total_count,
     data: label,
   }))
@@ -63,8 +60,8 @@ function renderLabel(option: RenderedLabel) {
 }
 
 const suggestions = ref<RenderedLabel[]>([])
-const suggest = computed(() => props.suggest)
-watchDebounced(suggest, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
+const suggestion = computed(() => suggest)
+watchDebounced(suggestion, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
 watchDebounced(selected, makeSuggestions, { debounce: 300, maxWait: 700, immediate: true })
 
 function makeSuggestions(val) {
@@ -72,9 +69,9 @@ function makeSuggestions(val) {
   const newSuggestions: RenderedLabel[] = []
 
   for (const option of options.value) {
-    if (selected.value.includes(option.data[props.field])) continue
+    if (selected.value.includes(option.data[field])) continue
 
-    if (suggest.value.match(new RegExp(`(^|\\W)${option.data.name}(\\W|$)`, "ig"))) {
+    if (suggestion.value.match(new RegExp(`(^|\\W)${option.data.name}(\\W|$)`, "ig"))) {
       newSuggestions.push(option)
     }
   }
@@ -83,8 +80,8 @@ function makeSuggestions(val) {
 }
 
 function addSuggestion(option: RenderedLabel) {
-  selected.value.push(option.data[props.field])
-  makeSuggestions(suggest.value)
+  selected.value.push(option.data[field])
+  makeSuggestions(suggestion.value)
 }
 </script>
 

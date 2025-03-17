@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: [
     "@hey-api/nuxt",
     "@vueuse/nuxt",
-    "@formkit/auto-animate",
+    "@formkit/auto-animate/nuxt",
     "@nuxt/ui-pro",
     // "@nuxtjs/html-validator"
   ],

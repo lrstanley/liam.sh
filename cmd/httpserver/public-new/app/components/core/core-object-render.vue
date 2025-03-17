@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { h } from "vue"
-import PostObject from "@/components/post/post-object.vue"
-import LabelObject from "@/components/label/label-object.vue"
-import RepoObject from "@/components/repo/repo-object.vue"
+import { RepoObject } from "#components"
 
 type MaybeArray<T> = T | T[]
 type Value = PostRead | LabelRead | GithubRepositoryRead
 
 // TODO: use {} | {} syntax, but this isn't working here for some reason.
 const props = defineProps<{
-  value: MaybeArray<Value>
+  value: MaybeArray<Value> | undefined
   type: "post" | "label" | "repo"
   showEmpty?: boolean
   divider?: boolean
@@ -40,10 +37,10 @@ type MappedObject = {
 
 function typeMapper(o: Value): MappedObject {
   switch (props.type) {
-    case "post":
-      return { component: h(PostObject, { value: o as PostRead }), object: o }
-    case "label":
-      return { component: h(LabelObject, { value: o as LabelRead }), object: o }
+    // case "post":
+    //   return { component: h(PostObject, { value: o as PostRead }), object: o }
+    // case "label":
+    //   return { component: h(LabelObject, { value: o as LabelRead }), object: o }
     case "repo":
       return { component: h(RepoObject, { value: o as GithubRepositoryRead }), object: o }
     default:
@@ -53,57 +50,53 @@ function typeMapper(o: Value): MappedObject {
 </script>
 
 <template>
-  <div v-if="loading" class="flex flex-row gap-2 mb-4">
+  <div v-if="loading && objects.length < 1" class="flex flex-row gap-4">
     <!-- avatar -->
-    <n-skeleton height="40px" circle />
+    <USkeleton class="rounded-full size-8" />
 
-    <div class="flex flex-col gap-3 grow">
-      <div class="flex">
+    <div class="flex flex-col w-full gap-2 my-1">
+      <div class="flex flex-row">
         <!-- name -->
-        <n-skeleton height="20px" round width="20%" />
-        <!-- homepage or similar -->
-        <n-skeleton height="20px" :sharp="false" width="15%" class="ml-auto" />
+        <USkeleton class="h-6 w-[250px]" />
+        <!-- homepage or similar link -->
+        <USkeleton class="ml-auto h-6 w-[100px]" />
       </div>
 
-      <div class="flex">
-        <!-- timestamp -->
-        <n-skeleton height="15px" round width="33%" />
-        <!-- license -->
-        <n-skeleton height="20px" :sharp="false" width="10%" class="ml-auto" />
+      <!-- timestamp -->
+      <USkeleton class="h-4 w-[350px] rounded-full" />
+
+      <!-- main description -->
+      <div class="flex flex-col gap-1 my-2">
+        <USkeleton class="w-full h-4 rounded-full" />
+        <USkeleton class="w-[80%] h-4 rounded-full" />
       </div>
 
-      <!-- main text -->
-      <n-skeleton height="30px" round width="75%" />
-
-      <div class="flex">
+      <div class="flex flex-row">
         <!-- tags -->
-        <n-skeleton height="30px" width="70%" :sharp="false" />
+        <div class="flex flex-row flex-wrap gap-1">
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+        </div>
+
         <!-- views -->
-        <n-skeleton height="30px" width="10%" class="ml-auto" />
+        <USkeleton class="h-7 w-[100px]" />
       </div>
     </div>
   </div>
-  <n-empty v-else-if="showEmpty && objects.length < 1" description="No items found matching filters" />
-  <TransitionGroup v-else-if="objects.length > 0" appear name="fade">
-    <div
-      v-for="(object, i) in objects"
-      :key="object.object.id"
-      :style="{ '--i': i, '--total': objects.length }"
-    >
+  <div v-else-if="showEmpty && objects.length < 1" class="flex flex-col items-center gap-4 mx-auto mb-4">
+    <UIcon name="mdi:folder-remove-outline" class="text-5xl text-emerald-500" />
+    <span class="text-zinc-400">No results found matching filters</span>
+  </div>
+  <!-- TODO: make sure v-auto-animate is working here -->
+  <div v-else-if="objects.length > 0" v-auto-animate class="divide-y divide-zinc-500/20">
+    <div v-for="(object, i) in objects" :key="object.object.id">
       <component :is="object.component" v-bind="$attrs" />
-      <n-divider v-if="divider && i != objects.length - 1" />
     </div>
-  </TransitionGroup>
+  </div>
 </template>
-
-<style scoped>
-.fade-move,
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.1s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
