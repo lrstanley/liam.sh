@@ -83,6 +83,7 @@ func (Post) Fields() []ent.Field {
 				entrest.WithSortable(true),
 				entrest.WithExample("hello-world"),
 				entrest.WithFilter(entrest.FilterGroupEqualExact),
+				entrest.WithFilterGroup("search"),
 			).
 			Comment("Post slug."),
 		field.String("title").
@@ -91,6 +92,7 @@ func (Post) Fields() []ent.Field {
 				entrest.WithSortable(true),
 				entrest.WithExample("Hello World"),
 				entrest.WithFilter(entrest.FilterGroupEqual|entrest.FilterGroupArray),
+				entrest.WithFilterGroup("search"),
 			).
 			Comment("Post title."),
 		field.String("content").
@@ -98,6 +100,7 @@ func (Post) Fields() []ent.Field {
 			Annotations(
 				entrest.WithExample("## Title\n\nHello World"),
 				entrest.WithFilter(entrest.FilterGroupContains),
+				entrest.WithFilterGroup("search"),
 			).
 			Comment("Post content in Markdown."),
 		field.String("content_html").

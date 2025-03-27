@@ -5229,6 +5229,15 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
                     }
                 ],
                 "responses": {
@@ -5697,6 +5706,15 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
                     }
                 ],
                 "responses": {
@@ -7356,6 +7374,15 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
                     }
                 ],
                 "responses": {
@@ -14228,6 +14255,36 @@
                 "schema": {
                     "type": "string",
                     "format": "date-time"
+                }
+            },
+            "PostFilterGroupSearchEQ": {
+                "name": "search.eq",
+                "in": "query",
+                "description": "Field \"search.eq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchEqualFold": {
+                "name": "search.ieq",
+                "in": "query",
+                "description": "Field \"search.ieq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchNEQ": {
+                "name": "search.neq",
+                "in": "query",
+                "description": "Field \"search.neq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
                 }
             },
             "PostID": {

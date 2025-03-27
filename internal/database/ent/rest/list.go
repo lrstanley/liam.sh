@@ -3344,6 +3344,13 @@ type ListPostParams struct {
 	EdgeLabelNameHasPrefix *string `form:"label.name.prefix,omitempty" json:"edge_label_name_has_prefix,omitempty"`
 	// Filters field "name" to end with the provided value.
 	EdgeLabelNameHasSuffix *string `form:"label.name.suffix,omitempty" json:"edge_label_name_has_suffix,omitempty"`
+
+	// Field "search.eq" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchEQ *string `form:"search.eq,omitempty" json:"post_filter_group_search_eq,omitempty"`
+	// Field "search.neq" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchNEQ *string `form:"search.neq,omitempty" json:"post_filter_group_search_neq,omitempty"`
+	// Field "search.ieq" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchEqualFold *string `form:"search.ieq,omitempty" json:"post_filter_group_search_equal_fold,omitempty"`
 }
 
 // FilterPredicates returns the predicates for filter-related parameters in Post.
@@ -3680,6 +3687,27 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 		predicates = append(predicates, post.HasLabelsWith(label.NameHasSuffix(*l.EdgeLabelNameHasSuffix)))
 	}
 
+	if l.PostFilterGroupSearchEQ != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugEQ(*l.PostFilterGroupSearchEQ),
+			post.TitleEQ(*l.PostFilterGroupSearchEQ),
+			post.ContentEQ(*l.PostFilterGroupSearchEQ),
+		))
+	}
+	if l.PostFilterGroupSearchNEQ != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugNEQ(*l.PostFilterGroupSearchNEQ),
+			post.TitleNEQ(*l.PostFilterGroupSearchNEQ),
+			post.ContentNEQ(*l.PostFilterGroupSearchNEQ),
+		))
+	}
+	if l.PostFilterGroupSearchEqualFold != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugEqualFold(*l.PostFilterGroupSearchEqualFold),
+			post.TitleEqualFold(*l.PostFilterGroupSearchEqualFold),
+			post.ContentEqualFold(*l.PostFilterGroupSearchEqualFold),
+		))
+	}
 	return l.ApplyFilterOperation(predicates...)
 }
 
