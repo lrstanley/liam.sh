@@ -2582,6 +2582,14 @@ type ListLabelParams struct {
 	EdgePostSlugNEQ *string `form:"post.slug.neq,omitempty" json:"edge_post_slug_neq,omitempty"`
 	// Filters field "slug" to be equal to the provided value, case-insensitive.
 	EdgePostSlugEqualFold *string `form:"post.slug.ieq,omitempty" json:"edge_post_slug_equal_fold,omitempty"`
+	// Filters field "slug" to contain the provided value.
+	EdgePostSlugContains *string `form:"post.slug.has,omitempty" json:"edge_post_slug_contains,omitempty"`
+	// Filters field "slug" to contain the provided value, case-insensitive.
+	EdgePostSlugContainsFold *string `form:"post.slug.ihas,omitempty" json:"edge_post_slug_contains_fold,omitempty"`
+	// Filters field "slug" to start with the provided value.
+	EdgePostSlugHasPrefix *string `form:"post.slug.prefix,omitempty" json:"edge_post_slug_has_prefix,omitempty"`
+	// Filters field "slug" to end with the provided value.
+	EdgePostSlugHasSuffix *string `form:"post.slug.suffix,omitempty" json:"edge_post_slug_has_suffix,omitempty"`
 	// Filters field "title" to be equal to the provided value.
 	EdgePostTitleEQ *string `form:"post.title.eq,omitempty" json:"edge_post_title_eq,omitempty"`
 	// Filters field "title" to be not equal to the provided value.
@@ -2842,6 +2850,18 @@ func (l *ListLabelParams) FilterPredicates() (predicate.Label, error) {
 	}
 	if l.EdgePostSlugEqualFold != nil {
 		predicates = append(predicates, label.HasPostsWith(post.SlugEqualFold(*l.EdgePostSlugEqualFold)))
+	}
+	if l.EdgePostSlugContains != nil {
+		predicates = append(predicates, label.HasPostsWith(post.SlugContains(*l.EdgePostSlugContains)))
+	}
+	if l.EdgePostSlugContainsFold != nil {
+		predicates = append(predicates, label.HasPostsWith(post.SlugContainsFold(*l.EdgePostSlugContainsFold)))
+	}
+	if l.EdgePostSlugHasPrefix != nil {
+		predicates = append(predicates, label.HasPostsWith(post.SlugHasPrefix(*l.EdgePostSlugHasPrefix)))
+	}
+	if l.EdgePostSlugHasSuffix != nil {
+		predicates = append(predicates, label.HasPostsWith(post.SlugHasSuffix(*l.EdgePostSlugHasSuffix)))
 	}
 	if l.EdgePostTitleEQ != nil {
 		predicates = append(predicates, label.HasPostsWith(post.TitleEQ(*l.EdgePostTitleEQ)))
@@ -3160,6 +3180,14 @@ type ListPostParams struct {
 	PostSlugNEQ *string `form:"slug.neq,omitempty" json:"post_slug_neq,omitempty"`
 	// Filters field "slug" to be equal to the provided value, case-insensitive.
 	PostSlugEqualFold *string `form:"slug.ieq,omitempty" json:"post_slug_equal_fold,omitempty"`
+	// Filters field "slug" to contain the provided value.
+	PostSlugContains *string `form:"slug.has,omitempty" json:"post_slug_contains,omitempty"`
+	// Filters field "slug" to contain the provided value, case-insensitive.
+	PostSlugContainsFold *string `form:"slug.ihas,omitempty" json:"post_slug_contains_fold,omitempty"`
+	// Filters field "slug" to start with the provided value.
+	PostSlugHasPrefix *string `form:"slug.prefix,omitempty" json:"post_slug_has_prefix,omitempty"`
+	// Filters field "slug" to end with the provided value.
+	PostSlugHasSuffix *string `form:"slug.suffix,omitempty" json:"post_slug_has_suffix,omitempty"`
 	// Filters field "title" to be equal to the provided value.
 	PostTitleEQ *string `form:"title.eq,omitempty" json:"post_title_eq,omitempty"`
 	// Filters field "title" to be not equal to the provided value.
@@ -3351,6 +3379,14 @@ type ListPostParams struct {
 	PostFilterGroupSearchNEQ *string `form:"search.neq,omitempty" json:"post_filter_group_search_neq,omitempty"`
 	// Field "search.ieq" filters across multiple fields (case insensitive): slug, title, content.
 	PostFilterGroupSearchEqualFold *string `form:"search.ieq,omitempty" json:"post_filter_group_search_equal_fold,omitempty"`
+	// Field "search.has" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchContains *string `form:"search.has,omitempty" json:"post_filter_group_search_contains,omitempty"`
+	// Field "search.ihas" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchContainsFold *string `form:"search.ihas,omitempty" json:"post_filter_group_search_contains_fold,omitempty"`
+	// Field "search.prefix" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchHasPrefix *string `form:"search.prefix,omitempty" json:"post_filter_group_search_has_prefix,omitempty"`
+	// Field "search.suffix" filters across multiple fields (case insensitive): slug, title, content.
+	PostFilterGroupSearchHasSuffix *string `form:"search.suffix,omitempty" json:"post_filter_group_search_has_suffix,omitempty"`
 }
 
 // FilterPredicates returns the predicates for filter-related parameters in Post.
@@ -3389,6 +3425,18 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 	}
 	if l.PostSlugEqualFold != nil {
 		predicates = append(predicates, post.SlugEqualFold(*l.PostSlugEqualFold))
+	}
+	if l.PostSlugContains != nil {
+		predicates = append(predicates, post.SlugContains(*l.PostSlugContains))
+	}
+	if l.PostSlugContainsFold != nil {
+		predicates = append(predicates, post.SlugContainsFold(*l.PostSlugContainsFold))
+	}
+	if l.PostSlugHasPrefix != nil {
+		predicates = append(predicates, post.SlugHasPrefix(*l.PostSlugHasPrefix))
+	}
+	if l.PostSlugHasSuffix != nil {
+		predicates = append(predicates, post.SlugHasSuffix(*l.PostSlugHasSuffix))
 	}
 	if l.PostTitleEQ != nil {
 		predicates = append(predicates, post.TitleEQ(*l.PostTitleEQ))
@@ -3706,6 +3754,34 @@ func (l *ListPostParams) FilterPredicates() (predicate.Post, error) {
 			post.SlugEqualFold(*l.PostFilterGroupSearchEqualFold),
 			post.TitleEqualFold(*l.PostFilterGroupSearchEqualFold),
 			post.ContentEqualFold(*l.PostFilterGroupSearchEqualFold),
+		))
+	}
+	if l.PostFilterGroupSearchContains != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugContains(*l.PostFilterGroupSearchContains),
+			post.TitleContains(*l.PostFilterGroupSearchContains),
+			post.ContentContains(*l.PostFilterGroupSearchContains),
+		))
+	}
+	if l.PostFilterGroupSearchContainsFold != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugContainsFold(*l.PostFilterGroupSearchContainsFold),
+			post.TitleContainsFold(*l.PostFilterGroupSearchContainsFold),
+			post.ContentContainsFold(*l.PostFilterGroupSearchContainsFold),
+		))
+	}
+	if l.PostFilterGroupSearchHasPrefix != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugHasPrefix(*l.PostFilterGroupSearchHasPrefix),
+			post.TitleHasPrefix(*l.PostFilterGroupSearchHasPrefix),
+			post.ContentHasPrefix(*l.PostFilterGroupSearchHasPrefix),
+		))
+	}
+	if l.PostFilterGroupSearchHasSuffix != nil {
+		predicates = append(predicates, sql.OrPredicates(
+			post.SlugHasSuffix(*l.PostFilterGroupSearchHasSuffix),
+			post.TitleHasSuffix(*l.PostFilterGroupSearchHasSuffix),
+			post.ContentHasSuffix(*l.PostFilterGroupSearchHasSuffix),
 		))
 	}
 	return l.ApplyFilterOperation(predicates...)

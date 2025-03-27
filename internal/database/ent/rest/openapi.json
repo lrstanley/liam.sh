@@ -2834,6 +2834,18 @@
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
                     },
                     {
@@ -3831,6 +3843,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
@@ -4955,6 +4979,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -5238,6 +5274,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -5432,6 +5480,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -5715,6 +5775,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -6232,6 +6304,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
@@ -7100,6 +7184,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -7383,6 +7479,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -11149,6 +11257,22 @@
                     "format": "date-time"
                 }
             },
+            "EdgePostSlugContains": {
+                "name": "post.slug.has",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugContainsFold": {
+                "name": "post.slug.ihas",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
             "EdgePostSlugEQ": {
                 "name": "post.slug.eq",
                 "in": "query",
@@ -11161,6 +11285,22 @@
                 "name": "post.slug.ieq",
                 "in": "query",
                 "description": "Filters field \"slug\" to be equal to the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugHasPrefix": {
+                "name": "post.slug.prefix",
+                "in": "query",
+                "description": "Filters field \"slug\" to start with the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugHasSuffix": {
+                "name": "post.slug.suffix",
+                "in": "query",
+                "description": "Filters field \"slug\" to end with the provided value.",
                 "schema": {
                     "type": "string"
                 }
@@ -14257,6 +14397,26 @@
                     "format": "date-time"
                 }
             },
+            "PostFilterGroupSearchContains": {
+                "name": "search.has",
+                "in": "query",
+                "description": "Field \"search.has\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchContainsFold": {
+                "name": "search.ihas",
+                "in": "query",
+                "description": "Field \"search.ihas\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
             "PostFilterGroupSearchEQ": {
                 "name": "search.eq",
                 "in": "query",
@@ -14271,6 +14431,26 @@
                 "name": "search.ieq",
                 "in": "query",
                 "description": "Field \"search.ieq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchHasPrefix": {
+                "name": "search.prefix",
+                "in": "query",
+                "description": "Field \"search.prefix\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchHasSuffix": {
+                "name": "search.suffix",
+                "in": "query",
+                "description": "Field \"search.suffix\" filters across multiple fields (case insensitive): slug, title, content.",
                 "schema": {
                     "description": "Post slug.",
                     "type": "string",
@@ -14340,6 +14520,22 @@
                     "format": "date-time"
                 }
             },
+            "PostSlugContains": {
+                "name": "slug.has",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugContainsFold": {
+                "name": "slug.ihas",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
             "PostSlugEQ": {
                 "name": "slug.eq",
                 "in": "query",
@@ -14352,6 +14548,22 @@
                 "name": "slug.ieq",
                 "in": "query",
                 "description": "Filters field \"slug\" to be equal to the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugHasPrefix": {
+                "name": "slug.prefix",
+                "in": "query",
+                "description": "Filters field \"slug\" to start with the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugHasSuffix": {
+                "name": "slug.suffix",
+                "in": "query",
+                "description": "Filters field \"slug\" to end with the provided value.",
                 "schema": {
                     "type": "string"
                 }

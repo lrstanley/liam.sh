@@ -82,7 +82,7 @@ func (Post) Fields() []ent.Field {
 			Annotations(
 				entrest.WithSortable(true),
 				entrest.WithExample("hello-world"),
-				entrest.WithFilter(entrest.FilterGroupEqualExact),
+				entrest.WithFilter(entrest.FilterGroupEqual),
 				entrest.WithFilterGroup("search"),
 			).
 			Comment("Post slug."),
