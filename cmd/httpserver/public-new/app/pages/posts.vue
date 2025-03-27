@@ -1,36 +1,33 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 
-useHead({ title: "Home" })
+useHead({ title: "Posts" })
 definePageMeta({
   layout: "default",
 })
 
-const pagination = usePagination<GithubRepositorySortableFields>({ sort: "pushed_at" })
+const pagination = usePagination<PostSortableFields>({ sort: "published_at" })
 const labels = useRouteQuery<Array<string>>("label", [])
-const archived = useRouteQuery<string>("archived", "")
-const forks = useRouteQuery<string>("forks", "")
 const search = useRouteQuery<string>("q", "")
 const debounceSearch = refDebounced<string>(search, 300)
 
 // TODO: make this an argument to usePagination?
-resetPagination(pagination, [labels, archived, forks, debounceSearch])
+resetPagination(pagination, [labels, debounceSearch])
 
 const {
-  data: repos,
+  data: posts,
   error,
   status,
-} = await listGithubRepositories({
+} = listPosts({
   composable: "useFetch",
   query: computed(() => ({
     page: pagination.page.value,
     per_page: pagination.perPage.value,
     sort: pagination.sort.value,
     order: pagination.order.value,
-    "archived.eq": archived.value == "true" ? true : archived.value == "false" ? false : undefined,
-    "fork.eq": forks.value == "true" ? true : forks.value == "false" ? false : undefined,
-    "fullName.ihas": debounceSearch.value.length > 0 ? debounceSearch.value : undefined,
-    "label.name.in": labels.value.length > 0 ? labels.value : undefined, // TODO: in vs has
+    "search.ihas": debounceSearch.value,
+    "label.name.in": labels.value.length > 0 ? labels.value : undefined,
+    "public.eq": true,
   })),
 })
 if (error.value) throw error.value
@@ -43,7 +40,7 @@ if (error.value) throw error.value
         v-model="search"
         :loading="status == 'pending'"
         type="search"
-        placeholder="Search for a repo"
+        placeholder="Search for a post"
         icon="mdi:search"
         class="w-full"
       >
@@ -60,7 +57,7 @@ if (error.value) throw error.value
       </UInput>
 
       <UPagination
-        v-show="repos?.last_page === undefined || repos?.last_page > 1"
+        v-show="posts?.last_page === undefined || posts?.last_page > 1"
         class="ml-auto"
         v-model:page="pagination.page.value"
         :items-per-page="pagination.perPage.value"
@@ -69,14 +66,14 @@ if (error.value) throw error.value
         active-variant="subtle"
         :show-controls="false"
         show-edges
-        :total="repos?.total_count"
+        :total="posts?.total_count"
         :disabled="status === 'pending'"
       />
     </div>
 
     <CoreObjectRender
-      :value="repos?.content"
-      type="repo"
+      :value="posts?.content"
+      type="post"
       linkable
       show-empty
       divider
@@ -85,25 +82,18 @@ if (error.value) throw error.value
 
     <template #sidebar>
       <div class="text-center md:text-left">
-        <div class="text-emerald-500">Sort repos</div>
+        <div class="text-emerald-500">Sort posts</div>
         <CoreSorter
           v-if="pagination"
           v-model="pagination.sort.value"
           v-model:order="pagination.order.value"
           :sort-options="{
-            pushed_at: { displayName: 'updated', defaultOrder: 'desc' },
-            star_count: { displayName: 'stars', defaultOrder: 'desc' },
-            created_at: { displayName: 'created', defaultOrder: 'desc' },
-            name: { displayName: 'name', defaultOrder: 'asc' },
+            published_at: { displayName: 'date', defaultOrder: 'desc' },
+            title: { displayName: 'title', defaultOrder: 'asc' },
+            view_count: { displayName: 'popularity', defaultOrder: 'desc' },
           }"
           class="pb-4"
         />
-
-        <div class="text-emerald-500">Filter attributes</div>
-        <div class="inline-flex flex-row gap-1 pb-4">
-          <CoreIndeterminateButton v-model:string-value="archived" size="xs" label="archived" />
-          <CoreIndeterminateButton v-model:string-value="forks" size="xs" label="forks" />
-        </div>
 
         <div class="text-emerald-500">Filter by label</div>
         <LabelSelect v-model="labels" />

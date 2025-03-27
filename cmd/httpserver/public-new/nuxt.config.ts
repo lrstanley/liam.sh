@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   modules: [
     "@hey-api/nuxt",
     "@vueuse/nuxt",
-    "@formkit/auto-animate/nuxt",
+    "@formkit/auto-animate/nuxt", // TODO: remove if motion-v ends up working.
     "@nuxt/ui-pro",
     // "@nuxtjs/html-validator"
   ],

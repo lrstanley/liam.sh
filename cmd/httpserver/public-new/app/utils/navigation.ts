@@ -16,7 +16,7 @@ export type Link = NavigationMenuItem & {
 
 export const menuOptions: Link[] = [
   { to: "/", label: "Home", functionAlias: "main", icon: "lucide:home" },
-  // { to: "/posts", label: "Posts" },
+  { to: "/posts", label: "Posts", functionAlias: "posts", icon: "lucide:notebook-pen" },
   { to: "/repos", label: "Repos", functionAlias: "repos", icon: "lucide:git-pull-request" },
 ]
 

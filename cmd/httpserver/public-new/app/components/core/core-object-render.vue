@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { RepoObject } from "#components"
+import { RepoObject, PostObject } from "#components"
 
 type MaybeArray<T> = T | T[]
-type Value = PostRead | LabelRead | GithubRepositoryRead
+type Value = PostRead | GithubRepositoryRead
 
 // TODO: use {} | {} syntax, but this isn't working here for some reason.
 const props = defineProps<{
@@ -37,10 +37,8 @@ type MappedObject = {
 
 function typeMapper(o: Value): MappedObject {
   switch (props.type) {
-    // case "post":
-    //   return { component: h(PostObject, { value: o as PostRead }), object: o }
-    // case "label":
-    //   return { component: h(LabelObject, { value: o as LabelRead }), object: o }
+    case "post":
+      return { component: h(PostObject, { value: o as PostRead }), object: o }
     case "repo":
       return { component: h(RepoObject, { value: o as GithubRepositoryRead }), object: o }
     default:
@@ -94,8 +92,8 @@ function typeMapper(o: Value): MappedObject {
     <span class="text-zinc-400">No results found matching filters</span>
   </div>
   <!-- TODO: make sure v-auto-animate is working here -->
-  <div v-else-if="objects.length > 0" v-auto-animate class="divide-y divide-zinc-500/20">
-    <div v-for="(object, i) in objects" :key="object.object.id">
+  <div v-auto-animate v-else-if="objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">
+    <div v-for="object in objects" :key="object.object.id">
       <component :is="object.component" v-bind="$attrs" />
     </div>
   </div>

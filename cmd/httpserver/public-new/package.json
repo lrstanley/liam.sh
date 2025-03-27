@@ -1,22 +1,23 @@
 {
   "dependencies": {
     "@nuxt/fonts": "^0.11.0",
-    "@nuxt/ui-pro": "3.0.0",
-    "@tailwindcss/vite": "4.0.14",
-    "nuxt": "3.16.0",
-    "tailwindcss": "4.0.14"
+    "@nuxt/ui-pro": "3.0.1",
+    "@tailwindcss/vite": "4.0.15",
+    "nuxt": "3.16.1",
+    "tailwindcss": "4.0.15"
   },
   "devDependencies": {
     "@codemirror/lang-markdown": "^6.2.5",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@formkit/auto-animate": "^0.8.2",
     "@hey-api/client-nuxt": "^0.3.0",
-    "@hey-api/nuxt": "^0.1.1",
+    "@hey-api/nuxt": "^0.1.2",
+    "@hey-api/openapi-ts": "^0.64.13",
     "@iconify-json/heroicons": "^1.2.2",
     "@iconify-json/logos": "^1.2.4",
-    "@iconify-json/lucide": "^1.2.30",
+    "@iconify-json/lucide": "^1.2.32",
     "@iconify-json/mdi": "^1.2.3",
-    "@iconify-json/simple-icons": "^1.2.28",
+    "@iconify-json/simple-icons": "^1.2.29",
     "@nuxt/icon": "^1.11.0",
     "@vueuse/components": "^13.0.0",
     "@vueuse/core": "^13.0.0",

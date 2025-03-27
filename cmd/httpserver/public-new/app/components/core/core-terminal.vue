@@ -23,8 +23,10 @@ const gh = useGithubUser()
       <span v-else class="mr-2" />
       {{ prefix }}
     </span>
-    <span class="cursor-wrap">
-      <span class="text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor">
+    <span class="inline-flex w-auto">
+      <span
+        class="inline-flex overflow-hidden border-r-4 border-solid text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor whitespace-nowrap border-r-emerald-500"
+      >
         {{ value }}
       </span>
     </span>
@@ -32,13 +34,7 @@ const gh = useGithubUser()
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
-.cursor-wrap {
-  @apply w-auto inline-flex;
-}
 .cursor {
-  @apply whitespace-nowrap overflow-hidden inline-flex border-r-4 border-r-emerald-500 border-solid;
   animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
 }
 

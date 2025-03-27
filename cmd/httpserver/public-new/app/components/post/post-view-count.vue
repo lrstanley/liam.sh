@@ -5,8 +5,14 @@ const props = defineProps<{
 </script>
 
 <template>
-  <n-tag class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500" v-bind="$attrs">
+  <UBadge
+    class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+    v-bind="$attrs"
+    color="neutral"
+    variant="outline"
+    size="lg"
+  >
     {{ props.value.toLocaleString() }}
     {{ props.value === 1 ? "view" : "views" }}
-  </n-tag>
+  </UBadge>
 </template>
