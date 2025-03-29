@@ -35,8 +35,8 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
                 <router-link v-if="link.to" v-slot="{ isActive, href, navigate }" :to="link.to" custom>
                   <a
                     :href="href"
-                    class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-zinc-300 text-zinc-400"
-                    :class="{ 'bg-zinc-900/50 text-zinc-300': isActive }"
+                    class="flex items-center px-1 rounded-sm hover:bg-zinc-900/50 hover:text-(--ui-text) text-(--ui-text-muted)"
+                    :class="{ 'bg-zinc-900/50 text-(--ui-text)!': isActive }"
                     @click="navigate"
                   >
                     <UIcon name="mdi:source-branch" />
@@ -80,7 +80,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 }
 
 .bar-item {
-  @apply px-2 rounded-br-sm inline-flex text-zinc-400 align-middle cursor-pointer transition hover:bg-zinc-800 text-sm;
+  @apply px-2 rounded-br-sm inline-flex text-(--ui-text-muted) align-middle cursor-pointer transition hover:bg-zinc-800 text-sm;
 }
 
 .bar-item .iconify {

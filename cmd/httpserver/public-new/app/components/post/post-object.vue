@@ -25,8 +25,8 @@ const drawerActive = ref(false)
 
       <div class="flex flex-row gap-2 text-sm">
         <div class="inline-flex flex-row items-center">
-          <UIcon name="mdi:update" class="mr-1 text-purple-400" />
-          <span class="italic text-zinc-400">
+          <UIcon name="mdi:update" class="mr-1 text-(--ui-color-secondary-400)" />
+          <span class="italic text-(--ui-text-muted)">
             Published
             {{ useTimeAgo(post.published_at).value }}
             by

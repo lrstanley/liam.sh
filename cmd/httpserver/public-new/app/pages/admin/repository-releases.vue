@@ -53,7 +53,7 @@ const columns: TableColumn<OutdatedRepositoryRelease>[] = [
 
       return h(
         "span",
-        { class: diffDays > 90 ? "text-red-500" : "" },
+        { class: diffDays > 90 ? "text-(--ui-error)" : "" },
         useTimeAgo(row.original.release.created_at).value
       )
     },
@@ -72,11 +72,7 @@ const columns: TableColumn<OutdatedRepositoryRelease>[] = [
     </template>
 
     <template #body>
-      <UCard
-        :ui="{
-          body: '!px-2 !py-0',
-        }"
-      >
+      <UCard variant="subtle">
         <UTable
           v-if="data"
           :data="data"

@@ -88,8 +88,8 @@ function typeMapper(o: Value): MappedObject {
     </div>
   </div>
   <div v-else-if="showEmpty && objects.length < 1" class="flex flex-col items-center gap-4 mx-auto mb-4">
-    <UIcon name="mdi:folder-remove-outline" class="text-5xl text-emerald-500" />
-    <span class="text-zinc-400">No results found matching filters</span>
+    <UIcon name="mdi:folder-remove-outline" class="text-5xl text-(--ui-primary)" />
+    <span class="text-(--ui-text-muted)">No results found matching filters</span>
   </div>
   <!-- TODO: make sure v-auto-animate is working here -->
   <div v-auto-animate v-else-if="objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">

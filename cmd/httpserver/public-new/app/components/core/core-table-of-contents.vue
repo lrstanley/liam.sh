@@ -31,8 +31,10 @@ function generate(links: HeadingTree[], depth: number): VNode[] {
           {
             href: `#${link.id}`,
             class: [
-              "transition-all duration-100 hover:text-emerald-400",
-              activeHeadings.value.includes(link.id) ? "text-emerald-500" : "text-white",
+              "transition-all duration-100 hover:text-(--ui-color-secondary-400)",
+              activeHeadings.value.includes(link.id)
+                ? "text-(--ui-color-secondary-400)"
+                : "text-(--ui-text)",
             ].join(" "),
           },
           link.title
@@ -48,7 +50,7 @@ const elements = computed(() => generate(props.links, 0))
 
 <template>
   <div v-show="links.length" v-bind="$attrs" class="text-sm">
-    <div class="mb-1 font-bold text-emerald-500">Table of Contents</div>
+    <div class="mb-1 font-bold text-(--ui-primary)">Table of Contents</div>
 
     <component :is="item" v-for="(item, index) in elements" :key="index" />
   </div>

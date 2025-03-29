@@ -12,11 +12,17 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
 <template>
   <div>
     marked a
-    <EventLink :href="thread.html_url" class="text-cyan-400 hover:text-cyan-500" value="thread" />
+    <EventLink
+      :href="thread.html_url"
+      class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
+      value="thread"
+    />
 
     as
 
-    <span :class="{ 'text-lime-500': action == 'resolved', 'text-red-400': action == 'unresolved' }">
+    <span
+      :class="{ 'text-(--ui-success)': action == 'resolved', 'text-red-400': action == 'unresolved' }"
+    >
       {{ action }}
     </span>
 

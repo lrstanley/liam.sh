@@ -16,13 +16,13 @@ const maxTitleLength = computed(
     v-bind="$attrs"
   >
     <div class="items-center bar-item misc">
-      <UIcon name="heroicons:clock" class="text-violet-400" />
+      <UIcon name="heroicons:clock" class="text-(--ui-color-secondary-400)" />
       <span>{{ codingStats.total_duration }}</span>
     </div>
 
     <template #content>
       <div class="px-2 py-1">
-        <p class="text-center text-violet-400">
+        <p class="text-center text-(--ui-color-secondary-400)">
           last {{ codingStats.calculated_days }} day coding stats
         </p>
 
@@ -35,7 +35,7 @@ const maxTitleLength = computed(
             {{ stat.key }}
           </div>
 
-          <div class="w-full rounded-sm bg-zinc-900">
+          <div class="w-full rounded-sm bg-(--ui-bg)">
             <div
               class="h-2 rounded-sm"
               :style="{ width: stat.percentage + '%', 'background-color': stat.hex_color }"

@@ -26,7 +26,7 @@ const { mutate, isPending, error } = useMutation({
 
 <template>
   <div>
-    <span class="text-emerald-500">Update tags</span>
+    <span class="text-(--ui-primary)">Update tags</span>
     <LabelSelect ref="selectRef" v-model="selected" field="id" :suggest="props.suggest" class="mb-3" />
 
     <n-input

@@ -10,7 +10,7 @@ const release = ref<Record<string, any>>(props.event.payload.release as any)
 
 <template>
   <div>
-    <span class="text-lime-500">{{ action }}</span>
+    <span class="text-(--ui-success)">{{ action }}</span>
 
     release from tag
     <EventHoverItem :href="release.html_url" :value="release.tag_name" class="truncate">

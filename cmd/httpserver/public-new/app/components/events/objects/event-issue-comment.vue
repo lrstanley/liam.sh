@@ -16,7 +16,11 @@ const issue = ref<Record<string, any>>(props.event.payload.issue as any)
     <span v-if="action == 'deleted'">removed</span>
 
     a
-    <EventLink :href="comment.html_url" class="text-cyan-400 hover:text-cyan-500" value="comment" />
+    <EventLink
+      :href="comment.html_url"
+      class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
+      value="comment"
+    />
     to {{ issue.pull_request ? "pr" : "issue" }}
 
     <EventHoverItem :href="issue.html_url" :value="'#' + issue.number">

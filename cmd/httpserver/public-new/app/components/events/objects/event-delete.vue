@@ -8,7 +8,7 @@ const props = defineProps<{
   <div>
     <span class="text-red-400">deleted</span>
     <template v-if="props.event.payload.ref">
-      <EventHoverItem :value="props.event.payload.ref as string" class="truncate text-zinc-200">
+      <EventHoverItem :value="props.event.payload.ref as string" class="truncate text-(--ui-text)">
         <template #icon>
           <UIcon name="mdi:source-branch" v-if="props.event.payload.ref_type == 'branch'" />
           <UIcon name="mdi:tag" v-else />

@@ -18,7 +18,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
     a
     <EventLink
       :href="comment.html_url"
-      class="text-cyan-400 hover:text-cyan-500"
+      class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
       value="review comment"
     />
     to pr

@@ -95,7 +95,7 @@ function fetchMoreEvents() {
       v-for="(e, i) in events"
       :key="e.id"
       :style="{ '--i': events.length - i, '--total': events.length }"
-      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
+      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
     >
       <a :href="'https://github.com/' + e.actor.login" target="_blank">
         <UAvatar
@@ -121,7 +121,7 @@ function fetchMoreEvents() {
       v-show="status != 'success' || error"
       id="status"
       key="status"
-      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-zinc-400 border-b-DEFAULT border-b-gray-100"
+      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
     >
       <UIcon name="heroicons:arrow-path-16-solid" class="mr-1 align-middle animate-spin" />
       <div class="flex items-center gap-2 truncate grow">

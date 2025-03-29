@@ -9,7 +9,7 @@ const fork = ref<Record<string, any>>(props.event.payload.forkee!)
 
 <template>
   <div>
-    <span class="text-purple-400">forked</span>
+    <span class="text-(--ui-color-secondary-400)">forked</span>
     <EventLink :href="repo.name as string" />
     to
     <EventLink :href="fork.full_name" />

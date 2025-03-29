@@ -61,7 +61,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
       <CoreTableOfContents v-if="postRef" :links="toc" :element="postRef" />
 
       <div>
-        <div class="mb-1 font-bold text-emerald-500">Post Labels</div>
+        <div class="mb-1 font-bold text-(--ui-primary)">Post Labels</div>
         <div class="flex flex-wrap gap-1">
           <LabelObject
             v-for="label in post.edges.labels"
@@ -94,7 +94,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
 
 #post-content :deep(img) {
   @apply max-w-[calc(100%)] lg:max-w-[calc(80%)] px-2 lg:px-0 !my-0 rounded-lg mx-auto;
-  @apply border border-indigo-600/40 border-solid;
+  @apply border border-(--ui-color-secondary-600)/40 border-solid;
   height: auto;
 }
 
@@ -118,7 +118,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
   border-left-width: 0.25rem;
   margin-top: 1.6em;
   margin-bottom: 1.6em;
-  @apply border-l-emerald-600 border-l-4 border-solid bg-emerald-600/30 rounded;
+  @apply border-l-(--ui-color-primary-600) border-l-4 border-solid bg-(--ui-color-primary-600)/30 rounded;
 }
 
 #post-content :deep(blockquote) > p {
@@ -128,7 +128,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
 }
 
 #post-content > :deep(p):not(blockquote) > strong {
-  @apply text-lime-400;
+  @apply text-(--ui-success);
 }
 
 #post-content :deep(h1) {
@@ -158,7 +158,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
 #post-content :deep(h4),
 #post-content :deep(h5) {
   @apply text-transparent bg-gradient-to-tr bg-clip-text font-bold from-10% via-50% to-90%;
-  @apply bg-gradient-to-r from-sky-400 to-blue-500 ml-[10px];
+  @apply bg-gradient-to-r from-(--ui-color-info-400) to-(--ui-color-info-600) ml-[10px];
 }
 
 #post-content :deep(h1)::before,
@@ -170,7 +170,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
   content: "#";
   position: relative;
   right: 10px;
-  @apply text-emerald-500;
+  @apply text-(--ui-primary);
 }
 
 #post-content :deep(:not(pre)) > code {

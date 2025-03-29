@@ -85,7 +85,7 @@ if (error.value) throw error.value
 
     <template #sidebar>
       <div>
-        <div class="text-emerald-500">Sort repos</div>
+        <div class="text-(--ui-primary)">Sort repos</div>
         <CoreSorter
           v-if="pagination"
           v-model="pagination.sort.value"
@@ -100,7 +100,7 @@ if (error.value) throw error.value
       </div>
 
       <div>
-        <div class="text-emerald-500">Filter attributes</div>
+        <div class="text-(--ui-primary)">Filter attributes</div>
         <div class="inline-flex flex-row gap-1">
           <CoreIndeterminateButton v-model:string-value="archived" size="xs" label="archived" />
           <CoreIndeterminateButton v-model:string-value="forks" size="xs" label="forks" />
@@ -108,7 +108,7 @@ if (error.value) throw error.value
       </div>
 
       <div>
-        <div class="text-emerald-500">Filter by label</div>
+        <div class="text-(--ui-primary)">Filter by label</div>
         <LabelSelect v-model="labels" />
       </div>
     </template>

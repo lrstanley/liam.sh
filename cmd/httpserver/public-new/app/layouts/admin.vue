@@ -34,7 +34,7 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-  <UDashboardGroup>
+  <UDashboardGroup class="bg-(--ui-bg)">
     <UDashboardSidebar
       resizable
       collapsible

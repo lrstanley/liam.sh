@@ -82,7 +82,7 @@ if (error.value) throw error.value
 
     <template #sidebar>
       <div>
-        <div class="text-emerald-500">Sort posts</div>
+        <div class="text-(--ui-primary)">Sort posts</div>
         <CoreSorter
           v-if="pagination"
           v-model="pagination.sort.value"
@@ -96,7 +96,7 @@ if (error.value) throw error.value
       </div>
 
       <div>
-        <div class="text-emerald-500">Filter by label</div>
+        <div class="text-(--ui-primary)">Filter by label</div>
         <LabelSelect v-model="labels" />
       </div>
     </template>

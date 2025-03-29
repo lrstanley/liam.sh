@@ -137,12 +137,12 @@ function clear(e: any) {
     </template>
   </USelectMenu>
   <!-- <div v-if="suggestions.length > 0" v-motion-fade class="flex flex-col mb-2">
-    <span class="text-emerald-500">Suggestions</span>
+    <span class="text-(--ui-primary)">Suggestions</span>
     <div class="inline-flex flex-row flex-wrap gap-1">
       <UBadge
         v-for="label in suggestions"
         :key="label.data.id"
-        class="cursor-pointer hover:bg-emerald-700"
+        class="cursor-pointer hover:bg-(--ui-color-primary-700)"
         @click="addSuggestion(label)"
       >
         <UBadge color="neutral" variant="outline" class="mr-0">{{ label.popularity }}</UBadge>

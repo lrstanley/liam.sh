@@ -11,14 +11,14 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
 
 <template>
   <div>
-    <div v-if="review.state == 'approved'" class="text-lime-500">approved</div>
+    <div v-if="review.state == 'approved'" class="text-(--ui-success)">approved</div>
     <div v-else-if="review.state == 'changes_requested'">
       <span class="text-red-400">requested changes</span>
       on
     </div>
     <div v-else-if="review.state == 'commented'">
       added a
-      <span class="text-cyan-400">review comment</span>
+      <span class="text-(--ui-color-info-400)">review comment</span>
       to
     </div>
     <div v-else>
@@ -29,7 +29,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
       a
       <EventLink
         :href="review.html_url"
-        class="text-cyan-400 hover:text-cyan-500"
+        class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
         :value="'review ' + review.state"
       />
       to

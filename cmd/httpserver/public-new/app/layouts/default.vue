@@ -31,7 +31,7 @@ watch(
 
     <span class="p-2 text-center">
       Made with
-      <UIcon name="mdi:heart" class="align-middle text-emerald-600" />
+      <UIcon name="mdi:heart" class="align-middle text-(--ui-color-primary-600)" />
       by
       <a :href="githubUser?.html_url" target="_blank">{{ githubUser?.login }}</a>
     </span>

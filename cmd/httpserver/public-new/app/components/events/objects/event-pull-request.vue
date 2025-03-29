@@ -10,7 +10,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
 
 <template>
   <div>
-    <span v-if="action == 'closed' && pr.merged" class="text-purple-400">merged</span>
+    <span v-if="action == 'closed' && pr.merged" class="text-(--ui-color-secondary-400)">merged</span>
     <span v-else-if="['opened', 'edited', 'closed', 'reopened'].includes(action)">
       {{ action }}
     </span>
@@ -30,7 +30,7 @@ const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
     <template v-if="['opened', 'edited', 'closed'].includes(action)">
       via
 
-      <EventHoverItem :value="pr.head.ref" class="truncate text-zinc-200">
+      <EventHoverItem :value="pr.head.ref" class="truncate text-(--ui-text-toned)">
         <template #icon>
           <UIcon name="mdi:source-pull" />
         </template>

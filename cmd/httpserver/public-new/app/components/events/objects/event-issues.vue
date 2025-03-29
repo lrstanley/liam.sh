@@ -10,7 +10,7 @@ const issue = ref<Record<string, any>>(props.event.payload.issue as any)
 
 <template>
   <div>
-    <div class="text-cyan-400">
+    <div class="text-(--ui-color-info-400)">
       <span v-if="['opened', 'edited', 'closed', 'reopened'].includes(action)">
         {{ action }}
       </span>

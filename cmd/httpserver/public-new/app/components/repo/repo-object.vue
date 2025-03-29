@@ -38,8 +38,8 @@ const gh = useGithubUser()
           text="last updated"
         >
           <div class="inline-flex flex-row items-center">
-            <UIcon name="mdi:update" class="mr-1 text-purple-400" />
-            <span class="italic text-zinc-400">
+            <UIcon name="mdi:update" class="mr-1 text-(--ui-color-secondary-400)" />
+            <span class="italic text-(--ui-text-muted)">
               {{ useTimeAgo(repo.pushed_at).value }}
             </span>
           </div>
@@ -47,8 +47,8 @@ const gh = useGithubUser()
 
         <UTooltip :delay-duration="50" :content="{ side: 'top' }" text="created">
           <div class="flex-row items-center hidden mr-auto md:inline-flex">
-            <UIcon name="mdi:rocket-launch-outline" class="mr-1 text-lime-400 ml-1ch" />
-            <span class="italic text-zinc-400">
+            <UIcon name="mdi:rocket-launch-outline" class="mr-1 text-(--ui-color-success-400) ml-1ch" />
+            <span class="italic text-(--ui-text-muted)">
               {{ useTimeAgo(repo.created_at).value }}
             </span>
           </div>

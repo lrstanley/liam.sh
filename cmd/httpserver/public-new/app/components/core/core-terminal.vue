@@ -14,11 +14,11 @@ const gh = useGithubUser()
 
 <template>
   <div v-bind="$attrs">
-    <span class="inline-flex text-emerald-600">
+    <span class="inline-flex text-(--ui-primary)">
       {{ gh?.name.split(" ")[0]?.toLowerCase() }}
-      <span class="text-zinc-500">:</span>
+      <span class="text-(--ui-text-muted)">:</span>
       {{ path }}
-      <span class="text-zinc-500">$</span>
+      <span class="text-(--ui-text-muted)">$</span>
       <span v-if="prefix" class="mr-4" />
       <span v-else class="mr-2" />
       {{ prefix }}
@@ -53,7 +53,7 @@ const gh = useGithubUser()
     border-color: transparent;
   }
   50% {
-    border-right-color: var(--color-emerald-700);
+    border-right-color: var(--ui-color-primary-700);
   }
 }
 </style>

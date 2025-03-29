@@ -13,10 +13,7 @@ const year = new Date().getFullYear()
     :content="{ side: 'top', align: 'end', sideOffset: 0 }"
     v-bind="$attrs"
   >
-    <a
-      class="px-2 text-white transition bg-blue-600 rounded-br-sm hover:bg-blue-800 hover:text-current"
-      :href="gh.html_url"
-    >
+    <a class="px-2 text-(--ui-text-highlighted) transition hover:text-current" :href="gh.html_url">
       <UIcon name="mdi:github" class="align-middle mt-[-3px] mr-[-7px]" />
       {{ gh.login }}
     </a>
@@ -28,14 +25,14 @@ const year = new Date().getFullYear()
 
           <div>
             <h2 class="text-base leading-tight">{{ gh.name }}</h2>
-            <h2 class="text-base leading-tight text-zinc-400">{{ gh.login }}</h2>
+            <h2 class="text-base leading-tight text-(--ui-text-muted)">{{ gh.login }}</h2>
           </div>
         </div>
 
         <div class="mt-4">
           <div class="flex flex-row justify-between flex-auto mt-1">
             <span>
-              <UIcon name="mdi:source-commit" class="text-zinc-400" />
+              <UIcon name="mdi:source-commit" class="text-(--ui-text-muted)" />
               Total Commits ({{ year }})
             </span>
             <UBadge class="ml-1" color="primary" variant="soft">
@@ -44,7 +41,7 @@ const year = new Date().getFullYear()
           </div>
           <div class="flex flex-row justify-between flex-auto mt-1">
             <span>
-              <UIcon name="mdi:heart-multiple-outline" class="text-zinc-400" />
+              <UIcon name="mdi:heart-multiple-outline" class="text-(--ui-text-muted)" />
               Contributed To ({{ year }})
             </span>
             <UBadge class="ml-1" color="primary" variant="soft">
@@ -53,7 +50,7 @@ const year = new Date().getFullYear()
           </div>
           <div class="flex flex-row justify-between flex-auto mt-1">
             <span>
-              <UIcon name="mdi:star-check-outline" class="text-zinc-400" />
+              <UIcon name="mdi:star-check-outline" class="text-(--ui-text-muted)" />
               Total Stars Earned
             </span>
             <UBadge class="ml-1" color="primary" variant="soft">
@@ -62,7 +59,7 @@ const year = new Date().getFullYear()
           </div>
           <div class="flex flex-row justify-between flex-auto mt-1">
             <span>
-              <UIcon name="mdi:source-pull" class="text-zinc-400" />
+              <UIcon name="mdi:source-pull" class="text-(--ui-text-muted)" />
               Total PRs
             </span>
             <UBadge class="ml-1" color="primary" variant="soft">
@@ -71,7 +68,7 @@ const year = new Date().getFullYear()
           </div>
           <div class="flex flex-row justify-between flex-auto mt-1">
             <span>
-              <UIcon name="mdi:help-circle-outline" class="text-zinc-400" />
+              <UIcon name="mdi:help-circle-outline" class="text-(--ui-text-muted)" />
               Total Issues
             </span>
             <UBadge class="ml-1" color="primary" variant="soft">
