@@ -26,8 +26,7 @@ ul :deep(a) {
   display: inline-flex;
   padding-left: 5ch;
   padding-right: 4ch;
-  @apply py-3;
-  @apply !text-violet-400 transition duration-100;
+  @apply py-3 !text-violet-400 transition duration-100 text-sm;
 }
 
 ul :deep(a):not(.active):hover {

@@ -18,7 +18,7 @@ const {
   data: posts,
   error,
   status,
-} = listPosts({
+} = await listPosts({
   composable: "useFetch",
   query: computed(() => ({
     page: pagination.page.value,
@@ -81,7 +81,7 @@ if (error.value) throw error.value
     />
 
     <template #sidebar>
-      <div class="text-center md:text-left">
+      <div>
         <div class="text-emerald-500">Sort posts</div>
         <CoreSorter
           v-if="pagination"
@@ -92,9 +92,10 @@ if (error.value) throw error.value
             title: { displayName: 'title', defaultOrder: 'asc' },
             view_count: { displayName: 'popularity', defaultOrder: 'desc' },
           }"
-          class="pb-4"
         />
+      </div>
 
+      <div>
         <div class="text-emerald-500">Filter by label</div>
         <LabelSelect v-model="labels" />
       </div>

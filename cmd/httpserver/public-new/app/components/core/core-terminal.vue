@@ -14,7 +14,7 @@ const gh = useGithubUser()
 
 <template>
   <div v-bind="$attrs">
-    <span class="inline-flex mr-[10px] text-emerald-600">
+    <span class="inline-flex text-emerald-600">
       {{ gh?.name.split(" ")[0]?.toLowerCase() }}
       <span class="text-zinc-500">:</span>
       {{ path }}
@@ -25,7 +25,7 @@ const gh = useGithubUser()
     </span>
     <span class="inline-flex w-auto">
       <span
-        class="inline-flex overflow-hidden border-r-4 border-solid text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor whitespace-nowrap border-r-emerald-500"
+        class="inline-flex overflow-hidden border-solid border-r-3 text-gradient bg-gradient-to-r from-blue-400 to-emerald-400 cursor whitespace-nowrap border-r-emerald-500"
       >
         {{ value }}
       </span>

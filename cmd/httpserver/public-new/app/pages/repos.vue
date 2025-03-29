@@ -84,7 +84,7 @@ if (error.value) throw error.value
     />
 
     <template #sidebar>
-      <div class="text-center md:text-left">
+      <div>
         <div class="text-emerald-500">Sort repos</div>
         <CoreSorter
           v-if="pagination"
@@ -96,15 +96,18 @@ if (error.value) throw error.value
             created_at: { displayName: 'created', defaultOrder: 'desc' },
             name: { displayName: 'name', defaultOrder: 'asc' },
           }"
-          class="pb-4"
         />
+      </div>
 
+      <div>
         <div class="text-emerald-500">Filter attributes</div>
-        <div class="inline-flex flex-row gap-1 pb-4">
+        <div class="inline-flex flex-row gap-1">
           <CoreIndeterminateButton v-model:string-value="archived" size="xs" label="archived" />
           <CoreIndeterminateButton v-model:string-value="forks" size="xs" label="forks" />
         </div>
+      </div>
 
+      <div>
         <div class="text-emerald-500">Filter by label</div>
         <LabelSelect v-model="labels" />
       </div>

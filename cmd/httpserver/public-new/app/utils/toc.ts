@@ -4,58 +4,21 @@
  * the LICENSE file.
  */
 
-// import { h } from "vue"
-
-// import type { VNode } from "vue"
-
-/**
- * createTOC recursively checks all HTML headers that contain an ID, under a given
- * root element, returning a list of heading descendants (taking into consideration
- * the heading level as the tree depth), and wraps the headings with the provided
- * wrapper element type.
- */
-export function createTOC<T>(root: Node, wrapper: T): VNode[] {
-  if (!root) {
-    return []
-  }
-
-  return wrapChildren(wrapper, getNodeTree(root))
-}
-
-/**
- * wrapChildren wraps all descendants in a custom element type, and if it has
- * children, it will recursively wrap them as well.
- */
-function wrapChildren<T>(wrapper: T, elements: HeadingTree[]): VNode[] {
-  if (!elements) return []
-
-  return elements.map((el) => {
-    return h(
-      wrapper!,
-      {
-        href: el.href,
-        title: el.title,
-      },
-      () => wrapChildren(wrapper, el.children)
-    )
-  })
-}
-
 /**
  * getNodeTree returns an araay of all headers that were obtained recrusively, under
  * a given root element.
  */
-export function getNodeTree(root: Node): HeadingTree[] {
+export function getNodeTree(root: HTMLElement): HeadingTree[] {
   return recurseNodes(root, [])
 }
 
 /**
  * HeadingTree represents a header, and its descendants, as a tree.
  */
-interface HeadingTree {
-  href: string
+export type HeadingTree = {
+  id: string
   title: string
-  type: Node["nodeName"]
+  depth: number
   children: HeadingTree[]
 }
 
@@ -63,16 +26,16 @@ interface HeadingTree {
  * recurseNodes recursively searches children of a root node looking for HTML headers
  * that contain an ID, and returns a flat array of nodes.
  */
-function recurseNodes(root: Node, tree: HeadingTree[] = []): HeadingTree[] {
+function recurseNodes(root: HTMLElement, tree: HeadingTree[] = []): HeadingTree[] {
   if (!root) return []
 
   // Collect all headers, and their descendants.
   root.childNodes.forEach((child) => {
     if (child instanceof HTMLHeadingElement) {
       tree.push({
-        href: `#${child.id}`,
+        id: child.id,
         title: child.textContent!,
-        type: child.nodeName,
+        depth: +child.nodeName.replace(/[^0-9]+/g, ""),
         children: recurseNodes(child),
       })
     }
@@ -93,8 +56,10 @@ function reorder(tree: HeadingTree[]): HeadingTree[] {
 
     // If the previous header is larger, then take the current header in the loop
     // and append it as a child of the previous header.
-    if (tree[i].type > tree[i - 1].type) {
-      tree[i - 1].children = reorder([...tree[i - 1].children, tree[i]])
+    const current = tree[i]
+    const previous = tree[i - 1]
+    if (current && previous && current.depth > previous.depth) {
+      previous.children = reorder([...(previous.children || []), current])
       tree.splice(i, 1)
       i--
     }

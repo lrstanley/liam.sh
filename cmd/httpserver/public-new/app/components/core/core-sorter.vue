@@ -29,6 +29,7 @@ function toggle(id: string) {
       :color="field == id ? 'primary' : 'neutral'"
       variant="outline"
       :icon="field == id ? (order == 'asc' ? 'mdi:arrow-up' : 'mdi:arrow-down') : undefined"
+      size="sm"
       @click="toggle(id)"
       class="cursor-pointer"
     >

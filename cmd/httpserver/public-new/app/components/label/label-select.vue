@@ -17,7 +17,7 @@ const emit = defineEmits<{
   "update:modelValue": [value: Label[LabelField][]]
 }>()
 
-const { data: labels, status, refresh } = getLabelsCount({ composable: "useFetch" })
+const { data: labels, status, refresh } = await getLabelsCount({ composable: "useFetch" })
 
 defineExpose({ refetch: refresh })
 
