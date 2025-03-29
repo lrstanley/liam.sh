@@ -42,11 +42,14 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
       :ui="{ footer: 'lg:border-t lg:border-(--ui-border)' }"
     >
       <template #default="{ collapsed }">
-        <router-link to="/admin">
-          <UButton color="primary" variant="subtle" block :square="collapsed">
-            {{ collapsed ? "LS" : "Admin Dashboard" }}
+        <div class="flex flex-row gap-2">
+          <UButton color="secondary" icon="lucide:arrow-left" variant="link" :square="collapsed" to="/">
+            {{ collapsed ? "" : "Back" }}
           </UButton>
-        </router-link>
+          <UButton v-if="!collapsed" color="primary" variant="subtle" block :square="collapsed">
+            Admin Dashboard
+          </UButton>
+        </div>
         <UNavigationMenu :collapsed="collapsed" :items="adminSidebarOptions" orientation="vertical" />
       </template>
 

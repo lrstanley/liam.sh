@@ -54,10 +54,4 @@ export const adminSidebarOptions: Link[] = [
   //     window.location.href = "/-/auth/logout"
   //   },
   // },
-  {
-    label: "User Facing Pages",
-    icon: "lucide:user",
-    defaultOpen: true,
-    children: menuOptions,
-  },
 ]
