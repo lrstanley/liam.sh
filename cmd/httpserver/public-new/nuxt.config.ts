@@ -37,11 +37,6 @@ export default defineNuxtConfig({
     typedPages: true,
   },
   telemetry: false,
-  routeRules: {
-    "/admin/**": {
-      ssr: false,
-    },
-  },
   vite: {
     server: {
       open: false,

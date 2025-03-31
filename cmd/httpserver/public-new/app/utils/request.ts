@@ -4,8 +4,6 @@
  * the LICENSE file.
  */
 
-import { shallowEqual } from "@/utils/equal"
-import { useRouteQuery } from "@vueuse/router"
 import type { WatchStopHandle } from "vue"
 import { client } from "#hey-api/client.gen"
 
@@ -21,8 +19,17 @@ export function getBackendURL(): string {
   return `${useRequestURL().origin}/-`
 }
 
-export function setHTTPClientBaseURL() {
-  client.setConfig({ baseURL: getBackendURL(), credentials: "include" })
+export function setHTTPClientConfig() {
+  // Allows pass-through of cookies from origin browser, to API requests (mainly helpful when in SSR).
+  const headers = useRequestHeaders(["cookie"])
+
+  client.setConfig({
+    baseURL: getBackendURL(),
+    credentials: "include",
+    retry: 3,
+    retryDelay: 1000,
+    headers: headers,
+  })
 }
 
 export type PaginationOptions<T> = {

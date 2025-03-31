@@ -24,7 +24,7 @@ useSeoMeta({
   },
 })
 
-setHTTPClientBaseURL()
+setHTTPClientConfig()
 </script>
 
 <template>

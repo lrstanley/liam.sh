@@ -4,11 +4,13 @@
  * the LICENSE file.
  */
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  setHTTPClientBaseURL()
+  setHTTPClientConfig()
 
   const self = useSelf()
   const githubUser = useGithubUser()
+  const url = useRequestURL()
 
+  // TODO: switch these from $fetch to useFetch, after the bugs with hey-api/openapi-ts are fixed.
   await Promise.all([
     callOnce("getSelf", async () => {
       let apiError: ErrorUnauthorized | undefined
@@ -34,9 +36,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   ])
 
   if (to.path.startsWith("/admin") && self.value == null) {
-    return navigateTo(
-      `${getBackendURL()}/auth/providers/github?next=${window.location.origin + to.path}`,
-      { external: true }
-    )
+    return navigateTo(`${getBackendURL()}/auth/providers/github?next=${url.origin + to.path}`, {
+      external: true,
+    })
   }
 })
