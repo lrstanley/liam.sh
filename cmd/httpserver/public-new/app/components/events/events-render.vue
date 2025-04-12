@@ -110,7 +110,10 @@ function fetchMoreEvents() {
       <div class="flex-none">
         <EventHoverItem placement="left">
           <template #value>
-            <UIcon name="mdi:clock-time-two-outline" class="timestamp" />
+            <UIcon
+              name="mdi:clock-time-two-outline"
+              class="opacity-[max(0.2,calc(var(--i)/var(--total)))] hover:opacity-100 transition duration-100;"
+            />
           </template>
 
           {{ useTimeAgo(e.created_at).value }}
@@ -132,8 +135,6 @@ function fetchMoreEvents() {
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 #main {
   font-size: 1.05em;
 
@@ -142,15 +143,6 @@ function fetchMoreEvents() {
       font-size: 1.15em;
     }
   }
-}
-
-.timestamp {
-  opacity: max(0.2, calc(var(--i) / var(--total)));
-  @apply transition duration-100;
-}
-
-.timestamp:hover {
-  opacity: 1;
 }
 
 div :deep(.icon) {

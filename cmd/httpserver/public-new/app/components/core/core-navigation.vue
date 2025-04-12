@@ -19,7 +19,7 @@ const self = useSelf()
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
+@reference "../../assets/main.css";
 
 ul :deep(a) {
   position: relative;

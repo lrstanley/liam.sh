@@ -2,6 +2,9 @@
 import type { DropdownMenuItem } from "#ui/types"
 
 const self = useSelf()
+const route = useRoute()
+
+const title = computed(() => (route.meta.title ? (route.meta.title as string) : undefined))
 
 const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
   [
@@ -88,6 +91,18 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
       </template>
     </UDashboardSidebar>
 
-    <slot />
+    <UDashboardPanel>
+      <template #header>
+        <UDashboardNavbar :title="title">
+          <template #leading>
+            <UDashboardSidebarCollapse />
+          </template>
+        </UDashboardNavbar>
+      </template>
+
+      <template #body>
+        <slot />
+      </template>
+    </UDashboardPanel>
   </UDashboardGroup>
 </template>

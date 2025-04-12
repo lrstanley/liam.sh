@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useTimeAgo } from "@vueuse/core"
 
-useHead({ title: "Gists" })
 definePageMeta({
+  title: "Gists",
   layout: "terminal",
 })
 
@@ -70,7 +70,3 @@ const gists = computed(() => data.value?.content ?? [])
     </div>
   </ContainerIde>
 </template>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-</style>

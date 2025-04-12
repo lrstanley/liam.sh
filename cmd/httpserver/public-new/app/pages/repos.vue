@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
 
-useHead({ title: "Home" })
 definePageMeta({
+  title: "Repos",
   layout: "default",
 })
 

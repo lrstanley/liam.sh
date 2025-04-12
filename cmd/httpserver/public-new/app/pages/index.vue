@@ -1,6 +1,6 @@
 <script setup lang="ts">
-useHead({ title: "Home" })
 definePageMeta({
+  title: "Home",
   layout: "terminal",
 })
 

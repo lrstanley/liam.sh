@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { TableColumn } from "#ui/types"
 
-useHead({ title: "Repository Releases" })
 definePageMeta({
+  title: "Repository Releases",
   layout: "admin",
 })
 
@@ -62,25 +62,13 @@ const columns: TableColumn<OutdatedRepositoryRelease>[] = [
 </script>
 
 <template>
-  <UDashboardPanel id="customers">
-    <template #header>
-      <UDashboardNavbar title="Repository Releases">
-        <template #leading>
-          <UDashboardSidebarCollapse />
-        </template>
-      </UDashboardNavbar>
-    </template>
-
-    <template #body>
-      <UCard variant="subtle">
-        <UTable
-          v-if="data"
-          :data="data"
-          :columns="columns"
-          :loading="status === 'pending'"
-          class="shrink-0"
-        />
-      </UCard>
-    </template>
-  </UDashboardPanel>
+  <UCard variant="subtle">
+    <UTable
+      v-if="data"
+      :data="data"
+      :columns="columns"
+      :loading="status === 'pending'"
+      class="shrink-0"
+    />
+  </UCard>
 </template>

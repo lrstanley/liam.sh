@@ -37,11 +37,11 @@ export const adminSidebarOptions: Link[] = [
   //   icon: "lucide:book-open-page-variant-outline",
   //   label: "Blog Posts",
   // },
-  // {
-  //   to: "/admin/banner-builder",
-  //   icon: "lucide:image-edit-outline",
-  //   label: "Banner Builder",
-  // },
+  {
+    label: "Banner Builder",
+    to: "/admin/banner-builder",
+    icon: "mdi:image-edit-outline",
+  },
   {
     label: "Repository Releases",
     to: "/admin/repository-releases",

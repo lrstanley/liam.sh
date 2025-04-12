@@ -1,6 +1,12 @@
 <script setup lang="ts">
+const route = useRoute()
+
+const title = computed(() =>
+  route.meta.title ? `${route.meta.title} · Liam Stanley` : "Personal Website & Blog"
+)
+
 useHead({
-  titleTemplate: (chunk) => (chunk ? `${chunk} · Liam Stanley` : "Liam Stanley"),
+  title: title,
   htmlAttrs: { lang: "en" },
   meta: [
     { name: "revisit-after", content: "10" },
@@ -13,8 +19,8 @@ useHead({
 
 useSeoMeta({
   author: "Liam Stanley",
-  title: "Personal Website & Blog",
-  ogTitle: "Personal Website & Blog",
+  title: title,
+  ogTitle: title,
   description: "Personal website, including blog posts, Git repositories, and more",
   ogDescription: "Personal website, including blog posts, Git repositories, and more",
   robots: "index, follow",

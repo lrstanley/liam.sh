@@ -1,6 +1,6 @@
 <script setup lang="ts">
-useHead({ title: "Posts" })
 definePageMeta({
+  title: "Posts",
   layout: "default",
 })
 
@@ -77,7 +77,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
+@reference "../../assets/main.css";
 
 #post-content {
   line-height: 1.55;

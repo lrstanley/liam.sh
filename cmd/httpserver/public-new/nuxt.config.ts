@@ -29,7 +29,7 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
-  css: ["~/assets/css/main.css"],
+  css: ["~/assets/main.css"],
   devServer: {
     port: 8081,
   },
