@@ -168,8 +168,8 @@ const { top: atTop } = toRefs(scrollState)
         description="Height of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber
-          @update:model-value="(v) => (input.h = v === 200 ? undefined : v)"
+        <USlider
+          @update:model-value="(v) => (input.h = +v === 200 ? undefined : +v)"
           class="md:min-w-60"
           :default-value="200"
           :min="200"
@@ -184,8 +184,8 @@ const { top: atTop } = toRefs(scrollState)
         description="Width of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber
-          @update:model-value="(v) => (input.w = v === 961 ? undefined : v)"
+        <USlider
+          @update:model-value="(v) => (input.w = +v === 961 ? undefined : +v)"
           class="md:min-w-60"
           :default-value="961"
           :min="600"
@@ -200,13 +200,13 @@ const { top: atTop } = toRefs(scrollState)
         description="Font scale of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber
-          @update:model-value="(v) => (input.font = v === 1 ? undefined : v)"
+        <USlider
+          @update:model-value="(v) => (input.font = +v === 1 ? undefined : +v)"
           class="md:min-w-60"
           :default-value="1"
           :min="0.5"
           :max="3"
-          :step="0.5"
+          :step="0.1"
           :format-options="{
             minimumFractionDigits: 1,
           }"
@@ -299,7 +299,7 @@ const { top: atTop } = toRefs(scrollState)
         description="Height of the icon (in px)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber v-model="input['icon.height']" class="md:min-w-60" :min="0" :max="300" />
+        <USlider v-model="input['icon.height']" class="md:min-w-60" :min="0" :max="300" />
       </UFormField>
 
       <USeparator />
@@ -309,7 +309,7 @@ const { top: atTop } = toRefs(scrollState)
         description="Width of the icon (in px)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber v-model="input['icon.width']" class="md:min-w-60" :min="0" :max="300" />
+        <USlider v-model="input['icon.width']" class="md:min-w-60" :min="0" :max="300" />
       </UFormField>
 
       <USeparator />
@@ -339,7 +339,7 @@ const { top: atTop } = toRefs(scrollState)
         description="Rotate the icon (1=90deg, 2=180deg, 3=270deg)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
       >
-        <UInputNumber
+        <USlider
           v-model="input['icon.rotate']"
           class="md:min-w-60"
           :min="0"
