@@ -14,50 +14,9 @@ if (error.value) throw error.value
 const now = new Date()
 
 const columns: TableColumn<OutdatedRepositoryRelease>[] = [
-  {
-    header: "Repository",
-    accessorKey: "repository",
-    cell: ({ row }) =>
-      h(
-        "a",
-        {
-          class: "flex flex-row",
-          href: row.original.repository.html_url + "/releases",
-          target: "_blank",
-        },
-        [
-          h("img", { src: row.original.repository.owner.avatar_url, class: "w-6 h-6 rounded-full" }),
-          h("span", { class: "ml-2" }, row.original.repository.full_name),
-        ]
-      ),
-  },
-  {
-    header: "Last Release",
-    accessorKey: "lastRelease",
-    cell: ({ row }) =>
-      h("a", { class: "flex flex-row", href: row.original.release.html_url, target: "_blank" }, [
-        h("span", {}, row.original.release.name || row.original.release.tag_name),
-      ]),
-  },
-  {
-    header: "Last Release Date",
-    accessorKey: "lastRelease",
-    cell: ({ row }) => h("span", {}, row.original.release.created_at.toLocaleString()),
-  },
-  {
-    header: "Last Release Relative",
-    accessorKey: "lastRelease",
-    cell: ({ row }) => {
-      const diffMs = now.getTime() - new Date(row.original.release.created_at).getTime()
-      const diffDays = Math.round(diffMs / 86400000)
-
-      return h(
-        "span",
-        { class: diffDays > 90 ? "text-(--ui-error)" : "" },
-        useTimeAgo(row.original.release.created_at).value
-      )
-    },
-  },
+  { id: "repository", header: "Repository", accessorKey: "repository" },
+  { id: "lastReleaseVersion", header: "Last Release Version", accessorKey: "lastRelease" },
+  { id: "lastReleaseDate", header: "Last Release", accessorKey: "lastRelease" },
 ]
 </script>
 
@@ -68,7 +27,37 @@ const columns: TableColumn<OutdatedRepositoryRelease>[] = [
       :data="data"
       :columns="columns"
       :loading="status === 'pending'"
+      loading-color="primary"
+      loading-animation="carousel"
       class="shrink-0"
-    />
+    >
+      <template #repository-cell="{ row }">
+        <a
+          class="flex flex-row"
+          :href="'https://github.com/' + row.original.repository.full_name + '/releases'"
+          target="_blank"
+        >
+          <img :src="row.original.repository.owner.avatar_url" class="w-6 h-6 rounded-full" />
+          <span class="ml-2">{{ row.original.repository.full_name }}</span>
+        </a>
+      </template>
+
+      <template #lastReleaseVersion-cell="{ row }">
+        <a :href="row.original.release.html_url" target="_blank">
+          <span>{{ row.original.release.name || row.original.release.tag_name }}</span>
+        </a>
+      </template>
+
+      <template #lastReleaseDate-cell="{ row }">
+        <span
+          :class="{
+            'text-(--ui-error)':
+              new Date(row.original.release.created_at).getTime() < now.getTime() - 90 * 86400000,
+          }"
+        >
+          {{ useTimeAgo(row.original.release.created_at).value }}
+        </span>
+      </template>
+    </UTable>
   </UCard>
 </template>
