@@ -75,15 +75,10 @@ const drawerActive = ref(false)
 
         <!-- views -->
         <div class="flex flex-col ml-auto shrink-0">
-          <UBadge
-            class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
-            color="neutral"
-            variant="solid"
-            size="lg"
-          >
+          <StatsButton>
             {{ post.view_count.toLocaleString() }}
             {{ post.view_count === 1 ? "view" : "views" }}
-          </UBadge>
+          </StatsButton>
 
           <!-- TODO: show draft & edit badges/buttons -->
         </div>

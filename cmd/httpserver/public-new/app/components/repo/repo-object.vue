@@ -97,15 +97,10 @@ const gh = useGithubUser()
 
         <!-- views -->
         <div class="flex flex-col ml-auto shrink-0">
-          <UBadge
-            class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
-            color="neutral"
-            variant="outline"
-            size="lg"
-          >
+          <StatsButton>
             {{ repo.star_count.toLocaleString() }}
             {{ repo.star_count === 1 ? "star" : "stars" }}
-          </UBadge>
+          </StatsButton>
         </div>
       </div>
     </div>
