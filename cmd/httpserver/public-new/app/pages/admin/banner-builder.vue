@@ -56,6 +56,17 @@ function copyURL() {
     duration: 2000,
   })
 }
+
+const getScrollableParent = (el: HTMLElement | null) => {
+  if (!el) return null
+  if (el.scrollHeight > el.clientHeight) return el
+  return getScrollableParent(el.parentElement)
+}
+
+const scrollEl = useTemplateRef("scroll")
+const scrollElParent = computed(() => getScrollableParent(scrollEl.value?.$el))
+const { arrivedState: scrollState } = useScroll(scrollElParent)
+const { top: atTop } = toRefs(scrollState)
 </script>
 
 <template>
@@ -70,12 +81,16 @@ function copyURL() {
 
   <UContainer class="xl:w-[961px] sticky top-0 z-10">
     <UCard
-      variant="outline"
-      class="p-1 xl:p-3 flex xl:min-h-[200px] items-center justify-center drop-shadow-lg ring-primary-400/30"
+      :variant="atTop ? 'subtle' : 'outline'"
+      class="p-1 xl:p-3 flex xl:min-h-[200px] items-center justify-center shadow-lg transition-all duration-100"
+      :class="{
+        'ring-primary-400/30 scale-105 shadow-primary-400/20': !atTop,
+      }"
     >
       <img :src="urlDebounced" />
 
       <UButton
+        v-if="!atTop"
         label="Copy URL"
         size="xs"
         color="primary"
@@ -86,7 +101,7 @@ function copyURL() {
     </UCard>
   </UContainer>
 
-  <UContainer class="flex flex-col gap-5 xl:w-[961px]">
+  <UContainer ref="scroll" class="flex flex-col gap-5 xl:w-[961px]">
     <ReuseSection title="Main Configuration">
       <UFormField
         label="Repository"
