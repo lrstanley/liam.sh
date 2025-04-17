@@ -9169,9 +9169,6 @@
                         "type": "boolean",
                         "default": false
                     },
-                    "author": {
-                        "type": "integer"
-                    },
                     "labels": {
                         "type": "array",
                         "items": {
@@ -9182,8 +9179,7 @@
                 "required": [
                     "slug",
                     "title",
-                    "content",
-                    "author"
+                    "content"
                 ]
             },
             "PostEdges": {
@@ -9310,9 +9306,6 @@
                         "description": "Whether the post is public or not.",
                         "type": "boolean",
                         "default": false
-                    },
-                    "author": {
-                        "type": "integer"
                     },
                     "add_labels": {
                         "type": "array",

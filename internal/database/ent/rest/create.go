@@ -397,7 +397,6 @@ type CreatePostParams struct {
 	PublishedAt *time.Time `json:"published_at"`
 	// Whether the post is public or not.
 	Public *bool `json:"public"`
-	Author int   `json:"author"`
 	Labels []int `json:"labels,omitempty"`
 }
 
@@ -417,7 +416,6 @@ func (c *CreatePostParams) ApplyInputs(builder *ent.PostCreate) *ent.PostCreate 
 	if c.Public != nil {
 		builder.SetPublic(*c.Public)
 	}
-	builder.SetAuthorID(c.Author)
 	builder.AddLabelIDs(c.Labels...)
 	return builder
 }

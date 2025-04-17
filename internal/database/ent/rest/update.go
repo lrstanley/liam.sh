@@ -520,7 +520,6 @@ type UpdatePostParams struct {
 	PublishedAt Option[time.Time] `json:"published_at"`
 	// Whether the post is public or not.
 	Public       Option[bool]  `json:"public"`
-	Author       Option[int]   `json:"author"`
 	AddLabels    Option[[]int] `json:"add_labels,omitempty"`
 	RemoveLabels Option[[]int] `json:"remove_labels,omitempty"`
 }
@@ -545,9 +544,6 @@ func (u *UpdatePostParams) ApplyInputs(builder *ent.PostUpdateOne) *ent.PostUpda
 		builder.SetPublic(v)
 	}
 
-	if v, ok := u.Author.Get(); ok {
-		builder.SetAuthorID(v)
-	}
 	if v, ok := u.AddLabels.Get(); ok && v != nil {
 		builder.AddLabelIDs(v...)
 	}

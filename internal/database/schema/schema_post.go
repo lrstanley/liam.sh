@@ -170,6 +170,7 @@ func (Post) Edges() []ent.Edge {
 			Annotations(
 				entrest.WithEagerLoad(true),
 				entrest.WithFilter(entrest.FilterEdge),
+				entrest.WithExcludeOperations(entrest.OperationCreate, entrest.OperationUpdate),
 			),
 		edge.From("labels", Label.Type).
 			Ref("posts").
