@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/lrstanley/entrest"
-	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
 var reLabel = regexp.MustCompile(`^[a-z\d][a-z\d-]*$`)
@@ -38,17 +37,6 @@ func (Label) Fields() []ent.Field {
 func (Label) Mixin() []ent.Mixin {
 	return []ent.Mixin{
 		MixinTime{},
-	}
-}
-
-func (Label) Policy() ent.Policy {
-	return privacy.Policy{
-		Mutation: privacy.MutationPolicy{
-			AllowRoles([]string{"admin"}, true),
-		},
-		Query: privacy.QueryPolicy{
-			privacy.AlwaysAllowRule(),
-		},
 	}
 }
 

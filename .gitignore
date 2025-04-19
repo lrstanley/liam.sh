@@ -10,6 +10,7 @@ bin/*
 *.log
 .env
 .gitapicache
+internal/database/ent
 
 # frontend-specific
 **/node_modules

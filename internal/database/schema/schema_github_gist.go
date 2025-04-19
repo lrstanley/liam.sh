@@ -11,7 +11,6 @@ import (
 	"entgo.io/ent/schema/index"
 	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/entrest"
-	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/ogen-go/ogen"
 )
 
@@ -103,18 +102,6 @@ func (GithubGist) Indexes() []ent.Index {
 	return []ent.Index{
 		// unique index.
 		index.Fields("gist_id", "name").Unique(),
-	}
-}
-
-func (GithubGist) Policy() ent.Policy {
-	return privacy.Policy{
-		Mutation: privacy.MutationPolicy{
-			privacy.AlwaysDenyRule(),
-		},
-		Query: privacy.QueryPolicy{
-			FilterPublicOnly(),
-			privacy.AlwaysAllowRule(),
-		},
 	}
 }
 

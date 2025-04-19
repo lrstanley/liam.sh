@@ -18,10 +18,10 @@ require (
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/lrstanley/chix v1.0.5
 	github.com/lrstanley/clix v1.0.7
-	github.com/lrstanley/entrest v0.0.0-20250417070602-1fcaae8354a8
+	github.com/lrstanley/entrest v0.0.0-20250419072846-665f4494098f
 	github.com/markbates/goth v1.81.0
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/ogen-go/ogen v1.10.1
+	github.com/ogen-go/ogen v1.12.0
 	github.com/prometheus/client_golang v1.22.0
 	github.com/shurcooL/githubv4 v0.0.0-20240727222349-48295856cce7
 	github.com/yuin/goldmark v1.7.10
