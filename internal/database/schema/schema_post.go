@@ -78,6 +78,8 @@ func (Post) Fields() []ent.Field {
 	return []ent.Field{
 		field.String("slug").
 			Match(rePostSlug).
+			MinLen(5).
+			MaxLen(50).
 			Unique().
 			Annotations(
 				entrest.WithSortable(true),
@@ -87,6 +89,7 @@ func (Post) Fields() []ent.Field {
 			).
 			Comment("Post slug."),
 		field.String("title").
+			MinLen(5).
 			MaxLen(100).
 			Annotations(
 				entrest.WithSortable(true),
