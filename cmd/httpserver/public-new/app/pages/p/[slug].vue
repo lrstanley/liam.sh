@@ -1,6 +1,5 @@
 <script setup lang="ts">
 definePageMeta({
-  title: "Posts",
   layout: "default",
 })
 
@@ -23,6 +22,10 @@ if (error.value) throw error.value
 const postRef = useTemplateRef("postRef")
 const post = computed(() => (posts.value?.content ? posts.value.content[0] : null))
 const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
+
+useHead({
+  title: post.value ? post.value?.title + " · Liam Stanley" : null,
+})
 </script>
 
 <template>
@@ -34,7 +37,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
       :value="'cat &quot;' + post.slug + '.md&quot;'"
     />
 
-    <div class="flex-col flex-auto h-full mt-3">
+    <div class="flex-col flex-auto mt-3">
       <div
         class="text-[30px]/12 md:text-[45px] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
       >

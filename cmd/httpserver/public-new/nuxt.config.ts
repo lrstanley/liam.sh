@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@formkit/auto-animate/nuxt", // TODO: remove if motion-v ends up working.
     "@nuxt/ui-pro",
-    // "@nuxtjs/html-validator"
+    "nuxt-typed-router",
   ],
   future: {
     compatibilityVersion: 4,
@@ -52,17 +52,11 @@ export default defineNuxtConfig({
       plugins: [
         "@hey-api/client-nuxt",
         "@hey-api/schemas",
+        "@hey-api/sdk",
+        "zod",
         {
-          name: "@hey-api/sdk",
-          transformer: true,
-        },
-        {
-          enums: "javascript",
           name: "@hey-api/typescript",
-        },
-        {
-          name: "@hey-api/transformers",
-          dates: true,
+          enums: "javascript",
         },
       ],
     },

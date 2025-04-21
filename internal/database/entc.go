@@ -38,6 +38,8 @@ func main() {
 
 	extensions := entc.Extensions(rest)
 
+	// TODO: see if entrest can be updated so it doesn't patch the original config annotations,
+	// and we don't need to have this function hack.
 	getConfig := func() *gen.Config {
 		return &gen.Config{
 			Target:  "./ent/",

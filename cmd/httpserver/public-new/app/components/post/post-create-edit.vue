@@ -7,88 +7,141 @@ import { oneDark } from "@codemirror/theme-one-dark"
 const codeExtensions = [markdown(), oneDark, EditorView.lineWrapping]
 
 const props = defineProps<{
-  post?: PostRead
-  create?: boolean
+  create: boolean
+  loading?: boolean
+  error?: string
 }>()
-const emit = defineEmits(["update:post"])
 
-const post = ref<PostRead>(props.post ?? ({} as PostRead))
-const labelIDs = ref<number[]>(props.post?.edges.labels?.map(({ id }) => id) ?? [])
+const emit = defineEmits<{
+  save: []
+}>()
 
-const datetime = computed({
-  get: () => (post.value.published_at ? Date.parse(post.value.published_at) : new Date().getTime()),
-  set: (val) => {
-    post.value.published_at = new Date(val).toISOString()
-  },
-})
+const post = defineModel<PostRead | PostCreate>({ required: true })
+const labels = defineModel<number[]>("labels", { required: true })
+
+const titleMinLength = 5
+const titleMaxLength = 100
+const slugMinLength = 5
+const slugMaxLength = 50
+
+function save() {
+  emit("save")
+}
 </script>
 
 <template>
-  <div v-motion-fade class="grid gap-4 mb-20 grid-sidebar">
-    <n-card size="small">
-      <div class="grid grid-cols-1 gap-2 lg:grid-cols-2">
-        <n-form-item label="Post title" :required="true">
-          <n-input
-            v-model:value="post.title"
-            :maxlength="100"
-            :status="post.title?.length > 5 ? 'success' : 'error'"
-            show-count
-            type="text"
+  <div class="flex flex-row gap-2">
+    <UButton
+      color="secondary"
+      variant="subtle"
+      icon="lucide:arrow-left"
+      :to="{ name: 'admin-posts' }"
+      class="cursor-pointer"
+    >
+      Back
+    </UButton>
+  </div>
+  <ContainerStickySidebar>
+    <UCard variant="subtle" class="p-1 xl:p-3 flex flex-col">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <UFormField label="Post title" required class="flex flex-col">
+          <UInput
+            v-model="post.title"
             placeholder="Post title"
-          />
-        </n-form-item>
-
-        <n-form-item label="Post slug" :required="true">
-          <n-input
-            v-model:value="post.slug"
-            :maxlength="50"
-            :status="post.slug?.length > 5 ? 'success' : 'error'"
-            show-count
             type="text"
+            class="w-full"
+            :minlength="titleMinLength"
+            :maxlength="titleMaxLength"
+          >
+            <template #trailing>
+              <div
+                class="text-xs text-(--ui-text-muted) tabular-nums"
+                :class="{
+                  'text-error-400/50': (post.title?.length || 0) < titleMinLength,
+                }"
+                role="status"
+              >
+                {{ post.title?.length || 0 }}/{{ titleMaxLength }}
+              </div>
+            </template>
+          </UInput>
+        </UFormField>
+
+        <UFormField label="Post slug" required class="flex flex-col">
+          <UInput
+            v-model="post.slug"
             placeholder="Post slug"
-          />
-        </n-form-item>
+            type="text"
+            class="w-full"
+            :minlength="slugMinLength"
+            :maxlength="slugMaxLength"
+          >
+            <template #trailing>
+              <div
+                class="text-xs text-(--ui-text-muted) tabular-nums"
+                :class="{
+                  'text-error-400/50': (post.slug?.length || 0) < slugMinLength,
+                }"
+                role="status"
+              >
+                {{ post.slug?.length || 0 }}/{{ slugMaxLength }}
+              </div>
+            </template>
+          </UInput>
+        </UFormField>
       </div>
 
-      <div class="flex w-full shrink grow-0">
+      <div class="flex w-full shrink grow-0 mt-4 rounded">
         <codemirror
           v-model="post.content"
           placeholder="Post content"
           :autofocus="true"
           :style="{ 'min-height': '400px', width: '100%' }"
+          class="rounded"
           :indent-with-tab="true"
           :tab-size="4"
           :extensions="codeExtensions"
         />
       </div>
-    </n-card>
-    <div>
-      <n-card size="small" class="md:sticky md:top-5 md:left-0">
-        <div class="flex flex-col gap-3">
-          <div>
-            <span class="text-(--ui-color-primary-400)">Post published date</span>
-            <n-date-picker v-model:value="datetime" type="datetime" />
-          </div>
+    </UCard>
 
-          <div>
-            <div class="text-(--ui-color-primary-400)">Post attributes</div>
-            <n-checkbox v-model:checked="post.public">Public</n-checkbox>
-          </div>
+    <template #sidebar>
+      <UCard variant="subtle" class="p-1 xl:p-3">
+        <div class="flex flex-col gap-4">
+          <UFormField label="Published at" class="flex flex-col" required>
+            <UInput v-model="post.published_at" type="text" class="w-full" />
+          </UFormField>
 
-          <LabelInput v-model="labelIDs" :suggest="post.content" />
+          <UFormField label="Public" class="flex flex-col" required>
+            <USwitch v-model="post.public" class="w-full" />
+            <div class="text-xs text-(--ui-text-muted)">
+              <span class="font-bold">Public</span>
+              posts are visible to all users
+            </div>
+          </UFormField>
 
-          <n-button block type="primary" @click="emit('update:post', post, labelIDs)">
-            <UIcon name="mdi:content-save" class="mr-1" />
-            Save post
-          </n-button>
+          <UFormField label="Labels" class="flex flex-col" required>
+            <LabelSelect v-model="labels" field="id" :suggest="post.content" />
+          </UFormField>
+
+          <UButton
+            block
+            color="primary"
+            variant="subtle"
+            @click="save()"
+            :loading="loading"
+            icon="mdi:content-save"
+          >
+            {{ create ? "Create post" : "Save post" }}
+          </UButton>
+
+          <UAlert v-if="error && !loading" color="error">
+            <template #description>
+              <div v-html="error" />
+            </template>
+          </UAlert>
         </div>
-      </n-card>
-    </div>
-  </div>
+      </UCard>
+    </template>
+  </ContainerStickySidebar>
 </template>
-
-<style scoped>
-.grid-sidebar {
-  @apply grid-cols-1 lg:grid-cols-[1fr,280px];
-}
-</style>

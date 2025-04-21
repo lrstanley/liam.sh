@@ -16,7 +16,7 @@ const drawerActive = ref(false)
     <div class="flex flex-col w-full gap-1">
       <div class="flex flex-row">
         <NuxtLink
-          class="text-[1.4em] md:text-[1.5em] truncate text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+          class="text-[1.4em] md:text-[1.5em] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
           :to="{ name: 'p-slug', params: { slug: post.slug } }"
         >
           {{ post.title }}

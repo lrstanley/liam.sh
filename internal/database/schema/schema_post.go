@@ -117,6 +117,7 @@ func (Post) Edges() []ent.Edge {
 			Annotations(
 				entrest.WithEagerLoad(true),
 				entrest.WithFilter(entrest.FilterEdge),
+				entrest.WithEdgeUpdateBulk(true),
 			),
 	}
 }

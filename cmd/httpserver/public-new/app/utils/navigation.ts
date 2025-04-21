@@ -32,11 +32,11 @@ export const adminSidebarOptions: Link[] = [
     to: "/admin",
     icon: "lucide:lock",
   },
-  // {
-  //   to: "/admin/posts",
-  //   icon: "lucide:book-open-page-variant-outline",
-  //   label: "Blog Posts",
-  // },
+  {
+    label: "Blog Posts",
+    to: "/admin/posts",
+    icon: "lucide:book-open-text",
+  },
   {
     label: "Banner Builder",
     to: "/admin/banner-builder",
