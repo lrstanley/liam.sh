@@ -1,0 +1,14 @@
+{
+    "recommendations": [
+        "antfu.goto-alias",
+        "antfu.iconify",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "foxundermoon.shell-format",
+        "golang.go",
+        "mikestead.dotenv",
+        "naumovs.color-highlight",
+        "timonwong.shellcheck",
+        "vue.volar"
+    ]
+}

@@ -77,4 +77,5 @@
     "editor.quickSuggestions": {
         "strings": true
     },
+    "editor.gotoLocation.multipleDefinitions": "goto"
 }
