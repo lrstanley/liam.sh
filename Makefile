@@ -44,11 +44,11 @@ docker-build:
 
 # TODO: TEMPORARY
 node-clean:
-	rm -rf cmd/httpserver/public-new/node_modules
-	rm -rf cmd/httpserver/public-new/.nuxt
-	rm -rf cmd/httpserver/public-new/.output
-	cd cmd/httpserver/public-new && pnpm store prune
-	cd cmd/httpserver/public-new && pnpm i
+	rm -rf frontend/node_modules
+	rm -rf frontend/.nuxt
+	rm -rf frontend/.output
+	cd frontend/ && pnpm store prune
+	cd frontend/ && pnpm i
 
 # frontend
 node-fetch:
@@ -57,35 +57,28 @@ node-fetch:
 		--no-fund \
 		--quiet \
 		--global pnpm
-	cd cmd/httpserver/public-new && \
-		pnpm install
+	cd frontend/ && pnpm install
 
 node-upgrade-deps:
-	cd cmd/httpserver/public-new && \
-		pnpm up -iL
+	cd frontend/ && pnpm up -iL
 
 node-prepare: license node-fetch
 	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd cmd/httpserver/public-new && \
-		pnpm exec eslint \
-			--ignore-path ../../../.gitignore \
-			--ext .js,.ts,.vue .
-	cd cmd/httpserver/public-new && \
-		pnpm exec vue-tsc --noEmit
+	cd frontend/ && pnpm exec eslint \
+		--ignore-path ../../../.gitignore \
+		--ext .js,.ts,.vue .
+	cd frontend/ && pnpm exec vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd cmd/httpserver/public-new && \
-		pnpm run dev
+	cd frontend/ && pnpm run dev
 
 node-build: node-prepare
-	cd cmd/httpserver/public-new && \
-		pnpm run build
+	cd frontend/ && pnpm run build
 
 node-preview: node-build
-	cd cmd/httpserver/public-new && \
-		pnpm run preview
+	cd frontend/ && pnpm run preview
 
 # backend
 go-prepare: license

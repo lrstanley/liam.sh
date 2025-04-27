@@ -13,8 +13,8 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2025-01-13",
   devtools: {
-    viteInspect: false,
-    componentInspector: false,
+    // viteInspect: false,
+    // componentInspector: false,
   },
   ssr: true,
   runtimeConfig: {
@@ -47,7 +47,7 @@ export default defineNuxtConfig({
   heyApi: {
     config: {
       input: {
-        path: "../../../internal/database/ent/rest/openapi.json",
+        path: "../internal/database/ent/rest/openapi.json",
       },
       plugins: [
         "@hey-api/client-nuxt",
