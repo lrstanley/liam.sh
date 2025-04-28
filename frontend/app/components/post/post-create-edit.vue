@@ -121,7 +121,7 @@ function save() {
           </UFormField>
 
           <UFormField label="Labels" class="flex flex-col" required>
-            <LabelSelect v-model="labels" field="id" :suggest="post.content" />
+            <LabelSelect v-model="labels" field="id" :suggest="post.content" allow-create />
           </UFormField>
 
           <UButton

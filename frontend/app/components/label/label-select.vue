@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { UBadge } from "#components"
 
+const toast = useToast()
+
 export type LabelField = keyof Pick<Label, "id" | "name">
 
 const {
   modelValue: value = [],
   field = "name",
   suggest = "",
+  allowCreate,
 } = defineProps<{
   modelValue: Label[LabelField] | Label[LabelField][]
   field?: LabelField
   suggest?: string
+  allowCreate?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -84,6 +88,30 @@ function clear(e: any) {
   e.stopPropagation()
   selected.value = []
 }
+
+async function onCreate(name: string) {
+  try {
+    const label = await createLabel({
+      composable: "$fetch",
+      body: { name },
+    })
+
+    toast.add({
+      title: "Label created",
+      description: `Label ${label.name} created`,
+      color: "success",
+      duration: 3000,
+    })
+    await refresh()
+  } catch (e) {
+    toast.add({
+      title: "Failed to create label",
+      description: (e as any).message,
+      color: "error",
+      duration: 5000,
+    })
+  }
+}
 </script>
 
 <template>
@@ -93,6 +121,8 @@ function clear(e: any) {
     :loading="status === 'pending'"
     icon="lucide:tag"
     multiple
+    :create-item="allowCreate"
+    @create="onCreate"
     placeholder="Select labels"
     class="w-full lg:max-w-[15vw]"
   >
@@ -123,10 +153,10 @@ function clear(e: any) {
           item.popularity > 25
             ? 'primary'
             : item.popularity > 10
-            ? 'info'
-            : item.popularity > 0
-            ? 'neutral'
-            : 'error'
+              ? 'info'
+              : item.popularity > 0
+                ? 'neutral'
+                : 'error'
         "
         variant="soft"
         class="rounded-full"
