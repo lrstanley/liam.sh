@@ -6,15 +6,15 @@ definePageMeta({
   layout: "default",
 })
 
-const pagination = usePagination<GithubRepositorySortableFields>({ sort: "pushed_at" })
 const labels = useRouteQuery<Array<string>>("label", [])
 const archived = useRouteQuery<string>("archived", "")
 const forks = useRouteQuery<string>("forks", "")
 const search = useRouteQuery<string>("q", "")
 const debounceSearch = refDebounced<string>(search, 300)
-
-// TODO: make this an argument to usePagination?
-resetPagination(pagination, [labels, archived, forks, debounceSearch])
+const pagination = usePagination<GithubRepositorySortableFields>({
+  sort: "pushed_at",
+  resetChanged: [labels, archived, forks, debounceSearch],
+})
 
 const {
   data: repos,

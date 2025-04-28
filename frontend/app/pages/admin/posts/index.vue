@@ -9,12 +9,12 @@ definePageMeta({
 
 const toast = useToast()
 
-const pagination = usePagination<PostSortableFields>({ sort: "published_at" })
 const search = useRouteQuery<string>("q", "")
 const debounceSearch = refDebounced<string>(search, 300)
-
-// TODO: make this an argument to usePagination?
-resetPagination(pagination, [debounceSearch])
+const pagination = usePagination<PostSortableFields>({
+  sort: "published_at",
+  resetChanged: [debounceSearch],
+})
 
 const {
   data: posts,

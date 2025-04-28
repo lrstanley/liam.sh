@@ -37,6 +37,7 @@ export type PaginationOptions<T> = {
   perPage?: number
   sort?: T
   order?: "asc" | "desc"
+  resetChanged?: Ref<any>[]
 }
 
 export function usePagination<T extends string = string>({
@@ -44,30 +45,26 @@ export function usePagination<T extends string = string>({
   perPage = 15,
   sort,
   order = "desc",
+  resetChanged = [],
 }: PaginationOptions<T>) {
-  return {
+  const results = {
     page: useRouteQuery<number>("page", page, { transform: Number }),
     perPage: useRouteQuery<number>("per_page", perPage, { transform: Number }),
     sort: useRouteQuery<T>("sort", sort),
     order: useRouteQuery<"asc" | "desc">("order", order),
     sizes: [5, 15, 25, 50, 100, 250],
   }
-}
 
-/**
- * resetPagination - reset the pagination when any of the provided refs change, as well
- * as perPage, sort, and order from the pagination object itself.
- */
-export function resetPagination(
-  pagination: ReturnType<typeof usePagination>,
-  refs: Ref<any>[]
-): WatchStopHandle {
-  return watch([...refs, pagination.perPage, pagination.sort, pagination.order], (newv, oldv) => {
-    for (let i = 0; i < newv.length; i++) {
-      if (!shallowEqual(newv[i], oldv[i])) {
-        pagination.page.value = 1
-        return
+  if (resetChanged.length) {
+    watch([...resetChanged, results.perPage, results.sort, results.order], (newv, oldv) => {
+      for (let i = 0; i < newv.length; i++) {
+        if (!shallowEqual(newv[i], oldv[i])) {
+          results.page.value = 1
+          return
+        }
       }
-    }
-  })
+    })
+  }
+
+  return results
 }
