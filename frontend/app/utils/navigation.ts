@@ -33,9 +33,14 @@ export const adminSidebarOptions: Link[] = [
     icon: "lucide:lock",
   },
   {
-    label: "Blog Posts",
+    label: "Manage Posts",
     to: "/admin/posts",
     icon: "lucide:book-open-text",
+  },
+  {
+    label: "Manage Labels",
+    to: "/admin/labels",
+    icon: "lucide:tag",
   },
   {
     label: "Banner Builder",
@@ -47,11 +52,4 @@ export const adminSidebarOptions: Link[] = [
     to: "/admin/repository-releases",
     icon: "mdi:history",
   },
-  // {
-  //   icon: "lucide:log-out",
-  //   label: "Logout",
-  //   onSelect() {
-  //     window.location.href = "/-/auth/logout"
-  //   },
-  // },
 ]
