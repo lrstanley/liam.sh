@@ -11,6 +11,7 @@ import (
 	"github.com/apex/log"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/clix"
+	"github.com/lrstanley/liam.sh/internal/ai"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime"
@@ -22,6 +23,7 @@ import (
 var (
 	db     *ent.Client
 	logger log.Interface
+	aiSvc  ai.Service
 
 	cli = &clix.CLI[models.Flags]{
 		Links: clix.GithubLinks("github.com/lrstanley/liam.sh", "master", "https://liam.sh"),
@@ -41,6 +43,12 @@ func main() {
 	database.Migrate(ctx, db)
 
 	gh.NewClient(ctx, cli.Flags.Github)
+
+	var err error
+	aiSvc, err = ai.NewService(ctx, cli.Flags.AI, cli.Flags.HTTP, db)
+	if err != nil {
+		logger.WithError(err).Fatal("failed to create AI service")
+	}
 
 	if err := chix.RunContext(
 		ctx, httpServer(ctx),

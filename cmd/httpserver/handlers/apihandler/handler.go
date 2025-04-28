@@ -6,7 +6,10 @@ package apihandler
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/lrstanley/chix"
 	"github.com/lrstanley/clix"
+	"github.com/lrstanley/liam.sh/internal/ai"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
 	"github.com/lrstanley/liam.sh/internal/models"
@@ -14,11 +17,12 @@ import (
 
 type handler struct {
 	db      *ent.Client
+	aiSvc   ai.Service
 	srv     *rest.Server
 	version *clix.VersionInfo[models.Flags]
 }
 
-func New(db *ent.Client, version *clix.VersionInfo[models.Flags], debug bool, base string) *handler {
+func New(db *ent.Client, aiSvc ai.Service, version *clix.VersionInfo[models.Flags], debug bool, base string) *handler {
 	restServer, err := rest.NewServer(db, &rest.ServerConfig{
 		BasePath:   base,
 		MaskErrors: !debug,
@@ -29,6 +33,7 @@ func New(db *ent.Client, version *clix.VersionInfo[models.Flags], debug bool, ba
 
 	return &handler{
 		db:      db,
+		aiSvc:   aiSvc,
 		srv:     restServer,
 		version: version,
 	}
@@ -42,6 +47,10 @@ func (h *handler) Route(r chi.Router) {
 	r.Get("/github-user", h.getGithubUser)
 	r.Get("/github-releases/outdated", h.getOutdatedGithubReleases)
 	r.Post("/posts/regenerate", h.postsRegenerate)
+	r.With(
+		chix.UseAuthRequired[ent.User],
+		middleware.Throttle(1),
+	).Post("/posts/suggest-labels", h.postsSuggestLabels)
 	r.Get("/stats/coding", h.getStatsCoding)
 	r.Get("/stats/github", h.getStatsGithub)
 }

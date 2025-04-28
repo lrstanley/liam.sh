@@ -5,11 +5,13 @@
 package apihandler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/apex/log"
 	"github.com/lrstanley/chix"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
+	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
 )
 
 func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
@@ -50,4 +52,23 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *handler) postsSuggestLabels(w http.ResponseWriter, r *http.Request) {
+	v := &struct {
+		Content string `json:"content"`
+	}{}
+	if err := chix.Bind(r, v); err != nil {
+		chix.Error(w, r, err)
+		return
+	}
+
+	// Don't reuse context, because we want it to continue in the background and cache if
+	// possible.
+	suggestions, err := h.aiSvc.PostSuggestLabels(context.WithoutCancel(r.Context()), v.Content)
+	if err != nil {
+		chix.Error(w, r, err)
+		return
+	}
+	rest.JSON(w, r, http.StatusOK, suggestions)
 }

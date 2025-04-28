@@ -98,7 +98,7 @@ func httpServer(ctx context.Context) *http.Server {
 		}),
 	)
 
-	r.Route("/-", apihandler.New(db, cli.VersionInfo, cli.Debug, "/-").Route)
+	r.Route("/-", apihandler.New(db, aiSvc, cli.VersionInfo, cli.Debug, "/-").Route)
 	r.Mount("/-/auth", chix.NewAuthHandler(
 		authSvc,
 		cli.Flags.HTTP.ValidationKey,

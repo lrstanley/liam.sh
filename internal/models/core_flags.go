@@ -9,7 +9,7 @@ type Flags struct {
 	Database ConfigDatabase `group:"Database options"    namespace:"database" env-namespace:"DATABASE"`
 	Github   ConfigGithub   `group:"Github options"      namespace:"github"   env-namespace:"GITHUB"`
 	WakAPI   ConfigWakAPI   `group:"WakAPI options"      namespace:"wakapi"   env-namespace:"WAKAPI"`
-
+	AI       ConfigAI       `group:"AI options"         namespace:"ai"       env-namespace:"AI"`
 }
 
 // ConfigDatabase holds the database configuration.
@@ -43,4 +43,12 @@ type ConfigGithub struct {
 type ConfigWakAPI struct {
 	URL    string `env:"URL"     long:"url"     required:"true" description:"wakapi connection url"`
 	APIKey string `env:"API_KEY" long:"api-key" required:"true" description:"WakAPI API key"`
+}
+
+// ConfigAI are configurations specifically utilized for interacting with
+// OpenRouter (https://openrouter.ai).
+type ConfigAI struct {
+	BaseURL      string `env:"BASE_URL"      long:"base-url"      default:"https://openrouter.ai/api/v1" description:"OpenRouter base URL"`
+	APIKey       string `env:"API_KEY"       long:"api-key"       required:"true" description:"OpenRouter API key"`
+	DefaultModel string `env:"DEFAULT_MODEL" long:"default-model" description:"default OpenRouter model to use"`
 }

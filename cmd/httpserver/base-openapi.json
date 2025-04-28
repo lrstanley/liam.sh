@@ -454,6 +454,31 @@
                     "release"
                 ]
             },
+            "SuggestedLabel": {
+                "description": "A suggested label for a post.",
+                "properties": {
+                    "existing_id": {
+                        "description": "The existing label ID if it already exists.",
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "name": {
+                        "description": "The name of the label.",
+                        "type": "string",
+                        "example": "github-action"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "SuggestedLabelList": {
+                "description": "A list of suggested labels for a post.",
+                "items": {
+                    "$ref": "#/components/schemas/SuggestedLabel"
+                },
+                "type": "array"
+            },
             "VersionInfo": {
                 "properties": {
                     "arch": {
@@ -754,7 +779,47 @@
                         "description": "Posts were regenerated."
                     }
                 },
-                "summary": "Regenerate posts.",
+                "summary": "Regenerate posts",
+                "tags": [
+                    "Posts"
+                ]
+            }
+        },
+        "/posts/suggest-labels": {
+            "post": {
+                "description": "Suggest labels for a post.",
+                "operationId": "suggestLabels",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "description": "The markdown text content which is used as the basis for the label suggestions.",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuggestedLabelList"
+                                }
+                            }
+                        },
+                        "description": "Suggested labels were found."
+                    }
+                },
+                "summary": "Suggest labels for a post",
                 "tags": [
                     "Posts"
                 ]

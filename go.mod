@@ -24,6 +24,7 @@ require (
 	github.com/ogen-go/ogen v1.12.0
 	github.com/prometheus/client_golang v1.22.0
 	github.com/shurcooL/githubv4 v0.0.0-20240727222349-48295856cce7
+	github.com/tmc/langchaingo v0.1.13
 	github.com/yuin/goldmark v1.7.10
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.29.0
@@ -74,6 +75,7 @@ require (
 	github.com/ncruces/go-strftime v0.1.9 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pkoukk/tiktoken-go v0.1.7 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.63.0 // indirect
 	github.com/prometheus/procfs v0.16.0 // indirect
