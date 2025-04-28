@@ -10,7 +10,6 @@ type Flags struct {
 	Github   ConfigGithub   `group:"Github options"      namespace:"github"   env-namespace:"GITHUB"`
 	WakAPI   ConfigWakAPI   `group:"WakAPI options"      namespace:"wakapi"   env-namespace:"WAKAPI"`
 
-	ChatLink string `env:"CHAT_LINK" long:"chat-link" required:"true" description:"Link to a chat platform"`
 }
 
 // ConfigDatabase holds the database configuration.

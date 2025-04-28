@@ -6,8 +6,6 @@ package main
 
 import (
 	"context"
-	"embed"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -21,15 +19,10 @@ import (
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/webhookhandler"
 	"github.com/lrstanley/liam.sh/internal/auth"
-	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
-
-//go:generate sh -c "mkdir -vp public/dist;touch public/dist/index.html"
-//go:embed all:public/dist
-var staticFS embed.FS
 
 func httpServer(ctx context.Context) *http.Server {
 	chix.DefaultAPIPrefix = "/-/"
@@ -65,9 +58,6 @@ func httpServer(ctx context.Context) *http.Server {
 	)
 
 	// Security related.
-	if !cli.Debug {
-		r.Use(middleware.SetHeader("Strict-Transport-Security", "max-age=31536000"))
-	}
 	r.Use(
 		cors.New(cors.Options{
 			AllowOriginFunc: func(r *http.Request, origin string) bool { return true },
@@ -84,13 +74,6 @@ func httpServer(ctx context.Context) *http.Server {
 			MaxAge:           300,
 			AllowCredentials: true,
 		}).Handler,
-		chix.UseHeaders(map[string]string{
-			"Content-Security-Policy": "default-src 'self'; img-src * data:; media-src * data:; style-src 'self' 'unsafe-inline'; object-src 'none'; child-src 'none'; frame-src 'none'; worker-src 'none'",
-			"X-Frame-Options":         "DENY",
-			"X-Content-Type-Options":  "nosniff",
-			"Referrer-Policy":         "no-referrer-when-downgrade",
-			"Permissions-Policy":      "clipboard-write=(self)",
-		}),
 		chix.UseAuthContext(authSvc),
 		httprate.LimitByIP(400, 1*time.Minute),
 	)
@@ -103,10 +86,6 @@ func httpServer(ctx context.Context) *http.Server {
 
 	// Misc.
 	r.Use(
-		chix.UseRobotsTxt(fmt.Sprintf(
-			"User-agent: *\nSitemap: %s/sitemap.txt\nAllow: /\n",
-			strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"),
-		)),
 		chix.UseSecurityTxt(&chix.SecurityConfig{
 			ExpiresIn: 182 * 24 * time.Hour,
 			Contacts: []string{
@@ -120,7 +99,6 @@ func httpServer(ctx context.Context) *http.Server {
 	)
 
 	r.Route("/-", apihandler.New(db, cli.VersionInfo, cli.Debug, "/-").Route)
-	r.Mount("/chat", http.RedirectHandler(cli.Flags.ChatLink, http.StatusTemporaryRedirect))
 	r.Mount("/-/auth", chix.NewAuthHandler(
 		authSvc,
 		cli.Flags.HTTP.ValidationKey,
@@ -140,19 +118,9 @@ func httpServer(ctx context.Context) *http.Server {
 		})
 	})
 
-	r.Get("/sitemap.txt", sitemap)
-
-	r.NotFound(chix.UseStatic(ctx, &chix.Static{
-		FS:         staticFS,
-		CatchAll:   true,
-		AllowLocal: cli.Debug,
-		Path:       "public/dist",
-		SPA:        true,
-		Headers: map[string]string{
-			"Vary":          "Accept-Encoding",
-			"Cache-Control": "public, max-age=7776000",
-		},
-	}).ServeHTTP)
+	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
+		chix.Error(w, r, chix.WrapCode(http.StatusNotFound))
+	})
 
 	return &http.Server{
 		Addr:    cli.Flags.HTTP.BindAddr,
@@ -160,27 +128,5 @@ func httpServer(ctx context.Context) *http.Server {
 
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
-	}
-}
-
-func sitemap(w http.ResponseWriter, r *http.Request) {
-	urls := []string{
-		"/repos",
-		"/posts",
-	}
-
-	postSlugs, err := db.Post.Query().Select(post.FieldSlug).Strings(r.Context())
-	if chix.Error(w, r, err) {
-		return
-	}
-
-	for _, slug := range postSlugs {
-		urls = append(urls, "/p/"+slug)
-	}
-
-	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-	w.WriteHeader(http.StatusOK)
-	for _, url := range urls {
-		fmt.Fprintf(w, "%s%s\n", strings.TrimRight(cli.Flags.HTTP.BaseURL, "/"), url)
 	}
 }
