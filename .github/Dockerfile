@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # build backend
-FROM golang:latest as build-go
+FROM golang:latest AS build-go
 WORKDIR /build
 
 COPY . /build
@@ -11,7 +11,7 @@ RUN \
 	make go-build
 
 # build frontend
-FROM node:22-alpine as build
+FROM node:22-alpine AS build
 
 RUN apk add --no-cache make bash curl
 

@@ -65,7 +65,7 @@ func (r *Runner) url() string {
 	return fmt.Sprintf("%s/api/summary?interval=last_30_days", strings.TrimRight(r.config.URL, "/"))
 }
 
-func (r *Runner) fetch(ctx context.Context) error {
+func (r *Runner) fetch(_ context.Context) error {
 	req, err := http.NewRequest("GET", r.url(), http.NoBody)
 	if err != nil {
 		return err
