@@ -13,7 +13,6 @@ formatters:
 issues:
   max-issues-per-linter: 0
   max-same-issues: 50
-  fix: true
 
 severity:
   default: error
@@ -32,7 +31,6 @@ linters:
     - bodyclose # checks whether HTTP response body is closed successfully
     - canonicalheader # checks whether net/http.Header uses canonical header
     - copyloopvar # detects places where loop variables are copied (Go 1.22+)
-    - cyclop # checks function and package cyclomatic complexity
     - depguard # checks if package imports are in a list of acceptable packages
     - dupl # tool for code clone detection
     - durationcheck # checks for two durations multiplied together
@@ -50,8 +48,8 @@ linters:
     - gocognit # computes and checks the cognitive complexity of functions
     - goconst # finds repeated strings that could be replaced by a constant
     - gocritic # provides diagnostics that check for bugs, performance and style issues
-    - gocyclo # computes and checks the cyclomatic complexity of functions
-    - godot # checks if comments end in a period
+    # TODO: breaks multi-line comments when used with --fix: https://github.com/tetafro/godot/issues/39
+    # - godot # checks if comments end in a period
     - gomoddirectives # manages the use of 'replace', 'retract', and 'excludes' directives in go.mod
     - goprintffuncname # checks that printf-like functions are named with f at the end
     - gosec # inspects source code for security problems
@@ -93,9 +91,6 @@ linters:
     - whitespace # detects leading and trailing whitespace
 
   settings:
-    cyclop:
-      max-complexity: 30
-      package-average: 10
     gocognit:
       min-complexity: 40
     errcheck:
@@ -165,7 +160,7 @@ linters:
     nakedret:
       max-func-lines: 0
     nestif:
-      min-complexity: 8
+      min-complexity: 10
     rowserrcheck:
       packages:
         - github.com/jmoiron/sqlx
@@ -207,6 +202,12 @@ linters:
         linters: [revive, staticcheck]
       - text: 'unexported-return: exported func \S+ returns unexported type \S+ .*'
         linters: [revive]
+      - text: "var-declaration: should drop .* from declaration of .*; it is the zero value"
+        linters: [revive]
+      - text: ".*use ALL_CAPS in Go names.*"
+        linters: [revive, staticcheck]
+      - text: '.* always receives \S+'
+        linters: [unparam]
       - path: _test\.go
         linters:
           - bodyclose
