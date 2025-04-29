@@ -38,8 +38,10 @@ generate-language-colors:
 
 docker-build:
 	docker build \
-		--tag ${PROJECT} \
 		--pull \
+		--tag ${PROJECT} \
+		--secret id=NUXT_UI_PRO_LICENSE \
+		--file .github/Dockerfile \
 		--force-rm .
 
 # TODO: TEMPORARY
@@ -52,11 +54,7 @@ node-clean:
 
 # frontend
 node-fetch:
-	command -v pnpm >/dev/null >&2 || npm install \
-		--no-audit \
-		--no-fund \
-		--quiet \
-		--global pnpm
+	command -v pnpm >/dev/null >&2 || corepack enable
 	cd frontend/ && pnpm install
 
 node-upgrade-deps:
@@ -107,7 +105,6 @@ go-build: go-prepare
 	go build \
 		-ldflags '-d -s -w -extldflags=-static' \
 		-tags=netgo,osusergo,static_build \
-		-installsuffix netgo \
 		-buildvcs=false \
 		-trimpath \
 		-o ${PROJECT} \

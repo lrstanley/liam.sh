@@ -2,16 +2,13 @@
 ~*
 *.tmp
 *.txt
-dist
+**/dist
 *.test
 *.prof
 *.conf
 *.toml
 *.db
-vendor
-rice*.go
 .git
-bin
 **/*.md
 **/.env
 **/node_modules

@@ -1,0 +1,29 @@
+name: release-rewrite
+
+on:
+  pull_request:
+    branches: [feature/rewrite-2]
+    paths-ignore: [".gitignore", "**/*.md", ".github/ISSUE_TEMPLATE/**"]
+    types: [opened, edited, reopened, synchronize, unlocked]
+  push:
+    branches: [feature/rewrite-2]
+    tags: [v*]
+    paths-ignore: [".gitignore", "**/*.md", ".github/ISSUE_TEMPLATE/**"]
+
+jobs:
+  go-test:
+    uses: lrstanley/.github/.github/workflows/lang-go-test-matrix.yml@master
+    with: { num-minor: 1, num-patch: 1 }
+  go-lint:
+    uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  docker-release:
+    needs: [go-test, go-lint]
+    uses: lrstanley/.github/.github/workflows/docker-release.yml@master
+    with:
+      dockerfile: .github/Dockerfile
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      docker-secrets: |
+        "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_UI_PRO_LICENSE }}"

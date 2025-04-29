@@ -17,7 +17,7 @@ require (
 	github.com/google/go-github/v63 v63.0.0
 	github.com/gregjones/httpcache v0.0.0-20190611155906-901d90724c79
 	github.com/lrstanley/chix v1.0.5
-	github.com/lrstanley/clix v1.0.7
+	github.com/lrstanley/clix v1.0.8
 	github.com/lrstanley/entrest v0.0.0-20250419072846-665f4494098f
 	github.com/markbates/goth v1.81.0
 	github.com/microcosm-cc/bluemonday v1.0.27
@@ -25,7 +25,7 @@ require (
 	github.com/prometheus/client_golang v1.22.0
 	github.com/shurcooL/githubv4 v0.0.0-20240727222349-48295856cce7
 	github.com/tmc/langchaingo v0.1.13
-	github.com/yuin/goldmark v1.7.10
+	github.com/yuin/goldmark v1.7.11
 	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
 	golang.org/x/oauth2 v0.29.0
 	modernc.org/sqlite v1.37.0
@@ -33,7 +33,7 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.32.0 // indirect
+	ariga.io/atlas v0.32.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
@@ -43,7 +43,7 @@ require (
 	github.com/dlclark/regexp2 v1.11.5 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/fatih/color v1.18.0 // indirect
-	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.9 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-faster/errors v0.7.1 // indirect
 	github.com/go-faster/jx v1.1.0 // indirect
@@ -78,10 +78,10 @@ require (
 	github.com/pkoukk/tiktoken-go v0.1.7 // indirect
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.63.0 // indirect
-	github.com/prometheus/procfs v0.16.0 // indirect
+	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
-	github.com/sethvargo/go-githubactions v1.3.0 // indirect
+	github.com/sethvargo/go-githubactions v1.3.1 // indirect
 	github.com/shurcooL/graphql v0.0.0-20230722043721-ed46e5a46466 // indirect
 	github.com/stoewer/go-strcase v1.3.0 // indirect
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e // indirect
@@ -100,7 +100,7 @@ require (
 	golang.org/x/tools v0.32.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	modernc.org/libc v1.62.1 // indirect
+	modernc.org/libc v1.64.0 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.10.0 // indirect
 )
