@@ -13,6 +13,7 @@ import (
 	ghql "github.com/shurcooL/githubv4"
 )
 
+// Stats is a cache of the current GitHub stats for the authenticated user.
 var Stats atomic.Pointer[models.GithubStats]
 
 type baseStatsQuery struct {
@@ -56,6 +57,8 @@ type repoStarsQuery struct {
 	}
 }
 
+// StatsRunner fetches the current GitHub stats for the authenticated user
+// from the GraphQL API, storing them in memory.
 func StatsRunner(ctx context.Context) error {
 	base := baseStatsQuery{}
 	err := GraphClient.Query(ctx, &base, nil)

@@ -19,6 +19,8 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
+// GistRunner fetches all gists for the authenticated user from Github, storing
+// them in the database.
 func GistRunner(ctx context.Context) error {
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 

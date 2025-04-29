@@ -11,7 +11,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
-func init() {
+func init() { //nolint
 	chix.AddErrorResolver(func(err error) (status int) {
 		if ent.IsConstraintError(err) || ent.IsValidationError(err) {
 			return http.StatusBadRequest

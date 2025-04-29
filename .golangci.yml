@@ -13,6 +13,7 @@ formatters:
 issues:
   max-issues-per-linter: 0
   max-same-issues: 50
+  fix: true
 
 severity:
   default: error
@@ -42,10 +43,8 @@ linters:
     - exptostd # detects functions from golang.org/x/exp/ that can be replaced by std functions
     - fatcontext # detects nested contexts in loops
     - forbidigo # forbids identifiers
-    - funcorder # checks the order of functions, methods, and constructors
     - funlen # tool for detection of long functions
     - gocheckcompilerdirectives # validates go compiler directive comments (//go:)
-    - gochecknoglobals # checks that no global variables exist
     - gochecknoinits # checks that no init functions are present in Go code
     - gochecksumtype # checks exhaustiveness on Go "sum types"
     - gocognit # computes and checks the cognitive complexity of functions
@@ -71,8 +70,6 @@ linters:
     - nilnesserr # reports that it checks for err != nil, but it returns a different nil value error (powered by nilness and nilerr)
     - nilnil # checks that there is no simultaneous return of nil error and an invalid value
     - noctx # finds sending http request without context.Context
-    - nolintlint # reports ill-formed or insufficient nolint directives
-    - nonamedreturns # reports all named returns
     - nosprintfhostport # checks for misuse of Sprintf to construct a host with port in a URL
     - perfsprint # checks that fmt.Sprintf can be replaced with a faster alternative
     - predeclared # finds code that shadows one of Go's predeclared identifiers
@@ -99,6 +96,8 @@ linters:
     cyclop:
       max-complexity: 30
       package-average: 10
+    gocognit:
+      min-complexity: 40
     errcheck:
       check-type-assertions: true
     funlen:
@@ -120,6 +119,8 @@ linters:
           paramsOnly: false
         underef:
           skipRecvDeref: false
+        rangeValCopy:
+          sizeThreshold: 512
     depguard:
       rules:
         "deprecated":
@@ -141,6 +142,11 @@ linters:
           deny:
             - pkg: log$
               desc: Use log/slog instead, see https://go.dev/blog/slog
+        "incorrect import":
+          files: ["$test"]
+          deny:
+            - pkg: github.com/tj/assert$
+              desc: Use github.com/stretchr/testify/assert instead, see
     gochecksumtype:
       default-signifies-exhaustive: false
     exhaustive:
@@ -158,6 +164,8 @@ linters:
       strconcat: false
     nakedret:
       max-func-lines: 0
+    nestif:
+      min-complexity: 8
     rowserrcheck:
       packages:
         - github.com/jmoiron/sqlx
@@ -177,22 +185,35 @@ linters:
       os-temp-dir: true
   exclusions:
     warn-unused: true
+    generated: lax
     presets:
       - common-false-positives
       - std-error-handling
+    paths:
+      - ".*\\.gen\\.go$"
+      - ".*\\.gen_test\\.go$"
     rules:
-      - linters:
-          - godot
-        source: (nolint|TODO)
-      - linters:
-          - gocritic
-        source: //nolint
-      - linters:
+      - source: "TODO"
+        linters: [godot]
+      - text: "should have a package comment"
+        linters: [revive]
+      - text: 'exported \S+ \S+ should have comment( \(or a comment on this block\))? or be unexported'
+        linters: [revive]
+      - text: 'package comment should be of the form ".+"'
+        source: "// ?(nolint|TODO)"
+        linters: [revive]
+      - text: 'comment on exported \S+ \S+ should be of the form ".+"'
+        source: "// ?(nolint|TODO)"
+        linters: [revive, staticcheck]
+      - text: 'unexported-return: exported func \S+ returns unexported type \S+ .*'
+        linters: [revive]
+      - path: _test\.go
+        linters:
           - bodyclose
           - dupl
           - funlen
+          - gocognit
           - goconst
           - gosec
           - noctx
           - wrapcheck
-        path: _test\.go

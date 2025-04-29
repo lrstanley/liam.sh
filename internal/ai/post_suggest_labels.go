@@ -29,7 +29,7 @@ func (s *service) PostSuggestLabels(ctx context.Context, content string) ([]Sugg
 	if len(content) > maxPostContentBytes {
 		return nil, fmt.Errorf("content is too large: %d bytes", len(content))
 	}
-	if len(content) == 0 {
+	if content == "" {
 		return nil, nil
 	}
 

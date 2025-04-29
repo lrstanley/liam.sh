@@ -24,7 +24,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func httpServer(ctx context.Context) *http.Server {
+func httpServer(_ context.Context) *http.Server {
 	chix.DefaultAPIPrefix = "/-/"
 	r := chi.NewRouter()
 
@@ -60,7 +60,7 @@ func httpServer(ctx context.Context) *http.Server {
 	// Security related.
 	r.Use(
 		cors.New(cors.Options{
-			AllowOriginFunc: func(r *http.Request, origin string) bool { return true },
+			AllowOriginFunc: func(_ *http.Request, _ string) bool { return true },
 			AllowedMethods: []string{
 				http.MethodGet,
 				http.MethodHead,

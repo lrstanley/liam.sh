@@ -23,6 +23,8 @@ import (
 
 var ReStripEmoji = regexp.MustCompile(`\s*:[^:]+:\s*`)
 
+// RepositoryRunner fetches all repositories for the authenticated user from
+// Github, storing them in the database.
 func RepositoryRunner(ctx context.Context) error {
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
@@ -109,7 +111,7 @@ func RepositoryRunner(ctx context.Context) error {
 // fetchRepositories fetches all repositories for the authenticated user from Github. It
 // will also iterate through all pages, returning all repositories in their entirety.
 func fetchRepositories(ctx context.Context) (allRepos []*github.Repository, err error) {
-	opts := &github.RepositoryListOptions{
+	opts := &github.RepositoryListByAuthenticatedUserOptions{
 		Visibility:  "all",
 		Affiliation: "owner,collaborator",
 		ListOptions: github.ListOptions{PerPage: 100, Page: 1},
@@ -129,7 +131,7 @@ func fetchRepositories(ctx context.Context) (allRepos []*github.Repository, err 
 		var repos []*github.Repository
 
 		log.FromContext(ctx).WithField("page", opts.ListOptions.Page).Info("querying repositories")
-		repos, resp, err = RestClient.Repositories.List(ctx, "", opts)
+		repos, resp, err = RestClient.Repositories.ListByAuthenticatedUser(ctx, opts)
 		if err != nil {
 			return nil, err
 		}

@@ -22,6 +22,7 @@ var (
 	clientOnce  sync.Once
 )
 
+// NewClient returns a new pre-configured GitHub client.
 func NewClient(ctx context.Context, config models.ConfigGithub) {
 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Token}))
 	tc.Transport = &oauth2.Transport{

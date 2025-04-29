@@ -45,8 +45,8 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 	e := reflect.ValueOf(event)
 	f := reflect.Indirect(e).FieldByName("Sender")
 
-	sender := f.Interface().(*github.User)
-	if sender != nil && sender.GetType() == "Bot" {
+	sender, ok := f.Interface().(*github.User)
+	if ok && sender != nil && sender.GetType() == "Bot" {
 		chix.Log(r).WithFields(log.Fields{
 			"event_type": github.WebHookType(r),
 			"bot":        sender.Login,

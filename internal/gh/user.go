@@ -12,8 +12,11 @@ import (
 	"github.com/google/go-github/v63/github"
 )
 
+// User is a cache of the current GitHub user for the authenticated user.
 var User atomic.Pointer[github.User]
 
+// UserRunner fetches the current GitHub user for the authenticated user
+// and stores it in the User cache, in memory.
 func UserRunner(ctx context.Context) error {
 	user, _, err := RestClient.Users.Get(ctx, "lrstanley")
 	if err != nil {

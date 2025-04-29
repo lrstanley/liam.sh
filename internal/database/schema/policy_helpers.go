@@ -16,17 +16,13 @@ import (
 )
 
 func hasRole(ctx context.Context, allowed []string) bool {
-	roles := chix.RolesFromContext(ctx)
-	if roles != nil {
-		for _, role := range roles {
-			for _, allowedRole := range allowed {
-				if strings.EqualFold(role, allowedRole) {
-					return true
-				}
+	for _, role := range chix.RolesFromContext(ctx) {
+		for _, allowedRole := range allowed {
+			if strings.EqualFold(role, allowedRole) {
+				return true
 			}
 		}
 	}
-
 	return false
 }
 
@@ -49,7 +45,7 @@ func FilterPublicOnly() privacy.QueryRule {
 	type PublicFilter interface {
 		WherePublic(p entql.BoolP)
 	}
-	return privacy.FilterFunc(func(ctx context.Context, f privacy.Filter) error {
+	return privacy.FilterFunc(func(_ context.Context, f privacy.Filter) error {
 		public, ok := f.(PublicFilter)
 		if !ok {
 			return privacy.Denyf("missing public field in filter")

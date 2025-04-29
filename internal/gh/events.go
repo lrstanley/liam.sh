@@ -33,6 +33,8 @@ var allowedEvents = []string{
 	"WatchEvent",
 }
 
+// EventsRunner fetches all events for the authenticated user from Github, storing
+// them in the database.
 func EventsRunner(ctx context.Context) error {
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 

@@ -50,7 +50,7 @@ func main() {
 		logger.WithError(err).Fatal("failed to create AI service")
 	}
 
-	if err := chix.RunContext(
+	if err = chix.RunContext(
 		ctx, httpServer(ctx),
 		chix.RunnerInterval("users", gh.UserRunner, 10*time.Minute, true, false),
 		chix.RunnerInterval("stats", gh.StatsRunner, 4*time.Hour, true, false),

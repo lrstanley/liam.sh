@@ -55,7 +55,8 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 
 	// Return just the releases for the given repository.
 	if version == "" {
-		releases, err := h.db.GithubRelease.Query().Where(
+		var releases []string
+		releases, err = h.db.GithubRelease.Query().Where(
 			githubrelease.HasRepositoryWith(githubrepository.NameEqualFold(repo)),
 			githubrelease.Draft(false),
 			githubrelease.Prerelease(false),

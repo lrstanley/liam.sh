@@ -65,8 +65,8 @@ func (r *Runner) url() string {
 	return fmt.Sprintf("%s/api/summary?interval=last_30_days", strings.TrimRight(r.config.URL, "/"))
 }
 
-func (r *Runner) fetch(_ context.Context) error {
-	req, err := http.NewRequest("GET", r.url(), http.NoBody)
+func (r *Runner) fetch(ctx context.Context) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, r.url(), http.NoBody)
 	if err != nil {
 		return err
 	}
@@ -88,7 +88,8 @@ func (r *Runner) fetch(_ context.Context) error {
 	}
 
 	var stats models.CodingStats
-	if err := json.NewDecoder(resp.Body).Decode(&stats); err != nil {
+	err = json.NewDecoder(resp.Body).Decode(&stats)
+	if err != nil {
 		return err
 	}
 
