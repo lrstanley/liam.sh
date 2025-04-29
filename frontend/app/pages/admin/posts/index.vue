@@ -152,6 +152,7 @@ async function promptDeletePost(post: PostRead) {
         @click="triggerRegenerate()"
         icon="mdi:reload"
         :loading="regenerating"
+        class="cursor-pointer"
       >
         Regenerate posts
       </UButton>
