@@ -27,6 +27,7 @@ export default defineNitroPlugin((nitroApp) => {
           "frame-src 'none'",
           "worker-src 'none'",
           "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+          "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com",
           "connect-src 'self' localhost:*",
         ].join(";"),
       }
