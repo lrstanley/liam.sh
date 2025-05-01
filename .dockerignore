@@ -10,6 +10,9 @@
 *.db
 .git
 **/*.md
-**/.env
+**/.env*
+**/ent
+**/.nuxt
+**/.output
 **/node_modules
 **/.gitapicache

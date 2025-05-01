@@ -11,20 +11,16 @@ RUN \
 	make go-build
 
 # build frontend
-FROM node:22-alpine AS build
+FROM node:22-alpine AS build-node
 
 RUN apk add --no-cache make bash curl
 
-WORKDIR /build/frontend
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
-COPY frontend/package.json frontend/pnpm-lock.yaml /build/frontend
-COPY Makefile /build
-
 WORKDIR /build
+COPY --from=build-go /build/ /build/
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store make node-prepare
-COPY . /build
 RUN \
 	--mount=type=cache,id=pnpm,target=/pnpm/store \
 	--mount=type=secret,id=NUXT_UI_PRO_LICENSE,env=NUXT_UI_PRO_LICENSE \
@@ -37,7 +33,7 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 
 # copy frontend
-COPY --from=build /build/frontend/.output /app/frontend
+COPY --from=build-node /build/frontend/.output /app/frontend
 
 # copy backend
 COPY --from=build-go /build/httpserver /app/backend/httpserver
