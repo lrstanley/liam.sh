@@ -108,12 +108,13 @@ const { top: atTop } = toRefs(scrollState)
         description="What repository to apply banner to"
         :required="!input.title"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USelectMenu
           v-model="repo"
           :search-input="{ placeholder: 'Filter...', icon: 'lucide:search' }"
           :items="repos"
-          class="md:min-w-60"
+          class="max-md:w-full md:min-w-60"
         />
       </UFormField>
 
@@ -124,8 +125,9 @@ const { top: atTop } = toRefs(scrollState)
         description="Banner title (vs repo name)"
         :required="!!input.title"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
-        <UInput v-model="input.title" placeholder="Example Title" class="md:min-w-60" />
+        <UInput v-model="input.title" placeholder="Example Title" class="max-md:w-full md:min-w-60" />
       </UFormField>
 
       <USeparator />
@@ -136,8 +138,13 @@ const { top: atTop } = toRefs(scrollState)
         :required="!!input.title"
         :error="!!input.title && !input.description && 'required when title set'"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
-        <UInput v-model="input.description" placeholder="The brown fox..." class="md:min-w-60" />
+        <UInput
+          v-model="input.description"
+          placeholder="The brown fox..."
+          class="max-md:w-full md:min-w-60"
+        />
       </UFormField>
     </ReuseSection>
 
@@ -146,12 +153,13 @@ const { top: atTop } = toRefs(scrollState)
         label="Layout"
         description="Layout structure of the icons, title, description, etc"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USelect
           v-model="input.layout"
           placeholder="Select layout"
           value-key="value"
-          class="md:min-w-60"
+          class="max-md:w-full md:min-w-60"
           :items="[
             { label: 'default', value: undefined },
             { label: 'all', value: 'all' },
@@ -167,6 +175,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Height"
         description="Height of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider
           @update:model-value="(v) => (input.h = +v === 200 ? undefined : +v)"
@@ -183,6 +192,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Width"
         description="Width of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider
           @update:model-value="(v) => (input.w = +v === 961 ? undefined : +v)"
@@ -199,6 +209,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Font Scale"
         description="Font scale of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider
           @update:model-value="(v) => (input.font = +v === 1 ? undefined : +v)"
@@ -219,12 +230,13 @@ const { top: atTop } = toRefs(scrollState)
         label="Background Style"
         description="Background style of the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USelect
           v-model="input.bg"
           placeholder="Select background"
           value-key="value"
-          class="md:min-w-60"
+          class="max-md:w-full md:min-w-60"
           :items="[
             { label: 'default', value: undefined },
             { label: 'geometric', value: 'geometric' },
@@ -239,6 +251,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Background Color"
         description="For backgrounds which support it, the background color"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <UPopover>
           <UButton label="Pick color" color="neutral" variant="outline">
@@ -283,12 +296,13 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon"
         description="Icon to use for the banner"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <UInput
           @update:model-value="(v) => (input.icon = '' + v || undefined)"
           type="text"
           placeholder="category:icon-name"
-          class="md:min-w-60"
+          class="max-md:w-full md:min-w-60"
         />
       </UFormField>
 
@@ -298,6 +312,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon Height"
         description="Height of the icon (in px)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider v-model="input['icon.height']" class="md:min-w-60" :min="0" :max="300" />
       </UFormField>
@@ -308,6 +323,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon Width"
         description="Width of the icon (in px)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider v-model="input['icon.width']" class="md:min-w-60" :min="0" :max="300" />
       </UFormField>
@@ -318,12 +334,13 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon Flip"
         description="Flip the icon"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USelect
           v-model="input['icon.flip']"
           placeholder="Select icon flip"
           value-key="value"
-          class="md:min-w-60"
+          class="max-md:w-full md:min-w-60"
           :items="[
             { label: 'default', value: undefined },
             { label: 'horizontal', value: 'horizontal' },
@@ -338,6 +355,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon Rotate"
         description="Rotate the icon (1=90deg, 2=180deg, 3=270deg)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <USlider
           v-model="input['icon.rotate']"
@@ -357,6 +375,7 @@ const { top: atTop } = toRefs(scrollState)
         label="Icon Color"
         description="Color of the icon (hex, rgb, rgba, hsl)"
         class="flex max-sm:flex-col justify-between items-start gap-4"
+        :ui="{ container: 'max-md:w-full' }"
       >
         <UPopover>
           <UButton label="Pick color" color="neutral" variant="outline">

@@ -112,14 +112,14 @@ async function promptDeletePost(post: PostRead) {
 
 <template>
   <div class="flex flex-col">
-    <div class="flex flex-auto gap-2 mt-1 mb-4">
+    <div class="flex flex-col lg:flex-row flex-auto gap-2 mt-1 mb-4">
       <UInput
         v-model="search"
         :loading="status == 'pending'"
         type="search"
         placeholder="Search for a post"
         icon="mdi:search"
-        class="md:min-w-36"
+        class="min-w-full lg:min-w-36"
       >
         <template v-if="search.length" #trailing>
           <UButton
@@ -133,7 +133,7 @@ async function promptDeletePost(post: PostRead) {
         </template>
       </UInput>
 
-      <div class="ml-auto"></div>
+      <div class="lg:ml-auto"></div>
 
       <UButton
         color="success"
