@@ -174,7 +174,7 @@ async function suggest() {
         :create-item="allowCreate"
         @create="addLabel"
         placeholder="Select labels"
-        class="max-w-full min-w-0 grid"
+        class="w-full min-w-0 grid"
       >
         <template #leading="{ modelValue, ui }">
           <span v-if="modelValue && modelValue.length > 0" class="group">
