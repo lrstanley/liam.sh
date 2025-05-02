@@ -52,6 +52,8 @@ const elements = computed(() => generate(props.links, 0))
   <div v-show="links.length" v-bind="$attrs" class="text-sm">
     <div class="mb-1 font-bold text-(--ui-primary)">Table of Contents</div>
 
-    <component :is="item" v-for="(item, index) in elements" :key="index" />
+    <div class="text-left">
+      <component :is="item" v-for="(item, index) in elements" :key="index" />
+    </div>
   </div>
 </template>
