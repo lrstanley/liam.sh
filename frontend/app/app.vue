@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { client } from "#hey-api/client.gen"
+
 const route = useRoute()
 
 const title = computed(() =>
@@ -30,7 +32,7 @@ useSeoMeta({
   },
 })
 
-setHTTPClientConfig()
+setHTTPClientConfig(client)
 </script>
 
 <template>

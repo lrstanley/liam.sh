@@ -66,7 +66,7 @@ async function paginate<
   Q extends PagableQuery | undefined = {},
   T = PagedType<R>,
 >(route: string, params?: Q): Promise<T[]> {
-  const BASE_URL = useRuntimeConfig().API_URL.replace(/\/$/, "")
+  const BASE_URL = getBackendURL()
 
   const items: T[] = []
   let page = 1

@@ -3,8 +3,11 @@
  * this source code is governed by the MIT license that can be found in
  * the LICENSE file.
  */
+
+import { client } from "#hey-api/client.gen"
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  setHTTPClientConfig()
+  setHTTPClientConfig(client)
 
   const self = useSelf()
   const githubUser = useGithubUser()

@@ -14,15 +14,16 @@ export default defineNuxtConfig({
   },
   compatibilityDate: "2025-01-13",
   devtools: {
-    // viteInspect: false,
-    // componentInspector: false,
+    enabled: false,
+    viteInspect: false,
+    componentInspector: false,
   },
   ssr: true,
   runtimeConfig: {
-    API_URL: "", // use $NUXT_API_URL
+    API_URL: "http://localhost:8081/-", // use $NUXT_API_URL
     CHAT_URL: "", // use $NUXT_CHAT_URL
     public: {
-      API_URL: "", // use $NUXT_PUBLIC_API_URL
+      API_URL: "/-", // use $NUXT_PUBLIC_API_URL
     },
   },
   components: [
@@ -43,6 +44,13 @@ export default defineNuxtConfig({
     server: {
       open: false,
       strictPort: true,
+      proxy: {
+        "^/-.*": {
+          target: "http://localhost:8080",
+          xfwd: true,
+          ws: true,
+        },
+      },
     },
     plugins: [tailwindcss()],
   },
