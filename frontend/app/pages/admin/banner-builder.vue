@@ -31,7 +31,7 @@ const input = ref<Banner>({ title: "", description: "", layout: undefined })
 const repo = ref<string>("lrstanley/liam.sh")
 
 const url = computed(() => {
-  let base = `${getBackendURL()}/gh/svg`
+  let base = `${useRuntimeConfig().public.API_URL.replace(/\/$/, "")}/gh/svg`
 
   if (repo.value && !input.value.title) base += "/" + repo.value
 

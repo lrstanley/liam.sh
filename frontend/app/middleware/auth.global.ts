@@ -7,6 +7,7 @@
 import { client } from "#hey-api/client.gen"
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  const runtime = useRuntimeConfig()
   setHTTPClientConfig(client)
 
   const self = useSelf()
@@ -39,8 +40,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   ])
 
   if (to.path.startsWith("/admin") && self.value == null) {
-    return navigateTo(`${getBackendURL()}/auth/providers/github?next=${url.origin + to.path}`, {
-      external: true,
-    })
+    return navigateTo(
+      `${runtime.public.API_URL.replace(/\/$/, "")}/auth/providers/github?next=${url.origin + to.path}`,
+      {
+        external: true,
+      }
+    )
   }
 })
