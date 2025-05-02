@@ -35,7 +35,9 @@ const gh = useGithubUser()
 
 <style scoped>
 .cursor {
-  animation: typing 1s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation:
+    typing 1s steps(40, end),
+    blink-caret 0.75s step-end infinite;
 }
 
 @keyframes typing {

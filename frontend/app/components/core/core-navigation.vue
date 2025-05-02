@@ -4,7 +4,7 @@ const self = useSelf()
 </script>
 
 <template>
-  <ul class="flex flex-wrap justify-center md:justify-start gap-x-2">
+  <ul class="flex flex-wrap justify-center md:justify-start gap-x-2 px-4 md:px-0">
     <li v-for="link in menuOptions" :key="link.label">
       <router-link v-if="link.to" :to="link.to" active-class="active">
         {{ link.functionAlias || link.label?.toLowerCase() }}

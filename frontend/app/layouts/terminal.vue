@@ -23,7 +23,7 @@ watch(
     >
       <CoreNavigation />
       <CoreTerminal
-        class="mb-4 flex flex-auto justify-center text-[38px] md:text-[45px]"
+        class="mb-4 flex flex-auto justify-center text-[28px] md:text-[45px]"
         path="~"
         prefix="#"
         value="Hello!"
