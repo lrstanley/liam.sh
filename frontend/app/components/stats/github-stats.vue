@@ -3,31 +3,36 @@ const githubStats = await getGithubStats({ composable: "$fetch" })
 
 const gh = useGithubUser()
 const year = new Date().getFullYear()
+const { width } = useWindowSize()
+
+const small = computed(() => width.value <= 640)
 </script>
 
 <template>
   <UPopover
     v-if="githubStats && gh"
-    mode="hover"
-    :open-delay="150"
+    :mode="small ? 'click' : 'hover'"
+    :open-delay="100"
     :content="{ side: 'top', align: 'end', sideOffset: 0 }"
     v-bind="$attrs"
   >
-    <a class="px-2 text-(--ui-text-highlighted) transition hover:text-current" :href="gh.html_url">
-      <UIcon name="mdi:github" class="align-middle mt-[-3px] mr-[-7px]" />
-      {{ gh.login }}
-    </a>
+    <div
+      class="px-2 text-(--ui-text-highlighted) transition hover:text-current inline-flex items-center cursor-pointer"
+    >
+      <UIcon name="mdi:github" class="align-middle size-4 max-sm:text-lg mr-1" />
+      <span class="max-sm:text-sm">{{ gh.login }}</span>
+    </div>
 
     <template #content>
       <div class="p-1">
-        <div class="flex flex-row items-center flex-auto mt-1">
+        <a class="flex flex-row items-center flex-auto mt-1" :href="gh.html_url" target="_blank">
           <UAvatar size="md" :src="gh.avatar_url + '&s=80'" class="mr-2 align-middle" :alt="gh.login" />
 
           <div>
             <h2 class="text-base leading-tight">{{ gh.name }}</h2>
             <h2 class="text-base leading-tight text-(--ui-text-muted)">{{ gh.login }}</h2>
           </div>
-        </div>
+        </a>
 
         <div class="mt-4">
           <div class="flex flex-row justify-between flex-auto mt-1">

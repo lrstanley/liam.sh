@@ -2,6 +2,8 @@
 import { version as vueVersion } from "vue"
 
 const { data: version } = await getServiceVersion({ composable: "useFetch" })
+
+const { width } = useWindowSize()
 </script>
 
 <template>
@@ -22,7 +24,11 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
         </span>
       </UTooltip>
 
-      <UPopover mode="hover" :open-delay="150" :content="{ side: 'top', align: 'start', sideOffset: 0 }">
+      <UPopover
+        :mode="width <= 640 ? 'click' : 'hover'"
+        :open-delay="150"
+        :content="{ side: 'top', align: 'start', sideOffset: 0 }"
+      >
         <span class="items-center bar-item">
           <UIcon name="mdi:source-branch" />
           {{ branchMenuOptions.find((o) => o.to === $route.path)?.label }}
@@ -80,7 +86,7 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 }
 
 .bar-item {
-  @apply px-2 rounded-br-sm inline-flex text-(--ui-text-muted) align-middle cursor-pointer transition hover:bg-zinc-800 text-sm;
+  @apply px-2 rounded-br-sm inline-flex text-(--ui-text-muted) align-middle cursor-pointer transition hover:bg-zinc-800 text-sm max-sm:py-1;
 }
 
 .bar-item .iconify {
@@ -88,6 +94,6 @@ const { data: version } = await getServiceVersion({ composable: "useFetch" })
 }
 
 .bar-item.misc {
-  @apply hidden sm:inline-flex;
+  @apply hidden md:inline-flex;
 }
 </style>
