@@ -33,9 +33,6 @@ importers:
       '@codemirror/theme-one-dark':
         specifier: ^6.1.2
         version: 6.1.2
-      '@formkit/auto-animate':
-        specifier: ^0.8.2
-        version: 0.8.2
       '@hey-api/client-nuxt':
         specifier: ^0.3.1
         version: 0.3.1(nuxt@3.17.1(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@22.13.1)(better-sqlite3@11.9.1)(db0@0.3.2(better-sqlite3@11.9.1))(ioredis@5.6.1)(lightningcss@1.29.2)(magicast@0.3.5)(rollup@4.40.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.3.4(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1))(vue@3.5.13(typescript@5.7.3))
@@ -743,9 +740,6 @@ packages:
 
   '@floating-ui/vue@1.1.6':
     resolution: {integrity: sha512-XFlUzGHGv12zbgHNk5FN2mUB7ROul3oG2ENdTpWdE+qMFxyNxWSRmsoyhiEnpmabNm6WnUvR1OvJfUfN4ojC1A==}
-
-  '@formkit/auto-animate@0.8.2':
-    resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
   '@hey-api/client-nuxt@0.3.1':
     resolution: {integrity: sha512-C5VRWcTfhnHEm/j8C0Mrk/BlT/lbf2RSjfZdPOziKiEmZWvyWVHRhgFL+AJdwqMJcHUbpl4d9BwzSz/0Uo2YtQ==}
@@ -5830,8 +5824,6 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
-
-  '@formkit/auto-animate@0.8.2': {}
 
   '@hey-api/client-nuxt@0.3.1(nuxt@3.17.1(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@22.13.1)(better-sqlite3@11.9.1)(db0@0.3.2(better-sqlite3@11.9.1))(ioredis@5.6.1)(lightningcss@1.29.2)(magicast@0.3.5)(rollup@4.40.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.3.4(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1))(vue@3.5.13(typescript@5.7.3))':
     dependencies:

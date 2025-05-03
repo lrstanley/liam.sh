@@ -12,7 +12,13 @@ const { width } = useWindowSize()
   >
     <slot />
 
-    <div class="box-border flex border-t bottom-bar border-zinc-700/50" v-auto-animate>
+    <motion
+      as="div"
+      layout
+      :initial="{ opacity: 0 }"
+      :animate="{ opacity: 1 }"
+      class="box-border flex border-t bottom-bar border-zinc-700/50"
+    >
       <UTooltip
         v-if="version"
         :content="{ side: 'top' }"
@@ -73,7 +79,7 @@ const { width } = useWindowSize()
       </UTooltip>
 
       <GithubStats placement="top-end" />
-    </div>
+    </motion>
   </div>
 </template>
 

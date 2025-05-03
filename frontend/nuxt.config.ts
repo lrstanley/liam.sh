@@ -7,7 +7,6 @@ export default defineNuxtConfig({
   modules: [
     "@hey-api/nuxt",
     "@vueuse/nuxt",
-    "@formkit/auto-animate/nuxt",
     "motion-v/nuxt",
     "@nuxt/ui-pro",
     "nuxt-typed-router",

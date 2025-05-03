@@ -222,7 +222,6 @@ async function suggest() {
     <div
       v-show="allowSuggest && hasMadeSuggestions && !loadingSuggestions"
       class="flex flex-row flex-wrap gap-1"
-      :v-auto-animate="{}"
     >
       <UBadge
         v-if="suggestionsFiltered.length === 0"

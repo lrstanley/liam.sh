@@ -85,17 +85,16 @@ function fetchMoreEvents() {
 </script>
 
 <template>
-  <div
-    id="main"
-    ref="scrollContainer"
-    v-infinite-scroll="[fetchMoreEvents, { distance: 100 }]"
-    v-auto-animate
-  >
-    <div
+  <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchMoreEvents, { distance: 100 }]">
+    <motion
+      as="div"
+      :initial="{ opacity: 0 }"
+      :animate="{ opacity: 1 }"
+      :exit="{ opacity: 0 }"
+      :transition="{ delay: ((i % 100) + 1) * 0.015 }"
       v-for="(e, i) in events"
       :key="e.id"
-      :style="{ '--i': events.length - i, '--total': events.length }"
-      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
+      class="flex flex-row items-center flex-auto px-1 text-sm gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
     >
       <a :href="'https://github.com/' + e.actor.login" target="_blank">
         <UAvatar
@@ -119,7 +118,7 @@ function fetchMoreEvents() {
           {{ useTimeAgo(e.created_at).value }}
         </EventHoverItem>
       </div>
-    </div>
+    </motion>
     <div
       v-show="status != 'success' || error"
       id="status"

@@ -21,8 +21,13 @@ const gists = computed(() => data.value?.content ?? [])
 
 <template>
   <ContainerIde>
-    <div class="relative overflow-x-hidden size-full grow basis-0" v-auto-animate>
-      <div
+    <div class="relative overflow-x-hidden size-full grow basis-0">
+      <motion
+        as="div"
+        :initial="{ opacity: 0 }"
+        :animate="{ opacity: 1 }"
+        :exit="{ opacity: 0 }"
+        :transition="{ delay: ((i % 100) + 1) * 0.015 }"
         v-for="(gist, i) in gists"
         :key="gist.id"
         class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-gray-100"
@@ -66,7 +71,7 @@ const gists = computed(() => data.value?.content ?? [])
             {{ useTimeAgo(gist.updated_at).value }}
           </EventHoverItem>
         </div>
-      </div>
+      </motion>
     </div>
   </ContainerIde>
 </template>
