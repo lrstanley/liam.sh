@@ -91,7 +91,7 @@ function fetchMoreEvents() {
       :initial="{ opacity: 0 }"
       :animate="{ opacity: 1 }"
       :exit="{ opacity: 0 }"
-      :transition="{ delay: ((i % 100) + 1) * 0.015 }"
+      :transition="{ delay: ((i % 50) + 1) * 0.015 }"
       v-for="(e, i) in events"
       :key="e.id"
       class="flex flex-row items-center flex-auto px-1 text-sm gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"

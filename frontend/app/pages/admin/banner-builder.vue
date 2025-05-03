@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import {} from "#hey-api/schemas.gen"
-
+import { useScroll } from "@vueuse/core"
 definePageMeta({
   title: "Banner Builder",
   layout: "admin",
