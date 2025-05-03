@@ -54,17 +54,6 @@ body,
     opacity: 0;
   }
 
-  .stepped-enter-active,
-  .stepped-leave-active {
-    @apply transition-opacity duration-300 transform;
-    transition-delay: min(0.05s, calc(0.005s * (var(--total) - var(--i))));
-  }
-
-  .stepped-enter-from,
-  .stepped-leave-to {
-    @apply opacity-0;
-  }
-
   .layout-enter-active,
   .layout-leave-active {
     transition: all 0.2s;

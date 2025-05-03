@@ -157,18 +157,7 @@ async function promptDeletePost(post: PostRead) {
         Regenerate posts
       </UButton>
 
-      <UPagination
-        v-show="posts?.last_page === undefined || posts?.last_page > 1"
-        v-model:page="pagination.page.value"
-        :items-per-page="pagination.perPage.value"
-        :sibling-count="1"
-        active-color="primary"
-        active-variant="subtle"
-        :show-controls="false"
-        show-edges
-        :total="posts?.total_count"
-        :disabled="status === 'pending'"
-      />
+      <CorePagination :loading="status === 'pending'" :resp="posts" :pagination="pagination" />
     </div>
     <UCard variant="subtle">
       <UTable

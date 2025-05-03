@@ -59,18 +59,11 @@ if (error.value) throw error.value
         </template>
       </UInput>
 
-      <UPagination
-        v-show="repos?.last_page === undefined || repos?.last_page > 1"
+      <CorePagination
         class="ml-auto"
-        v-model:page="pagination.page.value"
-        :items-per-page="pagination.perPage.value"
-        :sibling-count="1"
-        active-color="primary"
-        active-variant="subtle"
-        :show-controls="false"
-        show-edges
-        :total="repos?.total_count"
-        :disabled="status === 'pending'"
+        :loading="status === 'pending'"
+        :resp="repos"
+        :pagination="pagination"
       />
     </div>
 
