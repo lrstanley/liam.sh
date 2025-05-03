@@ -78,9 +78,6 @@ importers:
       codemirror:
         specifier: ^6.0.1
         version: 6.0.1
-      nuxt-typed-router:
-        specifier: ^3.8.0
-        version: 3.8.0(magicast@0.3.5)(prettier@3.5.3)
       vue-codemirror:
         specifier: ^6.1.1
         version: 6.1.1(codemirror@6.0.1)(vue@3.5.13(typescript@5.7.3))
@@ -3441,10 +3438,6 @@ packages:
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
-  log-symbols@7.0.0:
-    resolution: {integrity: sha512-zrc91EDk2M+2AXo/9BTvK91pqb7qrPg2nX/Hy+u8a5qQlbaOflCKO+6SqgZ+M+xUFxGdKTgwnGiL96b1W3ikRA==}
-    engines: {node: '>=18'}
-
   logform@2.7.0:
     resolution: {integrity: sha512-TFYA4jnP7PVbmlBIfhlSe+WKxs9dklXMTEGcBCIvLhE/Tn3H6Gk1norupVW7m5Cnd4bLcr08AytbyV/xj7f/kQ==}
     engines: {node: '>= 12.0.0'}
@@ -3771,11 +3764,6 @@ packages:
 
   nuxt-site-config@3.1.9:
     resolution: {integrity: sha512-YB69GX0st8drv1d5xypweseiEWeR22tfGdyVH3U4R+mpUSz8paBx48ArKC6MgV22DKItoQm51LVoapF5pl5bEQ==}
-
-  nuxt-typed-router@3.8.0:
-    resolution: {integrity: sha512-cGD5pWAD2x65RKfEmddWkJ/ZFE4WwKIzIMaXO83UiYr1i1dqDlXVTlrIRNHjNaqTFNTQxMxKMgLGPLfYUspAmg==}
-    peerDependencies:
-      prettier: ^2.5.x || 3.x
 
   nuxt@3.17.1:
     resolution: {integrity: sha512-RFUamVkXw86Kn9l3jeHLNnctsNf5Dp5pQY2bal9uZFiq1Wc9VyMdzou70DbMUjDe1yAoUbD6qz65FOEq+abesQ==}
@@ -4165,11 +4153,6 @@ packages:
   precinct@11.0.5:
     resolution: {integrity: sha512-oHSWLC8cL/0znFhvln26D14KfCQFFn4KOLSw6hmLhd+LQ2SKt9Ljm89but76Pc7flM9Ty1TnXyrA2u16MfRV3w==}
     engines: {node: ^14.14.0 || >=16.0.0}
-    hasBin: true
-
-  prettier@3.5.3:
-    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
-    engines: {node: '>=14'}
     hasBin: true
 
   pretty-bytes@6.1.1:
@@ -9075,11 +9058,6 @@ snapshots:
 
   lodash@4.17.21: {}
 
-  log-symbols@7.0.0:
-    dependencies:
-      is-unicode-supported: 2.1.0
-      yoctocolors: 2.1.1
-
   logform@2.7.0:
     dependencies:
       '@colors/colors': 1.6.0
@@ -9566,20 +9544,6 @@ snapshots:
     transitivePeerDependencies:
       - magicast
       - vue
-
-  nuxt-typed-router@3.8.0(magicast@0.3.5)(prettier@3.5.3):
-    dependencies:
-      '@nuxt/kit': 3.16.2(magicast@0.3.5)
-      chalk: 5.4.1
-      defu: 6.1.4
-      lodash-es: 4.17.21
-      log-symbols: 7.0.0
-      mkdirp: 3.0.1
-      nanoid: 5.1.5
-      pathe: 2.0.3
-      prettier: 3.5.3
-    transitivePeerDependencies:
-      - magicast
 
   nuxt@3.17.1(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@22.13.1)(better-sqlite3@11.9.1)(db0@0.3.2(better-sqlite3@11.9.1))(ioredis@5.6.1)(lightningcss@1.29.2)(magicast@0.3.5)(rollup@4.40.0)(terser@5.39.0)(typescript@5.7.3)(vite@6.3.4(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(yaml@2.7.1))(yaml@2.7.1):
     dependencies:
@@ -10087,8 +10051,6 @@ snapshots:
       node-source-walk: 6.0.2
     transitivePeerDependencies:
       - supports-color
-
-  prettier@3.5.3: {}
 
   pretty-bytes@6.1.1: {}
 

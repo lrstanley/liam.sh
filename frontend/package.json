@@ -25,7 +25,6 @@
     "@vueuse/nuxt": "^13.1.0",
     "@vueuse/router": "^13.1.0",
     "codemirror": "^6.0.1",
-    "nuxt-typed-router": "^3.8.0",
     "vue-codemirror": "^6.1.1"
   },
   "name": "liam.sh",
