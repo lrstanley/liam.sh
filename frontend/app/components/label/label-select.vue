@@ -182,15 +182,16 @@ async function suggest() {
               :color="modelValue.length >= 3 ? 'error' : 'success'"
               size="sm"
               variant="soft"
-              class="inline-block rounded-full group-hover:hidden"
+              class="inline-block rounded-full group-hover:hidden max-sm:hidden"
             >
               {{ modelValue.length }}
             </UBadge>
             <UBadge
+              v-show="modelValue && modelValue.length >= 0"
               color="neutral"
               size="sm"
               variant="subtle"
-              class="hidden rounded-full cursor-pointer group-hover:inline-block"
+              class="md:hidden rounded-full cursor-pointer md:group-hover:inline-block"
               @click="clear"
             >
               x

@@ -13,7 +13,7 @@ const gh = useGithubUser()
     <div class="flex flex-col w-full gap-1">
       <div class="flex flex-row">
         <a
-          class="text-[1.4em] md:text-[1.5em] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
+          class="text-[1.3em] md:text-[1.5em] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
           :href="repo.html_url"
           target="_blank"
         >
