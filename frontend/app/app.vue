@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { client } from "#hey-api/client.gen"
 
+const runtime = useRuntimeConfig()
+client.setConfig({
+  baseURL: runtime.API_URL
+    ? runtime.API_URL.replace(/\/$/, "")
+    : runtime.public.API_URL.replace(/\/$/, ""),
+  credentials: "include",
+  retry: 3,
+  retryDelay: 1000,
+  headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser, to API requests (mainly helpful when in SSR).
+})
+
 const route = useRoute()
 
 const title = computed(() =>
@@ -31,8 +42,6 @@ useSeoMeta({
     initialScale: "1.0",
   },
 })
-
-setHTTPClientConfig(client)
 </script>
 
 <template>

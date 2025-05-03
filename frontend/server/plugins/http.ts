@@ -5,6 +5,20 @@
  */
 
 export default defineNitroPlugin((nitroApp) => {
+  nitroApp.hooks.hook("request", (event) => {
+    console.log(
+      `[${new Date().toISOString()}] ${event.node.req.method || "method:n/a"} ${JSON.stringify(event.node.req.url)} ${JSON.stringify(event.node.req.headers["host"] || "host:n/a")} ${JSON.stringify(event.node.req.socket.remoteAddress || "ip:n/a")} ${JSON.stringify(event.node.req.headers["user-agent"] || "user-agent:n/a")}`
+    )
+
+    // If frontend receives a request intended for the API, fail the request.
+    if (event.node.req.url?.startsWith("/-/")) {
+      event.node.res.statusCode = 404
+      event.node.res.statusMessage = "backend request sent to frontend"
+      event.node.res.end()
+      return
+    }
+  })
+
   nitroApp.hooks.hook("render:response", (response) => {
     response.headers = {
       ...response.headers,

@@ -4,7 +4,6 @@ export default defineNuxtConfig({
   app: {
     layoutTransition: { name: "layout", mode: "out-in" },
   },
-  debug: true,
   modules: ["@hey-api/nuxt", "@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui-pro", "@nuxtjs/seo"],
   future: { compatibilityVersion: 4 },
   devtools: {
@@ -13,12 +12,11 @@ export default defineNuxtConfig({
     componentInspector: false,
   },
   ssr: true,
-  pages: true,
   runtimeConfig: {
-    API_URL: "http://localhost:8081/-", // use $NUXT_API_URL
+    API_URL: "http://localhost:8080/-", // use $NUXT_API_URL
     CHAT_URL: "", // use $NUXT_CHAT_URL
     public: {
-      API_URL: "http://localhost:8081/-", // use $NUXT_PUBLIC_API_URL
+      API_URL: "http://localhost:8080/-", // use $NUXT_PUBLIC_API_URL
     },
   },
   components: [

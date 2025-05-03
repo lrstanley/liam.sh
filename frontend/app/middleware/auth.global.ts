@@ -8,7 +8,16 @@ import { client } from "#hey-api/client.gen"
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const runtime = useRuntimeConfig()
-  setHTTPClientConfig(client)
+  client.setConfig({
+    baseURL: runtime.API_URL
+      ? runtime.API_URL.replace(/\/$/, "")
+      : runtime.public.API_URL.replace(/\/$/, ""),
+    credentials: "include",
+    retry: 3,
+    retryDelay: 1000,
+    cache: "no-cache",
+    headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser, to API requests (mainly helpful when in SSR).
+  })
 
   const self = useSelf()
   const githubUser = useGithubUser()
