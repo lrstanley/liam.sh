@@ -17,5 +17,14 @@
 
 ## 4-27-2025
 
-- add proper transition api (css)
 - generate `og` images
+
+## 4-30-2025
+
+- replace 500 and 404 pages
+- mobile improvements
+  - break search/pagination into 2 lines on repos and posts
+  - add a back-to-top button
+- see about committing openapi.json to make the docker build faster
+- inspiration: <https://kyren.codes/>
+- when I log in on one device, it is logged in for other users in incognito? just dev server being stupid?
