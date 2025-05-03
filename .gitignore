@@ -1,16 +1,17 @@
-liam.sh
-*.test
-*.prof
-*.db
-*.db-shm
-*.db-wal
-bin/*
-*.lock
-*.txt
-*.log
-.env
-.gitapicache
-internal/database/ent
+httpserver
+**/*.test
+**/*.prof
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/bin
+**/*.lock
+**/*.txt
+**/*.log
+**/*.md
+**/*.env*
+**/.gitapicache
+internal/database/ent/**/*.go
 
 # frontend-specific
 **/node_modules

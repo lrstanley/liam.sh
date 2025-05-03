@@ -46,11 +46,8 @@ docker-build:
 
 # TODO: TEMPORARY
 node-clean:
-	rm -rf frontend/node_modules
-	rm -rf frontend/.nuxt
-	rm -rf frontend/.output
-	cd frontend/ && pnpm store prune
-	cd frontend/ && pnpm i
+	rm -rf frontend/node_modules frontend/.nuxt frontend/.output
+	cd frontend/ && pnpm store prune && pnpm i
 
 # frontend
 node-fetch:
@@ -79,6 +76,9 @@ node-preview: node-build
 	cd frontend/ && pnpm run preview
 
 # backend
+go-clean:
+	rm -rf internal/database/ent .gitapicache/
+
 go-prepare: license
 	go generate -x ./...
 	go mod tidy

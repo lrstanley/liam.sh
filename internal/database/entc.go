@@ -58,13 +58,13 @@ func main() {
 	start := time.Now()
 
 	// For speed, check if hooks directory exists, if so, skip this step.
-	if _, err := os.Stat("./ent/hook"); err != nil {
+	if _, err := os.Stat("./ent/hook/hook.go"); err != nil && os.IsNotExist(err) {
 		checkError(entc.Generate(schemaPath, getConfig(), extensions, entc.BuildTags("skiphooks", "skippolicy")))
 		log.Printf("bootstrap (no hooks, policies) took: %s", time.Since(start))
 	}
 
 	// For speed, check if the privacy directory exists, if so, skip this step.
-	if _, err := os.Stat("./ent/privacy"); err != nil {
+	if _, err := os.Stat("./ent/privacy/privacy.go"); err != nil && os.IsNotExist(err) {
 		checkError(entc.Generate(schemaPath, getConfig(), extensions, entc.BuildTags("skippolicy")))
 		log.Printf("bootstrap (no policies) took: %s", time.Since(start))
 	}

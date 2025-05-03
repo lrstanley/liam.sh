@@ -19,7 +19,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 
 WORKDIR /build
-COPY --from=build-go /build/ /build/
+COPY . /build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store make node-prepare
 RUN \
 	--mount=type=cache,id=pnpm,target=/pnpm/store \
