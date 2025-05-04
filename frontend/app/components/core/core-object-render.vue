@@ -104,8 +104,8 @@ function typeMapper(o: Value): MappedObject {
     <div v-show="!loading && objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">
       <motion
         as="div"
-        :initial="{ opacity: 0, transform: 'translateX(-10px)' }"
-        :animate="{ opacity: 1, transform: 'translateX(0px)' }"
+        :initial="{ opacity: 0, x: -10 }"
+        :animate="{ opacity: 1, x: 0 }"
         :exit="{ opacity: 0 }"
         :transition="{ delay: (i + 1) * 0.05 }"
         v-for="(object, i) in objects"

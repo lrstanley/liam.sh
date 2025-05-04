@@ -29,11 +29,17 @@ watch(
       </main>
     </div>
 
-    <span class="p-2 text-center">
+    <motion
+      as="span"
+      :initial="{ opacity: 0 }"
+      :animate="{ opacity: 1 }"
+      :transition="{ delay: 2 }"
+      class="p-2 text-center"
+    >
       Made with
       <UIcon name="mdi:heart" class="align-middle text-(--ui-color-primary-600)" />
       by
       <a :href="githubUser?.html_url" target="_blank">{{ githubUser?.login }}</a>
-    </span>
+    </motion>
   </div>
 </template>

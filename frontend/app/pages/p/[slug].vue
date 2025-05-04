@@ -7,11 +7,7 @@ const { slug } = useRoute("p-slug").params
 
 if (!slug || typeof slug !== "string") throw new Error("Invalid slug")
 
-const {
-  data: posts,
-  error,
-  status,
-} = await listPosts({
+const { data: posts, error } = await listPosts({
   composable: "useFetch",
   query: {
     "slug.eq": slug,
@@ -37,7 +33,12 @@ useHead({
       :value="'cat &quot;' + post.slug + '.md&quot;'"
     />
 
-    <div class="flex-col flex-auto mt-3">
+    <motion
+      as="div"
+      :initial="{ opacity: 0, x: 20 }"
+      :animate="{ opacity: 1, x: 0 }"
+      class="flex-col flex-auto mt-3"
+    >
       <div
         class="text-[30px]/12 md:text-[45px] text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
       >
@@ -57,22 +58,32 @@ useHead({
 
       <USeparator />
       <div id="post-content" ref="postRef" class="lg:mb-[100px]" v-html="post.content_html" />
-    </div>
+    </motion>
 
     <template #sidebar>
       <!-- TODO: add admin section -->
       <CoreTableOfContents v-if="postRef" :links="toc" :element="postRef" />
 
       <div>
-        <div class="mb-1 font-bold text-(--ui-primary)">Post Labels</div>
+        <motion
+          as="div"
+          :initial="{ opacity: 0, x: 20 }"
+          :animate="{ opacity: 1, x: 0 }"
+          class="mb-1 font-bold text-(--ui-primary)"
+        >
+          Post Labels
+        </motion>
         <div class="flex flex-wrap gap-1">
-          <LabelObject
-            v-for="label in post.edges.labels"
+          <motion
+            as="div"
+            :initial="{ opacity: 0, x: 20 }"
+            :animate="{ opacity: 1, x: 0 }"
+            v-for="(label, i) in post.edges.labels"
+            :transition="{ delay: (i + 1) * 0.03 }"
             :key="label.id"
-            :value="label"
-            route="/posts"
-            linkable
-          />
+          >
+            <LabelObject :value="label" route="/posts" linkable />
+          </motion>
         </div>
       </div>
     </template>
