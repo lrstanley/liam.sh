@@ -34,7 +34,6 @@
     "files.exclude": {
         "**/*-journal": true,
         "**/*.backup": true,
-        "**/*.d.ts": true,
         "**/*.db": true,
         "**/*.db-wal": true,
         "**/*.db-shm": true,
