@@ -31,7 +31,7 @@ var defaultConnectionValues = url.Values{
 		"synchronous(1)",
 		"mmap_size(30000000000)",
 	},
-	"_busy_timeout": {"15"},
+	"_busy_timeout": {"30"},
 }
 
 var sqliteInit sync.Once
@@ -61,7 +61,7 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 		log.FromContext(ctx).WithError(err).Fatal("failed to open database connection")
 		return nil
 	}
-	db.SetMaxOpenConns(1)
+	db.SetMaxOpenConns(4)
 
 	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.SQLite, db)))
 }
