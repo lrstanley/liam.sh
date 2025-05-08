@@ -29,7 +29,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       let apiError: ErrorUnauthorized | undefined
 
       try {
-        self.value = await getSelf({ composable: "$fetch" })
+        // self.value = await getSelf({ composable: "$fetch" })
+        self.value = await $fetch<GetSelfResponse>(
+          client.getConfig().baseURL + "/self",
+          { headers: useRequestHeaders(["cookie"]) }
+        )
       } catch (error) {
         apiError = error as ErrorUnauthorized
         self.value = null
@@ -39,7 +43,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       let apiError: ErrorUnauthorized | undefined
 
       try {
-        githubUser.value = await getGithubUser({ composable: "$fetch" })
+        // githubUser.value = await getGithubUser({ composable: "$fetch" })
+        githubUser.value = await $fetch<GetGithubUserResponse>(
+          client.getConfig().baseURL + "/github-user",
+          { headers: useRequestHeaders(["cookie"]) }
+        )
       } catch (error) {
         if (!apiError) apiError = error as ErrorUnauthorized
         githubUser.value = null
