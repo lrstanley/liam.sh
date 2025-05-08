@@ -122,9 +122,13 @@ func httpServer(_ context.Context) *http.Server {
 		chix.Error(w, r, chix.WrapCode(http.StatusNotFound))
 	})
 
+	var protocols http.Protocols
+	protocols.SetUnencryptedHTTP2(true)
+
 	return &http.Server{
-		Addr:    cli.Flags.HTTP.BindAddr,
-		Handler: r,
+		Addr:      cli.Flags.HTTP.BindAddr,
+		Handler:   r,
+		Protocols: &protocols,
 
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
