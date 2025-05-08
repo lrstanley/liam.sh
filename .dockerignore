@@ -1,4 +1,4 @@
-./httpserver # ./ so it's treated like a binary, not a folder
+httpserver
 **/*.test
 **/*.prof
 **/*.db
