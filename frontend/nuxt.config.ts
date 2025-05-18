@@ -27,6 +27,11 @@ export default defineNuxtConfig({
     },
   ],
   css: ["~/assets/main.css"],
+  icon: {
+    fallbackToApi: false,
+    serverBundle: "local",
+    clientBundle: { scan: true },
+  },
   devServer: { port: 8081 },
   experimental: { typedPages: true },
   telemetry: false,

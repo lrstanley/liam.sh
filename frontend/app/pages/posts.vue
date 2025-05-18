@@ -67,7 +67,6 @@ if (error.value) throw error.value
     <CoreObjectRender
       :value="posts?.content"
       type="post"
-      linkable
       show-empty
       divider
       :loading="status === 'pending'"

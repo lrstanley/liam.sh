@@ -70,7 +70,6 @@ if (error.value) throw error.value
     <CoreObjectRender
       :value="repos?.content"
       type="repo"
-      linkable
       show-empty
       divider
       :loading="status === 'pending'"
