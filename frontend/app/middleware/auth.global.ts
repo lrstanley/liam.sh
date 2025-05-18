@@ -8,7 +8,6 @@ import { client } from "#hey-api/client.gen"
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const runtime = useRuntimeConfig()
-
   client.setConfig({
     baseURL: runtime.API_URL
       ? runtime.API_URL.replace(/\/$/, "")
@@ -17,22 +16,23 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     retry: 3,
     retryDelay: 1000,
     cache: "no-cache",
+    headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser, to API requests (mainly helpful when in SSR).
   })
 
   const self = useSelf()
   const githubUser = useGithubUser()
   const url = useRequestURL()
 
+  // TODO: switch these from $fetch to useFetch, after the bugs with hey-api/openapi-ts are fixed.
   await Promise.all([
     callOnce("getSelf", async () => {
       let apiError: ErrorUnauthorized | undefined
 
       try {
-        const results = await getSelf({
-          composable: "useFetch",
-          headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser.
+        // self.value = await getSelf({ composable: "$fetch" })
+        self.value = await $fetch<GetSelfResponse>(client.getConfig().baseURL + "/self", {
+          headers: useRequestHeaders(["cookie"]),
         })
-        self.value = results.data.value
       } catch (error) {
         apiError = error as ErrorUnauthorized
         self.value = null
@@ -42,11 +42,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       let apiError: ErrorUnauthorized | undefined
 
       try {
-        const results = await getGithubUser({
-          composable: "useFetch",
-          headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser.
-        })
-        githubUser.value = results.data.value
+        // githubUser.value = await getGithubUser({ composable: "$fetch" })
+        githubUser.value = await $fetch<GetGithubUserResponse>(
+          client.getConfig().baseURL + "/github-user",
+          { headers: useRequestHeaders(["cookie"]) }
+        )
       } catch (error) {
         if (!apiError) apiError = error as ErrorUnauthorized
         githubUser.value = null
