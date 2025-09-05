@@ -43,7 +43,7 @@ const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record
       <EventLink :href="repo.name as string" />
     </template>
 
-    <EventBlame>
+    <EventBlame v-if="commits.length > 0">
       {{ commits[0].message.split("\n")[0] }}
     </EventBlame>
   </div>
