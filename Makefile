@@ -5,6 +5,7 @@ export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
 export DOCKER_BUILDKIT := 1
 export KUBERNETES_NAMESPACE := "liam-sh"
 export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
+export NODE_OPTIONS := "--max-old-space-size=4096"
 
 license:
 	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s

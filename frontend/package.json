@@ -1,11 +1,15 @@
 {
+  "type": "module",
   "dependencies": {
     "@nuxt/fonts": "^0.11.0",
-    "@nuxt/ui-pro": "3.3.3",
-    "@tailwindcss/vite": "4.1.12",
+    "@nuxt/ui-pro": "^3.3.3",
+    "@tailwindcss/vite": "^4.1.12",
     "motion-v": "^1.7.1",
     "nuxt": "^4.0.0",
-    "tailwindcss": "4.1.12"
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.9.2",
+    "vue": "^3.5.20",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@codemirror/lang-markdown": "^6.3.4",

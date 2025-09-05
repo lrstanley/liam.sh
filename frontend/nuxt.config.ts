@@ -5,8 +5,7 @@ export default defineNuxtConfig({
     layoutTransition: { name: "layout", mode: "out-in" },
   },
   modules: ["@hey-api/nuxt", "@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui-pro", "@nuxtjs/seo"],
-  future: { compatibilityVersion: 4 },
-  compatibilityDate: "2025-05-03",
+  compatibilityDate: "2025-07-15",
   devtools: {
     enabled: false,
     viteInspect: false,
