@@ -8,7 +8,8 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/chix/xauth/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/lrstanley/liam.sh/internal/database/ent/user"
@@ -16,7 +17,7 @@ import (
 )
 
 // Validate authService implements chix.Service.
-var _ chix.AuthService[ent.User, int] = (*Service)(nil)
+var _ xauth.Service[ent.User, int] = (*Service)(nil)
 
 func NewService(db *ent.Client, admin int) *Service {
 	return &Service{
@@ -62,11 +63,4 @@ func (s *Service) Set(ctx context.Context, guser *goth.User) (id int, err error)
 	}
 
 	return q.OnConflictColumns(user.FieldUserID).Ignore().UpdateNewValues().ID(ctx)
-}
-
-func (s *Service) Roles(ctx context.Context, id int) ([]string, error) {
-	if ok, _ := s.db.User.Query().Where(user.IDEQ(id)).Exist(ctx); ok {
-		return []string{"admin"}, nil
-	}
-	return nil, nil
 }

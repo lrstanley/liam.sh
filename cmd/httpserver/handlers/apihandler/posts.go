@@ -6,12 +6,11 @@ package apihandler
 
 import (
 	"context"
+	"log/slog"
 	"net/http"
 
-	"github.com/apex/log"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
-	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
 )
 
 func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
@@ -21,7 +20,7 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	tx, err := h.db.Tx(r.Context())
-	if chix.Error(w, r, err) {
+	if chix.IfError(w, r, err) {
 		return
 	}
 
@@ -41,13 +40,12 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 			chix.Error(w, r, err)
 			return
 		}
-		log.FromContext(r.Context()).WithField("id", v.ID).Debug("regenerated post")
+		chix.LogDebug(r.Context(), "regenerated post", slog.Int("id", v.ID))
 	}
 
 	err = tx.Commit()
-	if err != nil {
+	if chix.IfError(w, r, err) {
 		_ = tx.Rollback()
-		chix.Error(w, r, err)
 		return
 	}
 
@@ -70,5 +68,5 @@ func (h *handler) postsSuggestLabels(w http.ResponseWriter, r *http.Request) {
 		chix.Error(w, r, err)
 		return
 	}
-	rest.JSON(w, r, http.StatusOK, suggestions)
+	chix.JSON(w, r, http.StatusOK, suggestions)
 }

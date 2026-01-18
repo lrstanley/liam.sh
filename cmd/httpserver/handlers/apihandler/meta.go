@@ -7,9 +7,9 @@ package apihandler
 import (
 	"net/http"
 
-	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
+	"github.com/lrstanley/chix/v2"
 )
 
 func (h *handler) getVersion(w http.ResponseWriter, r *http.Request) {
-	rest.JSON(w, r, http.StatusOK, h.version.NonSensitive())
+	chix.JSON(w, r, http.StatusOK, h.version)
 }

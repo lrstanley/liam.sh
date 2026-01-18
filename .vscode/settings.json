@@ -69,9 +69,13 @@
   },
   "tailwindCSS.classAttributes": [
     "class",
-    "className",
-    "ngClass",
     "ui"
+  ],
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "ui:\\s*{([^)]*)\\s*}",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
+    ]
   ],
   "editor.quickSuggestions": {
     "strings": true

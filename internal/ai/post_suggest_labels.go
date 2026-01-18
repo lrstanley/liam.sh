@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent/label"
 	"github.com/tmc/langchaingo/llms"
@@ -86,7 +85,7 @@ func (s *service) PostSuggestLabels(ctx context.Context, content string) ([]Sugg
 
 	for _, l := range results.Labels {
 		if err = label.NameValidator(l); err != nil {
-			log.FromContext(ctx).WithError(err).WithField("label", l).Warn("ignoring suggested invalid label name")
+			s.logger.ErrorContext(ctx, "ignoring suggested invalid label name", "error", err, "label", l)
 		}
 		filteredLabels = append(filteredLabels, l)
 	}

@@ -7,20 +7,27 @@ package models
 import (
 	"net/http"
 
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 )
 
-func init() { //nolint
-	chix.AddErrorResolver(func(err error) (status int) {
-		if ent.IsConstraintError(err) || ent.IsValidationError(err) {
-			return http.StatusBadRequest
+func ErrorResolver(oerr *chix.ResolvedError) *chix.ResolvedError {
+	switch {
+	case ent.IsConstraintError(oerr.Err) || ent.IsValidationError(oerr.Err):
+		return &chix.ResolvedError{
+			StatusCode: http.StatusBadRequest,
+			Err:        oerr.Err,
+			Errs:       oerr.Errs,
+			Visibility: chix.ErrorMasked,
 		}
-
-		if ent.IsNotFound(err) {
-			return http.StatusNotFound
+	case ent.IsNotFound(oerr.Err):
+		return &chix.ResolvedError{
+			StatusCode: http.StatusNotFound,
+			Err:        oerr.Err,
+			Errs:       oerr.Errs,
+			Visibility: chix.ErrorMasked,
 		}
-
-		return 0
-	})
+	default:
+		return oerr
+	}
 }

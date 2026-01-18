@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"sort"
 
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
@@ -58,5 +58,5 @@ func (h *handler) getOutdatedGithubReleases(w http.ResponseWriter, r *http.Reque
 		return results[i].Release.CreatedAt.Before(results[j].Release.CreatedAt)
 	})
 
-	rest.JSON(w, r, http.StatusOK, results)
+	chix.JSON(w, r, http.StatusOK, results)
 }

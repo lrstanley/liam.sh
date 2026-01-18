@@ -8,13 +8,13 @@ import (
 	"context"
 	"database/sql"
 	"iter"
+	"log/slog"
 	"net/url"
 	"sync"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
@@ -44,7 +44,7 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 
 	uri, err := url.Parse(config.URL)
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to parse database connection")
+		slog.ErrorContext(ctx, "failed to parse database connection", "error", err)
 		return nil
 	}
 
@@ -58,7 +58,7 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 
 	db, err := sql.Open("sqlite3", uri.String())
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to open database connection")
+		slog.ErrorContext(ctx, "failed to open database connection", "error", err)
 		return nil
 	}
 	db.SetMaxOpenConns(4)
@@ -67,7 +67,7 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 }
 
 func Migrate(ctx context.Context, db *ent.Client) {
-	log.FromContext(ctx).Info("initiating database schema migration")
+	slog.InfoContext(ctx, "initiating database schema migration")
 	if db == nil {
 		panic("database client is nil")
 	}
@@ -79,9 +79,9 @@ func Migrate(ctx context.Context, db *ent.Client) {
 		schema.WithGlobalUniqueID(true),
 		schema.WithForeignKeys(true),
 	); err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to create schema")
+		slog.ErrorContext(ctx, "failed to create schema", "error", err)
 	}
-	log.FromContext(ctx).Info("database schema migration complete")
+	slog.InfoContext(ctx, "database schema migration complete")
 }
 
 type PagableQuery[P any, T any] interface {

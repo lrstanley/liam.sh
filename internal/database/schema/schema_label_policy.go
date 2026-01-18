@@ -14,7 +14,8 @@ import (
 func (Label) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			AllowRoles([]string{"admin"}, true),
+			AllowAuthenticated(),
+			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
 			privacy.AlwaysAllowRule(),

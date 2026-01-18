@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/database/ent/predicate"
 )
@@ -27,7 +27,7 @@ func (h *handler) getGists(w http.ResponseWriter, r *http.Request) {
 	}
 
 	gist, err := h.db.GithubGist.Query().Where(filter...).First(r.Context())
-	if chix.Error(w, r, err) {
+	if chix.IfError(w, r, err) {
 		return
 	}
 

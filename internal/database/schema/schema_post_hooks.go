@@ -9,13 +9,14 @@ package schema
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"strings"
 	"sync"
 	"time"
 
 	"entgo.io/ent"
-	"github.com/apex/log"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/chix/xauth/v2"
 	gen "github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/hook"
 	"github.com/lrstanley/liam.sh/internal/database/ent/intercept"
@@ -35,7 +36,7 @@ func (Post) Hooks() []ent.Hook {
 	return []ent.Hook{
 		hook.On(func(next ent.Mutator) ent.Mutator {
 			return hook.PostFunc(func(ctx context.Context, m *gen.PostMutation) (ent.Value, error) {
-				ident := chix.IdentFromContext[gen.User](ctx)
+				ident := xauth.IdentFromContext[gen.User](ctx)
 				if ident == nil {
 					return nil, errors.New("unauthenticated")
 				}
@@ -123,8 +124,11 @@ func postViewCounter(ctx context.Context, p *gen.Post) {
 	postView[p.ID][ip.String()] = time.Now()
 	postViewMu.Unlock()
 
-	if _, err := p.Update().AddViewCount(1).Save(nctx); err != nil {
-		log.FromContext(ctx).WithError(err).WithField("post_id", p.ID).
-			Error("failed to update post view count")
+	if err := p.Update().AddViewCount(1).Exec(nctx); err != nil {
+		chix.LogError(
+			ctx, "failed to update post view count",
+			slog.Int("post_id", p.ID),
+			slog.Any("error", err),
+		)
 	}
 }

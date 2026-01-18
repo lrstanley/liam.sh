@@ -96,10 +96,10 @@ go-dlv: go-prepare
 		${PACKAGE} -- --debug
 
 go-debug: go-prepare
-	go run ${PACKAGE} --debug --log.pretty
+	go run ${PACKAGE} --debug
 
 go-debug-fast:
-	go run ${PACKAGE} --debug --log.pretty
+	go run ${PACKAGE} --debug
 
 go-build: go-prepare
 	CGO_ENABLED=0 \

@@ -7,9 +7,10 @@ package gh
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
+	"slices"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubevent"
@@ -35,7 +36,7 @@ var allowedEvents = []string{
 
 // EventsRunner fetches all events for the authenticated user from Github, storing
 // them in the database.
-func EventsRunner(ctx context.Context) error {
+func EventsRunner(ctx context.Context, logger *slog.Logger) error {
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
 	db := ent.FromContext(ctx)
@@ -55,7 +56,7 @@ func EventsRunner(ctx context.Context) error {
 
 	user, _, err = RestClient.Users.Get(ctx, "")
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Error("failed to get user")
+		logger.ErrorContext(ctx, "failed to get user", "error", err)
 		return err
 	}
 
@@ -70,20 +71,14 @@ func EventsRunner(ctx context.Context) error {
 
 		var events []*github.Event
 
-		log.FromContext(ctx).WithField("page", opts.Page).Info("querying events")
+		logger.InfoContext(ctx, "querying events", "page", opts.Page)
 		events, resp, err = RestClient.Activity.ListEventsPerformedByUser(ctx, user.GetLogin(), false, opts)
 		if err != nil {
 			return err
 		}
 
 		for _, event := range events {
-			isAllowed := false
-			for _, allowed := range allowedEvents {
-				if event.GetType() == allowed {
-					isAllowed = true
-					break
-				}
-			}
+			isAllowed := slices.Contains(allowedEvents, event.GetType())
 
 			if !isAllowed {
 				continue
@@ -111,7 +106,7 @@ func EventsRunner(ctx context.Context) error {
 			continue
 		}
 
-		payload := map[string]interface{}{}
+		payload := map[string]any{}
 		err = json.Unmarshal([]byte(event.GetRawPayload()), &payload)
 		if err != nil {
 			return err
@@ -135,6 +130,6 @@ func EventsRunner(ctx context.Context) error {
 		}
 	}
 
-	log.FromContext(ctx).WithField("events", count).Info("fetched newest events")
+	logger.InfoContext(ctx, "fetched newest events", "events", count)
 	return nil
 }

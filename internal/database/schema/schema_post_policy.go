@@ -14,10 +14,12 @@ import (
 func (Post) Policy() ent.Policy {
 	return privacy.Policy{
 		Mutation: privacy.MutationPolicy{
-			AllowRoles([]string{"admin"}, true),
+			AllowAuthenticated(),
+			privacy.AlwaysDenyRule(),
 		},
 		Query: privacy.QueryPolicy{
-			AllowPublicUnlessRole([]string{"admin"}),
+			AllowAuthenticated(),
+			FilterPublicOnly(),
 			privacy.AlwaysAllowRule(),
 		},
 	}

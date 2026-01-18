@@ -7,15 +7,15 @@ package apihandler
 import (
 	"net/http"
 
-	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/gh"
 	"github.com/lrstanley/liam.sh/internal/wakapi"
 )
 
 func (h *handler) getStatsCoding(w http.ResponseWriter, r *http.Request) {
-	rest.JSON(w, r, http.StatusOK, wakapi.Statistics.Load())
+	chix.JSON(w, r, http.StatusOK, wakapi.Statistics.Load())
 }
 
 func (h *handler) getStatsGithub(w http.ResponseWriter, r *http.Request) {
-	rest.JSON(w, r, http.StatusOK, gh.Stats.Load())
+	chix.JSON(w, r, http.StatusOK, gh.Stats.Load())
 }

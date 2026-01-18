@@ -5,76 +5,81 @@
 package main
 
 import (
-	"context"
+	"embed"
+	"log/slog"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/chix/xauth/v2"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/apihandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/ghhandler"
 	"github.com/lrstanley/liam.sh/cmd/httpserver/handlers/webhookhandler"
 	"github.com/lrstanley/liam.sh/internal/auth"
+	"github.com/lrstanley/liam.sh/internal/database/ent"
+	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-func httpServer(_ context.Context) *http.Server {
-	chix.DefaultAPIPrefix = "/-/"
+//go:embed all:public
+var frontendFS embed.FS
+
+func httpServer(logger *slog.Logger) *http.Server {
 	r := chi.NewRouter()
+
+	r.Use(
+		chix.NewConfig().
+			SetAPIBasePath("/-/").
+			SetLogger(logger).
+			SetMaskPrivateErrors(cli.Debug).
+			SetErrorResolvers(models.ErrorResolver).
+			Use(),
+	)
 
 	goth.UseProviders(
 		github.New(
 			cli.Flags.Github.ClientID,
 			cli.Flags.Github.ClientSecret,
 			cli.Flags.HTTP.BaseURL+"/-/auth/providers/github/callback",
+			"read:user",
+			"user:email",
 		),
 	)
 
 	authSvc := auth.NewService(db, cli.Flags.Github.User)
 
 	if len(cli.Flags.HTTP.TrustedProxies) > 0 {
-		r.Use(chix.UseRealIPCLIOpts(cli.Flags.HTTP.TrustedProxies))
+		r.Use(chix.UseRealIPStringOpts(cli.Flags.HTTP.TrustedProxies))
 	}
 
-	// Core middeware.
 	r.Use(
-		chix.UseDebug(cli.Debug),
-		chix.UseContextIP,
-		middleware.RequestID,
-		chix.UseStructuredLogger(logger),
-		chix.UsePrometheus,
-		chix.UseRecoverer,
-		middleware.Maybe(middleware.StripSlashes, func(r *http.Request) bool {
-			return !strings.HasPrefix(r.URL.Path, "/debug/")
-		}),
+		chix.UseContextIP(),
+		chix.UseRequestID(),
+		chix.UseStripSlashes(),
+		chix.UseStructuredLogger(chix.DefaultLogConfig()),
 		middleware.Compress(5),
-		chix.UseNextURL,
-	)
-
-	// Security related.
-	r.Use(
-		cors.New(cors.Options{
-			AllowOriginFunc: func(_ *http.Request, _ string) bool { return true },
+		chix.UseNextURL(),
+		chix.UseCrossOriginProtection("http://localhost:8081", "https://liam.sh", "https://*.liam.sh"),
+		chix.UseCrossOriginResourceSharing(&chix.CORSConfig{
+			AllowedOrigins: []string{"http://localhost:8081", "https://liam.sh", "https://*.liam.sh"},
 			AllowedMethods: []string{
 				http.MethodGet,
 				http.MethodHead,
 				http.MethodPost,
-				http.MethodPut,
-				http.MethodPatch,
-				http.MethodDelete,
-				http.MethodOptions,
 			},
-			AllowedHeaders:   []string{"*"},
-			MaxAge:           300,
+			AllowedHeaders: []string{
+				"Accept",
+				"Content-Type",
+				"Origin",
+			},
+			// AllowPrivateNetwork: true,
 			AllowCredentials: true,
-		}).Handler,
-		chix.UseAuthContext(authSvc),
+		}),
+		xauth.UseAuthContext(authSvc),
 		httprate.LimitByIP(400, 1*time.Minute),
 	)
 
@@ -86,7 +91,7 @@ func httpServer(_ context.Context) *http.Server {
 
 	// Misc.
 	r.Use(
-		chix.UseSecurityTxt(&chix.SecurityConfig{
+		chix.UseSecurityText(chix.SecurityTextConfig{
 			ExpiresIn: 182 * 24 * time.Hour,
 			Contacts: []string{
 				"mailto:liam@liam.sh",
@@ -98,18 +103,16 @@ func httpServer(_ context.Context) *http.Server {
 		}),
 	)
 
-	r.Route("/-", apihandler.New(db, aiSvc, cli.VersionInfo, cli.Debug, "/-").Route)
-	r.Mount("/-/auth", chix.NewAuthHandler(
-		authSvc,
-		cli.Flags.HTTP.ValidationKey,
-		cli.Flags.HTTP.EncryptionKey,
-	))
+	r.Route("/-", apihandler.New(db, aiSvc, cli.GetVersion().NonSensitive(), cli.Debug, "/-").Route)
+	r.Mount("/-/auth", xauth.NewGothHandler(&xauth.GothConfig[ent.User, int]{
+		Service:        authSvc,
+		SessionStorage: xauth.NewCookieStore(cli.Flags.HTTP.ValidationKey, cli.Flags.HTTP.EncryptionKey),
+	}))
 	r.Route("/-/gh", ghhandler.New(db).Route)
 	r.Route("/-/webhook/discord", webhookhandler.New().Route)
-	r.With(chix.UsePrivateIP).Mount("/metrics", promhttp.Handler())
 
 	if cli.Debug {
-		r.With(chix.UsePrivateIP).Mount("/debug", middleware.Profiler())
+		r.With(chix.UsePrivateIP()).Mount("/debug", middleware.Profiler())
 	}
 
 	r.With(middleware.ThrottleBacklog(1, 5, 5*time.Second)).Get("/-/healthy", func(w http.ResponseWriter, r *http.Request) {
@@ -119,8 +122,19 @@ func httpServer(_ context.Context) *http.Server {
 	})
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
-		chix.Error(w, r, chix.WrapCode(http.StatusNotFound))
+		chix.ErrorWithCode(w, r, http.StatusNotFound)
 	})
+
+	// r.With(chix.UseHeaders(map[string]string{
+	// 	"Vary":          "Accept-Encoding",
+	// 	"Cache-Control": "public, max-age=3600",
+	// })).Mount("/", chix.UseStatic(&chix.StaticConfig{
+	// 	FS:         frontendFS,
+	// 	Prefix:     "/",
+	// 	SPA:        true,
+	// 	AllowLocal: true,
+	// 	Path:       "public",
+	// }))
 
 	return &http.Server{
 		Addr:    cli.Flags.HTTP.BindAddr,

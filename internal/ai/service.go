@@ -7,12 +7,13 @@ package ai
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/models"
+	"github.com/lrstanley/x/http/utils/httpclog"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/cache"
 	"github.com/tmc/langchaingo/llms/cache/inmemory"
@@ -32,13 +33,15 @@ type service struct {
 	httpConfig models.ConfigHTTP
 	cache      *inmemory.InMemory
 	db         *ent.Client
+	logger     *slog.Logger
 }
 
-func NewService(ctx context.Context, config models.ConfigAI, httpConfig models.ConfigHTTP, db *ent.Client) (s *service, err error) {
+func NewService(ctx context.Context, config models.ConfigAI, httpConfig models.ConfigHTTP, db *ent.Client, logger *slog.Logger) (s *service, err error) {
 	s = &service{
 		config:     config,
 		httpConfig: httpConfig,
 		db:         db,
+		logger:     logger,
 	}
 	s.cache, err = inmemory.New(ctx, inmemory.WithExpiration(cacheTimeout))
 	if err != nil {
@@ -48,19 +51,16 @@ func NewService(ctx context.Context, config models.ConfigAI, httpConfig models.C
 }
 
 func (s *service) newClient(ctx context.Context, opts ...openai.Option) (llms.Model, error) {
+	level := slog.LevelInfo
+
 	baseOpts := []openai.Option{
 		openai.WithBaseURL(s.config.BaseURL),
 		openai.WithToken(s.config.APIKey),
-		openai.WithHTTPClient(&http.Client{
-			Timeout: 60 * time.Second,
-			Transport: &httpTransport{
-				headers: map[string]string{
-					"HTTP-Referer": s.httpConfig.BaseURL,
-					"X-Title":      "Liam Stanley's Personal Website & Blog",
-				},
-				logger: log.FromContext(ctx).WithField("src", "ai-client"),
-			},
-		}),
+		openai.WithHTTPClient(httpclog.NewClient(&httpclog.Config{
+			Level:         &level,
+			BaseTransport: http.DefaultTransport,
+			Logger:        s.logger,
+		})),
 	}
 
 	if s.config.DefaultModel != "" {

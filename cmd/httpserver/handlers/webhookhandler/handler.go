@@ -7,13 +7,13 @@ package webhookhandler
 import (
 	"bytes"
 	"io"
+	"log/slog"
 	"net/http"
 	"reflect"
 
-	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/go-github/v63/github"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 )
 
 type handler struct{}
@@ -47,15 +47,19 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 
 	sender, ok := f.Interface().(*github.User)
 	if ok && sender != nil && sender.GetType() == "Bot" {
-		chix.Log(r).WithFields(log.Fields{
-			"event_type": github.WebHookType(r),
-			"bot":        sender.Login,
-		}).Info("ignoring bot event")
+		chix.LogInfo(
+			r.Context(), "ignoring bot event",
+			slog.String("event_type", github.WebHookType(r)),
+			slog.String("bot", sender.GetLogin()),
+		)
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	chix.Log(r).WithField("event_type", github.WebHookType(r)).Info("forwarding webhook to discord")
+	chix.LogInfo(
+		r.Context(), "forwarding webhook to discord",
+		slog.String("event_type", github.WebHookType(r)),
+	)
 	req, err := http.NewRequestWithContext(r.Context(), http.MethodPost, url, bytes.NewBuffer(payload))
 	if err != nil {
 		chix.Error(w, r, err)
@@ -73,5 +77,8 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	_, _ = io.Copy(w, resp.Body)
 
-	chix.Log(r).WithField("discord_status", resp.StatusCode).Info("discord response")
+	chix.LogInfo(
+		r.Context(), "discord response",
+		slog.Int("discord_status", resp.StatusCode),
+	)
 }
