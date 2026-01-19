@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ConfirmModal, UBadge } from "#components"
+import { ConfirmModal } from "#components"
+import type { SchemaLabelCount } from '#open-fetch-schemas/api'
 import type { TableColumn } from "#ui/types"
 
 definePageMeta({
@@ -7,6 +8,7 @@ definePageMeta({
   layout: "admin",
 })
 
+const { $api } = useNuxtApp()
 const toast = useToast()
 
 const {
@@ -14,10 +16,10 @@ const {
   error,
   status,
   refresh: refreshLabels,
-} = await getLabelsCount({ composable: "useFetch" })
+} = await useApi('/labels/count')
 if (error.value) throw error.value
 
-const columns: TableColumn<LabelCount>[] = [
+const columns: TableColumn<SchemaLabelCount>[] = [
   { id: "name", header: "Name", accessorKey: "name" },
   { id: "githubrepository_count", header: "# of repos", accessorKey: "githubrepository_count" },
   { id: "post_count", header: "# of posts", accessorKey: "post_count" },
@@ -26,23 +28,22 @@ const columns: TableColumn<LabelCount>[] = [
 ]
 
 const overlay = useOverlay()
-const labelToDelete = ref<LabelCount | null>(null)
+const labelToDelete = ref<SchemaLabelCount | null>(null)
 const deleteLoading = ref(false)
 const modalDelete = overlay.create(ConfirmModal)
 
-async function promptDeleteLabel(label: LabelCount) {
+async function promptDeleteLabel(label: SchemaLabelCount) {
   deleteLoading.value = true
   labelToDelete.value = label
-  modalDelete.patch({
+  const result = await modalDelete.open({
     title: `Delete Label ${label.name}?`,
     description: `Are you sure you want to delete "${label.name}"?`,
     confirmText: "Delete",
     color: "error",
   })
-  const result = await modalDelete.open()
   if (!result) return
-  await deleteLabel({
-    composable: "$fetch",
+  await $api('/labels/{labelID}', {
+    method: 'DELETE',
     path: {
       labelID: label.id,
     },
@@ -62,25 +63,12 @@ async function promptDeleteLabel(label: LabelCount) {
 <template>
   <div class="flex flex-col">
     <UCard variant="subtle">
-      <UTable
-        v-if="labels"
-        :data="labels"
-        :columns="columns"
-        :loading="status === 'pending'"
-        loading-color="primary"
-        loading-animation="carousel"
-        class="shrink-0"
-        :ui="{ td: 'p-2' }"
-      >
+      <UTable v-if="labels" :data="labels" :columns="columns" :loading="status === 'pending'" loading-color="primary"
+        loading-animation="carousel" class="shrink-0" :ui="{ td: 'p-2' }">
         <template #actions-cell="{ row }">
           <div class="flex flex-row gap-2">
-            <UButton
-              size="xs"
-              variant="subtle"
-              color="error"
-              icon="mdi:delete"
-              @click="promptDeleteLabel(row.original)"
-            >
+            <UButton size="xs" variant="subtle" color="error" icon="mdi:delete"
+              @click="promptDeleteLabel(row.original)">
               Delete
             </UButton>
           </div>

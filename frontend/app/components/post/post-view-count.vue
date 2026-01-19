@@ -5,13 +5,8 @@ const props = defineProps<{
 </script>
 
 <template>
-  <UBadge
-    class="text-gradient bg-gradient-to-br from-pink-500 via-red-500 to-yellow-500"
-    v-bind="$attrs"
-    color="neutral"
-    variant="outline"
-    size="lg"
-  >
+  <UBadge class="text-gradient bg-linear-to-br from-pink-500 via-red-500 to-yellow-500" v-bind="$attrs" color="neutral"
+    variant="outline" size="lg">
     {{ props.value.toLocaleString() }}
     {{ props.value === 1 ? "view" : "views" }}
   </UBadge>

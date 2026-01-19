@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { UBadge } from "#components"
+import type { SchemaLabel, SchemaLabelCount, SchemaSuggestedLabel } from '#open-fetch-schemas/api'
 
+const { $api } = useNuxtApp()
 const toast = useToast()
 
-export type LabelField = keyof Pick<Label, "id" | "name">
+export type LabelField = keyof Pick<SchemaLabel, "id" | "name">
 
 const {
   modelValue: value = [],
@@ -12,7 +14,7 @@ const {
   allowCreate,
   allowSuggest,
 } = defineProps<{
-  modelValue: Label[LabelField] | Label[LabelField][]
+  modelValue: SchemaLabel[LabelField] | SchemaLabel[LabelField][]
   field?: LabelField
   suggestText?: string
   allowCreate?: boolean
@@ -20,14 +22,14 @@ const {
 }>()
 
 const emit = defineEmits<{
-  "update:modelValue": [value: Label[LabelField][]]
+  "update:modelValue": [value: SchemaLabel[LabelField][]]
 }>()
 
-const { data: labels, status, refresh } = await getLabelsCount({ composable: "useFetch" })
+const { data: labels, status, refresh } = await useApi('/labels/count')
 
 defineExpose({ refetch: refresh })
 
-const label2rendered = (label: LabelCount): RenderedLabel => {
+const label2rendered = (label: SchemaLabelCount): RenderedLabel => {
   return {
     label: label.name,
     value: label[field],
@@ -51,8 +53,8 @@ const selected = computed<RenderedLabel[]>({
 
 type RenderedLabel = {
   label: string
-  value: Label[LabelField]
-  data: LabelCount
+  value: SchemaLabel[LabelField]
+  data: SchemaLabelCount
   popularity: number
 }
 
@@ -68,8 +70,8 @@ function clear(e: any) {
 async function addLabel(name: string) {
   if (!labels.value?.some((l) => l.name === name)) {
     try {
-      const label = await createLabel({
-        composable: "$fetch",
+      const label = await $api('/labels', {
+        method: 'POST',
         body: { name },
       })
 
@@ -97,7 +99,7 @@ async function addLabel(name: string) {
   }
 }
 
-const suggestions = ref<SuggestedLabel[]>([])
+const suggestions = ref<SchemaSuggestedLabel[]>([])
 const suggestionsFiltered = computed(() => {
   const filtered = suggestions.value.filter((s) => !selected.value.some((l) => l.data.name === s.name))
 
@@ -131,8 +133,8 @@ async function suggest() {
   hasMadeSuggestions.value = true
 
   try {
-    suggestions.value = await suggestLabels({
-      composable: "$fetch",
+    suggestions.value = await $api('/posts/suggest-labels', {
+      method: 'POST',
       body: { content: suggestText },
     })
   } catch (e) {
@@ -151,114 +153,62 @@ async function suggest() {
 <template>
   <div class="flex flex-col gap-2">
     <div class="flex flex-row gap-1">
-      <UButton
-        v-if="allowSuggest && suggestText"
-        size="md"
-        variant="link"
-        icon="lucide:wand-sparkles"
-        :loading="loadingSuggestions"
-        class="group transition-all duration-200 ease-in-out cursor-pointer"
-        :ui="{
+      <UButton v-if="allowSuggest && suggestText" size="md" variant="link" icon="lucide:wand-sparkles"
+        :loading="loadingSuggestions" class="group transition-all duration-200 ease-in-out cursor-pointer" :ui="{
           leadingIcon:
-            '!text-gradient bg-gradient-to-r group-hover:bg-gradient-to-br from-indigo-400 via-fuchsia-400 to-cyan-400 group-hover:scale-110 opacity-90 group-hover:opacity-100 group-hover:-rotate-6 transition-all duration-200 ease-in-out',
-        }"
-        @click="suggest()"
-      />
+            '!text-gradient bg-linear-to-r group-hover:bg-linear-to-br from-indigo-400 via-fuchsia-400 to-cyan-400 group-hover:scale-110 opacity-90 group-hover:opacity-100 group-hover:-rotate-6 transition-all duration-200 ease-in-out',
+        }" @click="suggest()" />
 
-      <USelectMenu
-        v-model="selected"
-        :items="options"
-        :loading="status === 'pending'"
-        icon="lucide:tag"
-        multiple
-        :create-item="allowCreate"
-        @create="addLabel"
-        placeholder="Select labels"
-        class="w-full min-w-0 grid"
-      >
+      <USelectMenu v-model="selected" :items="options" :loading="status === 'pending'" icon="lucide:tag" multiple
+        :create-item="allowCreate" @create="addLabel" placeholder="Select labels" class="w-full min-w-0 grid">
         <template #leading="{ modelValue, ui }">
           <span v-if="modelValue && modelValue.length > 0" class="group">
-            <UBadge
-              :color="modelValue.length >= 3 ? 'error' : 'success'"
-              size="sm"
-              variant="soft"
-              class="inline-block rounded-full group-hover:hidden max-sm:hidden"
-            >
+            <UBadge :color="modelValue.length >= 3 ? 'error' : 'success'" size="sm" variant="soft"
+              class="inline-block rounded-full group-hover:hidden max-sm:hidden">
               {{ modelValue.length }}
             </UBadge>
-            <UBadge
-              v-show="modelValue && modelValue.length >= 0"
-              color="neutral"
-              size="sm"
-              variant="subtle"
-              class="md:hidden rounded-full cursor-pointer md:group-hover:inline-block"
-              @click="clear"
-            >
+            <UBadge v-show="modelValue && modelValue.length >= 0" color="neutral" size="sm" variant="subtle"
+              class="md:hidden rounded-full cursor-pointer md:group-hover:inline-block" @click="clear">
               x
             </UBadge>
           </span>
         </template>
         <template #item-leading="{ item }">
-          <UBadge
-            :color="
-              item.popularity > 25
-                ? 'primary'
-                : item.popularity > 10
-                  ? 'info'
-                  : item.popularity > 0
-                    ? 'neutral'
-                    : 'error'
-            "
-            variant="soft"
-            class="rounded-full"
-            size="sm"
-          >
+          <UBadge :color="item.popularity > 25
+            ? 'primary'
+            : item.popularity > 10
+              ? 'info'
+              : item.popularity > 0
+                ? 'neutral'
+                : 'error'
+            " variant="soft" class="rounded-full" size="sm">
             {{ item.popularity }}
           </UBadge>
         </template>
       </USelectMenu>
     </div>
 
-    <div
-      v-show="allowSuggest && hasMadeSuggestions && !loadingSuggestions"
-      class="flex flex-row flex-wrap gap-1"
-    >
-      <UBadge
-        v-if="suggestionsFiltered.length === 0"
-        color="secondary"
-        variant="subtle"
-        class="block w-full text-center"
-      >
+    <div v-show="allowSuggest && hasMadeSuggestions && !loadingSuggestions" class="flex flex-row flex-wrap gap-1">
+      <UBadge v-if="suggestionsFiltered.length === 0" color="secondary" variant="subtle"
+        class="block w-full text-center">
         No suggestions found
       </UBadge>
 
-      <button
-        v-if="suggestionsFiltered.length > 0"
-        v-for="suggestion in suggestionsFiltered"
-        :key="suggestion.name"
+      <button v-if="suggestionsFiltered.length > 0" v-for="suggestion in suggestionsFiltered" :key="suggestion.name"
         @click="addLabel(suggestion.name)"
-        class="relative inline-flex h-7 overflow-hidden rounded-sm p-[1px] focus:outline-none focus:ring-0 group *:transition-opacity duration-200 ease-in-out"
-      >
+        class="relative inline-flex h-7 overflow-hidden rounded-sm p-px focus:outline-none focus:ring-0 group *:transition-opacity duration-200 ease-in-out">
+        <span v-if="suggestion.existing_id"
+          class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#171717_0%,#18d67d_50%,#171717_100%)] opacity-75 group-hover:opacity-100" />
+        <span v-else
+          class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#494beb_50%,#E2CBFF_100%)] opacity-75 group-hover:opacity-100" />
         <span
-          v-if="suggestion.existing_id"
-          class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#171717_0%,#18d67d_50%,#171717_100%)] opacity-75 group-hover:opacity-100"
-        />
-        <span
-          v-else
-          class="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#494beb_50%,#E2CBFF_100%)] opacity-75 group-hover:opacity-100"
-        />
-        <span
-          class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-sm bg-neutral-900 px-1 py-1 text-sm font-medium text-(--ui-text) group-hover:text-white backdrop-blur-3xl"
-        >
-          <UIcon
-            :name="suggestion.existing_id ? 'lucide:plus' : 'lucide:wand-sparkles'"
-            class="h-4 w-4 text-(--ui-text) mr-1"
-            :class="{
-              '!text-gradient bg-gradient-to-r group-hover:bg-gradient-to-br from-indigo-400 via-fuchsia-400 to-cyan-400 opacity-80 group-hover:opacity-100 transition-all duration-200 ease-in-out':
+          class="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-sm bg-neutral-900 px-1 py-1 text-sm font-medium text-default group-hover:text-white backdrop-blur-3xl">
+          <UIcon :name="suggestion.existing_id ? 'lucide:plus' : 'lucide:wand-sparkles'"
+            class="h-4 w-4 text-default mr-1" :class="{
+              '!text-gradient bg-linear-to-r group-hover:bg-linear-to-br from-indigo-400 via-fuchsia-400 to-cyan-400 opacity-80 group-hover:opacity-100 transition-all duration-200 ease-in-out':
                 !suggestion.existing_id,
-              'text-(--ui-text-muted)': suggestion.existing_id,
-            }"
-          />
+              'text-muted': suggestion.existing_id,
+            }" />
           {{ suggestion.name }}
         </span>
       </button>

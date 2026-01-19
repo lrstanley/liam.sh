@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouteQuery } from "@vueuse/router"
+import type { SchemaPostSortableFields } from '#open-fetch-schemas/api'
 
 definePageMeta({
   title: "Posts",
@@ -9,7 +10,7 @@ definePageMeta({
 const labels = useRouteQuery<Array<string>>("label", [])
 const search = useRouteQuery<string>("q", "")
 const debounceSearch = refDebounced<string>(search, 300)
-const pagination = usePagination<PostSortableFields>({
+const pagination = usePagination<SchemaPostSortableFields>({
   sort: "published_at",
   resetChanged: [labels, debounceSearch],
 })
@@ -18,8 +19,7 @@ const {
   data: posts,
   error,
   status,
-} = await listPosts({
-  composable: "useFetch",
+} = await useApi('/posts', {
   query: computed(() => ({
     page: pagination.page.value,
     per_page: pagination.perPage.value,
@@ -36,59 +36,32 @@ if (error.value) throw error.value
 <template>
   <ContainerStickySidebar class="mt-8">
     <div class="flex flex-auto gap-2 mt-1 mb-4">
-      <UInput
-        v-model="search"
-        :loading="status == 'pending'"
-        type="search"
-        placeholder="Search for a post"
-        icon="mdi:search"
-        class="w-full"
-      >
+      <UInput v-model="search" :loading="status == 'pending'" type="search" placeholder="Search for a post"
+        icon="mdi:search" class="w-full">
         <template v-if="search.length" #trailing>
-          <UButton
-            color="neutral"
-            variant="link"
-            size="sm"
-            icon="lucide:circle-x"
-            aria-label="Clear input"
-            @click="search = ''"
-          />
+          <UButton color="neutral" variant="link" size="sm" icon="lucide:circle-x" aria-label="Clear input"
+            @click="search = ''" />
         </template>
       </UInput>
 
-      <CorePagination
-        class="ml-auto"
-        :loading="status === 'pending'"
-        :resp="posts"
-        :pagination="pagination"
-      />
+      <CorePagination class="ml-auto" :loading="status === 'pending'" :resp="posts" :pagination="pagination" />
     </div>
 
-    <CoreObjectRender
-      :value="posts?.content"
-      type="post"
-      show-empty
-      divider
-      :loading="status === 'pending'"
-    />
+    <CoreObjectRender :value="posts?.content" type="post" show-empty divider :loading="status === 'pending'" />
 
     <template #sidebar>
       <div>
-        <div class="text-(--ui-primary)">Sort posts</div>
-        <CoreSorter
-          v-if="pagination"
-          v-model="pagination.sort.value"
-          v-model:order="pagination.order.value"
+        <div class="text-primary">Sort posts</div>
+        <CoreSorter v-if="pagination" v-model="pagination.sort.value" v-model:order="pagination.order.value"
           :sort-options="{
             published_at: { displayName: 'date', defaultOrder: 'desc' },
             title: { displayName: 'title', defaultOrder: 'asc' },
             view_count: { displayName: 'popularity', defaultOrder: 'desc' },
-          }"
-        />
+          }" />
       </div>
 
       <div>
-        <div class="text-(--ui-primary)">Filter by label</div>
+        <div class="text-primary">Filter by label</div>
         <LabelSelect v-model="labels" />
       </div>
     </template>

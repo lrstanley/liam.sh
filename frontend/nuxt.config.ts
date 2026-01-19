@@ -1,10 +1,8 @@
-import tailwindcss from "@tailwindcss/vite"
-
 export default defineNuxtConfig({
   app: {
     layoutTransition: { name: "layout", mode: "out-in" },
   },
-  modules: ["@hey-api/nuxt", "@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui-pro", "@nuxtjs/seo"],
+  modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
   compatibilityDate: "2025-07-15",
   devtools: {
     enabled: false,
@@ -29,7 +27,7 @@ export default defineNuxtConfig({
   icon: {
     fallbackToApi: false,
     serverBundle: "local",
-    clientBundle: { scan: true },
+    clientBundle: { scan: true, sizeLimitKb: 0, includeCustomCollections: true },
   },
   devServer: { port: 8081 },
   experimental: { typedPages: true },
@@ -39,7 +37,7 @@ export default defineNuxtConfig({
       open: false,
       strictPort: true,
     },
-    plugins: [tailwindcss()],
+    plugins: [],
   },
   routeRules: {
     "/security.txt": { redirect: "/-/security.txt" },
@@ -50,21 +48,16 @@ export default defineNuxtConfig({
     exclude: ["/admin/**"],
     sources: ["/api/__sitemap__/urls"],
   },
-  heyApi: {
-    config: {
-      input: {
-        path: "../internal/database/ent/rest/openapi.json",
-      },
-      plugins: [
-        "@hey-api/client-nuxt",
-        "@hey-api/schemas",
-        "@hey-api/sdk",
-        "zod",
-        {
-          name: "@hey-api/typescript",
-          enums: "javascript",
-        },
-      ],
+  openFetch: {
+    disableNitroPlugin: true,
+    disableNuxtPlugin: true,
+    openAPITS: {
+      rootTypes: true,
     },
+    clients: {
+      api: {
+        schema: "../internal/database/ent/rest/openapi.json",
+      }
+    }
   },
 })

@@ -25,5 +25,3 @@ jobs:
       dockerfile: .github/Dockerfile
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      docker-secrets: |
-        "NUXT_UI_PRO_LICENSE=${{ secrets.NUXT_UI_PRO_LICENSE }}"

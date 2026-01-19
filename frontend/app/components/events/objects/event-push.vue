@@ -1,50 +1,26 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const commits = ref<Record<string, any>[]>(props.event.payload.commits as Record<string, any>[])
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["push-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <template v-if="commits.length > 0">
-      <span style="color: #d086ff">pushed</span>
+    <span class="text-purple-400">pushed</span>
 
-      <div v-if="commits.length > 1">
-        <EventHoverItem
-          :href="repo.name + '/compare/' + commits[0].sha + '...' + props.event.payload.head"
-          :value="commits.length + ' commits'"
-          style="max-width: 350px"
-        >
-          <p v-for="commit in commits" :key="commit.sha" class="truncate" :title="commit.message">
-            <UIcon name="mdi:source-commit" />
-            {{ commit.sha.slice(0, 7) }}:
-            {{ commit.message.split("\n")[0] }}
-          </p>
-        </EventHoverItem>
-      </div>
-      <div v-else>
-        <EventHoverItem
-          :href="repo.name + '/commit/' + commits[0].sha"
-          :value="commits[0].sha.slice(0, 7)"
-        >
-          <UIcon name="mdi:source-commit" />
-          {{ commits[0].sha.slice(0, 7) }}:
-          {{ commits[0].message.split("\n")[0] }}
-        </EventHoverItem>
-      </div>
-      to
-      <EventLink :href="repo.name as string" />
-    </template>
-    <template v-else>
-      <span style="color: #d086ff">created</span>
-      <EventLink :href="repo.name as string" />
-    </template>
+    <EventHoverItem :href="props.event.repo.name + '/commit/' + props.event.payload.head"
+      :value="props.event.payload.head.slice(0, 7)">
+      <UIcon name="mdi:source-commit" />
+      {{ props.event.payload.head.slice(0, 7) }}
+    </EventHoverItem>
+    to
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame v-if="commits.length > 0">
-      {{ commits[0].message.split("\n")[0] }}
+    <EventBlame v-if="props.event.payload.ref">
+      {{ props.event.payload.ref }}
     </EventBlame>
   </div>
 </template>

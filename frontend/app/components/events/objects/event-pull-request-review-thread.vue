@@ -1,40 +1,33 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const thread = ref<Record<string, any>>(props.event.payload.thread as any)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["webhook-pull-request-review-thread-resolved"] | Github["schemas"]["webhook-pull-request-review-thread-unresolved"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
     marked a
-    <EventLink
-      :href="thread.html_url"
-      class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
-      value="thread"
-    />
+    <EventLink :href="props.event.payload.pull_request.url" class="text-info-400 hover:text-info-500" value="thread" />
 
     as
 
     <span
-      :class="{ 'text-(--ui-success)': action == 'resolved', 'text-red-400': action == 'unresolved' }"
-    >
-      {{ action }}
+      :class="{ 'text-success': props.event.payload.action == 'resolved', 'text-red-400': props.event.payload.action == 'unresolved' }">
+      {{ props.event.payload.action }}
     </span>
 
     for pr
 
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
-      {{ pr.title }}
+    <EventHoverItem :href="props.event.payload.pull_request.url" :value="'#' + props.event.payload.pull_request.number">
+      {{ props.event.payload.pull_request.title }}
     </EventHoverItem>
 
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ pr.title }}</EventBlame>
+    <EventBlame>{{ props.event.payload.pull_request.title }}</EventBlame>
   </div>
 </template>

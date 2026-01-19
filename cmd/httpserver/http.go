@@ -5,7 +5,6 @@
 package main
 
 import (
-	"embed"
 	"log/slog"
 	"net/http"
 	"time"
@@ -24,9 +23,6 @@ import (
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/providers/github"
 )
-
-//go:embed all:public
-var frontendFS embed.FS
 
 func httpServer(logger *slog.Logger) *http.Server {
 	r := chi.NewRouter()
@@ -63,13 +59,20 @@ func httpServer(logger *slog.Logger) *http.Server {
 		chix.UseStructuredLogger(chix.DefaultLogConfig()),
 		middleware.Compress(5),
 		chix.UseNextURL(),
-		chix.UseCrossOriginProtection("http://localhost:8081", "https://liam.sh", "https://*.liam.sh"),
+		// chix.UseCrossOriginProtection("http://localhost:8081", "http://localhost:8080", "https://liam.sh", "https://*.liam.sh"),
 		chix.UseCrossOriginResourceSharing(&chix.CORSConfig{
-			AllowedOrigins: []string{"http://localhost:8081", "https://liam.sh", "https://*.liam.sh"},
+			// AllowedOrigins: []string{"http://localhost:8081", "http://localhost:8080", "https://liam.sh", "https://*.liam.sh"},
+			AllowOriginFunc: func(r *http.Request, origin string) (headers []string, allowed bool) {
+				logger.Info("origin", "origin", origin)
+				return nil, true
+			},
 			AllowedMethods: []string{
 				http.MethodGet,
 				http.MethodHead,
 				http.MethodPost,
+				http.MethodPut,
+				http.MethodPatch,
+				http.MethodDelete,
 			},
 			AllowedHeaders: []string{
 				"Accept",

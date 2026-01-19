@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { vInfiniteScroll } from "@vueuse/components"
+import type { SchemaGithubEvent } from '#open-fetch-schemas/api'
 
 import {
   EventCreate,
@@ -35,35 +36,30 @@ const eventMap: Record<string, any> = {
   WatchEvent: EventWatch,
 }
 
-const emit = defineEmits<{
-  eventCount: [value: number]
-}>()
-
 const page = ref(1)
 
 const {
   data: githubEvents,
   error,
   status,
-} = await listGithubEvents({
-  composable: "useFetch",
+} = await useApi('/github-events', {
   query: {
     page: page,
     per_page: 50,
     "public.eq": true,
     sort: "created_at",
     order: "desc",
-  },
+  }
 })
 
-const events = ref<GithubEvent[]>([])
+const events = ref<SchemaGithubEvent[]>([])
 
 watch(
   githubEvents,
   (data) => {
     if (status.value != "success" || data?.content == null) return
+    data.content.filter((e) => !eventMap[e.event_type]).forEach((e) => console.warn(`No component for event type: ${e.event_type}`))
     events.value.push(...data.content.filter((e) => !!eventMap[e.event_type]))
-    emit("eventCount", events.value.length)
   },
   { immediate: true }
 )
@@ -86,48 +82,30 @@ function fetchMoreEvents() {
 
 <template>
   <div id="main" ref="scrollContainer" v-infinite-scroll="[fetchMoreEvents, { distance: 100 }]">
-    <motion
-      as="div"
-      :initial="{ opacity: 0 }"
-      :animate="{ opacity: 1 }"
-      :exit="{ opacity: 0 }"
-      :transition="{ delay: ((i % 50) + 1) * 0.015 }"
-      v-for="(e, i) in events"
-      :key="e.id"
-      class="flex flex-row items-center flex-auto px-1 text-sm gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
-    >
+    <motion as="div" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :exit="{ opacity: 0 }"
+      :transition="{ delay: ((i % 50) + 1) * 0.015 }" v-for="(e, i) in events" :key="e.id"
+      class="flex flex-row items-center flex-auto px-1 text-sm gap-x-1 hover:bg-zinc-500/10 text-muted border-b-DEFAULT border-b-gray-100">
       <a :href="'https://github.com/' + e.actor.login" target="_blank">
-        <UAvatar
-          size="3xs"
-          :src="e.actor.avatar_url + '&s=40'"
-          class="mr-1 align-middle"
-          :alt="e.actor.login"
-        />
+        <UAvatar size="3xs" :src="e.actor.avatar_url + '&s=40'" class="mr-1 align-middle" :alt="e.actor.login" />
       </a>
 
       <component :is="eventMap[e.event_type]" :event="e" class="flex items-center gap-2 truncate grow" />
       <div class="flex-none">
         <EventHoverItem placement="left">
           <template #value>
-            <UIcon
-              name="mdi:clock-time-two-outline"
-              class="opacity-[max(0.2,calc(var(--i)/var(--total)))] hover:opacity-100 transition duration-100;"
-            />
+            <UIcon name="mdi:clock-time-two-outline"
+              class="opacity-[max(0.2,calc(var(--i)/var(--total)))] hover:opacity-100 transition duration-100;" />
           </template>
 
           {{ useTimeAgo(e.created_at).value }}
         </EventHoverItem>
       </div>
     </motion>
-    <div
-      v-show="status != 'success' || error"
-      id="status"
-      key="status"
-      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-(--ui-text-muted) border-b-DEFAULT border-b-gray-100"
-    >
+    <div v-show="status != 'success' || error" id="status" key="status"
+      class="flex flex-row items-center flex-auto px-1 text-sm transition duration-75 ease-out gap-x-1 hover:bg-zinc-500/10 text-muted border-b-DEFAULT border-b-gray-100">
       <UIcon name="heroicons:arrow-path-16-solid" class="mr-1 align-middle animate-spin" />
       <div class="flex items-center gap-2 truncate grow">
-        {{ error ? "error loading events: " + error.error : "loading..." }}
+        {{ error ? "error loading events: " + error.message : "loading..." }}
       </div>
     </div>
   </div>

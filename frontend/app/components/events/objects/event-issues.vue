@@ -1,31 +1,30 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const issue = ref<Record<string, any>>(props.event.payload.issue as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["issues-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <div class="text-(--ui-color-info-400)">
-      <span v-if="['opened', 'edited', 'closed', 'reopened'].includes(action)">
-        {{ action }}
+    <div class="text-info-400">
+      <span v-if="['opened', 'edited', 'closed', 'reopened'].includes(props.event.payload.action)">
+        {{ props.event.payload.action }}
       </span>
-      <span v-else-if="['assigned', 'unassigned'].includes(action)">changed assignees on</span>
-      <span v-else-if="['labeled', 'unlabeled'].includes(action)">edited labels on</span>
+      <span v-else-if="['assigned', 'unassigned'].includes(props.event.payload.action)">changed assignees for</span>
+      <span v-else-if="['labeled', 'unlabeled'].includes(props.event.payload.action)">edited labels for</span>
     </div>
 
     issue
-    <EventHoverItem :href="issue.html_url" :value="'#' + issue.number">
-      {{ issue.title }}
+    <EventHoverItem :href="props.event.payload.issue.html_url" :value="'#' + props.event.payload.issue.number">
+      {{ props.event.payload.issue.title }}
     </EventHoverItem>
 
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ issue.title }}</EventBlame>
+    <EventBlame>{{ props.event.payload.issue.title }}</EventBlame>
   </div>
 </template>

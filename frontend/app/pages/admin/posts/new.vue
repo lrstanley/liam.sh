@@ -1,26 +1,31 @@
 <script setup lang="ts">
+import type { SchemaPostCreate } from '#open-fetch-schemas/api'
 definePageMeta({
   title: "New Post",
   layout: "admin",
 })
 
+const { $api } = useNuxtApp()
 const toast = useToast()
 const router = useRouter()
 
 const labelData = ref<number[]>([])
-const createPostData = ref<PostCreate>({ published_at: new Date().toISOString() } as PostCreate)
+const createPostData = ref<SchemaPostCreate>({ published_at: new Date().toISOString(), public: false } as SchemaPostCreate)
 const error = ref<string>()
 const loading = ref(false)
 
 async function invokeCreate() {
   error.value = undefined
 
-  const data: PostCreate = {
+  const data: SchemaPostCreate = {
     ...createPostData.value,
     labels: labelData.value,
   }
 
-  createPost({ composable: "$fetch", body: data })
+  $api('/posts', {
+    method: 'POST',
+    body: data,
+  })
     .then((v) => {
       toast.add({
         title: "Post created successfully",
@@ -34,12 +39,6 @@ async function invokeCreate() {
 </script>
 
 <template>
-  <PostCreateEdit
-    v-model="createPostData"
-    v-model:labels="labelData"
-    :create="true"
-    @save="invokeCreate"
-    :loading="loading"
-    :error="error"
-  />
+  <PostCreateEdit v-model="createPostData" v-model:labels="labelData" :create="true" @save="invokeCreate"
+    :loading="loading" :error="error" />
 </template>

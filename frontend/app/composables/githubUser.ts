@@ -3,5 +3,6 @@
  * this source code is governed by the MIT license that can be found in
  * the LICENSE file.
  */
+import type { SchemaGithubUser } from '#open-fetch-schemas/api'
 
-export const useGithubUser = () => useState<GithubUser | null | undefined>("githubUser", undefined)
+export const useGithubUser = () => useState<SchemaGithubUser | null | undefined>("githubUser", undefined)

@@ -37,13 +37,9 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-  <UDashboardGroup class="bg-(--ui-bg)">
-    <UDashboardSidebar
-      resizable
-      collapsible
-      class="bg-(--ui-bg-elevated)/25 mt-2"
-      :ui="{ footer: 'lg:border-t lg:border-(--ui-border)' }"
-    >
+  <UDashboardGroup class="bg-default">
+    <UDashboardSidebar resizable collapsible class="bg-(--ui-bg-elevated)/25 mt-2"
+      :ui="{ footer: 'lg:border-t lg:border-default' }">
       <template #default="{ collapsed }">
         <div class="flex flex-row gap-2">
           <UButton color="secondary" icon="lucide:arrow-left" variant="link" :square="collapsed" to="/">
@@ -57,35 +53,22 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
       </template>
 
       <template #footer="{ collapsed }">
-        <UDropdownMenu
-          :items="userDropdownItems"
-          :content="{ align: 'center', collisionPadding: 12 }"
-          :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
-        >
-          <UButton
-            v-bind="{
-              avatar: {
-                src: self?.avatar_url,
-                alt: self?.login,
-              },
-              label: collapsed ? undefined : self?.name,
-              trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down',
-            }"
-            color="neutral"
-            variant="ghost"
-            block
-            :square="collapsed"
-            class="data-[state=open]:bg-(--ui-bg-elevated) mb-2"
-            :ui="{
-              trailingIcon: 'text-(--ui-text-dimmed)',
-            }"
-          />
+        <UDropdownMenu :items="userDropdownItems" :content="{ align: 'center', collisionPadding: 12 }"
+          :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }">
+          <UButton v-bind="{
+            avatar: {
+              src: self?.avatar_url,
+              alt: self?.login,
+            },
+            label: collapsed ? undefined : self?.name,
+            trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down',
+          }" color="neutral" variant="ghost" block :square="collapsed" class="data-[state=open]:bg-elevated mb-2" :ui="{
+            trailingIcon: 'text-dimmed',
+          }" />
 
           <template #chip-leading="{ item }">
-            <span
-              :style="{ '--chip': `var(--color-${(item as any).chip}-400)` }"
-              class="ms-0.5 size-2 rounded-full bg-(--chip)"
-            />
+            <span :style="{ '--chip': `var(--color-${(item as any).chip}-400)` }"
+              class="ms-0.5 size-2 rounded-full bg-(--chip)" />
           </template>
         </UDropdownMenu>
       </template>

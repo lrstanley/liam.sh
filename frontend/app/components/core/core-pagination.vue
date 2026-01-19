@@ -1,9 +1,9 @@
 <script setup lang="ts" generic="T">
-import type { PagedResponse } from "#hey-api"
+import type { SchemaPagedResponse } from '#open-fetch-schemas/api'
 
 const props = defineProps<{
   loading?: boolean
-  resp?: PagedResponse | null
+  resp?: SchemaPagedResponse | null
   pagination: ReturnType<typeof usePagination>
 }>()
 
@@ -29,17 +29,8 @@ watch(
 
 <template>
   <motion as="div" layout :initial="{ opacity: 0 }" :animate="{ opacity: 1 }">
-    <UPagination
-      v-model:page="page"
-      :items-per-page="pagination.perPage.value"
-      :sibling-count="1"
-      active-color="primary"
-      active-variant="subtle"
-      :show-controls="false"
-      show-edges
-      :total="total"
-      :disabled="loading"
-      v-bind="$attrs"
-    />
+    <UPagination v-model:page="page" :items-per-page="pagination.perPage.value" :sibling-count="1"
+      active-color="primary" active-variant="subtle" :show-controls="false" show-edges :total="total"
+      :disabled="loading" v-bind="$attrs" />
   </motion>
 </template>

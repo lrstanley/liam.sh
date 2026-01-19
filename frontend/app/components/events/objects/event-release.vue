@@ -1,24 +1,24 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const release = ref<Record<string, any>>(props.event.payload.release as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["release-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <span class="text-(--ui-success)">{{ action }}</span>
+    <span class="text-success">{{ props.event.payload.action }}</span>
 
     release from tag
-    <EventHoverItem :href="release.html_url" :value="release.tag_name" class="truncate">
-      {{ release.name }}
+    <EventHoverItem :href="props.event.payload.release.html_url" :value="props.event.payload.release.tag_name"
+      class="truncate block">
+      {{ props.event.payload.release.name }}
     </EventHoverItem>
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ release.name }}</EventBlame>
+    <EventBlame>{{ props.event.payload.release.name }}</EventBlame>
   </div>
 </template>

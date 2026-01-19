@@ -1,24 +1,23 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const member = ref<Record<string, any>>(props.event.payload.member as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["member-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <span v-if="action == 'edited'">updated collaborator permissions on</span>
+    <span v-if="props.event.payload.action == 'edited'">updated collaborator permissions on</span>
     <span v-else>
-      {{ action }}
+      {{ props.event.payload.action }}
 
-      <EventLink :href="member.html_url" :title="member.login" />
+      <EventLink :href="props.event.payload.member.html_url" :title="props.event.payload.member.login" />
 
       as collaborator on
     </span>
 
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
   </div>
 </template>

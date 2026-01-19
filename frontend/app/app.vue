@@ -1,20 +1,12 @@
 <script setup lang="ts">
-import { client } from "#hey-api/client.gen"
-
-const runtime = useRuntimeConfig()
 const loading = useLoadingIndicator()
+const nuxtApp = useNuxtApp()
 
-client.setConfig({
-  baseURL: runtime.API_URL
-    ? runtime.API_URL.replace(/\/$/, "")
-    : runtime.public.API_URL.replace(/\/$/, ""),
-  credentials: "include",
-  retry: 3,
-  retryDelay: 1000,
-  headers: useRequestHeaders(["cookie"]), // Allows pass-through of cookies from origin browser, to API requests (mainly helpful when in SSR).
-  onRequest: () => loading.start(),
-  onResponse: (ctx) => (ctx.response.status < 300 ? loading.finish() : loading.finish({ error: true })),
+nuxtApp.hook('openFetch:onRequest', (ctx) => {
+  if (loading.isLoading.value) return
+  loading.start({ force: true })
 })
+nuxtApp.hook('openFetch:onResponse', (ctx) => ctx.response.status < 300 ? loading.finish() : loading.finish({ error: true }))
 
 const route = useRoute()
 

@@ -1,48 +1,42 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const review = ref<Record<string, any>>(props.event.payload.review as any)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["pull-request-review-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <div v-if="review.state == 'approved'" class="text-(--ui-success)">approved</div>
-    <div v-else-if="review.state == 'changes_requested'">
+    <div v-if="props.event.payload.review.state == 'approved'" class="text-success">approved</div>
+    <div v-else-if="props.event.payload.review.state == 'changes_requested'">
       <span class="text-red-400">requested changes</span>
       on
     </div>
-    <div v-else-if="review.state == 'commented'">
+    <div v-else-if="props.event.payload.review.state == 'commented'">
       added a
-      <span class="text-(--ui-color-info-400)">review comment</span>
+      <span class="text-info-400">review comment</span>
       to
     </div>
     <div v-else>
-      <span v-if="action == 'created'">added</span>
-      <span v-else-if="action == 'edited'">updated</span>
-      <span v-if="action == 'deleted'">removed</span>
+      <span v-if="props.event.payload.action == 'created'">added</span>
+      <span v-else-if="props.event.payload.action == 'edited'">updated</span>
+      <span v-if="props.event.payload.action == 'deleted'">removed</span>
 
       a
-      <EventLink
-        :href="review.html_url"
-        class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
-        :value="'review ' + review.state"
-      />
+      <EventLink :href="props.event.payload.review.html_url ?? $props.event.payload.pull_request.url"
+        class="text-info-400 hover:text-info-500" :value="'review ' + props.event.payload.review.state" />
       to
     </div>
 
     pr
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
-      {{ pr.title }}
-    </EventHoverItem>
+
+    <EventLink :href="props.event.payload.pull_request.url" :value="'#' + props.event.payload.pull_request.number" />
 
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ pr.title }}</EventBlame>
+    <EventBlame>{{ props.event.payload.pull_request.head.ref }}</EventBlame>
   </div>
 </template>

@@ -8,6 +8,7 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
+	"time"
 
 	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
@@ -15,8 +16,9 @@ import (
 
 func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 	p := []struct {
-		ID      int    `json:"id"`
-		Content string `json:"content"`
+		ID          int       `json:"id"`
+		Content     string    `json:"content"`
+		PublishedAt time.Time `json:"published_at"`
 	}{}
 
 	tx, err := h.db.Tx(r.Context())
@@ -24,7 +26,14 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = tx.Post.Query().Select(post.FieldID, post.FieldContent).Scan(r.Context(), &p); err != nil {
+	err = tx.Post.Query().
+		Select(
+			post.FieldID,
+			post.FieldContent,
+			post.FieldPublishedAt,
+		).
+		Scan(r.Context(), &p)
+	if err != nil {
 		_ = tx.Rollback()
 		chix.Error(w, r, err)
 		return
@@ -35,7 +44,11 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		if err = tx.Post.UpdateOneID(v.ID).SetContent(v.Content).Exec(r.Context()); err != nil {
+		err = tx.Post.UpdateOneID(v.ID).
+			SetContent(v.Content).
+			SetPublishedAt(v.PublishedAt.UTC()).
+			Exec(r.Context())
+		if err != nil {
 			_ = tx.Rollback()
 			chix.Error(w, r, err)
 			return

@@ -26,41 +26,41 @@ ul :deep(a) {
   display: inline-flex;
   padding-left: 5ch;
   padding-right: 4ch;
-  @apply py-3 !text-(--ui-color-secondary-400) transition duration-100 text-sm;
+  @apply py-2 md:py-3 !text-secondary-400 transition duration-100 text-sm;
 }
 
 ul :deep(a):not(.active):hover {
   padding-right: 4ch;
-  @apply !text-(--ui-color-secondary-500);
+  @apply !text-secondary-500;
 }
 
 ul :deep(a.active) {
   padding-right: 7ch;
-  @apply !text-(--ui-color-secondary-500);
+  @apply !text-secondary-500;
 }
 
 ul :deep(a)::before {
   content: "func";
-  @apply absolute left-0 text-(--ui-color-error-400);
+  @apply absolute left-0 text-error-400;
 }
 
 ul :deep(a):not(.active)::after {
   content: "()";
-  @apply absolute right-[2ch] text-(--ui-color-warning-300) transition duration-100;
+  @apply absolute right-[2ch] text-warning-300 transition duration-100;
 }
 
 ul :deep(a):not(.active):hover::after {
   content: "(go)";
-  @apply absolute right-0 text-(--ui-text-muted);
+  @apply absolute right-0 text-muted;
 }
 
 ul :deep(a.active)::after {
   content: "(ctx)";
-  @apply absolute right-[2ch] text-(--ui-color-error-300) transition duration-100;
+  @apply absolute right-[2ch] text-error-300 transition duration-100;
 }
 
 ul :deep(a.active):hover::after {
   content: "(ctx)";
-  @apply absolute text-(--ui-color-error-400);
+  @apply absolute text-error-400;
 }
 </style>

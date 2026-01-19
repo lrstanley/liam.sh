@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UPopover } from "#components"
+import type { ComponentProps } from "vue-component-type-helpers"
 
 const {
   value = "",
@@ -8,7 +9,7 @@ const {
 } = defineProps<{
   value?: string
   href?: string
-  placement?: Exclude<InstanceType<typeof UPopover>["$props"]["content"], undefined>["side"]
+  placement?: Exclude<ComponentProps<typeof UPopover>["content"], undefined>["side"]
 }>()
 
 const open = ref(false)
@@ -23,25 +24,19 @@ watch(isScrolling, () => open.value && (open.value = false))
 </script>
 
 <template>
-  <UPopover
-    v-model:open="open"
-    mode="hover"
-    :open-delay="100"
-    :close-delay="0"
-    :content="{ side: placement }"
-    :ui="{ content: 'px-1' }"
-  >
-    <div ref="target" v-bind="$attrs">
-      <div v-if="href?.length > 0" class="align-middle">
+  <UPopover v-model:open="open" mode="hover" :open-delay="100" :close-delay="0" :content="{ side: placement }"
+    :ui="{ content: 'px-1' }">
+    <div ref="target">
+      <span v-if="href?.length > 0" class="align-middle" v-bind="$attrs">
         <EventLink :href="href">
           <slot name="icon" />
           <slot name="value">{{ value }}</slot>
         </EventLink>
-      </div>
-      <div v-else class="align-middle max-w-[24ch]">
+      </span>
+      <span v-else class="align-middle max-w-[24ch]" v-bind="$attrs">
         <slot name="icon" />
         <slot name="value">{{ value }}</slot>
-      </div>
+      </span>
     </div>
 
     <template #content>

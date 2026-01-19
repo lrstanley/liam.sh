@@ -1,47 +1,45 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["pull-request-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <span v-if="action == 'closed' && pr.merged" class="text-(--ui-color-secondary-400)">merged</span>
-    <span v-else-if="['opened', 'edited', 'closed', 'reopened'].includes(action)">
-      {{ action }}
-    </span>
-    <span v-else-if="action == 'synchronize'">updated</span>
-    <span v-else-if="['assigned', 'unassigned'].includes(action)">changed assignees on</span>
-    <span v-else-if="['review_requested', 'review_request_removed'].includes(action)">
-      requested review on
-    </span>
-    <span v-else-if="['labeled', 'unlabeled'].includes(action)">edited labels on</span>
+    <div class="text-fuchsia-400">
+      <span v-if="['opened', 'edited', 'closed', 'reopened'].includes(props.event.payload.action)">
+        {{ props.event.payload.action }}
+      </span>
+      <span v-else-if="props.event.payload.action == 'synchronize'">updated</span>
+      <span v-else-if="['assigned', 'unassigned'].includes(props.event.payload.action)">changed assignees for</span>
+      <span v-else-if="['review_requested', 'review_request_removed'].includes(props.event.payload.action)">
+        requested review for
+      </span>
+      <span v-else-if="['labeled', 'unlabeled'].includes(props.event.payload.action)">edited labels for</span>
+    </div>
 
     pr
 
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
-      {{ pr.title }}
-    </EventHoverItem>
+    <EventLink :href="props.event.payload.pull_request.url" :value="'#' + props.event.payload.pull_request.number" />
 
-    <template v-if="['opened', 'edited', 'closed'].includes(action)">
+    <template v-if="['opened', 'edited', 'closed'].includes(props.event.payload.action)">
       via
 
-      <EventHoverItem :value="pr.head.ref" class="truncate text-(--ui-text-toned)">
+      <EventHoverItem :value="props.event.payload.pull_request.head.ref" class="truncate text-default block">
         <template #icon>
           <UIcon name="mdi:source-pull" />
         </template>
 
-        {{ pr.head.ref }}
+        {{ props.event.payload.pull_request.head.ref }}
       </EventHoverItem>
     </template>
 
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ pr.title }}</EventBlame>
+    <EventBlame>{{ props.event.payload.pull_request.head.ref }}</EventBlame>
   </div>
 </template>

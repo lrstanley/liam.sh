@@ -1,21 +1,25 @@
 <script setup lang="ts">
+import type { SchemaPostRead, SchemaPostUpdate } from '#open-fetch-schemas/api'
+
 definePageMeta({
   title: "Edit Post",
   layout: "admin",
+  validate: async (route) => {
+    return typeof route.params.id === 'string' && /^\d+$/.test(route.params.id)
+  }
 })
 
+const { $api } = useNuxtApp()
 const toast = useToast()
-
-const postID = +useRoute("admin-posts-id-edit").params.id
+const postID = +(useRoute("admin-posts-id-edit").params.id as string)
 const labelData = ref<number[]>([])
-const post = ref<PostRead>()
+const post = ref<SchemaPostRead>()
 const error = ref<string>()
 const loading = ref(false)
 
-// TODO: can this use useFetch without breaking everything?
 async function fetchPost() {
   loading.value = true
-  getPost({ composable: "$fetch", path: { postID: postID } })
+  $api('/posts/{postID}', { path: { postID: postID } })
     .then((data) => {
       post.value = data
       labelData.value = data.edges.labels?.map((label) => label.id) ?? []
@@ -27,17 +31,17 @@ async function fetchPost() {
 async function invokeUpdate() {
   error.value = undefined
 
-  const data: PostUpdate = {
+  const data: SchemaPostUpdate = {
     slug: post.value?.slug,
     title: post.value?.title,
     content: post.value?.content,
     published_at: post.value?.published_at,
-    public: post.value?.public,
+    public: post.value?.public ?? false,
     labels: labelData.value,
   }
 
   loading.value = true
-  updatePost({ composable: "$fetch", path: { postID: postID }, body: data })
+  $api('/posts/{postID}', { method: 'PATCH', path: { postID: postID }, body: data })
     .then(() => {
       toast.add({
         title: "Post updated successfully",
@@ -53,13 +57,6 @@ await fetchPost()
 </script>
 
 <template>
-  <PostCreateEdit
-    v-if="post"
-    v-model="post"
-    v-model:labels="labelData"
-    :create="false"
-    @save="invokeUpdate"
-    :loading="loading"
-    :error="error"
-  />
+  <PostCreateEdit v-if="post" v-model="post" v-model:labels="labelData" :create="false" @save="invokeUpdate"
+    :loading="loading" :error="error" />
 </template>

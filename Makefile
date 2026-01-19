@@ -5,7 +5,7 @@ export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
 export DOCKER_BUILDKIT := 1
 export KUBERNETES_NAMESPACE := "liam-sh"
 export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
-export NODE_OPTIONS := "--max-old-space-size=4096"
+export NODE_OPTIONS := "--max-old-space-size=3900"
 
 license:
 	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
@@ -41,19 +41,16 @@ docker-build:
 	docker build \
 		--pull \
 		--tag ${PROJECT} \
-		--secret id=NUXT_UI_PRO_LICENSE \
 		--file .github/Dockerfile \
 		--force-rm .
-
-# TODO: TEMPORARY
-node-clean:
-	rm -rf frontend/node_modules frontend/.nuxt frontend/.output
-	cd frontend/ && pnpm store prune && pnpm i
 
 # frontend
 node-fetch:
 	command -v pnpm >/dev/null >&2 || corepack enable
 	cd frontend/ && pnpm install
+	if [ ! -f frontend/app/components/events/objects/events.ts ]; then \
+		pnpm dlx openapi-typescript -o frontend/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
+	fi
 
 node-upgrade-deps:
 	cd frontend/ && pnpm up -iL

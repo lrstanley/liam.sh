@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { ConfirmModal, UBadge } from "#components"
 import type { TableColumn } from "#ui/types"
+import type { SchemaPostSortableFields, SchemaPostRead } from '#open-fetch-schemas/api'
 
 definePageMeta({
   title: "Posts",
   layout: "admin",
 })
 
+const { $api } = useNuxtApp()
+
 const toast = useToast()
 
 const search = useRouteQuery<string>("q", "")
 const debounceSearch = refDebounced<string>(search, 300)
-const pagination = usePagination<PostSortableFields>({
+const pagination = usePagination<SchemaPostSortableFields>({
   sort: "published_at",
   resetChanged: [debounceSearch],
 })
@@ -21,8 +24,7 @@ const {
   error,
   status,
   refresh: refreshPosts,
-} = await listPosts({
-  composable: "useFetch",
+} = await useApi('/posts', {
   query: computed(() => ({
     page: pagination.page.value,
     per_page: pagination.perPage.value,
@@ -37,7 +39,7 @@ const regenerating = ref(false)
 
 async function triggerRegenerate() {
   regenerating.value = true
-  regeneratePosts({ composable: "$fetch" })
+  $api('/posts/regenerate', { method: 'POST' })
     .then(() => {
       toast.add({
         title: "Regenerated posts",
@@ -59,7 +61,7 @@ async function triggerRegenerate() {
     })
 }
 
-const columns: TableColumn<PostRead>[] = [
+const columns: TableColumn<SchemaPostRead>[] = [
   { id: "title", header: "Title" },
   { header: "Slug", accessorKey: "slug" },
   { id: "labels", header: "Labels" },
@@ -74,25 +76,23 @@ const columns: TableColumn<PostRead>[] = [
 ]
 
 const overlay = useOverlay()
-const postToDelete = ref<PostRead | null>(null)
+const postToDelete = ref<SchemaPostRead | null>(null)
 const deleteLoading = ref(false)
 const modalDelete = overlay.create(ConfirmModal)
 
-async function promptDeletePost(post: PostRead) {
+async function promptDeletePost(post: SchemaPostRead) {
   deleteLoading.value = true
   postToDelete.value = post
-  modalDelete.patch({
+  const result = await modalDelete.open({
     title: `Delete Post #${post.id}?`,
     description: `Are you sure you want to delete "${post.title}"?`,
     confirmText: "Delete",
     color: "error",
   })
-  const result = await modalDelete.open()
-
   if (!result) return
 
-  await deletePost({
-    composable: "$fetch",
+  await $api('/posts/{postID}', {
+    method: 'DELETE',
     path: {
       postID: post.id,
     },
@@ -113,101 +113,52 @@ async function promptDeletePost(post: PostRead) {
 <template>
   <div class="flex flex-col">
     <div class="flex flex-col lg:flex-row flex-auto gap-2 mt-1 mb-4">
-      <UInput
-        v-model="search"
-        :loading="status == 'pending'"
-        type="search"
-        placeholder="Search for a post"
-        icon="mdi:search"
-        class="min-w-full lg:min-w-36"
-      >
+      <UInput v-model="search" :loading="status == 'pending'" type="search" placeholder="Search for a post"
+        icon="mdi:search" class="min-w-full lg:min-w-36">
         <template v-if="search.length" #trailing>
-          <UButton
-            color="neutral"
-            variant="link"
-            size="sm"
-            icon="lucide:circle-x"
-            aria-label="Clear input"
-            @click="search = ''"
-          />
+          <UButton color="neutral" variant="link" size="sm" icon="lucide:circle-x" aria-label="Clear input"
+            @click="search = ''" />
         </template>
       </UInput>
 
       <div class="lg:ml-auto"></div>
 
-      <UButton
-        color="success"
-        variant="subtle"
-        size="sm"
-        icon="mdi:plus-circle"
-        :to="{ name: 'admin-posts-new' }"
-      >
+      <UButton color="success" variant="subtle" size="sm" icon="mdi:plus-circle" :to="{ name: 'admin-posts-new' }">
         New Post
       </UButton>
 
-      <UButton
-        color="warning"
-        variant="subtle"
-        size="sm"
-        @click="triggerRegenerate()"
-        icon="mdi:reload"
-        :loading="regenerating"
-        class="cursor-pointer"
-      >
+      <UButton color="warning" variant="subtle" size="sm" @click="triggerRegenerate()" icon="mdi:reload"
+        :loading="regenerating" class="cursor-pointer">
         Regenerate posts
       </UButton>
 
       <CorePagination :loading="status === 'pending'" :resp="posts" :pagination="pagination" />
     </div>
     <UCard variant="subtle">
-      <UTable
-        v-if="posts"
-        :data="posts.content"
-        :columns="columns"
-        :loading="status === 'pending'"
-        loading-color="primary"
-        loading-animation="carousel"
-        class="shrink-0"
-        :ui="{ td: 'p-2' }"
-      >
+      <UTable v-if="posts" :data="posts.content" :columns="columns" :loading="status === 'pending'"
+        loading-color="primary" loading-animation="carousel" class="shrink-0" :ui="{ td: 'p-2' }">
         <template #title-cell="{ row }">
           <NuxtLink :to="{ name: 'p-slug', params: { slug: row.original.slug } }">
             <span>{{ row.original.title }}</span>
-            <UBadge
-              variant="outline"
-              :color="row.original.public ? 'success' : 'warning'"
-              size="sm"
-              class="ml-2 text-xs"
-            >
+            <UBadge variant="outline" :color="row.original.public ? 'success' : 'warning'" size="sm"
+              class="ml-2 text-xs">
               {{ row.original.public ? "public" : "draft" }}
             </UBadge>
           </NuxtLink>
         </template>
 
         <template #labels-cell="{ row }">
-          <UPopover
-            v-if="row.original.edges.labels"
-            mode="hover"
-            scrollable
-            placement="left"
-            :content="{
-              align: 'end',
-              side: 'left',
-              sideOffset: 8,
-            }"
-          >
+          <UPopover v-if="row.original.edges.labels" mode="hover" scrollable placement="left" :content="{
+            align: 'end',
+            side: 'left',
+            sideOffset: 8,
+          }">
             <UButton size="xs" variant="subtle">{{ row.original.edges.labels.length }} labels</UButton>
 
             <template #content>
               <div class="flex flex-wrap flex-auto gap-1 p-1 max-w-40">
-                <LabelObject
-                  v-for="label in row.original.edges.labels"
-                  :key="label.id"
-                  :value="label"
-                  route="/posts"
-                  linkable
-                  class="hidden md:flex"
-                />
+                <LabelObject v-for="label in row.original.edges.labels" :key="label.id" :value="label" route="/posts"
+                  linkable class="hidden md:flex" />
               </div>
             </template>
           </UPopover>
@@ -222,22 +173,11 @@ async function promptDeletePost(post: PostRead) {
 
         <template #actions-cell="{ row }">
           <div class="flex flex-row gap-2">
-            <UButton
-              size="xs"
-              variant="subtle"
-              color="warning"
-              icon="mdi:pencil"
-              :to="{ name: 'admin-posts-id-edit', params: { id: row.original.id } }"
-            >
+            <UButton size="xs" variant="subtle" color="warning" icon="mdi:pencil"
+              :to="{ name: 'admin-posts-id-edit', params: { id: row.original.id } }">
               Edit
             </UButton>
-            <UButton
-              size="xs"
-              variant="subtle"
-              color="error"
-              icon="mdi:delete"
-              @click="promptDeletePost(row.original)"
-            >
+            <UButton size="xs" variant="subtle" color="error" icon="mdi:delete" @click="promptDeletePost(row.original)">
               Delete
             </UButton>
           </div>

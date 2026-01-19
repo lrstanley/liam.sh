@@ -23,7 +23,6 @@ COPY . /build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store make node-prepare
 RUN \
 	--mount=type=cache,id=pnpm,target=/pnpm/store \
-	--mount=type=secret,id=NUXT_UI_PRO_LICENSE,env=NUXT_UI_PRO_LICENSE \
 	make node-build
 
 # runtime

@@ -1,55 +1,45 @@
 <script setup lang="ts">
-const value = defineModel<null | boolean>()
-const valueString = defineModel<string | undefined>("stringValue") // string version of the value depending on usecase.
-
-const { intermediary = true } = defineProps<{
+const valueString = defineModel<string>({ required: true })
+const props = defineProps<{
   intermediary?: boolean
 }>()
 
-// keep them both in sync. if one is update, update the other, but make sure not to trigger an update
-// if the value is already exactly the same, otherwise infinite loops.
-watch(
-  value,
-  (v) => {
-    const newValue = v === null ? undefined : v ? "true" : "false"
-
-    if (valueString.value !== newValue) {
-      valueString.value = newValue
+const result = computed(() => {
+  if (valueString.value === "true") {
+    return true
+  } else if (valueString.value === "false") {
+    return false
+  } else if (valueString.value === "") {
+    if (props.intermediary) {
+      return null
+    } else {
+      return true
     }
-  },
-  { immediate: true }
-)
+  }
+  return null
+})
 
-watch(
-  valueString,
-  (v) => {
-    let newValue: null | boolean = null
-    if (v === "true") {
-      newValue = true
-    } else if (v === "false") {
-      newValue = false
+function click() {
+  if (result.value === null) {
+    valueString.value = "true"
+  } else if (result.value === true) {
+    valueString.value = "false"
+  } else if (result.value === false) {
+    if (props.intermediary) {
+      valueString.value = ""
+    } else {
+      valueString.value = "true"
     }
-
-    if (value.value !== newValue) {
-      value.value = newValue
-    }
-  },
-  { immediate: true }
-)
+  } else {
+    valueString.value = props.intermediary ? "" : "true"
+  }
+}
 </script>
 
 <template>
-  <UButton
-    default-value="indeterminate"
-    @click="value = value === null ? true : value === true ? false : intermediary ? null : true"
-    :icon="
-      value === null ? 'lucide:square-minus' : value === true ? 'lucide:square-check' : 'lucide:square'
-    "
-    :color="value === true ? 'primary' : value === false ? 'error' : 'neutral'"
-    variant="subtle"
-    class="cursor-pointer"
-    v-bind="$attrs"
-  >
+  <UButton default-value="indeterminate" @click="click()" :icon="result === null ? 'lucide:square-minus' : result === true ? 'lucide:square-check' : 'lucide:square'
+    " :color="result === true ? 'primary' : result === false ? 'error' : 'neutral'" variant="subtle"
+    class="cursor-pointer" v-bind="$attrs">
     <slot />
   </UButton>
 </template>

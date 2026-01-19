@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { NuxtLink } from "#components"
+import type { SchemaLabel } from '#open-fetch-schemas/api'
 import type { RouteNamedMap } from "vue-router/auto-routes"
 
 const {
@@ -9,7 +10,7 @@ const {
   query = "label",
 } = defineProps<{
   linkable?: boolean
-  value: Label
+  value: SchemaLabel
   route?: RouteNamedMap[keyof RouteNamedMap]["path"]
   query?: string
 }>()
@@ -18,13 +19,8 @@ const { width } = useWindowSize()
 
 <template>
   <component :is="linkable ? NuxtLink : 'span'" :to="{ path: route, query: { [query]: label.name } }">
-    <UButton
-      color="neutral"
-      variant="outline"
-      :size="width <= 640 ? 'md' : 'xs'"
-      v-bind="$attrs"
-      class="cursor-pointer"
-    >
+    <UButton color="neutral" variant="outline" :size="width <= 640 ? 'md' : 'xs'" v-bind="$attrs"
+      class="cursor-pointer">
       {{ label.name }}
     </UButton>
   </component>

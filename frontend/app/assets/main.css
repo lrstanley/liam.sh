@@ -5,7 +5,7 @@
  */
 
 @import "tailwindcss";
-@import "@nuxt/ui-pro";
+@import "@nuxt/ui";
 
 :root {
   --ui-radius: var(--radius-xs);
@@ -13,20 +13,20 @@
   scrollbar-gutter: stable;
   scrollbar-color: var(--ui-primary) var(--ui-bg) !important;
   *::-webkit-scrollbar-thumb {
-    @apply rounded-md bg-(--ui-primary);
+    @apply rounded-md bg-primary;
   }
   *::-webkit-scrollbar-thumb:hover {
-    @apply rounded-md bg-(--ui-color-primary-700);
+    @apply rounded-md bg-primary-700;
   }
   *::-webkit-scrollbar-thumb:window-inactive {
-    @apply bg-(--ui-bg-muted);
+    @apply bg-muted;
   }
 }
 
 html,
 body,
 #__nuxt {
-  @apply block w-full h-full text-(--ui-text) antialiased;
+  @apply block w-full h-full text-default antialiased;
   background-color: #101014;
   font-family: Consolas, monaco, monospace;
 }
@@ -37,11 +37,11 @@ body,
 */
 @layer base {
   a {
-    @apply text-(--ui-primary) hover:text-(--ui-color-primary-600);
+    @apply text-primary hover:text-primary-600;
   }
 
   .text-gradient {
-    @apply font-bold text-transparent bg-gradient-to-tr bg-clip-text from-10% via-50% to-90%;
+    @apply font-bold text-transparent bg-linear-to-tr bg-clip-text from-10% via-50% to-90%;
   }
 
   .fade-enter-active,

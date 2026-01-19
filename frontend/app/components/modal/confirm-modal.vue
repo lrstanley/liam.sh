@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { UButton } from "#components"
+import type { ComponentProps } from "vue-component-type-helpers"
 
 const {
   title,
@@ -10,7 +11,7 @@ const {
   title: string
   description: string
   confirmText: string
-  color: InstanceType<typeof UButton>["$props"]["color"]
+  color: ComponentProps<typeof UButton>["color"]
 }>()
 
 const emit = defineEmits<{ close: [boolean] }>()

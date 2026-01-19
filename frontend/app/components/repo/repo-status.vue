@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { SchemaGithubRepositoryRead } from '#open-fetch-schemas/api'
+
 const { value: repo } = defineProps<{
-  value: GithubRepositoryRead
+  value: SchemaGithubRepositoryRead
 }>()
 
 const gh = useGithubUser()

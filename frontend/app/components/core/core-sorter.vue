@@ -23,16 +23,9 @@ function toggle(id: string) {
 
 <template>
   <div class="inline-flex flex-wrap gap-1">
-    <UButton
-      v-for="(config, id) in sortOptions"
-      :key="id"
-      :color="field == id ? 'primary' : 'neutral'"
-      variant="outline"
-      :icon="field == id ? (order == 'asc' ? 'mdi:arrow-up' : 'mdi:arrow-down') : undefined"
-      size="sm"
-      @click="toggle(id)"
-      class="cursor-pointer"
-    >
+    <UButton v-for="(config, id) in sortOptions" :key="id" :color="field == id ? 'primary' : 'neutral'"
+      variant="outline" :icon="field == id ? (order == 'asc' ? 'mdi:arrow-up' : 'mdi:arrow-down') : undefined" size="sm"
+      @click="toggle(id)" class="cursor-pointer">
       {{ config.displayName || id }}
     </UButton>
   </div>

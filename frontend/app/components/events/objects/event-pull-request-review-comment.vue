@@ -1,35 +1,28 @@
 <script setup lang="ts">
-const props = defineProps<{
-  event: GithubEvent
-}>()
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
 
-const repo = ref(props.event.repo)
-const action = ref<string>(props.event.payload.action as string)
-const comment = ref<Record<string, any>>(props.event.payload.comment as any)
-const pr = ref<Record<string, any>>(props.event.payload.pull_request as any)
+const props = defineProps<{
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["pull-request-review-comment-event"], repo: Github["schemas"]["event"]["repo"] }
+}>()
 </script>
 
 <template>
   <div>
-    <span v-if="action == 'created'">added</span>
-    <span v-else-if="action == 'edited'">updated</span>
-    <span v-if="action == 'deleted'">removed</span>
+    <span v-if="props.event.payload.action == 'created'">added</span>
+    <span v-else-if="props.event.payload.action == 'edited'">updated</span>
+    <span v-if="props.event.payload.action == 'deleted'">removed</span>
 
     a
-    <EventLink
-      :href="comment.html_url"
-      class="text-(--ui-color-info-400) hover:text-(--ui-color-info-500)"
-      value="review comment"
-    />
+    <EventLink :href="props.event.payload.comment.html_url" class="text-info-400 hover:text-info-500"
+      value="review comment" />
     to pr
-
-    <EventHoverItem :href="pr.html_url" :value="'#' + pr.number">
-      {{ pr.title }}
-    </EventHoverItem>
-
+    <EventLink :href="props.event.payload.pull_request.url" :value="'#' + props.event.payload.pull_request.number" />
     on
-    <EventLink :href="repo.name as string" />
+    <EventLink :href="props.event.repo.name" />
 
-    <EventBlame>{{ pr.title }}</EventBlame>
+    <EventBlame>
+      {{ props.event.payload.pull_request.head.ref }}
+    </EventBlame>
   </div>
 </template>

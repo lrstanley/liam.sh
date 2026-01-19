@@ -54,12 +54,8 @@ const elements = computed(() => generate(props.links, 0))
 
 <template>
   <div v-show="links.length" v-bind="$attrs" class="text-sm">
-    <motion
-      as="div"
-      :initial="{ opacity: 0, x: 20 }"
-      :animate="{ opacity: 1, x: 0 }"
-      class="mb-1 font-bold text-(--ui-primary)"
-    >
+    <motion as="div" :initial="{ opacity: 0, x: 20 }" :animate="{ opacity: 1, x: 0 }"
+      class="mb-1 font-bold text-primary">
       Table of Contents
     </motion>
 

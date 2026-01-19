@@ -1,14 +1,17 @@
 <script setup lang="ts">
+import type { SchemaGithubEvent } from "#open-fetch-schemas/api";
+import type { components as Github } from "./events"
+
 const props = defineProps<{
-  event: GithubEvent
+  event: Exclude<SchemaGithubEvent, "payload" | "repo"> & { payload: Github["schemas"]["create-event"], repo: Github["schemas"]["event"]["repo"] }
 }>()
 </script>
 
 <template>
   <div>
-    <span class="text-(--ui-success)">created</span>
+    <span class="text-success">created</span>
     <template v-if="props.event.payload.ref">
-      <EventHoverItem :value="props.event.payload.ref as string" class="truncate text-(--ui-text)">
+      <EventHoverItem :value="props.event.payload.ref" class="truncate text-default block">
         <template #icon>
           <UIcon name="mdi:source-branch" v-if="props.event.payload.ref_type == 'branch'" />
           <UIcon name="mdi:tag" v-else />
@@ -18,6 +21,9 @@ const props = defineProps<{
       </EventHoverItem>
       on
     </template>
-    <EventLink :href="props.event.repo.name as string" />
+    <template v-else>
+      <span>repository</span>
+    </template>
+    <EventLink :href="props.event.repo.name" />
   </div>
 </template>

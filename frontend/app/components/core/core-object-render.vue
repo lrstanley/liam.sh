@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { RepoObject, PostObject } from "#components"
+import type { SchemaPostRead, SchemaGithubRepositoryRead } from '#open-fetch-schemas/api'
 
 type MaybeArray<T> = T | T[]
-type Value = PostRead | GithubRepositoryRead
+type Value = SchemaPostRead | SchemaGithubRepositoryRead
 
 // TODO: use {} | {} syntax, but this isn't working here for some reason.
 const props = defineProps<{
@@ -38,9 +39,9 @@ type MappedObject = {
 function typeMapper(o: Value): MappedObject {
   switch (props.type) {
     case "post":
-      return { component: h(PostObject, { value: o as PostRead }), object: o }
+      return { component: h(PostObject, { value: o as SchemaPostRead }), object: o }
     case "repo":
-      return { component: h(RepoObject, { value: o as GithubRepositoryRead }), object: o }
+      return { component: h(RepoObject, { value: o as SchemaGithubRepositoryRead }), object: o }
     default:
       throw new Error("unknown type")
   }
@@ -49,13 +50,8 @@ function typeMapper(o: Value): MappedObject {
 
 <template>
   <AnimatePresence>
-    <motion
-      as="div"
-      :initial="{ opacity: 0 }"
-      :animate="{ opacity: 1 }"
-      v-show="loading"
-      class="flex flex-row gap-4 mt-8"
-    >
+    <motion as="div" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" v-if="loading"
+      class="flex flex-row gap-4 mt-8">
       <!-- avatar -->
       <USkeleton class="rounded-full size-8" />
 
@@ -94,25 +90,17 @@ function typeMapper(o: Value): MappedObject {
         </div>
       </div>
     </motion>
-    <div
-      v-show="!loading && showEmpty && objects.length < 1"
-      class="flex flex-col items-center gap-4 mx-auto mb-4"
-    >
-      <UIcon name="mdi:folder-remove-outline" class="text-5xl text-(--ui-primary)" />
-      <span class="text-(--ui-text-muted)">No results found matching filters</span>
+    <div v-if="!loading && showEmpty && objects.length < 1" class="flex flex-col items-center gap-4 mx-auto mb-4">
+      <UIcon name="mdi:folder-remove-outline" class="text-5xl text-primary" />
+      <span class="text-muted">No results found matching filters</span>
     </div>
-    <div v-show="!loading && objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">
-      <motion
-        as="div"
-        :initial="{ opacity: 0, x: -10 }"
-        :animate="{ opacity: 1, x: 0 }"
-        :exit="{ opacity: 0 }"
-        :transition="{ delay: (i + 1) * 0.05 }"
-        v-for="(object, i) in objects"
-        :key="object.object.id"
-      >
-        <component :is="object.component" v-bind="$attrs" />
-      </motion>
+    <div v-if="!loading && objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">
+      <AnimatePresence>
+        <motion as="div" :initial="{ opacity: 0, x: -10 }" :animate="{ opacity: 1, x: 0 }" :exit="{ opacity: 0 }"
+          :transition="{ delay: (i + 1) * 0.05 }" v-for="(object, i) in objects" :key="object.object.id">
+          <component :is="object.component" v-bind="$attrs" />
+        </motion>
+      </AnimatePresence>
     </div>
   </AnimatePresence>
 </template>
