@@ -192,6 +192,12 @@
                         },
                         "type": "array"
                     },
+                    "summary": {
+                        "items": {
+                            "$ref": "#/components/schemas/CodingStatsSummary"
+                        },
+                        "type": "array"
+                    },
                     "total_duration": {
                         "example": "95 hrs 19 mins",
                         "type": "string"
@@ -208,10 +214,49 @@
                 "required": [
                     "calculated_days",
                     "languages",
+                    "summary",
                     "total_duration",
                     "total_duration_short",
                     "total_seconds"
                 ]
+            },
+            "CodingStatsSummary": {
+                "properties": {
+                    "hex_color": {
+                        "example": "#ff0000",
+                        "type": "string"
+                    },
+                    "key": {
+                        "example": "Go",
+                        "type": "string"
+                    },
+                    "percentage": {
+                        "maximum": 100,
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "title_length": {
+                        "minimum": 0,
+                        "type": "integer"
+                    },
+                    "total_duration": {
+                        "example": "95 hrs 19 mins",
+                        "type": "string"
+                    },
+                    "total_seconds": {
+                        "minimum": 0,
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "hex_color",
+                    "key",
+                    "percentage",
+                    "total_duration",
+                    "total_seconds",
+                    "title_length"
+                ],
+                "type": "object"
             },
             "GithubStats": {
                 "properties": {
@@ -408,6 +453,31 @@
                     "repository",
                     "release"
                 ]
+            },
+            "SuggestedLabel": {
+                "description": "A suggested label for a post.",
+                "properties": {
+                    "existing_id": {
+                        "description": "The existing label ID if it already exists.",
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "name": {
+                        "description": "The name of the label.",
+                        "type": "string",
+                        "example": "github-action"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "SuggestedLabelList": {
+                "description": "A list of suggested labels for a post.",
+                "items": {
+                    "$ref": "#/components/schemas/SuggestedLabel"
+                },
+                "type": "array"
             },
             "VersionInfo": {
                 "properties": {
@@ -709,7 +779,47 @@
                         "description": "Posts were regenerated."
                     }
                 },
-                "summary": "Regenerate posts.",
+                "summary": "Regenerate posts",
+                "tags": [
+                    "Posts"
+                ]
+            }
+        },
+        "/posts/suggest-labels": {
+            "post": {
+                "description": "Suggest labels for a post.",
+                "operationId": "suggestLabels",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "description": "The markdown text content which is used as the basis for the label suggestions.",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuggestedLabelList"
+                                }
+                            }
+                        },
+                        "description": "Suggested labels were found."
+                    }
+                },
+                "summary": "Suggest labels for a post",
                 "tags": [
                     "Posts"
                 ]

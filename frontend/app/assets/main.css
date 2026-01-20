@@ -1,0 +1,66 @@
+/**
+ * Copyright (c) Liam Stanley <liam@liam.sh>. All rights reserved. Use of
+ * this source code is governed by the MIT license that can be found in
+ * the LICENSE file.
+ */
+
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+:root {
+  --ui-radius: var(--radius-xs);
+
+  scrollbar-gutter: stable;
+  scrollbar-color: var(--ui-primary) var(--ui-bg) !important;
+  *::-webkit-scrollbar-thumb {
+    @apply rounded-md bg-primary;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    @apply rounded-md bg-primary-700;
+  }
+  *::-webkit-scrollbar-thumb:window-inactive {
+    @apply bg-muted;
+  }
+}
+
+html,
+body,
+#__nuxt {
+  @apply block w-full h-full text-default antialiased;
+  background-color: #101014;
+  font-family: Consolas, monaco, monospace;
+}
+
+/*
+  wrapping in @layer so it's lower in priority than the scoped stuff in individual components...
+  https://github.com/tailwindlabs/tailwindcss/issues/15850
+*/
+@layer base {
+  a {
+    @apply text-primary hover:text-primary-600;
+  }
+
+  .text-gradient {
+    @apply font-bold text-transparent bg-linear-to-tr bg-clip-text from-10% via-50% to-90%;
+  }
+
+  .fade-enter-active,
+  .fade-leave-active {
+    @apply transition-opacity duration-200 transform;
+  }
+
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .layout-enter-active,
+  .layout-leave-active {
+    transition: all 0.2s;
+  }
+  .layout-enter-from,
+  .layout-leave-to {
+    opacity: 0;
+    filter: blur(0.2rem);
+  }
+}

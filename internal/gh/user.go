@@ -6,22 +6,25 @@ package gh
 
 import (
 	"context"
+	"log/slog"
 	"sync/atomic"
 
-	"github.com/apex/log"
 	"github.com/google/go-github/v63/github"
 )
 
+// User is a cache of the current GitHub user for the authenticated user.
 var User atomic.Pointer[github.User]
 
-func UserRunner(ctx context.Context) error {
+// UserRunner fetches the current GitHub user for the authenticated user
+// and stores it in the User cache, in memory.
+func UserRunner(ctx context.Context, logger *slog.Logger) error {
 	user, _, err := RestClient.Users.Get(ctx, "lrstanley")
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Error("failed to get user")
+		logger.ErrorContext(ctx, "failed to get user", "error", err)
 		return nil
 	}
 
-	log.FromContext(ctx).WithField("user", user.GetLogin()).Info("got user")
+	logger.InfoContext(ctx, "got user", "user", user.GetLogin())
 	User.Store(user)
 	return nil
 }

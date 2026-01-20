@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
@@ -38,7 +38,7 @@ func (h *handler) getReleasesLegacy(w http.ResponseWriter, r *http.Request) {
 		Order(ent.Asc(githubasset.FieldName)).
 		Where(githubasset.Name(asset)).First(r.Context())
 	if err != nil {
-		chix.ErrorCode(w, r, 404, err)
+		chix.ErrorWithCode(w, r, http.StatusNotFound, err)
 		return
 	}
 
@@ -55,7 +55,8 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 
 	// Return just the releases for the given repository.
 	if version == "" {
-		releases, err := h.db.GithubRelease.Query().Where(
+		var releases []string
+		releases, err = h.db.GithubRelease.Query().Where(
 			githubrelease.HasRepositoryWith(githubrepository.NameEqualFold(repo)),
 			githubrelease.Draft(false),
 			githubrelease.Prerelease(false),
@@ -63,7 +64,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 			Order(ent.Desc(githubrelease.FieldCreatedAt)).
 			Select(githubrelease.FieldTagName).Strings(r.Context())
 
-		if chix.Error(w, r, err) {
+		if chix.IfError(w, r, err) {
 			return
 		}
 
@@ -91,7 +92,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 			Limit(1).Select(githubrelease.FieldTagName).
 			String(r.Context())
 
-		if chix.Error(w, r, err) {
+		if chix.IfError(w, r, err) {
 			return
 		}
 	}
@@ -106,7 +107,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		),
 	).First(r.Context())
 
-	if chix.Error(w, r, err) {
+	if chix.IfError(w, r, err) {
 		return
 	}
 
@@ -117,7 +118,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		assets, err = release.QueryAssets().
 			Select(githubasset.FieldName).Strings(r.Context())
 
-		if chix.Error(w, r, err) {
+		if chix.IfError(w, r, err) {
 			return
 		}
 
@@ -142,7 +143,7 @@ func (h *handler) getReleases(w http.ResponseWriter, r *http.Request) {
 		githubasset.NameEqualFold(asset),
 	).Limit(1).Select(githubasset.FieldBrowserDownloadURL).String(r.Context())
 
-	if chix.Error(w, r, err) {
+	if chix.IfError(w, r, err) {
 		return
 	}
 

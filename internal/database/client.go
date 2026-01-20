@@ -7,18 +7,21 @@ package database
 import (
 	"context"
 	"database/sql"
+	"iter"
+	"log/slog"
 	"net/url"
 	"sync"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
 	sqlite "modernc.org/sqlite"
 )
+
+//go:generate go run -mod=readonly entc.go
 
 var defaultConnectionValues = url.Values{
 	"_pragma": {
@@ -28,7 +31,7 @@ var defaultConnectionValues = url.Values{
 		"synchronous(1)",
 		"mmap_size(30000000000)",
 	},
-	"_busy_timeout": {"15"},
+	"_busy_timeout": {"30"},
 }
 
 var sqliteInit sync.Once
@@ -41,7 +44,7 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 
 	uri, err := url.Parse(config.URL)
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to parse database connection")
+		slog.ErrorContext(ctx, "failed to parse database connection", "error", err)
 		return nil
 	}
 
@@ -55,16 +58,16 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 
 	db, err := sql.Open("sqlite3", uri.String())
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to open database connection")
+		slog.ErrorContext(ctx, "failed to open database connection", "error", err)
 		return nil
 	}
-	db.SetMaxOpenConns(1)
+	db.SetMaxOpenConns(4)
 
 	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.SQLite, db)))
 }
 
 func Migrate(ctx context.Context, db *ent.Client) {
-	log.FromContext(ctx).Info("initiating database schema migration")
+	slog.InfoContext(ctx, "initiating database schema migration")
 	if db == nil {
 		panic("database client is nil")
 	}
@@ -76,7 +79,49 @@ func Migrate(ctx context.Context, db *ent.Client) {
 		schema.WithGlobalUniqueID(true),
 		schema.WithForeignKeys(true),
 	); err != nil {
-		log.FromContext(ctx).WithError(err).Fatal("failed to create schema")
+		slog.ErrorContext(ctx, "failed to create schema", "error", err)
 	}
-	log.FromContext(ctx).Info("database schema migration complete")
+	slog.InfoContext(ctx, "database schema migration complete")
+}
+
+type PagableQuery[P any, T any] interface {
+	Limit(int) P
+	Offset(int) P
+	All(context.Context) ([]*T, error)
+}
+
+func Chunked[P PagableQuery[P, T], T any](
+	ctx context.Context,
+	size int,
+	query PagableQuery[P, T],
+) iter.Seq2[*T, error] {
+	if size <= 1 {
+		size = 250
+	}
+
+	return func(yield func(*T, error) bool) {
+		var offset int
+		var results []*T
+		var err error
+
+		for {
+			results, err = query.Limit(size).Offset(offset).All(ctx)
+			if err != nil {
+				yield(nil, err)
+				return
+			}
+
+			for _, result := range results {
+				if !yield(result, nil) {
+					return
+				}
+			}
+
+			if len(results) < size {
+				return
+			}
+
+			offset += size
+		}
+	}
 }

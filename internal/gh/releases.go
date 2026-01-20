@@ -6,9 +6,9 @@ package gh
 
 import (
 	"context"
+	"log/slog"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
@@ -19,7 +19,7 @@ import (
 // Github. It will also iterate through all pages, returning all repository releases
 // in their entirety.
 func fetchReleases(
-	ctx context.Context, repo *github.Repository,
+	ctx context.Context, logger *slog.Logger, repo *github.Repository,
 ) (allReleases []*github.RepositoryRelease, err error) {
 	var resp *github.Response
 
@@ -39,10 +39,11 @@ func fetchReleases(
 
 		var releases []*github.RepositoryRelease
 
-		log.FromContext(ctx).WithFields(log.Fields{
-			"page": opts.Page,
-			"repo": repo.GetFullName(),
-		}).Info("querying repository releases")
+		logger.InfoContext(
+			ctx, "querying repository releases",
+			"page", opts.Page,
+			"repo", repo.GetFullName(),
+		)
 		releases, resp, err = RestClient.Repositories.ListReleases(ctx, repo.GetOwner().GetLogin(), repo.GetName(), opts)
 		if err != nil {
 			return nil, err

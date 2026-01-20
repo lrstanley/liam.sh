@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/label"
 )
@@ -45,7 +45,8 @@ func (h *handler) getLabelsCount(w http.ResponseWriter, r *http.Request) {
 				return ""
 			},
 		).Scan(context.Background(), &v)
-	if chix.Error(w, r, err) {
+
+	if chix.IfError(w, r, err) {
 		return
 	}
 

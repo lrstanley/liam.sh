@@ -8,18 +8,20 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"regexp"
 	"time"
 
-	"github.com/apex/log"
 	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 )
 
-func GistRunner(ctx context.Context) error {
+// GistRunner fetches all gists for the authenticated user from Github, storing
+// them in the database.
+func GistRunner(ctx context.Context, logger *slog.Logger) error {
 	ctx = privacy.DecisionContext(ctx, privacy.Allow)
 
 	db := ent.FromContext(ctx)
@@ -27,7 +29,7 @@ func GistRunner(ctx context.Context) error {
 		panic("database client is nil")
 	}
 
-	gists, err := fetchGists(ctx)
+	gists, err := fetchGists(ctx, logger)
 	if err != nil {
 		return fmt.Errorf("failed to fetch gists: %w", err)
 	}
@@ -72,13 +74,13 @@ func GistRunner(ctx context.Context) error {
 		return fmt.Errorf("failed to remove gists: %w", err)
 	}
 
-	log.FromContext(ctx).WithField("gists", len(gists)).Info("fetched newest gists")
+	logger.InfoContext(ctx, "fetched newest gists", "gists", len(gists))
 	return nil
 }
 
 // fetchGists fetches all gists for the authenticated user from Github. It
 // will also iterate through all pages, returning all gists in their entirety.
-func fetchGists(ctx context.Context) (allGists []*github.Gist, err error) {
+func fetchGists(ctx context.Context, logger *slog.Logger) (allGists []*github.Gist, err error) {
 	opts := &github.GistListOptions{
 		ListOptions: github.ListOptions{PerPage: 100, Page: 1},
 	}
@@ -96,7 +98,7 @@ func fetchGists(ctx context.Context) (allGists []*github.Gist, err error) {
 
 		var gists []*github.Gist
 
-		log.FromContext(ctx).WithField("page", opts.ListOptions.Page).Info("querying gists")
+		logger.InfoContext(ctx, "querying gists", "page", opts.ListOptions.Page)
 		gists, resp, err = RestClient.Gists.List(ctx, "", opts)
 		if err != nil {
 			return nil, err

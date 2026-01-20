@@ -6,13 +6,14 @@ package gh
 
 import (
 	"context"
+	"log/slog"
 	"sync/atomic"
 
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/models"
 	ghql "github.com/shurcooL/githubv4"
 )
 
+// Stats is a cache of the current GitHub stats for the authenticated user.
 var Stats atomic.Pointer[models.GithubStats]
 
 type baseStatsQuery struct {
@@ -56,14 +57,16 @@ type repoStarsQuery struct {
 	}
 }
 
-func StatsRunner(ctx context.Context) error {
+// StatsRunner fetches the current GitHub stats for the authenticated user
+// from the GraphQL API, storing them in memory.
+func StatsRunner(ctx context.Context, logger *slog.Logger) error {
 	base := baseStatsQuery{}
 	err := GraphClient.Query(ctx, &base, nil)
 	if err != nil {
-		log.FromContext(ctx).WithError(err).Error("failed to get stats")
+		logger.ErrorContext(ctx, "failed to get stats", "error", err)
 		return nil
 	}
-	log.FromContext(ctx).Info("retrieved base github stats")
+	logger.InfoContext(ctx, "retrieved base github stats")
 
 	stats := &models.GithubStats{
 		CommitsYear:      base.Viewer.ContributionsCollection.TotalCommitContributions + base.Viewer.ContributionsCollection.RestrictedContributionsCount,
@@ -83,17 +86,18 @@ func StatsRunner(ctx context.Context) error {
 		repoStars := repoStarsQuery{}
 		err = GraphClient.Query(ctx, &repoStars, repoStarVariables)
 		if err != nil {
-			log.FromContext(ctx).
-				WithField("cursor", repoStarVariables["after"]).
-				WithError(err).
-				Error("failed to get repo stars")
+			logger.ErrorContext(
+				ctx, "failed to get repo stars",
+				"error", err,
+				"cursor", repoStarVariables["after"],
+			)
 			return nil
 		}
 
-		log.FromContext(ctx).
-			WithField("cursor", repoStarVariables["after"]).
-			Info("retrieved repo star stats")
-
+		logger.InfoContext(
+			ctx, "retrieved repo star stats",
+			"cursor", repoStarVariables["after"],
+		)
 		for _, repo := range repoStars.Viewer.Repositories.Nodes {
 			stats.Stars += repo.Stargazers.TotalCount
 		}

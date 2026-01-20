@@ -1,63 +1,84 @@
 {
-    "editor.formatOnSave": true,
-    "[css]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.formatOnSave": true,
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "Vue.volar"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+    "editor.quickSuggestions": {
+      "comments": false,
+      "strings": false,
+      "other": false
     },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[vue]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[markdown]": {
-        "editor.wordWrap": "on",
-        "editor.quickSuggestions": {
-            "comments": false,
-            "strings": false,
-            "other": false
-        },
-        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
-    },
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "explicit"
-    },
-    "typescript.tsdk": "cmd/httpserver/public/node_modules/typescript/lib",
-    "[ignore]": {
-        "editor.defaultFormatter": "foxundermoon.shell-format"
-    },
-    "typescript.preferences.autoImportFileExcludePatterns": [
-        "vue-router/auto"
-    ],
-    "files.exclude": {
-        "**/*-journal": true,
-        "**/*.backup": true,
-        "**/*.db": true,
-        "**/*.db-wal": true,
-        "**/*.db-shm": true,
-        "**/*.example": true,
-        "**/*.log": true,
-        "**/*.min.*": true,
-        "**/*.sum": true,
-        "**/.*cache": true,
-        "**/.*ignore": true,
-        "**/.*attributes": true,
-        "**/.cache": true,
-        "**/.docker*": true,
-        "**/.editorconfig": true,
-        "**/.eslint*": true,
-        "**/.eslintrc.js": true,
-        "**/.golangci.yml": true,
-        "**/LICENSE": true,
-        "**/bin": true,
-        "**/dist": true,
-        "**/ent": true,
-        "**/node_modules": true,
-        "**/package-lock.json": true,
-        "**/pnpm-lock*": true,
-        "**/tmp": true,
-        "**/.env": true
-    }
+    "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "vue-router/auto"
+  ],
+  "files.exclude": {
+    "**/*-journal": true,
+    "**/*.backup": true,
+    "**/*.d.ts": true,
+    "**/*.db": true,
+    "**/*.db-wal": true,
+    "**/*.db-shm": true,
+    "**/*.example": true,
+    "**/*.log": true,
+    "**/*.min.*": true,
+    "**/*.sum": true,
+    "**/.*cache": true,
+    "**/.*ignore": true,
+    "**/.*attributes": true,
+    "**/.cache": true,
+    "**/.docker*": true,
+    "**/.editorconfig": true,
+    "**/.eslint*": true,
+    "**/.eslintrc.js": true,
+    "**/.golangci.yml": true,
+    "**/LICENSE": true,
+    "**/bin": true,
+    "**/dist": true,
+    // "**/ent": true,
+    "**/node_modules": true,
+    "**/package-lock.json": true,
+    "**/pnpm-lock*": true,
+    "**/tmp": true,
+    "**/.env": true,
+    "**/.output": true,
+    "**/.data": true,
+    "**/.nuxt": true,
+    "**/.nitro": true,
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "ui"
+  ],
+  "tailwindCSS.experimental.classRegex": [
+    [
+      "ui:\\s*{([^)]*)\\s*}",
+      "(?:'|\"|`)([^']*)(?:'|\"|`)"
+    ]
+  ],
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.gotoLocation.multipleDefinitions": "goto"
 }

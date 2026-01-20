@@ -9,6 +9,7 @@ import (
 	_ "embed"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -16,9 +17,8 @@ import (
 	"time"
 
 	cache "github.com/Code-Hex/go-generics-cache"
-	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/gh"
@@ -93,18 +93,24 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 		return icon
 	}
 
-	logger := log.FromContext(ctx)
-
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, _url, http.NoBody) // nolint:gosec
 	if err != nil {
-		logger.WithError(err).WithField("url", _url).Error("failed to create http request")
+		chix.LogError(
+			ctx, "failed to create http request",
+			slog.Any("error", err),
+			slog.String("url", _url),
+		)
 		iconCache.Set(_url, "", cache.WithExpiration(expFailureDuration))
 		return ""
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		logger.WithError(err).WithField("url", _url).Error("failed to get iconify svg")
+		chix.LogError(
+			ctx, "failed to get iconify svg",
+			slog.Any("error", err),
+			slog.String("url", _url),
+		)
 		iconCache.Set(_url, "", cache.WithExpiration(expFailureDuration))
 		return ""
 	}
@@ -112,7 +118,11 @@ func (h *handler) getIconifySVG(ctx context.Context, p *svgParams) string {
 
 	b, err := io.ReadAll(resp.Body)
 	if err != nil {
-		logger.WithError(err).WithField("url", _url).Error("failed to read iconify svg")
+		chix.LogError(
+			ctx, "failed to read iconify svg",
+			slog.Any("error", err),
+			slog.String("url", _url),
+		)
 		return ""
 	}
 
@@ -144,7 +154,7 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 	repoFullName := chi.URLParam(r, "owner") + "/" + chi.URLParam(r, "repo")
 
 	if (params.Title == "" || params.Description == "") && repoFullName == "/" || params.Icon == "" {
-		chix.ErrorCode(w, r, http.StatusBadRequest, chix.WrapCode(http.StatusBadRequest))
+		chix.ErrorWithCode(w, r, http.StatusBadRequest)
 		return
 	}
 
@@ -153,7 +163,7 @@ func (h *handler) getProjectSVG(w http.ResponseWriter, r *http.Request) {
 			githubrepository.FullNameEqualFold(repoFullName),
 		).First(r.Context())
 
-		if chix.Error(w, r, err) {
+		if chix.IfError(w, r, err) {
 			return
 		}
 

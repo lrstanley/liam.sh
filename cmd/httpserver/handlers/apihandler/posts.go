@@ -5,25 +5,35 @@
 package apihandler
 
 import (
+	"context"
+	"log/slog"
 	"net/http"
+	"time"
 
-	"github.com/apex/log"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent/post"
 )
 
 func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 	p := []struct {
-		ID      int    `json:"id"`
-		Content string `json:"content"`
+		ID          int       `json:"id"`
+		Content     string    `json:"content"`
+		PublishedAt time.Time `json:"published_at"`
 	}{}
 
 	tx, err := h.db.Tx(r.Context())
-	if chix.Error(w, r, err) {
+	if chix.IfError(w, r, err) {
 		return
 	}
 
-	if err = tx.Post.Query().Select(post.FieldID, post.FieldContent).Scan(r.Context(), &p); err != nil {
+	err = tx.Post.Query().
+		Select(
+			post.FieldID,
+			post.FieldContent,
+			post.FieldPublishedAt,
+		).
+		Scan(r.Context(), &p)
+	if err != nil {
 		_ = tx.Rollback()
 		chix.Error(w, r, err)
 		return
@@ -34,20 +44,42 @@ func (h *handler) postsRegenerate(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		if err = tx.Post.UpdateOneID(v.ID).SetContent(v.Content).Exec(r.Context()); err != nil {
+		err = tx.Post.UpdateOneID(v.ID).
+			SetContent(v.Content).
+			SetPublishedAt(v.PublishedAt.UTC()).
+			Exec(r.Context())
+		if err != nil {
 			_ = tx.Rollback()
 			chix.Error(w, r, err)
 			return
 		}
-		log.FromContext(r.Context()).WithField("id", v.ID).Debug("regenerated post")
+		chix.LogDebug(r.Context(), "regenerated post", slog.Int("id", v.ID))
 	}
 
 	err = tx.Commit()
-	if err != nil {
+	if chix.IfError(w, r, err) {
 		_ = tx.Rollback()
-		chix.Error(w, r, err)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *handler) postsSuggestLabels(w http.ResponseWriter, r *http.Request) {
+	v := &struct {
+		Content string `json:"content"`
+	}{}
+	if err := chix.Bind(r, v); err != nil {
+		chix.Error(w, r, err)
+		return
+	}
+
+	// Don't reuse context, because we want it to continue in the background and cache if
+	// possible.
+	suggestions, err := h.aiSvc.PostSuggestLabels(context.WithoutCancel(r.Context()), v.Content)
+	if err != nil {
+		chix.Error(w, r, err)
+		return
+	}
+	chix.JSON(w, r, http.StatusOK, suggestions)
 }

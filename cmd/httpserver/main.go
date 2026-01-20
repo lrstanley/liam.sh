@@ -6,33 +6,40 @@ package main
 
 import (
 	"context"
+	"os"
 	"time"
 
-	"github.com/apex/log"
-	"github.com/lrstanley/chix"
-	"github.com/lrstanley/clix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/clix/v2"
+	"github.com/lrstanley/liam.sh/internal/ai"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime"
 	"github.com/lrstanley/liam.sh/internal/gh"
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/liam.sh/internal/wakapi"
+	"github.com/lrstanley/x/scheduler"
 )
 
 var (
-	db     *ent.Client
-	logger log.Interface
+	db    *ent.Client
+	aiSvc ai.Service
 
-	cli = &clix.CLI[models.Flags]{
-		Links: clix.GithubLinks("github.com/lrstanley/liam.sh", "master", "https://liam.sh"),
-	}
+	cli = clix.NewWithDefaults(
+		clix.WithAppInfo[models.Flags](clix.AppInfo{
+			Links: clix.GithubLinks("github.com/lrstanley/liam.sh", "master", "https://liam.sh"),
+		}),
+	)
 )
 
 func main() {
-	cli.Parse()
-	logger = cli.Logger
+	var exitCode int
+	defer func() {
+		os.Exit(exitCode)
+	}()
 
-	ctx := log.NewContext(context.Background(), logger)
+	logger := cli.GetLogger()
+	ctx := context.Background()
 
 	db = database.Open(ctx, cli.Flags.Database)
 	defer db.Close()
@@ -42,15 +49,43 @@ func main() {
 
 	gh.NewClient(ctx, cli.Flags.Github)
 
-	if err := chix.RunContext(
-		ctx, httpServer(ctx),
-		chix.RunnerInterval("users", gh.UserRunner, 10*time.Minute, true, false),
-		chix.RunnerInterval("stats", gh.StatsRunner, 4*time.Hour, true, false),
-		chix.RunnerInterval("events", gh.EventsRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
-		chix.RunnerInterval("repositories", gh.RepositoryRunner, 30*time.Minute, cli.Flags.Github.SyncOnStart, false),
-		chix.RunnerInterval("gists", gh.GistRunner, 120*time.Minute, cli.Flags.Github.SyncOnStart, false),
-		chix.RunnerInterval("wakapi", wakapi.NewRunner(logger, cli.Flags.WakAPI).Run, 30*time.Minute, true, true),
-	); err != nil {
-		logger.WithError(err).Fatal("shutting down")
+	var err error
+	aiSvc, err = ai.NewService(ctx, cli.Flags.AI, cli.Flags.HTTP, db, logger)
+	if err != nil {
+		logger.ErrorContext(ctx, "failed to create AI service", "error", err)
+	}
+
+	err = chix.Run(
+		ctx,
+		logger,
+		httpServer(logger),
+		scheduler.NewCron("users", scheduler.JobLoggerFunc(gh.UserRunner)).
+			WithImmediate(true).
+			WithLogger(logger).
+			WithInterval(10*time.Minute),
+		scheduler.NewCron("stats", scheduler.JobLoggerFunc(gh.StatsRunner)).
+			WithImmediate(true).
+			WithLogger(logger).
+			WithInterval(4*time.Hour),
+		scheduler.NewCron("events", scheduler.JobLoggerFunc(gh.EventsRunner)).
+			WithImmediate(true).
+			WithLogger(logger).
+			WithInterval(10*time.Minute),
+		scheduler.NewCron("repositories", scheduler.JobLoggerFunc(gh.RepositoryRunner)).
+			WithLogger(logger).
+			WithInterval(30*time.Minute),
+		scheduler.NewCron("gists", scheduler.JobLoggerFunc(gh.GistRunner)).
+			WithImmediate(true).
+			WithLogger(logger).
+			WithInterval(120*time.Minute),
+		scheduler.NewCron("wakapi", wakapi.Runner(cli.Flags.WakAPI)).
+			WithImmediate(true).
+			WithLogger(logger).
+			WithExitOnError(true).
+			WithInterval(30*time.Minute),
+	)
+	if err != nil {
+		logger.ErrorContext(ctx, "shutting down", "error", err)
+		exitCode = 1
 	}
 }

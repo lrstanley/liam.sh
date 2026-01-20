@@ -4,6 +4,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"time"
 
 	"entgo.io/ent/entc"
 	"entgo.io/ent/entc/gen"
@@ -23,8 +25,9 @@ func checkError(err error) {
 }
 
 func main() {
+	schemaPath := "./schema"
 	rest, err := entrest.NewExtension(&entrest.Config{
-		SpecFromPath:          "../cmd/httpserver/base-openapi.json",
+		SpecFromPath:          "../../cmd/httpserver/base-openapi.json",
 		MaxItemsPerPage:       1000,
 		Handler:               entrest.HandlerChi,
 		StrictMutate:          true,
@@ -33,22 +36,39 @@ func main() {
 	})
 	checkError(err)
 
-	err = entc.Generate(
-		"./database/schema",
-		&gen.Config{
-			Target:  "./database/ent/",
+	extensions := entc.Extensions(rest)
+
+	// TODO: see if entrest can be updated so it doesn't patch the original config annotations,
+	// and we don't need to have this function hack.
+	getConfig := func() *gen.Config {
+		return &gen.Config{
+			Target:  "./ent/",
 			Schema:  "github.com/lrstanley/liam.sh/internal/database/schema",
 			Package: "github.com/lrstanley/liam.sh/internal/database/ent",
 			Header:  header,
 			Features: []gen.Feature{
 				gen.FeaturePrivacy,
 				gen.FeatureEntQL,
-				gen.FeatureSnapshot,
 				gen.FeatureUpsert,
 				gen.FeatureIntercept,
 			},
-		},
-		entc.Extensions(rest),
-	)
-	checkError(err)
+		}
+	}
+
+	start := time.Now()
+
+	// For speed, check if hooks directory exists, if so, skip this step.
+	if _, err := os.Stat("./ent/hook/hook.go"); err != nil && os.IsNotExist(err) {
+		checkError(entc.Generate(schemaPath, getConfig(), extensions, entc.BuildTags("skiphooks", "skippolicy")))
+		log.Printf("bootstrap (no hooks, policies) took: %s", time.Since(start))
+	}
+
+	// For speed, check if the privacy directory exists, if so, skip this step.
+	if _, err := os.Stat("./ent/privacy/privacy.go"); err != nil && os.IsNotExist(err) {
+		checkError(entc.Generate(schemaPath, getConfig(), extensions, entc.BuildTags("skippolicy")))
+		log.Printf("bootstrap (no policies) took: %s", time.Since(start))
+	}
+
+	checkError(entc.Generate(schemaPath, getConfig(), extensions))
+	log.Printf("generation completed (all): %s", time.Since(start))
 }

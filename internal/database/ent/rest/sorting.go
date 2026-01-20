@@ -260,6 +260,27 @@ var (
 	}
 )
 
+// isSpecializedSort checks if the sort field is a specialized sort field.
+func isSpecializedSort(parts []string) (isCount, isSum bool) {
+	switch {
+	case len(parts) == 3:
+		switch parts[2] {
+		case "count":
+			isCount = true
+		case "sum":
+			isSum = true
+		}
+	case len(parts) == 2:
+		switch parts[1] {
+		case "count":
+			isCount = true
+		case "sum":
+			isSum = true
+		}
+	}
+	return isCount, isSum
+}
+
 // applySortingGithubAsset applies sorting to the query based on the provided sort and
 // order fields. Note that all inputs provided MUST ALREADY BE VALIDATED.
 func applySortingGithubAsset(query *ent.GithubAssetQuery, field string, order orderDirection) *ent.GithubAssetQuery {
@@ -301,15 +322,7 @@ func applySortingGithubRelease(query *ent.GithubReleaseQuery, field string, orde
 	if parts := strings.Split(field, "."); len(parts) > 1 {
 		dir := withOrderTerm(order)
 
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
+		isCount, isSum := isSpecializedSort(parts)
 
 		switch parts[0] {
 		case githubrelease.EdgeRepository:
@@ -337,15 +350,7 @@ func applySortingGithubRepository(query *ent.GithubRepositoryQuery, field string
 	if parts := strings.Split(field, "."); len(parts) > 1 {
 		dir := withOrderTerm(order)
 
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
+		isCount, isSum := isSpecializedSort(parts)
 
 		switch parts[0] {
 		case githubrepository.EdgeLabels:
@@ -380,15 +385,7 @@ func applySortingLabel(query *ent.LabelQuery, field string, order orderDirection
 	if parts := strings.Split(field, "."); len(parts) > 1 {
 		dir := withOrderTerm(order)
 
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
+		isCount, isSum := isSpecializedSort(parts)
 
 		switch parts[0] {
 		case label.EdgePosts:
@@ -423,15 +420,7 @@ func applySortingPost(query *ent.PostQuery, field string, order orderDirection) 
 	if parts := strings.Split(field, "."); len(parts) > 1 {
 		dir := withOrderTerm(order)
 
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
+		isCount, isSum := isSpecializedSort(parts)
 
 		switch parts[0] {
 		case post.EdgeAuthor:
@@ -459,15 +448,7 @@ func applySortingUser(query *ent.UserQuery, field string, order orderDirection) 
 	if parts := strings.Split(field, "."); len(parts) > 1 {
 		dir := withOrderTerm(order)
 
-		var isCount, isSum bool
-		if len(parts) > 2 {
-			switch parts[2] {
-			case "count":
-				isCount = true
-			case "sum":
-				isSum = true
-			}
-		}
+		isCount, isSum := isSpecializedSort(parts)
 
 		switch parts[0] {
 		case user.EdgePosts:

@@ -9,97 +9,96 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log/slog"
+	"math"
 	"net/http"
 	"strings"
 	"sync/atomic"
-	"time"
 
-	"github.com/apex/log"
 	"github.com/lrstanley/liam.sh/internal/models"
+	"github.com/lrstanley/x/http/utils/httpclog"
+	"github.com/lrstanley/x/scheduler"
 )
 
-const fetchInterval = 30 * time.Minute
+const maxSummaryLength = 5
 
 var Statistics atomic.Pointer[models.CodingStats]
 
-func NewRunner(logger log.Interface, config models.ConfigWakAPI) *Runner {
-	return &Runner{
-		config: config,
-		logger: logger.WithField("runner", "wakapi"),
-		client: http.Client{
-			Timeout: time.Second * 10,
-		},
-	}
-}
+func Runner(config models.ConfigWakAPI) scheduler.JobLoggerFunc {
+	uri := fmt.Sprintf("%s/api/summary?interval=last_30_days", strings.TrimRight(config.URL, "/"))
+	level := slog.LevelInfo
 
-type Runner struct {
-	config models.ConfigWakAPI
-	logger log.Interface
-	client http.Client
-}
+	return scheduler.JobLoggerFunc(func(ctx context.Context, logger *slog.Logger) error {
+		client := httpclog.NewClient(&httpclog.Config{
+			Level:         &level,
+			BaseTransport: http.DefaultTransport,
+			Logger:        logger,
+		})
 
-func (r *Runner) Run(ctx context.Context) (err error) {
-	if err = r.fetch(ctx); err != nil {
-		r.logger.WithError(err).Error("failed to fetch wakapi stats")
-		return err
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return nil
-		case <-time.After(fetchInterval):
-			if err = r.fetch(ctx); err != nil {
-				r.logger.WithError(err).Error("failed to fetch wakapi stats")
-				return err
-			}
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, uri, http.NoBody)
+		if err != nil {
+			return err
 		}
-	}
-}
 
-func (r *Runner) url() string {
-	return fmt.Sprintf("%s/api/summary?interval=last_30_days", strings.TrimRight(r.config.URL, "/"))
-}
+		req.Header.Set("Accept", "application/json")
+		req.Header.Set(
+			"Authorization",
+			fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(config.APIKey))),
+		)
 
-func (r *Runner) fetch(ctx context.Context) error {
-	req, err := http.NewRequest("GET", r.url(), http.NoBody)
-	if err != nil {
-		return err
-	}
+		resp, err := client.Do(req)
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
 
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set(
-		"Authorization",
-		fmt.Sprintf("Basic %s", base64.StdEncoding.EncodeToString([]byte(r.config.APIKey))),
-	)
+		if resp.StatusCode != http.StatusOK {
+			return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+		}
 
-	resp, err := r.client.Do(req)
-	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
+		var stats models.CodingStats
+		err = json.NewDecoder(resp.Body).Decode(&stats)
+		if err != nil {
+			return err
+		}
 
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
+		// Calculate misc stats for the frontend.
+		for i := range stats.Languages {
+			stats.Languages[i].HexColor = lookupColor(stats.Languages[i].Language)
+			stats.Languages[i].TotalDuration = formatDuration(stats.Languages[i].TotalSeconds)
+			stats.TotalSeconds += stats.Languages[i].TotalSeconds
+		}
+		stats.TotalDuration = formatDuration(stats.TotalSeconds)
+		stats.TotalDurationShort = formatDurationShort(stats.TotalSeconds)
+		stats.CalculatedDays = 30
 
-	var stats models.CodingStats
-	if err := json.NewDecoder(resp.Body).Decode(&stats); err != nil {
-		return err
-	}
+		maxTitleLength := 5
 
-	// Calculate misc stats for the frontend.
-	for i := range stats.Languages {
-		stats.Languages[i].HexColor = lookupColor(stats.Languages[i].Language)
-		stats.Languages[i].TotalDuration = formatDuration(stats.Languages[i].TotalSeconds)
-		stats.TotalSeconds += stats.Languages[i].TotalSeconds
-	}
-	stats.TotalDuration = formatDuration(stats.TotalSeconds)
-	stats.TotalDurationShort = formatDurationShort(stats.TotalSeconds)
-	stats.CalculatedDays = 30
+		for _, stat := range stats.Languages {
+			if len(stats.Summary) > maxSummaryLength {
+				stats.Summary[maxSummaryLength].Key = "Other"
+				stats.Summary[maxSummaryLength].HexColor = stat.HexColor
+				stats.Summary[maxSummaryLength].TotalSeconds = stat.TotalSeconds
+				continue
+			}
 
-	Statistics.Store(&stats)
-	return nil
+			maxTitleLength = max(maxTitleLength, len(stat.Language))
+			stats.Summary = append(stats.Summary, &models.CodingStatsSummary{
+				Key:           stat.Language,
+				HexColor:      stat.HexColor,
+				TotalSeconds:  stat.TotalSeconds,
+				TotalDuration: stat.TotalDuration,
+				TitleLength:   len(stat.Language),
+			})
+		}
+
+		for _, stat := range stats.Summary {
+			stat.Percentage = int(math.Round(float64(stat.TotalSeconds) / float64(stats.TotalSeconds) * 100))
+		}
+
+		Statistics.Store(&stats)
+		return nil
+	})
 }
 
 func formatDuration(seconds int) (out string) {

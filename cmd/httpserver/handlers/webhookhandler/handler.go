@@ -6,15 +6,14 @@ package webhookhandler
 
 import (
 	"bytes"
-	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"reflect"
 
-	"github.com/apex/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/go-github/v63/github"
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
 )
 
 type handler struct{}
@@ -28,7 +27,7 @@ func (h *handler) Route(r chi.Router) {
 }
 
 func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
-	url := fmt.Sprintf("https://discord.com/api/webhooks/%s", chi.URLParam(r, "*"))
+	url := "https://discord.com/api/webhooks/" + chi.URLParam(r, "*")
 
 	payload, err := io.ReadAll(r.Body)
 	defer r.Body.Close()
@@ -46,18 +45,22 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 	e := reflect.ValueOf(event)
 	f := reflect.Indirect(e).FieldByName("Sender")
 
-	sender := f.Interface().(*github.User)
-	if sender != nil && sender.GetType() == "Bot" {
-		chix.Log(r).WithFields(log.Fields{
-			"event_type": github.WebHookType(r),
-			"bot":        sender.Login,
-		}).Info("ignoring bot event")
+	sender, ok := f.Interface().(*github.User)
+	if ok && sender != nil && sender.GetType() == "Bot" {
+		chix.LogInfo(
+			r.Context(), "ignoring bot event",
+			slog.String("event_type", github.WebHookType(r)),
+			slog.String("bot", sender.GetLogin()),
+		)
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
-	chix.Log(r).WithField("event_type", github.WebHookType(r)).Info("forwarding webhook to discord")
-	req, err := http.NewRequestWithContext(r.Context(), "POST", url, bytes.NewBuffer(payload))
+	chix.LogInfo(
+		r.Context(), "forwarding webhook to discord",
+		slog.String("event_type", github.WebHookType(r)),
+	)
+	req, err := http.NewRequestWithContext(r.Context(), http.MethodPost, url, bytes.NewBuffer(payload))
 	if err != nil {
 		chix.Error(w, r, err)
 		return
@@ -74,5 +77,8 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 	defer resp.Body.Close()
 	_, _ = io.Copy(w, resp.Body)
 
-	chix.Log(r).WithField("discord_status", resp.StatusCode).Info("discord response")
+	chix.LogInfo(
+		r.Context(), "discord response",
+		slog.Int("discord_status", resp.StatusCode),
+	)
 }

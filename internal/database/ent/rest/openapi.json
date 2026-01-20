@@ -2834,6 +2834,18 @@
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
                     },
                     {
@@ -3831,6 +3843,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
@@ -4955,6 +4979,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -5229,6 +5265,27 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -5423,6 +5480,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -5697,6 +5766,27 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -5814,7 +5904,7 @@
                 "tags": [
                     "Posts"
                 ],
-                "summary": "Regenerate posts.",
+                "summary": "Regenerate posts",
                 "description": "Regenerate posts.",
                 "operationId": "regeneratePosts",
                 "responses": {
@@ -5829,6 +5919,80 @@
                             },
                             "X-Ratelimit-Reset": {
                                 "$ref": "#/components/headers/X-Ratelimit-Reset"
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/ErrorBadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/ErrorUnauthorized"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/ErrorForbidden"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/ErrorNotFound"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/ErrorTooManyRequests"
+                    },
+                    "500": {
+                        "$ref": "#/components/responses/ErrorInternalServerError"
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref": "#/components/parameters/X-Request-Id"
+                }
+            ]
+        },
+        "/posts/suggest-labels": {
+            "post": {
+                "tags": [
+                    "Posts"
+                ],
+                "summary": "Suggest labels for a post",
+                "description": "Suggest labels for a post.",
+                "operationId": "suggestLabels",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "content": {
+                                        "description": "The markdown text content which is used as the basis for the label suggestions.",
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "content"
+                                ]
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Suggested labels were found.",
+                        "headers": {
+                            "X-Ratelimit-Limit": {
+                                "$ref": "#/components/headers/X-Ratelimit-Limit"
+                            },
+                            "X-Ratelimit-Remaining": {
+                                "$ref": "#/components/headers/X-Ratelimit-Remaining"
+                            },
+                            "X-Ratelimit-Reset": {
+                                "$ref": "#/components/headers/X-Ratelimit-Reset"
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SuggestedLabelList"
+                                }
                             }
                         }
                     },
@@ -6214,6 +6378,18 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostSlugEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/EdgePostSlugHasSuffix"
                     },
                     {
                         "$ref": "#/components/parameters/EdgePostTitleEQ"
@@ -7082,6 +7258,18 @@
                         "$ref": "#/components/parameters/PostSlugEqualFold"
                     },
                     {
+                        "$ref": "#/components/parameters/PostSlugContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostSlugHasSuffix"
+                    },
+                    {
                         "$ref": "#/components/parameters/PostTitleEQ"
                     },
                     {
@@ -7356,6 +7544,27 @@
                     },
                     {
                         "$ref": "#/components/parameters/EdgeLabelNameHasSuffix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchNEQ"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchEqualFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContains"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchContainsFold"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasPrefix"
+                    },
+                    {
+                        "$ref": "#/components/parameters/PostFilterGroupSearchHasSuffix"
                     }
                 ],
                 "responses": {
@@ -7480,6 +7689,12 @@
                             "$ref": "#/components/schemas/LanguageStat"
                         }
                     },
+                    "summary": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CodingStatsSummary"
+                        }
+                    },
                     "total_duration": {
                         "type": "string",
                         "example": "95 hrs 19 mins"
@@ -7496,9 +7711,48 @@
                 "required": [
                     "calculated_days",
                     "languages",
+                    "summary",
                     "total_duration",
                     "total_duration_short",
                     "total_seconds"
+                ]
+            },
+            "CodingStatsSummary": {
+                "type": "object",
+                "properties": {
+                    "hex_color": {
+                        "type": "string",
+                        "example": "#ff0000"
+                    },
+                    "key": {
+                        "type": "string",
+                        "example": "Go"
+                    },
+                    "percentage": {
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 0
+                    },
+                    "title_length": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "total_duration": {
+                        "type": "string",
+                        "example": "95 hrs 19 mins"
+                    },
+                    "total_seconds": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "hex_color",
+                    "key",
+                    "percentage",
+                    "total_duration",
+                    "total_seconds",
+                    "title_length"
                 ]
             },
             "ErrorBadRequest": {
@@ -8989,9 +9243,6 @@
                         "type": "boolean",
                         "default": false
                     },
-                    "author": {
-                        "type": "integer"
-                    },
                     "labels": {
                         "type": "array",
                         "items": {
@@ -9002,8 +9253,7 @@
                 "required": [
                     "slug",
                     "title",
-                    "content",
-                    "author"
+                    "content"
                 ]
             },
             "PostEdges": {
@@ -9131,9 +9381,6 @@
                         "type": "boolean",
                         "default": false
                     },
-                    "author": {
-                        "type": "integer"
-                    },
                     "add_labels": {
                         "type": "array",
                         "items": {
@@ -9145,7 +9392,38 @@
                         "items": {
                             "type": "integer"
                         }
+                    },
+                    "labels": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
                     }
+                }
+            },
+            "SuggestedLabel": {
+                "description": "A suggested label for a post.",
+                "properties": {
+                    "existing_id": {
+                        "description": "The existing label ID if it already exists.",
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "name": {
+                        "description": "The name of the label.",
+                        "type": "string",
+                        "example": "github-action"
+                    }
+                },
+                "required": [
+                    "name"
+                ]
+            },
+            "SuggestedLabelList": {
+                "description": "A list of suggested labels for a post.",
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/SuggestedLabel"
                 }
             },
             "User": {
@@ -11077,6 +11355,22 @@
                     "format": "date-time"
                 }
             },
+            "EdgePostSlugContains": {
+                "name": "post.slug.has",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugContainsFold": {
+                "name": "post.slug.ihas",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
             "EdgePostSlugEQ": {
                 "name": "post.slug.eq",
                 "in": "query",
@@ -11089,6 +11383,22 @@
                 "name": "post.slug.ieq",
                 "in": "query",
                 "description": "Filters field \"slug\" to be equal to the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugHasPrefix": {
+                "name": "post.slug.prefix",
+                "in": "query",
+                "description": "Filters field \"slug\" to start with the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "EdgePostSlugHasSuffix": {
+                "name": "post.slug.suffix",
+                "in": "query",
+                "description": "Filters field \"slug\" to end with the provided value.",
                 "schema": {
                     "type": "string"
                 }
@@ -14185,6 +14495,76 @@
                     "format": "date-time"
                 }
             },
+            "PostFilterGroupSearchContains": {
+                "name": "search.has",
+                "in": "query",
+                "description": "Field \"search.has\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchContainsFold": {
+                "name": "search.ihas",
+                "in": "query",
+                "description": "Field \"search.ihas\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchEQ": {
+                "name": "search.eq",
+                "in": "query",
+                "description": "Field \"search.eq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchEqualFold": {
+                "name": "search.ieq",
+                "in": "query",
+                "description": "Field \"search.ieq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchHasPrefix": {
+                "name": "search.prefix",
+                "in": "query",
+                "description": "Field \"search.prefix\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchHasSuffix": {
+                "name": "search.suffix",
+                "in": "query",
+                "description": "Field \"search.suffix\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
+            "PostFilterGroupSearchNEQ": {
+                "name": "search.neq",
+                "in": "query",
+                "description": "Field \"search.neq\" filters across multiple fields (case insensitive): slug, title, content.",
+                "schema": {
+                    "description": "Post slug.",
+                    "type": "string",
+                    "example": "hello-world"
+                }
+            },
             "PostID": {
                 "name": "postID",
                 "in": "path",
@@ -14238,6 +14618,22 @@
                     "format": "date-time"
                 }
             },
+            "PostSlugContains": {
+                "name": "slug.has",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugContainsFold": {
+                "name": "slug.ihas",
+                "in": "query",
+                "description": "Filters field \"slug\" to contain the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
             "PostSlugEQ": {
                 "name": "slug.eq",
                 "in": "query",
@@ -14250,6 +14646,22 @@
                 "name": "slug.ieq",
                 "in": "query",
                 "description": "Filters field \"slug\" to be equal to the provided value, case-insensitive.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugHasPrefix": {
+                "name": "slug.prefix",
+                "in": "query",
+                "description": "Filters field \"slug\" to start with the provided value.",
+                "schema": {
+                    "type": "string"
+                }
+            },
+            "PostSlugHasSuffix": {
+                "name": "slug.suffix",
+                "in": "query",
+                "description": "Filters field \"slug\" to end with the provided value.",
                 "schema": {
                     "type": "string"
                 }

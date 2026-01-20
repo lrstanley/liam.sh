@@ -12,7 +12,6 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/go-github/v63/github"
 	"github.com/lrstanley/entrest"
-	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
 	"github.com/ogen-go/ogen"
 )
 
@@ -152,18 +151,6 @@ func (GithubRepository) Fields() []ent.Field {
 			Annotations(
 				entrest.WithSchema(entrest.SchemaObjectAny),
 			),
-	}
-}
-
-func (GithubRepository) Policy() ent.Policy {
-	return privacy.Policy{
-		Mutation: privacy.MutationPolicy{
-			privacy.AlwaysDenyRule(),
-		},
-		Query: privacy.QueryPolicy{
-			FilterPublicOnly(),
-			privacy.AlwaysAllowRule(),
-		},
 	}
 }
 

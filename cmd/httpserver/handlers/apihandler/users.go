@@ -7,16 +7,16 @@ package apihandler
 import (
 	"net/http"
 
-	"github.com/lrstanley/chix"
+	"github.com/lrstanley/chix/v2"
+	"github.com/lrstanley/chix/xauth/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
-	"github.com/lrstanley/liam.sh/internal/database/ent/rest"
 	"github.com/lrstanley/liam.sh/internal/gh"
 )
 
 func (h *handler) getSelf(w http.ResponseWriter, r *http.Request) {
-	ident := chix.IdentFromContext[ent.User](r.Context())
+	ident := xauth.IdentFromContext[ent.User](r.Context())
 	if ident == nil {
-		chix.ErrorCode(w, r, http.StatusUnauthorized, chix.WrapCode(http.StatusUnauthorized))
+		chix.ErrorWithCode(w, r, http.StatusUnauthorized)
 		return
 	}
 
@@ -26,16 +26,16 @@ func (h *handler) getSelf(w http.ResponseWriter, r *http.Request) {
 	// 	chix.Error(w, r, err)
 	// 	return
 	// }
-	// rest.JSON(w, r, http.StatusOK, user)
+	// chix.JSON(w, r, http.StatusOK, user)
 
-	rest.JSON(w, r, http.StatusOK, ident)
+	chix.JSON(w, r, http.StatusOK, ident)
 }
 
 func (h *handler) getGithubUser(w http.ResponseWriter, r *http.Request) {
 	user := gh.User.Load()
 	if user == nil {
-		chix.ErrorCode(w, r, http.StatusNotFound, chix.WrapCode(http.StatusNotFound))
+		chix.ErrorWithCode(w, r, http.StatusNotFound)
 		return
 	}
-	rest.JSON(w, r, http.StatusOK, user)
+	chix.JSON(w, r, http.StatusOK, user)
 }
