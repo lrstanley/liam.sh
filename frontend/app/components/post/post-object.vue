@@ -30,7 +30,7 @@ const drawerActive = ref(false)
             Published
             {{ useTimeAgo(post.published_at).value }}
             by
-            <a :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</a>
+            <NuxtLink :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</NuxtLink>
           </span>
         </div>
       </div>

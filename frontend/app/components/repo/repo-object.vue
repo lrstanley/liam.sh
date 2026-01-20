@@ -14,19 +14,20 @@ const gh = useGithubUser()
     <UAvatar :src="repo.owner.avatar_url + '&s=40'" class="mt-1" />
     <div class="flex flex-col w-full gap-1">
       <div class="flex flex-row">
-        <a class="text-[1.3em] md:text-[1.5em] text-gradient bg-linear-to-br from-pink-500 via-red-500 to-yellow-500"
+        <NuxtLink
+          class="text-[1.3em] md:text-[1.5em] text-gradient bg-linear-to-br from-pink-500 via-red-500 to-yellow-500"
           :href="repo.html_url" target="_blank">
           {{ repo.owner.login == gh?.login ? repo.name : repo.full_name }}
-        </a>
+        </NuxtLink>
 
-        <a v-if="repo.homepage" :href="repo.homepage" target="_blank" class="ml-auto">
+        <NuxtLink v-if="repo.homepage" :href="repo.homepage" target="_blank" class="ml-auto">
           <UButton color="primary" variant="outline" size="xs" class="cursor-pointer">
             <template #icon>
               <UIcon name="mdi:link" />
             </template>
             homepage
           </UButton>
-        </a>
+        </NuxtLink>
       </div>
 
       <div class="flex flex-row gap-2 text-sm">

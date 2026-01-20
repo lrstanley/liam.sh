@@ -18,14 +18,14 @@ const small = computed(() => width.value <= 640)
 
     <template #content>
       <div class="p-1">
-        <a class="flex flex-row items-center flex-auto mt-1" :href="gh.html_url" target="_blank">
+        <NuxtLink class="flex flex-row items-center flex-auto mt-1" :href="gh.html_url" target="_blank">
           <UAvatar size="md" :src="gh.avatar_url + '&s=80'" class="mr-2 align-middle" :alt="gh.login" />
 
           <div>
             <h2 class="text-base leading-tight">{{ gh.name }}</h2>
             <h2 class="text-base leading-tight text-muted">{{ gh.login }}</h2>
           </div>
-        </a>
+        </NuxtLink>
 
         <div class="mt-4">
           <div class="flex flex-row justify-between flex-auto mt-1">

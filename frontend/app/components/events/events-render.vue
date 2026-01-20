@@ -85,9 +85,9 @@ function fetchMoreEvents() {
     <motion as="div" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :exit="{ opacity: 0 }"
       :transition="{ delay: ((i % 50) + 1) * 0.015 }" v-for="(e, i) in events" :key="e.id"
       class="flex flex-row items-center flex-auto px-1 text-sm gap-x-1 hover:bg-zinc-500/10 text-muted border-b-DEFAULT border-b-gray-100">
-      <a :href="'https://github.com/' + e.actor.login" target="_blank">
+      <NuxtLink :href="'https://github.com/' + e.actor.login" target="_blank">
         <UAvatar size="3xs" :src="e.actor.avatar_url + '&s=40'" class="mr-1 align-middle" :alt="e.actor.login" />
-      </a>
+      </NuxtLink>
 
       <component :is="eventMap[e.event_type]" :event="e" class="flex items-center gap-2 truncate grow" />
       <div class="flex-none">

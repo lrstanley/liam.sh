@@ -38,7 +38,7 @@ useHead({
         <div class="inline-flex items-center">
           <UAvatar class="mr-3" round size="lg" :src="post.edges.author.avatar_url + '&s=40'" />
           <p>
-            <a :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</a>
+            <NuxtLink :href="post.edges.author.html_url" target="_blank">{{ post.edges.author.name }}</NuxtLink>
             <br />
             <i>Published {{ useTimeAgo(post.published_at).value }}</i>
           </p>

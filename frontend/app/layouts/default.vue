@@ -33,7 +33,7 @@ watch(
       Made with
       <UIcon name="mdi:heart" class="align-middle text-primary-600" />
       by
-      <a :href="githubUser?.html_url" target="_blank">{{ githubUser?.login }}</a>
+      <NuxtLink :href="githubUser?.html_url" target="_blank">{{ githubUser?.login }}</NuxtLink>
     </motion>
   </div>
 </template>

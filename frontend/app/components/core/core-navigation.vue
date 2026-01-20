@@ -10,8 +10,12 @@ const self = useSelf()
         {{ link.functionAlias || link.label?.toLowerCase() }}
       </router-link>
     </li>
-    <li><a :href="gh?.html_url">github</a></li>
-    <li><a href="/chat" target="_blank">discord</a></li>
+    <li>
+      <NuxtLink :href="gh?.html_url">github</NuxtLink>
+    </li>
+    <li>
+      <NuxtLink href="/chat" target="_blank">discord</NuxtLink>
+    </li>
     <li v-if="self">
       <router-link to="/admin">sudo</router-link>
     </li>

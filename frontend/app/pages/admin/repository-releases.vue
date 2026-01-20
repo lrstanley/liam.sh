@@ -24,17 +24,17 @@ const columns: TableColumn<SchemaOutdatedRepositoryRelease>[] = [
     <UTable v-if="data" :data="data" :columns="columns" :loading="status === 'pending'" loading-color="primary"
       loading-animation="carousel" class="shrink-0">
       <template #repository-cell="{ row }">
-        <a class="flex flex-row" :href="'https://github.com/' + row.original.repository.full_name + '/releases'"
+        <NuxtLink class="flex flex-row" :href="'https://github.com/' + row.original.repository.full_name + '/releases'"
           target="_blank">
           <img :src="row.original.repository.owner.avatar_url" class="w-6 h-6 rounded-full" />
           <span class="ml-2">{{ row.original.repository.full_name }}</span>
-        </a>
+        </NuxtLink>
       </template>
 
       <template #lastReleaseVersion-cell="{ row }">
-        <a :href="row.original.release.html_url" target="_blank">
+        <NuxtLink :href="row.original.release.html_url" target="_blank">
           <span>{{ row.original.release.name || row.original.release.tag_name }}</span>
-        </a>
+        </NuxtLink>
       </template>
 
       <template #lastReleaseDate-cell="{ row }">

@@ -3,7 +3,7 @@ export default defineNuxtConfig({
     layoutTransition: { name: "layout", mode: "out-in" },
   },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
-  compatibilityDate: "2025-07-15",
+  compatibilityDate: "2026-01-19",
   devtools: {
     enabled: false,
     viteInspect: false,
