@@ -9,7 +9,7 @@ import (
 	"log/slog"
 	"sync/atomic"
 
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v82/github"
 )
 
 // User is a cache of the current GitHub user for the authenticated user.

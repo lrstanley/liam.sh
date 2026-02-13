@@ -4,6 +4,11 @@ export default defineNuxtConfig({
   },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
   compatibilityDate: "2026-01-19",
+  experimental: {
+    asyncContext: true,
+    typedPages: true,
+    asyncEntry: true,
+  },
   devtools: {
     enabled: false,
     viteInspect: false,
@@ -30,7 +35,6 @@ export default defineNuxtConfig({
     clientBundle: { scan: true, sizeLimitKb: 0, includeCustomCollections: true },
   },
   devServer: { port: 8081 },
-  experimental: { typedPages: true },
   telemetry: false,
   vite: {
     server: {

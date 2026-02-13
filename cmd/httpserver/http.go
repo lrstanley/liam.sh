@@ -63,7 +63,6 @@ func httpServer(logger *slog.Logger) *http.Server {
 		chix.UseCrossOriginResourceSharing(&chix.CORSConfig{
 			// AllowedOrigins: []string{"http://localhost:8081", "http://localhost:8080", "https://liam.sh", "https://*.liam.sh"},
 			AllowOriginFunc: func(r *http.Request, origin string) (headers []string, allowed bool) {
-				logger.Info("origin", "origin", origin)
 				return nil, true
 			},
 			AllowedMethods: []string{
@@ -127,17 +126,6 @@ func httpServer(logger *slog.Logger) *http.Server {
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		chix.ErrorWithCode(w, r, http.StatusNotFound)
 	})
-
-	// r.With(chix.UseHeaders(map[string]string{
-	// 	"Vary":          "Accept-Encoding",
-	// 	"Cache-Control": "public, max-age=3600",
-	// })).Mount("/", chix.UseStatic(&chix.StaticConfig{
-	// 	FS:         frontendFS,
-	// 	Prefix:     "/",
-	// 	SPA:        true,
-	// 	AllowLocal: true,
-	// 	Path:       "public",
-	// }))
 
 	return &http.Server{
 		Addr:    cli.Flags.HTTP.BindAddr,

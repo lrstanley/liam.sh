@@ -8,7 +8,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v82/github"
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/lrstanley/liam.sh/internal/models"

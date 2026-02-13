@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/google/go-github/v63/github"
+	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
