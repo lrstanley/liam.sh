@@ -355,6 +355,7 @@ var languageColorMap = map[string]string{
 	"Mask":                            "#f97732",
 	"Mathematical Programming System": "#0530ad",
 	"Max":                             "#c4a79c",
+	"MeTTa":                           "#6a5acd",
 	"Mercury":                         "#ff2b2b",
 	"Mermaid":                         "#ff3670",
 	"Meson":                           "#007800",
