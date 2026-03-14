@@ -14,9 +14,7 @@ type Flags struct {
 
 // ConfigDatabase holds the database configuration.
 type ConfigDatabase struct {
-	URL          string `env:"URL"            required:"" help:"database connection url"`
-	MaxOpenConns int    `env:"MAX_OPEN_CONNS" help:"maximum number of open connections to the database"`
-	MaxIdleConns int    `env:"MAX_IDLE_CONNS" help:"maximum number of idle connections to the database"`
+	URL string `env:"URL" required:"" help:"database connection url"`
 }
 
 // ConfigHTTP are configurations specifically utilized by the HTTP service.
