@@ -8,7 +8,7 @@ export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
 export NODE_OPTIONS := "--max-old-space-size=3900"
 
 license:
-	curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
+	# curl -sL https://liam.sh/-/gh/g/license-header.sh | bash -s
 
 prepare: clean node-prepare node-build go-prepare
 	@echo
