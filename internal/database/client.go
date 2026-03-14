@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
@@ -29,9 +30,35 @@ func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
 		panic(err)
 	}
 
-	poolConfig.PingTimeout = 5 * time.Second
+	var db *pgxpool.Pool
 
-	db, err := pgxpool.NewWithConfig(ctx, poolConfig)
+	logger := func() *slog.Logger {
+		stats := db.Stat()
+		return slog.With(
+			slog.Group(
+				"database",
+				"active", stats.ConstructingConns()+stats.AcquiredConns(),
+				"idle", stats.IdleConns(),
+				"max", stats.MaxConns(),
+			),
+		)
+	}
+
+	poolConfig.MaxConnIdleTime = 5 * time.Minute
+	poolConfig.PingTimeout = 5 * time.Second
+	poolConfig.BeforeConnect = func(ctx context.Context, _ *pgx.ConnConfig) error {
+		logger().DebugContext(ctx, "initializing new connection")
+		return nil
+	}
+	poolConfig.AfterConnect = func(ctx context.Context, _ *pgx.Conn) error {
+		logger().DebugContext(ctx, "connection initialized")
+		return nil
+	}
+	poolConfig.BeforeClose = func(_ *pgx.Conn) {
+		logger().Debug("closing connection")
+	}
+
+	db, err = pgxpool.NewWithConfig(ctx, poolConfig)
 	if err != nil {
 		panic(err)
 	}
