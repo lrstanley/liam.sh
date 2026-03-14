@@ -74,7 +74,7 @@ const userDropdownItems = computed<DropdownMenuItem[][]>(() => [
       </template>
     </UDashboardSidebar>
 
-    <UDashboardPanel>
+    <UDashboardPanel :ui="{ body: 'sm:gap-2' }">
       <template #header>
         <UDashboardNavbar :title="title">
           <template #leading>

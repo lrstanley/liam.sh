@@ -42,6 +42,16 @@ export default defineNuxtConfig({
       strictPort: true,
     },
     plugins: [],
+    optimizeDeps: {
+      include: [
+        "@nuxt/ui > prosemirror-state",
+        "@nuxt/ui > prosemirror-transform",
+        "@nuxt/ui > prosemirror-model",
+        "@nuxt/ui > prosemirror-view",
+        "@nuxt/ui > prosemirror-gapcursor",
+        "tiptap-extension-code-block-shiki",
+      ],
+    },
   },
   routeRules: {
     "/security.txt": { redirect: "/-/security.txt" },
@@ -61,7 +71,7 @@ export default defineNuxtConfig({
     clients: {
       api: {
         schema: "../internal/database/ent/rest/openapi.json",
-      }
-    }
+      },
+    },
   },
 })
