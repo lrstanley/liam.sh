@@ -9,61 +9,32 @@ import (
 	"database/sql"
 	"iter"
 	"log/slog"
-	"net/url"
-	"sync"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
+	_ "github.com/jackc/pgx/v5/stdlib" // load postgres driver.
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
-	sqlite "modernc.org/sqlite"
 )
 
 //go:generate go run -mod=readonly entc.go
 
-var defaultConnectionValues = url.Values{
-	"_pragma": {
-		"foreign_keys(1)",
-		"journal_mode(WAL)",
-		"temp_store(2)",
-		"synchronous(1)",
-		"mmap_size(30000000000)",
-	},
-	"_busy_timeout": {"30"},
-}
-
-var sqliteInit sync.Once
-
 // Open new postgres connection.
 func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
-	sqliteInit.Do(func() {
-		sql.Register("sqlite3", &sqlite.Driver{})
-	})
-
-	uri, err := url.Parse(config.URL)
-	if err != nil {
-		slog.ErrorContext(ctx, "failed to parse database connection", "error", err)
-		return nil
-	}
-
-	values := uri.Query()
-	for k, v := range defaultConnectionValues {
-		if _, ok := values[k]; !ok {
-			values[k] = v
-		}
-	}
-	uri.RawQuery = values.Encode()
-
-	db, err := sql.Open("sqlite3", uri.String())
+	db, err := sql.Open("pgx", config.URL)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to open database connection", "error", err)
 		return nil
 	}
-	db.SetMaxOpenConns(4)
 
-	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.SQLite, db)))
+	db.SetMaxOpenConns(config.MaxOpenConns)
+	if config.MaxIdleConns > 0 {
+		db.SetMaxIdleConns(config.MaxIdleConns)
+	}
+
+	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.Postgres, db)))
 }
 
 func Migrate(ctx context.Context, db *ent.Client) {
@@ -80,6 +51,7 @@ func Migrate(ctx context.Context, db *ent.Client) {
 		schema.WithForeignKeys(true),
 	); err != nil {
 		slog.ErrorContext(ctx, "failed to create schema", "error", err)
+		panic(err)
 	}
 	slog.InfoContext(ctx, "database schema migration complete")
 }
