@@ -6,14 +6,15 @@ package database
 
 import (
 	"context"
-	"database/sql"
 	"iter"
 	"log/slog"
+	"time"
 
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/schema"
-	_ "github.com/jackc/pgx/v5/stdlib" // load postgres driver.
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/stdlib"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	_ "github.com/lrstanley/liam.sh/internal/database/ent/runtime" // required by ent.
 	"github.com/lrstanley/liam.sh/internal/models"
@@ -23,18 +24,19 @@ import (
 
 // Open new postgres connection.
 func Open(ctx context.Context, config models.ConfigDatabase) *ent.Client {
-	db, err := sql.Open("pgx", config.URL)
+	poolConfig, err := pgxpool.ParseConfig(config.URL)
 	if err != nil {
-		slog.ErrorContext(ctx, "failed to open database connection", "error", err)
-		return nil
+		panic(err)
 	}
 
-	db.SetMaxOpenConns(config.MaxOpenConns)
-	if config.MaxIdleConns > 0 {
-		db.SetMaxIdleConns(config.MaxIdleConns)
+	poolConfig.PingTimeout = 5 * time.Second
+
+	db, err := pgxpool.NewWithConfig(ctx, poolConfig)
+	if err != nil {
+		panic(err)
 	}
 
-	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.Postgres, db)))
+	return ent.NewClient(ent.Driver(entsql.OpenDB(dialect.Postgres, stdlib.OpenDBFromPool(db))))
 }
 
 func Migrate(ctx context.Context, db *ent.Client) {

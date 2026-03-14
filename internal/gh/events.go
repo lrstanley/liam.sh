@@ -124,6 +124,8 @@ func EventsRunner(ctx context.Context, logger *slog.Logger) error {
 			SetRepoID(event.GetRepo().GetID()).
 			SetRepo(event.GetRepo()).
 			SetPayload(payload).
+			OnConflictColumns(githubevent.FieldEventID).
+			UpdateNewValues().
 			Exec(ctx)
 		if err != nil {
 			return err
