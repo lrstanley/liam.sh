@@ -124,10 +124,16 @@ func EventsRunner(ctx context.Context, logger *slog.Logger) error {
 			SetRepoID(event.GetRepo().GetID()).
 			SetRepo(event.GetRepo()).
 			SetPayload(payload).
-			OnConflictColumns(githubevent.FieldEventID).
+			OnConflictColumns(githubevent.FieldID, githubevent.FieldEventID).
 			UpdateNewValues().
 			Exec(ctx)
 		if err != nil {
+			logger.ErrorContext(
+				ctx,
+				"failed to create event",
+				"event", event,
+				"error", err,
+			)
 			return err
 		}
 	}
