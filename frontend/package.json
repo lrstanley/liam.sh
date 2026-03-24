@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "type": "module",
   "dependencies": {
     "@nuxt/fonts": "^0.14.0",
@@ -48,6 +49,11 @@
     "postinstall": "nuxt prepare",
     "preinstall": "npx only-allow pnpm",
     "preview": "PORT=8081 nuxt preview"
+  },
+  "pnpm": {
+    "overrides": {
+      "vite": "^8.0.0"
+    }
   },
   "packageManager": "pnpm@10.9.0"
 }
