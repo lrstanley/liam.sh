@@ -5,35 +5,17 @@
 package wakapi
 
 import (
-	"sort"
+	"maps"
+	"slices"
 
-	"github.com/agnivade/levenshtein"
+	"github.com/lrstanley/x/text/fuzzy"
 )
 
 // lookupColor returns the hex color for a given language name from the internal
 // language color map. If the language name is not found, it will return the
 // closest match.
 func lookupColor(name string) (hex string) {
-	lowestCalc := 1000
-
-	sortedKeys := make([]string, 0, len(languageColorMap))
-	for k := range languageColorMap {
-		sortedKeys = append(sortedKeys, k)
-	}
-	sort.Strings(sortedKeys)
-
-	for _, lang := range sortedKeys {
-		calc := levenshtein.ComputeDistance(name, lang)
-
-		if calc < lowestCalc {
-			lowestCalc = calc
-			hex = languageColorMap[lang]
-		}
-
-		if calc == 0 {
-			break
-		}
-	}
-
-	return hex
+	sortedKeys := slices.Collect(maps.Keys(languageColorMap))
+	slices.Sort(sortedKeys)
+	return languageColorMap[fuzzy.ShortestDistance(name, sortedKeys)]
 }

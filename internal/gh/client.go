@@ -6,12 +6,15 @@ package gh
 
 import (
 	"context"
+	"log/slog"
+	"net/http"
 	"sync"
+	"time"
 
 	"github.com/google/go-github/v82/github"
-	"github.com/gregjones/httpcache"
-	"github.com/gregjones/httpcache/diskcache"
 	"github.com/lrstanley/liam.sh/internal/models"
+	"github.com/lrstanley/x/http/utils/httpccache"
+	"github.com/lrstanley/x/http/utils/httpclog"
 	ghql "github.com/shurcooL/githubv4"
 	"golang.org/x/oauth2"
 )
@@ -23,11 +26,26 @@ var (
 )
 
 // NewClient returns a new pre-configured GitHub client.
-func NewClient(ctx context.Context, config models.ConfigGithub) {
+func NewClient(ctx context.Context, logger *slog.Logger, config models.ConfigGithub) {
+	storage, err := httpccache.NewFileStorage(config.CachePath, 250, 24*time.Hour)
+	if err != nil {
+		panic(err)
+	}
+
 	tc := oauth2.NewClient(ctx, oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Token}))
 	tc.Transport = &oauth2.Transport{
 		Source: oauth2.StaticTokenSource(&oauth2.Token{AccessToken: config.Token}),
-		Base:   httpcache.NewTransport(diskcache.New(config.CachePath)),
+		Base: httpccache.NewTransport(&httpccache.Config{
+			BaseTransport: httpclog.NewTransport(&httpclog.Config{
+				BaseTransport: http.DefaultTransport,
+				Logger:        logger,
+			}),
+			Storage:                   storage,
+			Logger:                    logger,
+			AllowAuthorizationCaching: true,
+			MaxObjectSize:             1024 * 1024 * 10, // 10MB
+			AllowHeuristicFreshness:   true,
+		}),
 	}
 
 	clientOnce.Do(func() {

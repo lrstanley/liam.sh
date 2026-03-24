@@ -10,7 +10,6 @@ import (
 	"log/slog"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/liam.sh/internal/database"
@@ -125,8 +124,6 @@ func fetchRepositories(ctx context.Context, logger *slog.Logger) (allRepos []*gi
 			return nil, ctx.Err()
 		default:
 		}
-
-		time.Sleep(1 * time.Second)
 
 		var repos []*github.Repository
 

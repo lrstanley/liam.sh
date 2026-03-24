@@ -7,7 +7,6 @@ package gh
 import (
 	"context"
 	"log/slog"
-	"time"
 
 	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
@@ -34,8 +33,6 @@ func fetchReleases(
 			return nil, ctx.Err()
 		default:
 		}
-
-		time.Sleep(1 * time.Second)
 
 		var releases []*github.RepositoryRelease
 

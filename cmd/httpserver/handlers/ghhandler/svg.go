@@ -16,12 +16,13 @@ import (
 	"strings"
 	"time"
 
-	cache "github.com/Code-Hex/go-generics-cache"
 	"github.com/go-chi/chi/v5"
 	"github.com/lrstanley/chix/v2"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrepository"
 	"github.com/lrstanley/liam.sh/internal/gh"
+	"github.com/lrstanley/x/sync/cache"
+	"github.com/lrstanley/x/sync/cache/policy/lfu"
 )
 
 const (
@@ -33,7 +34,12 @@ var (
 	//go:embed project.svg
 	rawSVG string
 
-	iconCache = cache.New[string, string]()
+	iconCache = cache.New(
+		context.Background(),
+		cache.WithLFU[string, string](
+			lfu.WithCapacity(1000),
+		),
+	)
 )
 
 type svgParams struct {

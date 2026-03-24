@@ -47,7 +47,7 @@ func main() {
 
 	database.Migrate(ctx, db)
 
-	gh.NewClient(ctx, cli.Flags.Github)
+	gh.NewClient(ctx, logger, cli.Flags.Github)
 
 	var err error
 	aiSvc, err = ai.NewService(ctx, cli.Flags.AI, cli.Flags.HTTP, db, logger)

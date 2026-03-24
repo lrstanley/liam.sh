@@ -9,7 +9,6 @@ import (
 	"encoding/json"
 	"log/slog"
 	"slices"
-	"time"
 
 	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
@@ -66,8 +65,6 @@ func EventsRunner(ctx context.Context, logger *slog.Logger) error {
 			return ctx.Err()
 		default:
 		}
-
-		time.Sleep(5 * time.Second)
 
 		var events []*github.Event
 

@@ -11,7 +11,6 @@ import (
 	"log/slog"
 	"net/http"
 	"regexp"
-	"time"
 
 	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
@@ -93,8 +92,6 @@ func fetchGists(ctx context.Context, logger *slog.Logger) (allGists []*github.Gi
 			return nil, ctx.Err()
 		default:
 		}
-
-		time.Sleep(1 * time.Second)
 
 		var gists []*github.Gist
 
