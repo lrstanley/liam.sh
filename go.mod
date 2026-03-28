@@ -6,7 +6,7 @@ tool github.com/lrstanley/entrest
 
 require (
 	entgo.io/ent v0.14.6
-	github.com/alecthomas/chroma v0.10.0
+	github.com/alecthomas/chroma/v2 v2.23.1
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/httprate v0.15.0
 	github.com/go-playground/form/v4 v4.3.0
@@ -16,17 +16,17 @@ require (
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.0
 	github.com/lrstanley/clix/v2 v2.0.0-beta.1
 	github.com/lrstanley/entrest v1.0.2
-	github.com/lrstanley/x/http/utils v0.0.0-20260324061829-e2cbc2402ebc
-	github.com/lrstanley/x/scheduler v0.0.0-20260324061829-e2cbc2402ebc
-	github.com/lrstanley/x/sync v0.0.0-20260324061829-e2cbc2402ebc
-	github.com/lrstanley/x/text/fuzzy v0.0.0-20260324061829-e2cbc2402ebc
+	github.com/lrstanley/x/http/utils v0.0.0-20260328025304-fe0396d65897
+	github.com/lrstanley/x/scheduler v0.0.0-20260328025304-fe0396d65897
+	github.com/lrstanley/x/sync v0.0.0-20260328025304-fe0396d65897
+	github.com/lrstanley/x/text/fuzzy v0.0.0-20260328025304-fe0396d65897
 	github.com/markbates/goth v1.82.0
 	github.com/microcosm-cc/bluemonday v1.0.27
-	github.com/ogen-go/ogen v1.20.1
+	github.com/ogen-go/ogen v1.20.2
 	github.com/shurcooL/githubv4 v0.0.0-20260209031235-2402fdf4a9ed
 	github.com/tmc/langchaingo v0.1.14
-	github.com/yuin/goldmark v1.8.0
-	github.com/yuin/goldmark-highlighting v0.0.0-20220208100518-594be1970594
+	github.com/yuin/goldmark v1.8.2
+	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
 	golang.org/x/oauth2 v0.36.0
 	mvdan.cc/xurls/v2 v2.6.0
 )
