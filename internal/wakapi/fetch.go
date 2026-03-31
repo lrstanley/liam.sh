@@ -17,7 +17,7 @@ import (
 
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/x/http/utils/httpclog"
-	"github.com/lrstanley/x/scheduler"
+	"github.com/lrstanley/x/sync/scheduler"
 )
 
 const maxSummaryLength = 5

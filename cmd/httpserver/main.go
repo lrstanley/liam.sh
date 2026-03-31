@@ -18,7 +18,7 @@ import (
 	"github.com/lrstanley/liam.sh/internal/gh"
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/liam.sh/internal/wakapi"
-	"github.com/lrstanley/x/scheduler"
+	"github.com/lrstanley/x/sync/scheduler"
 )
 
 var (

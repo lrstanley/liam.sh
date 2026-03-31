@@ -12,14 +12,13 @@ require (
 	github.com/go-playground/form/v4 v4.3.0
 	github.com/google/go-github/v82 v82.0.0
 	github.com/jackc/pgx/v5 v5.9.1
-	github.com/lrstanley/chix/v2 v2.0.0-beta.0
-	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.0
-	github.com/lrstanley/clix/v2 v2.0.0-beta.1
+	github.com/lrstanley/chix/v2 v2.0.0-beta.1
+	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.1
+	github.com/lrstanley/clix/v2 v2.0.0
 	github.com/lrstanley/entrest v1.0.2
-	github.com/lrstanley/x/http/utils v0.0.0-20260328025304-fe0396d65897
-	github.com/lrstanley/x/scheduler v0.0.0-20260328025304-fe0396d65897
-	github.com/lrstanley/x/sync v0.0.0-20260328025304-fe0396d65897
-	github.com/lrstanley/x/text/fuzzy v0.0.0-20260328025304-fe0396d65897
+	github.com/lrstanley/x/http/utils v0.0.0-20260331013828-98de5249208d
+	github.com/lrstanley/x/sync v0.0.0-20260331013828-98de5249208d
+	github.com/lrstanley/x/text/fuzzy v0.0.0-20260331013828-98de5249208d
 	github.com/markbates/goth v1.82.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/ogen-go/ogen v1.20.2
@@ -49,7 +48,7 @@ require (
 	github.com/go-openapi/inflect v0.21.5 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.30.1 // indirect
+	github.com/go-playground/validator/v10 v10.30.2 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
