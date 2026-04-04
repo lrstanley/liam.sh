@@ -23,4 +23,4 @@
 **/.nuxt
 **/.nitro
 **/.cache
-/web/app/components/events/objects/events.ts
+/frontend/app/components/events/objects/events.ts

@@ -11,23 +11,28 @@ RUN \
 	make go-build
 
 # build frontend
-FROM oven/bun:1-alpine AS build-web
+FROM node:22-alpine AS build-node
 
 RUN apk add --no-cache make bash curl
 
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
 WORKDIR /build
 COPY . /build
-RUN make node-prepare
-RUN make node-build
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store make node-prepare
+RUN \
+	--mount=type=cache,id=pnpm,target=/pnpm/store \
+	make node-build
 
 # runtime
-FROM oven/bun:1-alpine AS runtime
+FROM node:22-alpine
 WORKDIR /app
 
 RUN apk add --no-cache ca-certificates
 
 # copy frontend
-COPY --from=build-web /build/web/.output /app/web
+COPY --from=build-node /build/frontend/.output /app/frontend
 
 # copy backend
 COPY --from=build-go /build/httpserver /app/backend/httpserver

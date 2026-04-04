@@ -22,6 +22,12 @@ up: node-upgrade-deps go-upgrade-deps
 clean:
 	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
 
+mirror-prod-db:
+	rm -rfv local.db*
+	kubectl -n ${KUBERNETES_NAMESPACE} get pods -l ${KUBERNETES_SELECTOR} --no-headers \
+		| awk '{print $$1}' | head -1 \
+		| xargs -n1 -I{} kubectl cp -n ${KUBERNETES_NAMESPACE} {}:/data/local.db local.db
+
 generate-language-colors:
 	curl -LsS -o- https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml \
 		| yq '{"languages": .} | tojson' \
@@ -40,32 +46,32 @@ docker-build:
 
 # frontend
 node-fetch:
-	command -v bun >/dev/null >&2 || exit 1
-	cd web/ && bun install
-	if [ ! -f web/app/components/events/objects/events.ts ]; then \
-		bunx openapi-typescript -o web/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
+	command -v pnpm >/dev/null >&2 || corepack enable
+	cd frontend/ && pnpm install
+	if [ ! -f frontend/app/components/events/objects/events.ts ]; then \
+		pnpm dlx openapi-typescript -o frontend/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
 	fi
 
 node-upgrade-deps:
-	cd web/ && bun update -i
+	cd frontend/ && pnpm up -iL
 
 node-prepare: license node-fetch
 	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd web/ && bunx eslint \
+	cd frontend/ && pnpm exec eslint \
 		--ignore-path ../../../.gitignore \
 		--ext .js,.ts,.vue .
-	cd web/ && bunx vue-tsc --noEmit
+	cd frontend/ && pnpm exec vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd web/ && bun run dev
+	cd frontend/ && pnpm run dev
 
 node-build: node-prepare
-	cd web/ && bun run build
+	cd frontend/ && pnpm run build
 
 node-preview: node-build
-	cd web/ && bun run preview
+	cd frontend/ && pnpm run preview
 
 # backend
 go-clean:

@@ -5,9 +5,9 @@
     "@nuxt/fonts": "^0.14.0",
     "@nuxt/ui": "^4.5.1",
     "@tailwindcss/vite": "^4.2.1",
-    "motion-v": "2.2.0",
+    "motion-v": "2.0.0",
     "nuxt": "^4.4.2",
-    "shiki": "^4.0.2",
+    "shiki": "^1.29.2",
     "tailwindcss": "^4.2.1",
     "tiptap-extension-code-block-shiki": "^1.0.0",
     "typescript": "^5.9.3",
@@ -47,9 +47,13 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "postinstall": "nuxt prepare",
+    "preinstall": "npx only-allow pnpm",
     "preview": "PORT=8081 nuxt preview"
   },
-  "overrides": {
-    "vite": "8.0.3"
-  }
+  "pnpm": {
+    "overrides": {
+      "vite": "^8.0.0"
+    }
+  },
+  "packageManager": "pnpm@10.9.0"
 }

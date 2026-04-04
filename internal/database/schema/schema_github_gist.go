@@ -9,7 +9,7 @@ import (
 	"entgo.io/ent/schema"
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v82/github"
 	"github.com/lrstanley/entrest"
 	"github.com/ogen-go/ogen"
 )
