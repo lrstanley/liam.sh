@@ -65,9 +65,6 @@ export default defineNuxtConfig({
   // ogImage: {
   //   zeroRuntime: true,
   // },
-  nitro: {
-    preset: "bun",
-  },
   openFetch: {
     disableNitroPlugin: true,
     disableNuxtPlugin: true,
