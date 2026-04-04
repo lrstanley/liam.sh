@@ -36,6 +36,9 @@ export default defineNuxtConfig({
   },
   devServer: { port: 8081 },
   telemetry: false,
+  nitro: {
+    preset: "bun",
+  },
   vite: {
     server: {
       open: false,

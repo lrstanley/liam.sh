@@ -38,32 +38,31 @@ docker-build:
 
 # web
 node-fetch:
-	command -v pnpm >/dev/null >&2 || corepack enable
-	cd web/ && pnpm install
+	cd web/ && bun install
 	if [ ! -f web/app/components/events/objects/events.ts ]; then \
-		pnpm dlx openapi-typescript -o web/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
+		bunx openapi-typescript -o web/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
 	fi
 
 node-upgrade-deps:
-	cd web/ && pnpm up -iL
+	cd web/ && bun update -i
 
 node-prepare: license node-fetch
 	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd web/ && pnpm exec eslint \
+	cd web/ && bunx eslint \
 		--ignore-path ../../../.gitignore \
 		--ext .js,.ts,.vue .
-	cd web/ && pnpm exec vue-tsc --noEmit
+	cd web/ && bunx vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd web/ && pnpm run dev
+	cd web/ && bun run dev
 
 node-build: node-prepare
-	cd web/ && pnpm run build
+	cd web/ && bun run build
 
 node-preview: node-build
-	cd web/ && pnpm run preview
+	cd web/ && bun run preview
 
 # backend
 go-clean:

@@ -56,7 +56,7 @@
     // "**/ent": true,
     "**/node_modules": true,
     "**/package-lock.json": true,
-    "**/pnpm-lock*": true,
+    "**/*.lock": true,
     "**/tmp": true,
     "**/.env": true,
     "**/.output": true,
