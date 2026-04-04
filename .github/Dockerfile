@@ -31,10 +31,7 @@ WORKDIR /app
 
 RUN apk add --no-cache ca-certificates
 
-# copy frontend
-COPY --from=build-node /build/frontend/.output /app/frontend
-
-# copy backend
+COPY --from=build-node /build/web/.output /app/web
 COPY --from=build-go /build/httpserver /app/backend/httpserver
 
 ENTRYPOINT ["/bin/ash", "-i"]

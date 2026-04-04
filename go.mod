@@ -10,12 +10,12 @@ require (
 	github.com/go-chi/chi/v5 v5.2.5
 	github.com/go-chi/httprate v0.15.0
 	github.com/go-playground/form/v4 v4.3.0
-	github.com/google/go-github/v82 v82.0.0
+	github.com/google/go-github/v84 v84.0.0
 	github.com/jackc/pgx/v5 v5.9.1
 	github.com/lrstanley/chix/v2 v2.0.0-beta.1
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.1
 	github.com/lrstanley/clix/v2 v2.0.0
-	github.com/lrstanley/entrest v1.0.2
+	github.com/lrstanley/entrest v1.0.3
 	github.com/lrstanley/x/http/utils v0.0.0-20260331013828-98de5249208d
 	github.com/lrstanley/x/sync v0.0.0-20260331013828-98de5249208d
 	github.com/lrstanley/x/text/fuzzy v0.0.0-20260331013828-98de5249208d
@@ -34,7 +34,7 @@ require (
 	ariga.io/atlas v1.1.0 // indirect
 	github.com/Code-Hex/go-generics-cache v1.5.1 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
-	github.com/alecthomas/kong v1.14.0 // indirect
+	github.com/alecthomas/kong v1.15.0 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect

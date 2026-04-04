@@ -8,7 +8,7 @@ import (
 	"context"
 	"log/slog"
 
-	"github.com/google/go-github/v82/github"
+	"github.com/google/go-github/v84/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubasset"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"

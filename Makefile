@@ -3,8 +3,6 @@
 export PROJECT := "httpserver"
 export PACKAGE := "github.com/lrstanley/liam.sh/cmd/httpserver"
 export DOCKER_BUILDKIT := 1
-export KUBERNETES_NAMESPACE := "liam-sh"
-export KUBERNETES_SELECTOR := "app.kubernetes.io/name=liam-sh"
 export NODE_OPTIONS := "--max-old-space-size=3900"
 
 license:
@@ -22,12 +20,6 @@ up: node-upgrade-deps go-upgrade-deps
 clean:
 	/bin/rm -rfv "cmd/httpserver/public/dist/*" ${PROJECT}
 
-mirror-prod-db:
-	rm -rfv local.db*
-	kubectl -n ${KUBERNETES_NAMESPACE} get pods -l ${KUBERNETES_SELECTOR} --no-headers \
-		| awk '{print $$1}' | head -1 \
-		| xargs -n1 -I{} kubectl cp -n ${KUBERNETES_NAMESPACE} {}:/data/local.db local.db
-
 generate-language-colors:
 	curl -LsS -o- https://raw.githubusercontent.com/github/linguist/master/lib/linguist/languages.yml \
 		| yq '{"languages": .} | tojson' \
@@ -44,34 +36,34 @@ docker-build:
 		--file .github/Dockerfile \
 		--force-rm .
 
-# frontend
+# web
 node-fetch:
 	command -v pnpm >/dev/null >&2 || corepack enable
-	cd frontend/ && pnpm install
-	if [ ! -f frontend/app/components/events/objects/events.ts ]; then \
-		pnpm dlx openapi-typescript -o frontend/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
+	cd web/ && pnpm install
+	if [ ! -f web/app/components/events/objects/events.ts ]; then \
+		pnpm dlx openapi-typescript -o web/app/components/events/objects/events.ts https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json; \
 	fi
 
 node-upgrade-deps:
-	cd frontend/ && pnpm up -iL
+	cd web/ && pnpm up -iL
 
 node-prepare: license node-fetch
 	@echo
 
 node-lint: node-build # needed to generate eslint auto-import ignores.
-	cd frontend/ && pnpm exec eslint \
+	cd web/ && pnpm exec eslint \
 		--ignore-path ../../../.gitignore \
 		--ext .js,.ts,.vue .
-	cd frontend/ && pnpm exec vue-tsc --noEmit
+	cd web/ && pnpm exec vue-tsc --noEmit
 
 node-debug: node-prepare
-	cd frontend/ && pnpm run dev
+	cd web/ && pnpm run dev
 
 node-build: node-prepare
-	cd frontend/ && pnpm run build
+	cd web/ && pnpm run build
 
 node-preview: node-build
-	cd frontend/ && pnpm run preview
+	cd web/ && pnpm run preview
 
 # backend
 go-clean:
