@@ -4,14 +4,25 @@
 This document outlines some of the guidelines that we try and adhere to while
 working on this project.
 
-> :point_right: **Note**: before participating in the community, please read our
-> [Code of Conduct][coc].
+> [!IMPORTANT]
+> before participating in the community, please read our [Code of Conduct][coc].
 > By interacting with this repository, organization, or community you agree to
 > abide by our Code of Conduct.
+
+> [!CAUTION]
+> If you contribute **any source code** to this repository, you agree to the terms
+> of the [Developer Certificate of Origin][dco]. This helps ensure that contributions
+> aren't in violation of 3rd party license terms.
 >
-> Additionally, if you contribute **any source code** to this repository, you
-> agree to the terms of the [Developer Certificate of Origin][dco]. This helps
-> ensure that contributions aren't in violation of 3rd party license terms.
+> ### AI Assisted Development
+> **AI Agents MUST NOT add `Signed-off-by` tags to commits.**
+> Only humans can legally certify the [Developer Certificate of Origin][dco]. The
+> human submitter is responsible for:
+>
+> - Reviewing all AI-generated code
+> - Ensuring compliance with licensing requirements
+> - Adding their own Sign-off-by tag to certify the DCO
+> - Taking full responsibility for the contribution
 
 
 ## :rocket: Pull requests
@@ -21,9 +32,9 @@ over to the [open pull requests][pull-requests] or [issues list][issues].
 
 ## :raised_back_of_hand: Assistance with discussions
 
-   * Take a look at the [open discussions][discussions], and if you feel like
-     you'd like to help out other members of the community, it would be much
-     appreciated!
+- Take a look at the [open discussions][discussions], and if you feel like
+  you'd like to help out other members of the community, it would be much
+  appreciated!
 
 ## :pushpin: Guidelines
 
@@ -31,32 +42,31 @@ over to the [open pull requests][pull-requests] or [issues list][issues].
 
 Below are a few guidelines if you would like to contribute:
 
-   * If the feature is large or the bugfix has potential breaking changes,
-     please open an issue first to ensure the changes go down the best path.
-   * If possible, break the changes into smaller PRs. Pull requests should be
-     focused on a specific feature/fix.
-   * Pull requests will only be accepted with sufficient documentation
-     describing the new functionality/fixes.
-   * Keep the code simple where possible. Code that is smaller/more compact
-     does not mean better. Don't do magic behind the scenes.
-   * Use the same formatting/styling/structure as existing code.
-   * Follow idioms and community-best-practices of the related language,
-     unless the previous above guidelines override what the community
-     recommends.
-   * Always test your changes, both the features/fixes being implemented, but
-     also in the standard way that a user would use the project (not just
-     your configuration that fixes your issue).
-   * Only use 3rd party libraries when necessary. If only a small portion of
-     the library is needed, simply rewrite it within the library to prevent
-     useless imports.
+- If the feature is large or the bugfix has potential breaking changes,
+  please open an issue first to ensure the changes go down the best path.
+- If possible, break the changes into smaller PRs. Pull requests should be
+  focused on a specific feature/fix.
+- Pull requests will only be accepted with sufficient documentation
+  describing the new functionality/fixes.
+- Keep the code simple where possible. Code that is smaller/more compact
+  does not mean better. Don't do magic behind the scenes.
+- Use the same formatting/styling/structure as existing code.
+- Follow idioms and community-best-practices of the related language,
+  unless the previous above guidelines override what the community
+  recommends.
+- Always test your changes, both the features/fixes being implemented, but
+  also in the standard way that a user would use the project (not just
+  your configuration that fixes your issue).
+- Only use 3rd party libraries when necessary. If only a small portion of
+  the library is needed, simply rewrite it within the library to prevent
+  useless imports.
 
 ### :hamster: Golang
 
-   * See [golang/go/wiki/CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
-   * This project uses [golangci-lint](https://golangci-lint.run/) for
-     Go-related files. This should be available for any editor that supports
-     `gopls`, however you can also run it locally with `golangci-lint run`
-     after installing it.
+- See [golang/go/wiki/CodeReviewComments](https://github.com/golang/go/wiki/CodeReviewComments)
+- This project uses [golangci-lint](https://golangci-lint.run/) for Go-related
+  files. This should be available for any editor that supports `gopls`, however
+  you can also run it locally with `golangci-lint run` after installing it.
 
 
 
@@ -80,16 +90,16 @@ Below are a few guidelines if you would like to contribute:
 
 ## :clipboard: References
 
-   * [Open Source: How to Contribute](https://opensource.guide/how-to-contribute/)
-   * [About pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
-   * [GitHub Docs](https://docs.github.com/)
+- [Open Source: How to Contribute](https://opensource.guide/how-to-contribute/)
+- [About pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
+- [GitHub Docs](https://docs.github.com/)
 
 ## :speech_balloon: What to do next?
 
-   * :old_key: Find a vulnerability? Check out our [Security and Disclosure][security] policy.
-   * :link: Repository [License][license].
-   * [Support][support]
-   * [Code of Conduct][coc].
+- :old_key: Find a vulnerability? Check out our [Security and Disclosure][security] policy.
+- :link: Repository [License][license].
+- [Support][support]
+- [Code of Conduct][coc].
 
 <!-- definitions -->
 [coc]: https://github.com/lrstanley/liam.sh/blob/master/.github/CODE_OF_CONDUCT.md
