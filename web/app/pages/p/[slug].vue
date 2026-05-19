@@ -20,7 +20,7 @@ const toc = computed(() => (postRef.value ? getNodeTree(postRef.value) : []))
 const self = useSelf()
 
 useHead({
-  title: post.value ? post.value?.title + " · Liam Stanley" : null,
+  title: post.value ? post.value?.title : null,
 })
 </script>
 

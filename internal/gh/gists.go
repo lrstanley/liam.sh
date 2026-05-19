@@ -8,11 +8,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"io"
 	"log/slog"
 	"net/http"
 	"regexp"
 
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v87/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"
@@ -34,6 +35,7 @@ func GistRunner(ctx context.Context, logger *slog.Logger) error {
 	}
 
 	var req *http.Request
+	var resp *github.Response
 	buf := &bytes.Buffer{}
 
 	for _, gist := range gists {
@@ -50,13 +52,19 @@ func GistRunner(ctx context.Context, logger *slog.Logger) error {
 					return fmt.Errorf("failed to create raw gist request: %w", err)
 				}
 
-				buf.Reset()
-				_, err = RestClient.Do(ctx, req, buf)
+				resp, err = RestClient.Do(req, nil)
 				if err != nil {
 					return fmt.Errorf("failed to fetch gist: %w", err)
 				}
 
+				buf.Reset()
+				_, err = io.Copy(buf, resp.Body)
+				if err != nil {
+					_ = resp.Body.Close()
+					return fmt.Errorf("failed to copy gist body: %w", err)
+				}
 				content = buf.String()
+				_ = resp.Body.Close()
 			}
 
 			file.Content = &content

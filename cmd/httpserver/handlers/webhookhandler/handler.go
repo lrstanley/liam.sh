@@ -12,7 +12,7 @@ import (
 	"reflect"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v87/github"
 	"github.com/lrstanley/chix/v2"
 )
 

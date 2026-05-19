@@ -44,7 +44,7 @@ node-fetch:
 	fi
 
 node-upgrade-deps:
-	cd web/ && bun update -i
+	cd web/ && bun update -i --minimum-release-age 86400
 
 node-prepare: license node-fetch
 	@echo

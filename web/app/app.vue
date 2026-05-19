@@ -11,7 +11,7 @@ nuxtApp.hook('openFetch:onResponse', (ctx) => ctx.response.status < 300 ? loadin
 const route = useRoute()
 
 const title = computed(() =>
-  route.meta.title ? `${route.meta.title} · Liam Stanley` : "Personal Website & Blog"
+  route.meta.title as string || "Personal Website & Blog"
 )
 
 useHead({

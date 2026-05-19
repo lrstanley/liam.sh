@@ -2,6 +2,9 @@ export default defineNuxtConfig({
   app: {
     layoutTransition: { name: "layout", mode: "out-in" },
   },
+  site: {
+    name: "liam.sh",
+  },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
   compatibilityDate: "2026-01-19",
   experimental: {
@@ -36,6 +39,9 @@ export default defineNuxtConfig({
   },
   devServer: { port: 8081 },
   telemetry: false,
+  // nitro: {
+  //   preset: "bun",
+  // },
   vite: {
     server: {
       open: false,
@@ -62,6 +68,7 @@ export default defineNuxtConfig({
     exclude: ["/admin/**"],
     sources: ["/api/__sitemap__/urls"],
   },
+  ogImage: { enabled: false },
   openFetch: {
     disableNitroPlugin: true,
     disableNuxtPlugin: true,

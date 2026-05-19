@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/go-github/v84/github"
+	"github.com/google/go-github/v87/github"
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/x/http/utils/httpccache"
 	"github.com/lrstanley/x/http/utils/httpclog"
@@ -49,7 +49,12 @@ func NewClient(ctx context.Context, logger *slog.Logger, config models.ConfigGit
 	}
 
 	clientOnce.Do(func() {
-		RestClient = github.NewClient(tc)
+		var rerr error
+		RestClient, rerr = github.NewClient(github.WithHTTPClient(tc))
+		if rerr != nil {
+			panic(rerr)
+		}
+
 		GraphClient = ghql.NewClient(tc)
 	})
 }
