@@ -20,6 +20,7 @@ const {
   error,
   status,
 } = await useApi('/posts', {
+  lazy: import.meta.client,
   query: computed(() => ({
     page: pagination.page.value,
     per_page: pagination.perPage.value,

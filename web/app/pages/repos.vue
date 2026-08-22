@@ -22,6 +22,7 @@ const {
   error,
   status,
 } = await useApi('/github-repositories', {
+  lazy: import.meta.client,
   query: computed(() => ({
     page: pagination.page.value,
     per_page: pagination.perPage.value,

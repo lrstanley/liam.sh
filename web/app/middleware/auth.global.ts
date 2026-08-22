@@ -25,7 +25,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         githubUser.value = await $api('/github-user')
       } catch (error) {
         githubUser.value = null
-        throw error
       }
     }),
   ])

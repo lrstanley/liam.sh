@@ -49,58 +49,55 @@ function typeMapper(o: Value): MappedObject {
 </script>
 
 <template>
-  <AnimatePresence>
-    <motion as="div" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" v-if="loading"
-      class="flex flex-row gap-4 mt-8">
-      <!-- avatar -->
-      <USkeleton class="rounded-full size-8" />
+  <div v-if="loading" class="flex flex-row gap-4 mt-8">
+    <USkeleton class="rounded-full size-8" />
 
-      <div class="flex flex-col w-full gap-2 my-1">
-        <div class="flex flex-row">
-          <!-- name -->
-          <USkeleton class="h-6 w-[250px]" />
-          <!-- homepage or similar link -->
-          <USkeleton class="ml-auto h-6 w-[100px]" />
-        </div>
+    <div class="flex flex-col w-full gap-2 my-1">
+      <div class="flex flex-row">
+        <USkeleton class="h-6 w-[250px]" />
+        <USkeleton class="ml-auto h-6 w-[100px]" />
+      </div>
 
-        <!-- timestamp -->
-        <USkeleton class="h-4 w-[350px] rounded-full" />
+      <USkeleton class="h-4 w-[350px] rounded-full" />
 
-        <!-- main description -->
-        <div class="flex flex-col gap-1 my-2">
-          <USkeleton class="w-full h-4 rounded-full" />
-          <USkeleton class="w-[80%] h-4 rounded-full" />
-        </div>
+      <div class="flex flex-col gap-1 my-2">
+        <USkeleton class="w-full h-4 rounded-full" />
+        <USkeleton class="w-[80%] h-4 rounded-full" />
+      </div>
 
-        <div class="flex flex-row">
-          <!-- tags -->
-          <div class="flex flex-row flex-wrap gap-1">
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-            <USkeleton class="h-7 w-[100px]" />
-          </div>
-
-          <!-- views -->
+      <div class="flex flex-row">
+        <div class="flex flex-row flex-wrap gap-1">
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
+          <USkeleton class="h-7 w-[100px]" />
           <USkeleton class="h-7 w-[100px]" />
         </div>
+
+        <USkeleton class="h-7 w-[100px]" />
       </div>
+    </div>
+  </div>
+  <div v-else-if="showEmpty && !loading && objects.length < 1" class="flex flex-col items-center gap-4 mx-auto mb-4">
+    <UIcon name="mdi:folder-remove-outline" class="text-5xl text-primary" />
+    <span class="text-muted">No results found matching filters</span>
+  </div>
+  <div
+    v-show="objects.length > 0 && !loading"
+    class="flex flex-col divide-y divide-zinc-500/20"
+  >
+    <motion
+      as="div"
+      v-for="(object, i) in objects"
+      :key="object.object.id"
+      :initial="{ opacity: 0, x: -10 }"
+      :animate="{ opacity: 1, x: 0 }"
+      :transition="{ delay: (i + 1) * 0.05 }"
+    >
+      <component :is="object.component" v-bind="$attrs" />
     </motion>
-    <div v-if="!loading && showEmpty && objects.length < 1" class="flex flex-col items-center gap-4 mx-auto mb-4">
-      <UIcon name="mdi:folder-remove-outline" class="text-5xl text-primary" />
-      <span class="text-muted">No results found matching filters</span>
-    </div>
-    <div v-if="!loading && objects.length > 0" class="flex flex-col divide-y divide-zinc-500/20">
-      <AnimatePresence>
-        <motion as="div" :initial="{ opacity: 0, x: -10 }" :animate="{ opacity: 1, x: 0 }" :exit="{ opacity: 0 }"
-          :transition="{ delay: (i + 1) * 0.05 }" v-for="(object, i) in objects" :key="object.object.id">
-          <component :is="object.component" v-bind="$attrs" />
-        </motion>
-      </AnimatePresence>
-    </div>
-  </AnimatePresence>
+  </div>
 </template>
