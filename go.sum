@@ -121,8 +121,8 @@ github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.7 h1:hoXaqTNmbU+loyioECGho0ff0A+w
 github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.7/go.mod h1:UNV7t7r2vLI1nqN2NHNaxCBeUfuIa1GDa7xyRWLPlZ8=
 github.com/lrstanley/clix/v2 v2.0.3 h1:CKWI8Atwr4Ey6bdUyJs84d+6TB4tDFl74yr/a/Zaugg=
 github.com/lrstanley/clix/v2 v2.0.3/go.mod h1:oGxO0wxUi80+Xd6fEWAJ+q0pMOioFU8vvHQmzwgxz/k=
-github.com/lrstanley/entrest v1.0.5-0.20260821171437-c482e0dda5bb h1:4dBFZe2ynP0v9rotkhM5KKQB44QvW3QjfSpjBf+u/To=
-github.com/lrstanley/entrest v1.0.5-0.20260821171437-c482e0dda5bb/go.mod h1:4FojEZWa0MG//ByhW0dBe0lik9OzkpGjuJz+2WMBM2o=
+github.com/lrstanley/entrest v1.1.0 h1:BL0aYNcAgSEJsH9TiljK5BhzYs1uus2KHIpLqeh/f6s=
+github.com/lrstanley/entrest v1.1.0/go.mod h1:4FojEZWa0MG//ByhW0dBe0lik9OzkpGjuJz+2WMBM2o=
 github.com/lrstanley/x/http/utils v0.0.0-20260820045812-c29a6d098dc7 h1:bf4Ipy+7KzAGDJNcVCWcI8GSqjdHWGvtP8RcsVG9U40=
 github.com/lrstanley/x/http/utils v0.0.0-20260820045812-c29a6d098dc7/go.mod h1:mi11moxnnIad1Gb4Ovj2xM4o0OhXscNMClj/Fp1F5RA=
 github.com/lrstanley/x/sync v0.0.0-20260820045812-c29a6d098dc7 h1:TIt/b6XcHJCwqf1IyWqXb9o7Moa7BmU1bBoiOTZATbM=

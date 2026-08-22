@@ -15,7 +15,7 @@ require (
 	github.com/lrstanley/chix/v2 v2.0.0-beta.7
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.7
 	github.com/lrstanley/clix/v2 v2.0.3
-	github.com/lrstanley/entrest v1.0.5-0.20260821171437-c482e0dda5bb
+	github.com/lrstanley/entrest v1.1.0
 	github.com/lrstanley/x/http/utils v0.0.0-20260820045812-c29a6d098dc7
 	github.com/lrstanley/x/sync v0.0.0-20260820045812-c29a6d098dc7
 	github.com/lrstanley/x/text/fuzzy v0.0.0-20260820045812-c29a6d098dc7

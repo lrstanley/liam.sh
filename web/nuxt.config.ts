@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     name: "liam.sh",
   },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
-  compatibilityDate: "2026-01-19",
+  compatibilityDate: "2026-08-22",
   experimental: {
     asyncContext: true,
     typedPages: true,
