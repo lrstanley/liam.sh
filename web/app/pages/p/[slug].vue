@@ -21,6 +21,9 @@ const self = useSelf()
 
 useHead({
   title: post.value ? post.value?.title : null,
+  link: post.value
+    ? [{ rel: "alternate", type: "text/markdown", href: `/p/${slug}.md` }]
+    : [],
 })
 </script>
 
