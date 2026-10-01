@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"regexp"
 
-	"github.com/google/go-github/v87/github"
+	"github.com/google/go-github/v92/github"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubgist"
 	"github.com/lrstanley/liam.sh/internal/database/ent/privacy"

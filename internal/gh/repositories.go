@@ -11,7 +11,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/google/go-github/v87/github"
+	"github.com/google/go-github/v92/github"
 	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent"
 	"github.com/lrstanley/liam.sh/internal/database/ent/githubrelease"
@@ -69,8 +69,10 @@ func RepositoryRunner(ctx context.Context, logger *slog.Logger) error {
 		if repo.GetArchived() {
 			var exists bool
 			exists, _ = db.GithubRelease.Query().
-				Where(githubrelease.HasRepositoryWith(
-					githubrepository.RepoID(int64(repoID))),
+				Where(
+					githubrelease.HasRepositoryWith(
+						githubrepository.RepoID(int64(repoID)),
+					),
 				).Exist(ctx)
 			if exists {
 				logger.InfoContext(ctx, "skipping repository release checks (archived)", "repo", repo.GetFullName())

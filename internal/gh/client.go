@@ -11,7 +11,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/go-github/v87/github"
+	"github.com/google/go-github/v92/github"
 	"github.com/lrstanley/liam.sh/internal/models"
 	"github.com/lrstanley/x/http/utils/httpccache"
 	"github.com/lrstanley/x/http/utils/httpclog"

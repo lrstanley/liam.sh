@@ -64,24 +64,23 @@ func main() {
 			WithLogger(logger).
 			WithInterval(10*time.Minute),
 		scheduler.NewCron("stats", scheduler.JobLoggerFunc(gh.StatsRunner)).
-			WithImmediate(true).
+			WithImmediate(false).
 			WithLogger(logger).
 			WithInterval(4*time.Hour),
 		scheduler.NewCron("events", scheduler.JobLoggerFunc(gh.EventsRunner)).
-			WithImmediate(true).
+			WithImmediate(false).
 			WithLogger(logger).
 			WithInterval(10*time.Minute),
 		scheduler.NewCron("repositories", scheduler.JobLoggerFunc(gh.RepositoryRunner)).
 			WithLogger(logger).
 			WithInterval(30*time.Minute),
 		scheduler.NewCron("gists", scheduler.JobLoggerFunc(gh.GistRunner)).
-			WithImmediate(true).
+			WithImmediate(false).
 			WithLogger(logger).
 			WithInterval(120*time.Minute),
 		scheduler.NewCron("wakapi", wakapi.Runner(cli.Flags.WakAPI)).
 			WithImmediate(true).
 			WithLogger(logger).
-			WithExitOnError(true).
 			WithInterval(30*time.Minute),
 	)
 	if err != nil {

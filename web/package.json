@@ -3,30 +3,30 @@
   "type": "module",
   "dependencies": {
     "@nuxt/fonts": "^0.14.0",
-    "@nuxt/ui": "^4.10.0",
+    "@nuxt/ui": "^4.11.2",
     "@tailwindcss/vite": "^4.3.3",
-    "motion-v": "2.4.0",
+    "motion-v": "2.5.1",
     "nuxt": "^4.5.2",
     "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3",
     "tiptap-extension-code-block-shiki": "^1.2.0",
     "typescript": "^5.9.3",
-    "vue": "^3.5.41",
-    "vue-router": "^5.2.0"
+    "vue": "^3.5.43",
+    "vue-router": "^5.3.1"
   },
   "devDependencies": {
     "@iconify-json/heroicons": "^1.2.3",
-    "@iconify-json/logos": "^1.2.13",
-    "@iconify-json/lucide": "^1.2.124",
+    "@iconify-json/logos": "^1.2.15",
+    "@iconify-json/lucide": "^1.2.138",
     "@iconify-json/mdi": "^1.2.3",
-    "@nuxt/icon": "^2.5.0",
-    "@nuxtjs/seo": "^5.3.14",
-    "@vueuse/components": "^14.4.0",
-    "@vueuse/core": "^14.4.0",
-    "@vueuse/nuxt": "^14.4.0",
-    "@vueuse/router": "14.4.0",
+    "@nuxt/icon": "^2.5.1",
+    "@nuxtjs/seo": "^5.3.16",
+    "@vueuse/components": "^15.0.0",
+    "@vueuse/core": "^15.0.0",
+    "@vueuse/nuxt": "^15.0.0",
+    "@vueuse/router": "15.0.0",
     "nuxt-open-fetch": "^0.13.9",
-    "vue-component-type-helpers": "^3.3.10"
+    "vue-component-type-helpers": "^3.3.11"
   },
   "name": "liam.sh",
   "overrides": {

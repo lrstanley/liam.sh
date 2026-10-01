@@ -9,24 +9,24 @@ require (
 	github.com/alecthomas/chroma/v2 v2.27.0
 	github.com/go-chi/chi/v5 v5.3.2
 	github.com/go-chi/httprate v0.16.0
-	github.com/go-playground/form/v4 v4.3.0
-	github.com/google/go-github/v87 v87.0.0
-	github.com/jackc/pgx/v5 v5.10.0
-	github.com/lrstanley/chix/v2 v2.0.0-beta.7
-	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.7
-	github.com/lrstanley/clix/v2 v2.0.3
-	github.com/lrstanley/entrest v1.1.0
-	github.com/lrstanley/x/http/utils v0.0.0-20260820045812-c29a6d098dc7
-	github.com/lrstanley/x/sync v0.0.0-20260820045812-c29a6d098dc7
-	github.com/lrstanley/x/text/fuzzy v0.0.0-20260820045812-c29a6d098dc7
+	github.com/go-playground/form/v4 v4.5.0
+	github.com/google/go-github/v92 v92.0.0
+	github.com/jackc/pgx/v5 v5.11.0
+	github.com/lrstanley/chix/v2 v2.0.0-beta.10
+	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.10
+	github.com/lrstanley/clix/v2 v2.0.5
+	github.com/lrstanley/entrest v1.2.0
+	github.com/lrstanley/x/http/utils v0.0.0-20260928073819-139854520bc8
+	github.com/lrstanley/x/sync v0.0.0-20260928073819-139854520bc8
+	github.com/lrstanley/x/text/fuzzy v0.0.0-20260928073819-139854520bc8
 	github.com/markbates/goth v1.82.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/ogen-go/ogen v1.24.0
 	github.com/shurcooL/githubv4 v0.0.0-20260209031235-2402fdf4a9ed
 	github.com/tmc/langchaingo v0.1.14
-	github.com/yuin/goldmark v1.8.5
+	github.com/yuin/goldmark v1.8.6
 	github.com/yuin/goldmark-highlighting/v2 v2.0.0-20230729083705-37449abec8cc
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 	mvdan.cc/xurls/v2 v2.6.0
 )
 
@@ -40,17 +40,17 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/dlclark/regexp2 v1.12.0 // indirect
-	github.com/dlclark/regexp2/v2 v2.7.1 // indirect
+	github.com/dlclark/regexp2/v2 v2.8.1 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-faster/errors v0.8.0 // indirect
 	github.com/go-faster/jx v1.2.0 // indirect
 	github.com/go-faster/yaml v0.4.6 // indirect
-	github.com/go-openapi/inflect v1.0.0 // indirect
-	github.com/go-playground/locales v0.14.1 // indirect
-	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.30.3 // indirect
+	github.com/go-openapi/inflect v1.0.1 // indirect
+	github.com/go-playground/locales v0.14.2 // indirect
+	github.com/go-playground/universal-translator v0.18.2 // indirect
+	github.com/go-playground/validator/v10 v10.30.5 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -58,7 +58,7 @@ require (
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/gorilla/securecookie v1.1.2 // indirect
 	github.com/gorilla/sessions v1.4.0 // indirect
-	github.com/hashicorp/hcl/v2 v2.24.0 // indirect
+	github.com/hashicorp/hcl/v2 v2.25.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
@@ -78,14 +78,14 @@ require (
 	github.com/zeebo/xxh3 v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
-	golang.org/x/crypto v0.55.0 // indirect
-	golang.org/x/exp v0.0.0-20260820142414-ca536658362e // indirect
-	golang.org/x/mod v0.40.0 // indirect
-	golang.org/x/net v0.58.0 // indirect
-	golang.org/x/sync v0.22.0 // indirect
-	golang.org/x/sys v0.47.0 // indirect
-	golang.org/x/text v0.41.0 // indirect
-	golang.org/x/tools v0.49.0 // indirect
+	golang.org/x/crypto v0.57.0 // indirect
+	golang.org/x/exp v0.0.0-20260908205506-85c1c2202aba // indirect
+	golang.org/x/mod v0.41.0 // indirect
+	golang.org/x/net v0.59.0 // indirect
+	golang.org/x/sync v0.23.0 // indirect
+	golang.org/x/sys v0.48.0 // indirect
+	golang.org/x/text v0.42.0 // indirect
+	golang.org/x/tools v0.50.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
