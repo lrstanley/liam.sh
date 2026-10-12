@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/lrstanley/liam.sh/internal/database"
 	"github.com/lrstanley/liam.sh/internal/database/ent/label"
+	"github.com/lrstanley/x/entx"
 	"github.com/tmc/langchaingo/llms"
 	"github.com/tmc/langchaingo/llms/openai"
 )
@@ -94,7 +94,7 @@ func (s *service) PostSuggestLabels(ctx context.Context, content string) ([]Sugg
 		return nil, nil
 	}
 
-	chunked := database.Chunked(ctx, 100, s.db.Label.Query().Where(label.NameIn(filteredLabels...)))
+	chunked := entx.Chunked(ctx, 100, s.db.Label.Query().Where(label.NameIn(filteredLabels...)))
 
 	for l, err := range chunked {
 		if err != nil {

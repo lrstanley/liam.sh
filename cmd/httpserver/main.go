@@ -33,13 +33,17 @@ var (
 )
 
 func main() {
-	var exitCode int
-	defer func() {
-		os.Exit(exitCode)
-	}()
-
 	logger := cli.GetLogger()
 	ctx := context.Background()
+
+	var exitCode int
+	defer func() {
+		if err := recover(); err != nil {
+			logger.ErrorContext(ctx, "panic", "error", err)
+			exitCode = 1
+		}
+		os.Exit(exitCode)
+	}()
 
 	db = database.Open(ctx, cli.Flags.Database)
 	defer db.Close()

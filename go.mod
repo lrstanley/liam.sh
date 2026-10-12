@@ -2,7 +2,10 @@ module github.com/lrstanley/liam.sh
 
 go 1.27.0
 
-tool github.com/lrstanley/entrest
+tool (
+	entgo.io/ent/entc
+	github.com/lrstanley/entrest
+)
 
 require (
 	entgo.io/ent v0.14.6
@@ -11,11 +14,11 @@ require (
 	github.com/go-chi/httprate v0.16.1
 	github.com/go-playground/form/v4 v4.5.0
 	github.com/google/go-github/v92 v92.0.0
-	github.com/jackc/pgx/v5 v5.11.0
 	github.com/lrstanley/chix/v2 v2.0.0-beta.10
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.10
 	github.com/lrstanley/clix/v2 v2.0.5
 	github.com/lrstanley/entrest v1.2.0
+	github.com/lrstanley/x/entx v0.0.0-20261012033115-94a2087e9052
 	github.com/lrstanley/x/http/utils v0.0.0-20260928073819-139854520bc8
 	github.com/lrstanley/x/sync v0.0.0-20260928073819-139854520bc8
 	github.com/lrstanley/x/text/fuzzy v0.0.0-20260928073819-139854520bc8
@@ -41,6 +44,7 @@ require (
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/dlclark/regexp2 v1.12.0 // indirect
 	github.com/dlclark/regexp2/v2 v2.8.4 // indirect
+	github.com/dustin/go-humanize v1.1.0 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.15 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
@@ -61,6 +65,7 @@ require (
 	github.com/hashicorp/hcl/v2 v2.25.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
+	github.com/jackc/pgx/v5 v5.11.0 // indirect
 	github.com/jackc/puddle/v2 v2.2.3 // indirect
 	github.com/klauspost/cpuid/v2 v2.4.0 // indirect
 	github.com/leodido/go-urn v1.5.0 // indirect
@@ -68,7 +73,9 @@ require (
 	github.com/mattn/go-colorable v0.1.16 // indirect
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
+	github.com/ncruces/go-strftime v1.1.0 // indirect
 	github.com/pkoukk/tiktoken-go v0.1.8 // indirect
+	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/shopspring/decimal v1.5.0 // indirect
 	github.com/shurcooL/graphql v0.0.0-20240915155400-7ee5256398cf // indirect
@@ -88,4 +95,8 @@ require (
 	golang.org/x/tools v0.52.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	modernc.org/libc v1.78.0 // indirect
+	modernc.org/mathutil v1.7.1 // indirect
+	modernc.org/memory v1.12.1 // indirect
+	modernc.org/sqlite v1.60.1 // indirect
 )
