@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
   compatibilityDate: "2026-08-22",
+  future: {
+    compatibilityVersion: 5,
+  },
   experimental: {
     asyncContext: true,
     typedPages: true,
