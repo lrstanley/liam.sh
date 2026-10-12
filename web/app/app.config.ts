@@ -1,4 +1,4 @@
-export default defineAppConfig({
+export default {
   title: "liam.sh",
   icon: {
     class: "icon",
@@ -16,4 +16,4 @@ export default defineAppConfig({
       },
     },
   },
-})
+}

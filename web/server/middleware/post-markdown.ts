@@ -4,8 +4,13 @@
  * the LICENSE file.
  */
 
-import { createError, defineEventHandler, setHeader } from "#imports"
+import {
+  createError,
+  defineEventHandler,
+  getRequestURL,
+} from "nuxt/server"
 import type { SchemaPostRead } from "#open-fetch-schemas/api"
+import { fetchPosts } from "../utils/api"
 
 function formatPostMarkdown(post: SchemaPostRead): string {
   const lines = [`# ${post.title}`, ""]
@@ -20,24 +25,21 @@ function formatPostMarkdown(post: SchemaPostRead): string {
 }
 
 export default defineEventHandler(async (event) => {
-  const match = event.path.match(/^\/p\/(.+)\.md$/)
+  const match = getRequestURL(event).pathname.match(/^\/p\/(.+)\.md$/)
   if (!match) return
 
   const slug = match[1]
-  const { $api } = useNitroApp()
-  const resp = await $api("/posts", {
-    query: {
-      "slug.eq": slug,
-    },
+  const resp = await fetchPosts({
+    "slug.eq": slug,
   })
 
   const post = resp.content?.[0]
   if (!post) {
-    throw createError({ statusCode: 404, statusMessage: "post not found" })
+    throw createError({ status: 404, statusText: "post not found" })
   }
 
-  setHeader(event, "content-type", "text/markdown; charset=utf-8")
-  setHeader(event, "cache-control", "public, max-age=300")
+  event.res.headers.set("content-type", "text/markdown; charset=utf-8")
+  event.res.headers.set("cache-control", "public, max-age=300")
 
   return formatPostMarkdown(post)
 })

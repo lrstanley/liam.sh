@@ -6,20 +6,17 @@
 
 import { defineSitemapEventHandler } from "#imports"
 import type { SchemaPostRead } from '#open-fetch-schemas/api'
+import { fetchPosts } from "../../utils/api"
 
 export default defineSitemapEventHandler(async (event) => {
-  const { $api } = useNitroApp()
-
   const posts: SchemaPostRead[] = []
   let page = 1
 
   while (true) {
-    const resp = await $api('/posts', {
-      query: {
-        page: page,
-        per_page: 100,
-        "public.eq": true,
-      },
+    const resp = await fetchPosts({
+      page,
+      per_page: 100,
+      "public.eq": true,
     })
     posts.push(...resp.content)
 
