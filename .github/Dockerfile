@@ -13,7 +13,9 @@ RUN \
 # build frontend
 FROM oven/bun:1-alpine AS build-web
 
-RUN apk add --no-cache make bash curl
+# nodejs is needed for "nuxt prepare" (postinstall), as bun doesn't implement
+# node:module.findPackageJSON, which nuxt modules (e.g. nuxt-og-image) rely on.
+RUN apk add --no-cache make bash curl nodejs
 
 WORKDIR /build
 COPY . /build
