@@ -4,25 +4,11 @@
  * the LICENSE file.
  */
 
-import { defineSitemapEventHandler } from "#imports"
-import type { SchemaPostRead } from '#open-fetch-schemas/api'
-import { fetchPosts } from "../../utils/api"
+import { defineSitemapEventHandler } from "#sitemap/server"
+import { fetchAllPosts } from "../../utils/api"
 
-export default defineSitemapEventHandler(async (event) => {
-  const posts: SchemaPostRead[] = []
-  let page = 1
-
-  while (true) {
-    const resp = await fetchPosts({
-      page,
-      per_page: 100,
-      "public.eq": true,
-    })
-    posts.push(...resp.content)
-
-    if (resp.is_last_page) break
-    page++
-  }
+export default defineSitemapEventHandler(async () => {
+  const posts = await fetchAllPosts({ "public.eq": true })
 
   return posts.map((p) => ({
     loc: `/p/${p.slug}`,

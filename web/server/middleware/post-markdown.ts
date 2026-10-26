@@ -9,26 +9,13 @@ import {
   defineEventHandler,
   getRequestURL,
 } from "nuxt/server"
-import type { SchemaPostRead } from "#open-fetch-schemas/api"
-import { fetchPosts } from "../utils/api"
-
-function formatPostMarkdown(post: SchemaPostRead): string {
-  const lines = [`# ${post.title}`, ""]
-
-  if (post.summary) {
-    lines.push(`> ${post.summary}`, "")
-  }
-
-  lines.push(post.content)
-
-  return lines.join("\n")
-}
+import { fetchPosts, formatPostMarkdown } from "../utils/api"
 
 export default defineEventHandler(async (event) => {
   const match = getRequestURL(event).pathname.match(/^\/p\/(.+)\.md$/)
-  if (!match) return
+  const slug = match?.[1]
+  if (!slug) return
 
-  const slug = match[1]
   const resp = await fetchPosts({
     "slug.eq": slug,
   })

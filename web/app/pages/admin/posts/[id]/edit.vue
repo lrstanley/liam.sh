@@ -5,7 +5,8 @@ definePageMeta({
   title: "Edit Post",
   layout: "admin",
   validate: async (route) => {
-    return typeof route.params.id === 'string' && /^\d+$/.test(route.params.id)
+    const id = (route.params as Record<string, unknown>).id
+    return typeof id === 'string' && /^\d+$/.test(id)
   }
 })
 

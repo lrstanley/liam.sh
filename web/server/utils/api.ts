@@ -5,7 +5,7 @@
  */
 
 import { createError, useRuntimeConfig } from "nuxt/server"
-import type { SchemaPostList } from "#open-fetch-schemas/api"
+import type { SchemaPostList, SchemaPostRead } from "#open-fetch-schemas/api"
 
 export async function fetchPosts(
   query: Record<string, string | number | boolean> = {},
@@ -26,4 +26,33 @@ export async function fetchPosts(
   }
 
   return (await response.json()) as SchemaPostList
+}
+
+export async function fetchAllPosts(
+  query: Record<string, string | number | boolean> = {},
+): Promise<SchemaPostRead[]> {
+  const posts: SchemaPostRead[] = []
+  let page = 1
+
+  while (true) {
+    const resp = await fetchPosts({ ...query, page, per_page: 100 })
+    posts.push(...resp.content)
+
+    if (resp.is_last_page) break
+    page++
+  }
+
+  return posts
+}
+
+export function formatPostMarkdown(post: SchemaPostRead): string {
+  const lines = [`# ${post.title}`, ""]
+
+  if (post.summary) {
+    lines.push(`> ${post.summary}`, "")
+  }
+
+  lines.push(post.content)
+
+  return lines.join("\n")
 }

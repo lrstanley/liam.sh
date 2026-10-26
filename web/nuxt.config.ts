@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   },
   site: {
     name: "liam.sh",
+    description: "Personal website, including blog posts, Git repositories, and more",
   },
   modules: ["@vueuse/nuxt", "motion-v/nuxt", "@nuxt/ui", "@nuxtjs/seo", "nuxt-open-fetch"],
   compatibilityDate: "2026-08-22",
@@ -72,6 +73,27 @@ export default defineNuxtConfig({
     sources: ["/api/__sitemap__/urls"],
   },
   ogImage: { enabled: false },
+  aiReady: {
+    // llms-full.txt is served from server/routes/llms-full.txt.get.ts, and sitemap.md
+    // would be empty without a prerender/sqlite page index.
+    llmsFullTxt: false,
+    sitemapMd: false,
+    llmsTxt: {
+      notes: "Personal website and blog of Liam Stanley. Blog posts are available as raw markdown at /p/<slug>.md.",
+      sections: [
+        {
+          title: "Full content",
+          links: [
+            {
+              title: "llms-full.txt",
+              href: "/llms-full.txt",
+              description: "Every published blog post, in markdown format.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   openFetch: {
     disableNitroPlugin: true,
     disableNuxtPlugin: true,

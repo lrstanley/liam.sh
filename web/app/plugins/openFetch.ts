@@ -39,7 +39,7 @@ export default defineNuxtPlugin({
           ...options,
           ...localOptions,
           credentials: 'include',
-        }), localFetch as any, 'core', nuxtApp.hooks)
+        }), localFetch as any, 'core', nuxtApp.hooks as any)
       }
     }
   }

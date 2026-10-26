@@ -4,7 +4,7 @@ const nuxtApp = useNuxtApp()
 
 nuxtApp.hook('openFetch:onRequest', (ctx) => {
   if (loading.isLoading.value) return
-  loading.start({ force: true })
+  loading.start()
 })
 nuxtApp.hook('openFetch:onResponse', (ctx) => ctx.response.status < 300 ? loading.finish() : loading.finish({ error: true }))
 
@@ -21,7 +21,7 @@ useHead({
     { name: "revisit-after", content: "10" },
     { name: "language", content: "en" },
     { name: "copyright", content: "© Liam Stanley" },
-    { name: "darkreader-lock" },
+    { name: "darkreader-lock", content: "" },
   ],
   link: [{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml" }],
 })
