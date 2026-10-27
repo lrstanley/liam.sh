@@ -6,7 +6,7 @@
     "@nuxt/ui": "^4.12.0",
     "@tailwindcss/vite": "^4.3.3",
     "motion-v": "2.8.0",
-    "nuxt": "^4.6.2",
+    "nuxt": "^4.6.3",
     "shiki": "^4.4.3",
     "tailwindcss": "^4.3.3",
     "tiptap-extension-code-block-shiki": "^1.2.0",
@@ -32,7 +32,7 @@
   "overrides": {
     "@unhead/vue": "^3.3.1",
     "unhead": "^3.3.1",
-    "@nuxt/schema": "^4.6.2"
+    "@nuxt/schema": "^4.6.3"
   },
   "prettier": {
     "arrowParens": "always",
