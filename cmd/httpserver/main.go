@@ -6,7 +6,7 @@ package main
 
 import (
 	"context"
-	"os"
+	"log/slog"
 	"time"
 
 	"github.com/lrstanley/chix/v2"
@@ -33,18 +33,10 @@ var (
 )
 
 func main() {
-	logger := cli.GetLogger()
-	ctx := context.Background()
+	cli.Execute(run)
+}
 
-	var exitCode int
-	defer func() {
-		if err := recover(); err != nil {
-			logger.ErrorContext(ctx, "panic", "error", err)
-			exitCode = 1
-		}
-		os.Exit(exitCode)
-	}()
-
+func run(ctx context.Context, logger *slog.Logger) error {
 	db = database.Open(ctx, cli.Flags.Database)
 	defer db.Close()
 	ctx = ent.NewContext(ctx, db)
@@ -59,7 +51,7 @@ func main() {
 		logger.ErrorContext(ctx, "failed to create AI service", "error", err)
 	}
 
-	err = chix.Run(
+	return chix.Run(
 		ctx,
 		logger,
 		httpServer(logger),
@@ -87,8 +79,4 @@ func main() {
 			WithLogger(logger).
 			WithInterval(30*time.Minute),
 	)
-	if err != nil {
-		logger.ErrorContext(ctx, "shutting down", "error", err)
-		exitCode = 1
-	}
 }
