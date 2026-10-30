@@ -16,7 +16,7 @@ require (
 	github.com/google/go-github/v92 v92.0.0
 	github.com/lrstanley/chix/v2 v2.0.0-beta.10
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.10
-	github.com/lrstanley/clix/v2 v2.0.6
+	github.com/lrstanley/clix/v2 v2.0.7
 	github.com/lrstanley/entrest v1.2.0
 	github.com/lrstanley/x/entx v0.0.0-20261025072154-370fd85c1fc2
 	github.com/lrstanley/x/http/utils v0.0.0-20261025072154-370fd85c1fc2

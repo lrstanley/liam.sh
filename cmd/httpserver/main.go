@@ -36,7 +36,7 @@ func main() {
 	cli.Execute(run)
 }
 
-func run(ctx context.Context, logger *slog.Logger) error {
+func run(ctx context.Context, _ *clix.CLI[models.Flags], logger *slog.Logger) error {
 	db = database.Open(ctx, cli.Flags.Database)
 	defer db.Close()
 	ctx = ent.NewContext(ctx, db)
