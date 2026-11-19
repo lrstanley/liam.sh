@@ -14,7 +14,7 @@ const self = useSelf()
       <NuxtLink :href="gh?.html_url">github</NuxtLink>
     </li>
     <li>
-      <NuxtLink href="/chat" target="_blank">discord</NuxtLink>
+      <NuxtLink href="/chat" target="_blank" external>discord</NuxtLink>
     </li>
     <li v-if="self">
       <router-link to="/admin">sudo</router-link>

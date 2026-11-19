@@ -65,7 +65,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     "/security.txt": { redirect: "/-/security.txt" },
-    "/chat": { redirect: process.env.NUXT_CHAT_URL },
   },
   robots: { disallow: "/admin/*" },
   sitemap: {
