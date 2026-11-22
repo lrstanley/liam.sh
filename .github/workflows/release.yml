@@ -16,12 +16,8 @@ jobs:
   #   with: { num-minor: 1, num-patch: 1 }
   # go-lint:
   #   uses: lrstanley/.github/.github/workflows/lang-go-lint.yml@master
-  #   secrets:
-  #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   docker-release:
     # needs: [go-test, go-lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
     with:
       dockerfile: .github/Dockerfile
-    secrets:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
