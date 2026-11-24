@@ -18,10 +18,10 @@ require (
 	github.com/lrstanley/chix/xauth/v2 v2.0.0-beta.12
 	github.com/lrstanley/clix/v2 v2.0.7
 	github.com/lrstanley/entrest v1.2.0
-	github.com/lrstanley/x/entx v0.0.0-20261114083341-9a83c78e3aa5
-	github.com/lrstanley/x/http/utils v0.0.0-20261114083341-9a83c78e3aa5
-	github.com/lrstanley/x/sync v0.0.0-20261114083341-9a83c78e3aa5
-	github.com/lrstanley/x/text/fuzzy v0.0.0-20261114083341-9a83c78e3aa5
+	github.com/lrstanley/x/entx v0.0.0-20261123121849-6e1388555e13
+	github.com/lrstanley/x/http/utils v0.0.0-20261123121849-6e1388555e13
+	github.com/lrstanley/x/sync v0.0.0-20261123121849-6e1388555e13
+	github.com/lrstanley/x/text/fuzzy v0.0.0-20261123121849-6e1388555e13
 	github.com/markbates/goth v1.82.0
 	github.com/microcosm-cc/bluemonday v1.0.27
 	github.com/ogen-go/ogen v1.25.0
@@ -43,7 +43,7 @@ require (
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/dlclark/regexp2 v1.12.0 // indirect
-	github.com/dlclark/regexp2/v2 v2.13.1 // indirect
+	github.com/dlclark/regexp2/v2 v2.13.2 // indirect
 	github.com/dustin/go-humanize v1.1.0 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.16 // indirect
@@ -79,14 +79,14 @@ require (
 	github.com/segmentio/asm v1.2.1 // indirect
 	github.com/shopspring/decimal v1.6.0 // indirect
 	github.com/shurcooL/graphql v0.0.0-20240915155400-7ee5256398cf // indirect
-	github.com/stoewer/go-strcase v1.3.1 // indirect
+	github.com/stoewer/go-strcase v1.4.0 // indirect
 	github.com/zclconf/go-cty v1.20.0 // indirect
 	github.com/zclconf/go-cty-yaml v1.2.0 // indirect
 	github.com/zeebo/xxh3 v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.28.0 // indirect
 	golang.org/x/crypto v0.59.0 // indirect
-	golang.org/x/exp v0.0.0-20261118215729-2791e4028fd4 // indirect
+	golang.org/x/exp v0.0.0-20261124000051-d6646c509b6d // indirect
 	golang.org/x/mod v0.43.0 // indirect
 	golang.org/x/net v0.63.0 // indirect
 	golang.org/x/sync v0.25.0 // indirect
@@ -95,8 +95,8 @@ require (
 	golang.org/x/tools v0.53.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	modernc.org/libc v1.82.2 // indirect
+	modernc.org/libc v1.82.13 // indirect
 	modernc.org/mathutil v1.7.1 // indirect
 	modernc.org/memory v1.13.0 // indirect
-	modernc.org/sqlite v1.62.0 // indirect
+	modernc.org/sqlite v1.63.0 // indirect
 )
