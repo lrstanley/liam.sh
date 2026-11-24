@@ -19,5 +19,10 @@ jobs:
   docker-release:
     # needs: [go-test, go-lint]
     uses: lrstanley/.github/.github/workflows/docker-release.yml@master
+    secrets: inherit
     with:
       dockerfile: .github/Dockerfile
+      # Railway runs :master; redeploy it whenever a release pushes that tag.
+      railway-project: liam-sh
+      railway-services: backend,frontend
+      railway-tag: master
