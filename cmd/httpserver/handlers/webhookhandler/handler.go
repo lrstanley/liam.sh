@@ -10,6 +10,7 @@ import (
 	"log/slog"
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/google/go-github/v92/github"
@@ -66,19 +67,30 @@ func (h *handler) Discord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.Header = r.Header.Clone()
+	// Only forward what Discord's GitHub endpoint reads. Copying everything
+	// passes on proxy headers (e.g. Cloudflare's Cf-Connecting-Ip), which
+	// Cloudflare in front of discord.com rejects with a 403 (error 1000).
+	for k, v := range r.Header {
+		if k == "Content-Type" || k == "User-Agent" || strings.HasPrefix(k, "X-Github-") {
+			req.Header[k] = v
+		}
+	}
 
-	w.WriteHeader(http.StatusOK)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		chix.Error(w, r, err)
 		return
 	}
 	defer resp.Body.Close()
-	_, _ = io.Copy(w, resp.Body)
 
 	chix.LogInfo(
 		r.Context(), "discord response",
 		slog.Int("discord_status", resp.StatusCode),
 	)
+
+	// Pass Discord's status through, so failures show up in GitHub's
+	// delivery log.
+	w.Header().Set("Content-Type", resp.Header.Get("Content-Type"))
+	w.WriteHeader(resp.StatusCode)
+	_, _ = io.Copy(w, resp.Body)
 }
